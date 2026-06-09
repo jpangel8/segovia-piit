@@ -7,7 +7,7 @@ export function renderLogin(container) {
       <div class="auth-card">
         <div class="auth-logo">
           <h1>PIIT</h1>
-          <p>Plataforma Integral de Innovación Tecnológica</p>
+          <p>Plataforma Integral de Inteligencia Territorial</p>
         </div>
         <form class="auth-form" id="login-form">
           <div class="auth-error" id="login-error"></div>
