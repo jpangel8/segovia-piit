@@ -1,59 +1,26 @@
-import { animate } from "motion/mini"
-import { ExperimentEngine } from "@/config/experiment-engine.js"
-import { createExperimentPanel } from "@/components/experiment-panel.js"
+import { AuthService } from "@/services/auth-service.js"
+import { Router } from "@/config/router.js"
+import { renderLogin } from "@/pages/login.js"
+import { renderRegister } from "@/pages/register.js"
+import { renderDashboard } from "@/pages/dashboard.js"
 import "./styles/style.css"
+import "./styles/auth.css"
+import "./styles/dashboard.css"
 import "./styles/experiment-panel.css"
 
-const box = document.querySelector("#box")
-let currentAnimation = null
+const app = document.querySelector("#app")
 
-function runAnimation() {
-  if (currentAnimation) currentAnimation.stop()
+const PUBLIC_ROUTES = ["/login", "/register"]
 
-  const params = ExperimentEngine.getAll()
+Router.guard((path) => {
+  if (PUBLIC_ROUTES.includes(path) && AuthService.isAuthenticated()) return "/"
+  if (!PUBLIC_ROUTES.includes(path) && !AuthService.isAuthenticated()) return "/login"
+  return path
+})
 
-  box.style.width = `${params.boxSize}px`
-  box.style.height = `${params.boxSize}px`
-  box.style.borderRadius = `${params.themeBorderRadius}px`
-  box.style.background = `hsl(${params.themeHue}, 58%, 52%)`
+Router.register("/login", () => renderLogin(app))
+Router.register("/register", () => renderRegister(app))
+Router.register("/", () => renderDashboard(app))
+Router.register("*", () => Router.navigate("/"))
 
-  box.style.transform = ""
-
-  currentAnimation = animate(
-    box,
-    { x: params.animationDistance, rotate: params.animationRotation, scale: params.animationScale },
-    {
-      duration: params.animationDuration,
-      easing: params.animationEasing,
-      onComplete: () => {
-        if (params.autoReplay) {
-          setTimeout(() => {
-            box.style.transform = ""
-            runAnimation()
-          }, 400)
-        }
-      },
-    }
-  )
-}
-
-function init() {
-  const panel = createExperimentPanel()
-  if (panel) document.body.appendChild(panel)
-
-  ExperimentEngine.subscribe(() => runAnimation())
-
-  runAnimation()
-
-  if (ExperimentEngine.get("debugMode")) {
-    const debug = document.createElement("pre")
-    debug.id = "debug-info"
-    debug.style.cssText = "position:fixed;bottom:1rem;left:1rem;color:#555;font-size:0.65rem;z-index:9999"
-    document.body.appendChild(debug)
-    ExperimentEngine.subscribe((state) => {
-      debug.textContent = `v${__APP_VERSION__} | ${__MODE__} | ${__BUILD_TIME__}\n${JSON.stringify(state, null, 1)}`
-    })
-  }
-}
-
-init()
+Router.start()
