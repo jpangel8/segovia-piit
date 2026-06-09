@@ -1,16 +1,59 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="PIIT - Plataforma Integral de Inteligencia Territorial" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="PIIT - Plataforma Integral de Inteligencia Territorial. Análisis, indicadores y visualización de datos territoriales en tiempo real." />
+    <meta name="theme-color" content="#7c3aed" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#7c3aed" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PIIT" />
+
+    <meta property="og:title" content="PIIT — Plataforma Integral de Inteligencia Territorial" />
+    <meta property="og:description" content="Análisis, indicadores y visualización de datos territoriales en tiempo real." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
-    <title>PIIT — Plataforma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+
+    <title>PIIT — Inteligencia Territorial</title>
+
+    <style>
+      #app-loader {
+        position: fixed;
+        inset: 0;
+        background: #0f0f0f;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        z-index: 99999;
+        transition: opacity 0.4s;
+      }
+      #app-loader.hidden { opacity: 0; pointer-events: none; }
+      #app-loader h1 { color: #fff; font-size: 2rem; font-family: Inter, system-ui, sans-serif; letter-spacing: 0.08em; }
+      #app-loader p { color: #666; font-size: 0.8rem; font-family: Inter, system-ui, sans-serif; }
+      .loader-bar { width: 120px; height: 3px; background: #1a1a2e; border-radius: 3px; overflow: hidden; }
+      .loader-bar::after { content: ""; display: block; width: 40%; height: 100%; background: #7c3aed; border-radius: 3px; animation: load 1s ease-in-out infinite; }
+      @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app-loader">
+      <h1>PIIT</h1>
+      <div class="loader-bar"></div>
+      <p>Plataforma Integral de Inteligencia Territorial</p>
+    </div>
+    <a href="#main-content" class="skip-nav">Saltar al contenido</a>
+    <div id="app" role="application" aria-label="PIIT Plataforma"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

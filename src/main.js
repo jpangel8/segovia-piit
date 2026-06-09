@@ -13,6 +13,13 @@ import "./styles/charts.css"
 import "./styles/experiment-panel.css"
 
 const app = document.querySelector("#app")
+const loader = document.querySelector("#app-loader")
+
+function dismissLoader() {
+  if (!loader) return
+  loader.classList.add("hidden")
+  setTimeout(() => loader.remove(), 400)
+}
 
 const PUBLIC_ROUTES = ["/login", "/register"]
 
@@ -38,27 +45,28 @@ function renderAppShell(activePath) {
     .filter((item) => !item.admin || AuthService.isAdmin())
     .map(
       (item) =>
-        `<a href="#${item.path}" class="nav-link ${activePath === item.path ? "active" : ""}">${item.icon} ${item.label}</a>`
+        `<a href="#${item.path}" class="nav-link ${activePath === item.path ? "active" : ""}" aria-current="${activePath === item.path ? "page" : "false"}">${item.icon} ${item.label}</a>`
     )
     .join("")
 
   app.innerHTML = `
     <div class="app-layout">
-      <nav class="navbar">
+      <nav class="navbar" role="navigation" aria-label="Navegación principal">
         <span class="navbar-brand">PIIT</span>
-        <div class="navbar-nav">${navLinks}</div>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">&#9776;</button>
+        <div class="navbar-nav" id="navbar-nav" role="menubar">${navLinks}</div>
         <div class="navbar-user">
           <div class="user-badge">
-            <div class="user-avatar">${initials}</div>
+            <div class="user-avatar" aria-hidden="true">${initials}</div>
             <div class="user-info">
               <span class="user-name">${user.name}</span>
               <span class="user-role">${user.role}</span>
             </div>
           </div>
-          <button class="btn-logout" id="btn-logout">Salir</button>
+          <button class="btn-logout" id="btn-logout" aria-label="Cerrar sesión">Salir</button>
         </div>
       </nav>
-      <div id="page-content"></div>
+      <main id="page-content" class="page-enter" tabindex="-1"></main>
     </div>`
 
   app.querySelector("#btn-logout").addEventListener("click", () => {
@@ -66,7 +74,23 @@ function renderAppShell(activePath) {
     Router.navigate("/login")
   })
 
-  return app.querySelector("#page-content")
+  const toggle = app.querySelector("#nav-toggle")
+  const nav = app.querySelector("#navbar-nav")
+  toggle.addEventListener("click", () => {
+    const open = nav.classList.toggle("open")
+    toggle.setAttribute("aria-expanded", open)
+    toggle.innerHTML = open ? "&#10005;" : "&#9776;"
+  })
+
+  nav.querySelectorAll(".nav-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("open")
+      toggle.setAttribute("aria-expanded", "false")
+      toggle.innerHTML = "&#9776;"
+    })
+  })
+
+  return app.querySelector("main")
 }
 
 Router.guard((path) => {
@@ -76,29 +100,44 @@ Router.guard((path) => {
   return path
 })
 
-Router.register("/login", () => renderLogin(app))
-Router.register("/register", () => renderRegister(app))
+Router.register("/login", () => {
+  renderLogin(app)
+  dismissLoader()
+})
+
+Router.register("/register", () => {
+  renderRegister(app)
+  dismissLoader()
+})
 
 Router.register("/", () => {
   const layout = renderAppShell("/")
   if (layout) renderDashboard(app, layout)
+  dismissLoader()
 })
 
 Router.register("/territorio", () => {
   const layout = renderAppShell("/territorio")
   if (layout) renderTerritorio(app, layout)
+  dismissLoader()
 })
 
 Router.register("/indicadores", () => {
   const layout = renderAppShell("/indicadores")
   if (layout) renderIndicadores(app, layout)
+  dismissLoader()
 })
 
 Router.register("/configuracion", () => {
   const layout = renderAppShell("/configuracion")
   if (layout) renderConfiguracion(app, layout)
+  dismissLoader()
 })
 
 Router.register("*", () => Router.navigate("/"))
 
 Router.start()
+
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
+  navigator.serviceWorker.register("/sw.js")
+}

@@ -1,19 +1,27 @@
 import { ApiService } from "@/services/api-service.js"
-import { AuthService } from "@/services/auth-service.js"
-import { ExperimentEngine } from "@/config/experiment-engine.js"
 import { createExperimentPanel } from "@/components/experiment-panel.js"
-import { drawLineChart, drawBarChart } from "@/components/charts.js"
-import { Router } from "@/config/router.js"
+import { drawLineChart, drawBarChart, observeChartResize } from "@/components/charts.js"
 
-export async function renderDashboard(container, layout) {
-  layout.innerHTML = `
-    <div class="dashboard-content">
+function skeletonHTML() {
+  return `
+    <div class="dashboard-content page-enter">
       <div class="page-header">
         <h2>Dashboard</h2>
         <p>Resumen de inteligencia territorial</p>
       </div>
-      <div class="loading-spinner">Cargando datos...</div>
+      <div class="stats-grid">
+        ${'<div class="stat-card"><div class="skeleton skeleton-card"></div></div>'.repeat(8)}
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><div class="skeleton skeleton-chart"></div></div>
+        <div class="chart-card"><div class="skeleton skeleton-chart"></div></div>
+        <div class="chart-card wide"><div class="skeleton skeleton-chart"></div></div>
+      </div>
     </div>`
+}
+
+export async function renderDashboard(container, layout) {
+  layout.innerHTML = skeletonHTML()
 
   const [resumen, poblacion, empleo, inversion] = await Promise.all([
     ApiService.getResumenTerritorial(),
@@ -23,7 +31,7 @@ export async function renderDashboard(container, layout) {
   ])
 
   layout.innerHTML = `
-    <div class="dashboard-content">
+    <div class="dashboard-content page-enter">
       <div class="page-header">
         <h2>Dashboard</h2>
         <p>Resumen de inteligencia territorial</p>
@@ -78,9 +86,17 @@ export async function renderDashboard(container, layout) {
       </div>
     </div>`
 
-  drawLineChart(layout.querySelector("#chart-pob"), poblacion, { color: "#7c3aed" })
-  drawLineChart(layout.querySelector("#chart-emp"), empleo, { color: "#10b981" })
-  drawBarChart(layout.querySelector("#chart-inv"), inversion, { color: "#3b82f6" })
+  const cPob = layout.querySelector("#chart-pob")
+  const cEmp = layout.querySelector("#chart-emp")
+  const cInv = layout.querySelector("#chart-inv")
+
+  const draw = () => {
+    drawLineChart(cPob, poblacion, { color: "#7c3aed" })
+    drawLineChart(cEmp, empleo, { color: "#10b981" })
+    drawBarChart(cInv, inversion, { color: "#3b82f6" })
+  }
+  draw()
+  observeChartResize(cPob, draw)
 
   const panel = createExperimentPanel()
   if (panel) container.appendChild(panel)

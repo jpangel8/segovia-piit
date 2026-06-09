@@ -21,9 +21,7 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          motion: ["motion/mini"],
-        },
+        manualChunks: {},
         assetFileNames: "assets/[name]-[hash][extname]",
         chunkFileNames: "chunks/[name]-[hash].js",
         entryFileNames: "js/[name]-[hash].js",

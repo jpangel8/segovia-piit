@@ -1,14 +1,18 @@
 import { ApiService } from "@/services/api-service.js"
-import { drawDonutChart } from "@/components/charts.js"
+import { drawDonutChart, observeChartResize } from "@/components/charts.js"
 
 export async function renderTerritorio(container, layout) {
   layout.innerHTML = `
-    <div class="dashboard-content">
+    <div class="dashboard-content page-enter">
       <div class="page-header">
         <h2>Territorio</h2>
         <p>Zonas y distribución territorial</p>
       </div>
-      <div class="loading-spinner">Cargando datos territoriales...</div>
+      <div class="charts-grid">
+        <div class="chart-card"><div class="skeleton skeleton-chart"></div></div>
+        <div class="chart-card"><div class="skeleton skeleton-chart"></div></div>
+      </div>
+      <div class="skeleton" style="height:200px;width:100%;max-width:var(--max-content);margin-top:0.8rem"></div>
     </div>`
 
   const zonas = await ApiService.getZonas()
@@ -26,7 +30,7 @@ export async function renderTerritorio(container, layout) {
     .join("")
 
   layout.innerHTML = `
-    <div class="dashboard-content">
+    <div class="dashboard-content page-enter">
       <div class="page-header">
         <h2>Territorio</h2>
         <p>Zonas y distribución territorial</p>
@@ -41,7 +45,7 @@ export async function renderTerritorio(container, layout) {
           <canvas class="chart-canvas" id="chart-empleo-zona"></canvas>
         </div>
       </div>
-      <div class="zonas-table" style="margin-top:1rem">
+      <div class="zonas-table" style="margin-top:0.8rem">
         <table>
           <thead>
             <tr>
@@ -57,13 +61,15 @@ export async function renderTerritorio(container, layout) {
       </div>
     </div>`
 
-  drawDonutChart(
-    layout.querySelector("#chart-poblacion-zona"),
-    zonas.map((z) => ({ name: z.name, value: z.poblacion, color: z.color }))
-  )
+  const cPob = layout.querySelector("#chart-poblacion-zona")
+  const cEmp = layout.querySelector("#chart-empleo-zona")
+  const pobData = zonas.map((z) => ({ name: z.name, value: z.poblacion, color: z.color }))
+  const empData = zonas.map((z) => ({ name: z.name, value: z.empleos, color: z.color }))
 
-  drawDonutChart(
-    layout.querySelector("#chart-empleo-zona"),
-    zonas.map((z) => ({ name: z.name, value: z.empleos, color: z.color }))
-  )
+  const draw = () => {
+    drawDonutChart(cPob, pobData)
+    drawDonutChart(cEmp, empData)
+  }
+  draw()
+  observeChartResize(cPob, draw)
 }

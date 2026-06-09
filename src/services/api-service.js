@@ -31,54 +31,77 @@ function generateZones() {
   }))
 }
 
+const cache = new Map()
+const CACHE_TTL = 30_000
+
+function cached(key, fn) {
+  return async function (...args) {
+    const entry = cache.get(key)
+    if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.data
+    const data = await fn(...args)
+    cache.set(key, { data, ts: Date.now() })
+    return data
+  }
+}
+
 function delay(ms) {
   return new Promise((r) => setTimeout(r, ms))
 }
 
+async function fetchResumenTerritorial() {
+  await delay(randomBetween(80, 200))
+  return {
+    poblacionTotal: Math.round(randomBetween(120000, 180000)),
+    superficie: randomBetween(80, 150),
+    densidadPromedio: randomBetween(800, 1500),
+    zonas: 6,
+    empleosTotales: Math.round(randomBetween(45000, 75000)),
+    idh: randomBetween(0.72, 0.88),
+    crecimientoAnual: randomBetween(1.2, 4.5),
+    inversionPublica: randomBetween(15, 45),
+  }
+}
+
+async function fetchZonas() {
+  await delay(randomBetween(80, 180))
+  return generateZones()
+}
+
+async function fetchPoblacionHistorica() {
+  await delay(randomBetween(60, 150))
+  return generateTimeSeries(12, 120000, 180000)
+}
+
+async function fetchEmpleoHistorico() {
+  await delay(randomBetween(60, 150))
+  return generateTimeSeries(12, 45000, 75000)
+}
+
+async function fetchInversionHistorica() {
+  await delay(randomBetween(60, 150))
+  return generateTimeSeries(12, 10, 50)
+}
+
+async function fetchIndicadoresClave() {
+  await delay(randomBetween(80, 150))
+  return [
+    { nombre: "Índice de Desarrollo Humano", valor: randomBetween(0.72, 0.88), unidad: "", tendencia: "up" },
+    { nombre: "Tasa de Empleo", valor: randomBetween(55, 72), unidad: "%", tendencia: "up" },
+    { nombre: "Cobertura de Servicios", valor: randomBetween(78, 96), unidad: "%", tendencia: "stable" },
+    { nombre: "Inversión per cápita", valor: randomBetween(1200, 3500), unidad: "MXN", tendencia: "up" },
+    { nombre: "Densidad Vial", valor: randomBetween(2.5, 6.8), unidad: "km/km²", tendencia: "stable" },
+    { nombre: "Áreas Verdes", valor: randomBetween(4, 12), unidad: "m²/hab", tendencia: "down" },
+  ]
+}
+
 export const ApiService = {
-  async getResumenTerritorial() {
-    await delay(randomBetween(100, 300))
-    return {
-      poblacionTotal: Math.round(randomBetween(120000, 180000)),
-      superficie: randomBetween(80, 150),
-      densidadPromedio: randomBetween(800, 1500),
-      zonas: 6,
-      empleosTotales: Math.round(randomBetween(45000, 75000)),
-      idh: randomBetween(0.72, 0.88),
-      crecimientoAnual: randomBetween(1.2, 4.5),
-      inversionPublica: randomBetween(15, 45),
-    }
-  },
-
-  async getZonas() {
-    await delay(randomBetween(100, 250))
-    return generateZones()
-  },
-
-  async getPoblacionHistorica() {
-    await delay(randomBetween(80, 200))
-    return generateTimeSeries(12, 120000, 180000)
-  },
-
-  async getEmpleoHistorico() {
-    await delay(randomBetween(80, 200))
-    return generateTimeSeries(12, 45000, 75000)
-  },
-
-  async getInversionHistorica() {
-    await delay(randomBetween(80, 200))
-    return generateTimeSeries(12, 10, 50)
-  },
-
-  async getIndicadoresClave() {
-    await delay(randomBetween(100, 200))
-    return [
-      { nombre: "Índice de Desarrollo Humano", valor: randomBetween(0.72, 0.88), unidad: "", tendencia: "up" },
-      { nombre: "Tasa de Empleo", valor: randomBetween(55, 72), unidad: "%", tendencia: "up" },
-      { nombre: "Cobertura de Servicios", valor: randomBetween(78, 96), unidad: "%", tendencia: "stable" },
-      { nombre: "Inversión per cápita", valor: randomBetween(1200, 3500), unidad: "MXN", tendencia: "up" },
-      { nombre: "Densidad Vial", valor: randomBetween(2.5, 6.8), unidad: "km/km²", tendencia: "stable" },
-      { nombre: "Áreas Verdes", valor: randomBetween(4, 12), unidad: "m²/hab", tendencia: "down" },
-    ]
+  getResumenTerritorial: cached("resumen", fetchResumenTerritorial),
+  getZonas: cached("zonas", fetchZonas),
+  getPoblacionHistorica: cached("poblacion", fetchPoblacionHistorica),
+  getEmpleoHistorico: cached("empleo", fetchEmpleoHistorico),
+  getInversionHistorica: cached("inversion", fetchInversionHistorica),
+  getIndicadoresClave: cached("indicadores", fetchIndicadoresClave),
+  clearCache() {
+    cache.clear()
   },
 }

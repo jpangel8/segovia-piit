@@ -1,15 +1,19 @@
 {
   "name": "PIIT - Plataforma Integral de Inteligencia Territorial",
   "short_name": "PIIT",
+  "description": "Análisis, indicadores y visualización de datos territoriales",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f0f0f",
   "theme_color": "#7c3aed",
+  "orientation": "any",
+  "categories": ["government", "utilities"],
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
