@@ -1,11 +1,13 @@
 {
   "name": "piit-prototipo",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:staging": "vite build --mode staging",
+    "build:analyze": "vite build --mode production && npx vite-bundle-visualizer",
     "preview": "vite preview"
   },
   "devDependencies": {
