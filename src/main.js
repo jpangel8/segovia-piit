@@ -11,14 +11,21 @@ import "./styles/auth.css"
 import "./styles/dashboard.css"
 import "./styles/charts.css"
 import "./styles/experiment-panel.css"
+import "./styles/map.css"
 
 const app = document.querySelector("#app")
 const loader = document.querySelector("#app-loader")
+const loaderStart = Date.now()
+const LOADER_MIN_MS = 1800
 
 function dismissLoader() {
   if (!loader) return
-  loader.classList.add("hidden")
-  setTimeout(() => loader.remove(), 400)
+  const elapsed = Date.now() - loaderStart
+  const remaining = Math.max(0, LOADER_MIN_MS - elapsed)
+  setTimeout(() => {
+    loader.classList.add("hidden")
+    setTimeout(() => loader.remove(), 400)
+  }, remaining)
 }
 
 const PUBLIC_ROUTES = ["/login", "/register"]
@@ -52,7 +59,13 @@ function renderAppShell(activePath) {
   app.innerHTML = `
     <div class="app-layout">
       <nav class="navbar" role="navigation" aria-label="Navegación principal">
-        <span class="navbar-brand">PIIT</span>
+        <a class="navbar-brand" href="#/">
+          <div class="navbar-brand-logo">PI</div>
+          <div>
+            <span class="navbar-brand-text">PIIT</span>
+            <span class="navbar-brand-sub">Segovia · Inteligencia Territorial</span>
+          </div>
+        </a>
         <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">&#9776;</button>
         <div class="navbar-nav" id="navbar-nav" role="menubar">${navLinks}</div>
         <div class="navbar-user">
@@ -94,9 +107,11 @@ function renderAppShell(activePath) {
 }
 
 Router.guard((path) => {
-  if (PUBLIC_ROUTES.includes(path) && AuthService.isAuthenticated()) return "/"
-  if (!PUBLIC_ROUTES.includes(path) && !AuthService.isAuthenticated()) return "/login"
-  if (path === "/configuracion" && !AuthService.isAdmin()) return "/"
+  if (AuthService.isAuthenticated()) {
+    window.location.replace("/piit-v5.html")
+    return path
+  }
+  if (!PUBLIC_ROUTES.includes(path)) return "/login"
   return path
 })
 

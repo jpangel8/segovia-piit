@@ -1,31 +1,55 @@
+/* ═══════════════════════════════════════════════════════════════
+   PIIT Segovia · Charts & Cards · Premium Glass Edition
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Charts grid ── */
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 0.8rem;
+  gap: 1rem;
   width: 100%;
   max-width: var(--max-content);
 }
 
 .chart-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
-  padding: 1rem;
-  transition: border-color var(--transition);
+  padding: 1.2rem 1.25rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition:
+    border-color 0.22s ease,
+    transform 0.22s var(--ease-spring),
+    box-shadow 0.22s ease;
   overflow: hidden;
+  position: relative;
+}
+
+.chart-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 0.5px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.12) 50%,
+    transparent 100%);
 }
 
 .chart-card:hover {
-  border-color: var(--color-border-hover);
+  border-color: rgba(86, 176, 122, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(86,176,122,0.1);
 }
 
 .chart-card h4 {
-  font-size: 0.7rem;
-  color: var(--color-text-dim);
+  font-size: 0.65rem;
+  color: rgba(242, 242, 237, 0.4);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   font-weight: 600;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.8rem;
 }
 
 .chart-canvas {
@@ -34,75 +58,84 @@
   display: block;
 }
 
-.chart-card.wide {
-  grid-column: 1 / -1;
-}
+.chart-card.wide { grid-column: 1 / -1; }
 
-/* Indicadores */
+/* ── Indicadores grid ── */
 .indicadores-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.8rem;
+  gap: 0.9rem;
   width: 100%;
   max-width: var(--max-content);
 }
 
 .indicador-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
-  padding: 1.1rem;
+  padding: 1.2rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  transition: border-color var(--transition), transform var(--transition);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition:
+    border-color 0.22s ease,
+    transform 0.22s var(--ease-spring),
+    box-shadow 0.22s ease;
 }
 
 .indicador-card:hover {
-  border-color: var(--color-primary);
-  transform: translateY(-1px);
+  border-color: rgba(86, 176, 122, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.3);
 }
 
 .indicador-nombre {
-  font-size: 0.68rem;
-  color: var(--color-text-dim);
+  font-size: 0.63rem;
+  color: rgba(242, 242, 237, 0.4);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.11em;
   font-weight: 600;
 }
 
 .indicador-valor {
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #fff;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .indicador-unidad {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  color: rgba(242, 242, 237, 0.4);
   font-weight: 400;
 }
 
 .indicador-tendencia {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
 
-.tendencia-up { color: var(--color-success); }
-.tendencia-down { color: var(--color-danger); }
-.tendencia-stable { color: var(--color-warning); }
+.tendencia-up     { color: #34C759; }
+.tendencia-down   { color: #FF453A; }
+.tendencia-stable { color: var(--gold-400); }
 
-/* Zonas table */
+/* ── Zonas table ── */
 .zonas-table {
   width: 100%;
   max-width: var(--max-content);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
   border-radius: var(--radius-lg);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .zonas-table table {
@@ -113,63 +146,51 @@
 
 .zonas-table th {
   text-align: left;
-  padding: 0.65rem 1rem;
-  font-size: 0.65rem;
-  color: var(--color-text-dim);
+  padding: 0.7rem 1rem;
+  font-size: 0.62rem;
+  color: rgba(242, 242, 237, 0.35);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.10em;
   font-weight: 600;
-  background: var(--color-surface-alt);
-  border-bottom: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.025);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
   white-space: nowrap;
 }
 
 .zonas-table td {
-  padding: 0.65rem 1rem;
+  padding: 0.7rem 1rem;
   font-size: 0.8rem;
-  color: #ccc;
-  border-bottom: 1px solid rgba(30, 30, 58, 0.6);
+  color: rgba(242, 242, 237, 0.65);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.04);
   font-variant-numeric: tabular-nums;
 }
 
-.zonas-table tr:last-child td {
-  border-bottom: none;
+.zonas-table tr:last-child td { border-bottom: none; }
+
+.zonas-table tr:hover td {
+  background: rgba(255, 255, 255, 0.025);
+  color: rgba(242, 242, 237, 0.85);
 }
 
 .zona-color {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
   margin-right: 0.5rem;
   vertical-align: middle;
+  flex-shrink: 0;
 }
 
-/* Responsive */
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .chart-canvas {
-    height: 180px;
-  }
-
-  .indicadores-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .indicador-valor {
-    font-size: 1.3rem;
-  }
+  .charts-grid { grid-template-columns: 1fr; }
+  .chart-canvas { height: 180px; }
+  .indicadores-grid { grid-template-columns: repeat(2, 1fr); }
+  .indicador-valor { font-size: 1.4rem; }
 }
 
 @media (max-width: 480px) {
-  .indicadores-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .chart-canvas {
-    height: 160px;
-  }
+  .indicadores-grid { grid-template-columns: 1fr; }
+  .chart-canvas { height: 160px; }
 }

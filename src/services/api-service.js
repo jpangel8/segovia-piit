@@ -13,6 +13,16 @@ function generateTimeSeries(months, min, max) {
   })
 }
 
+// GeoJSON polygons approximating zones around Segovia, Guanajuato (~20.55 N, -100.39 W)
+const ZONE_GEOJSON = {
+  "Centro Histórico": [[-100.395, 20.558], [-100.385, 20.558], [-100.385, 20.548], [-100.395, 20.548], [-100.395, 20.558]],
+  "Zona Industrial":  [[-100.380, 20.558], [-100.365, 20.558], [-100.365, 20.545], [-100.380, 20.545], [-100.380, 20.558]],
+  "Corredor Norte":   [[-100.400, 20.572], [-100.375, 20.572], [-100.375, 20.560], [-100.400, 20.560], [-100.400, 20.572]],
+  "Periferia Sur":    [[-100.398, 20.545], [-100.370, 20.545], [-100.370, 20.532], [-100.398, 20.532], [-100.398, 20.545]],
+  "Zona Residencial": [[-100.415, 20.562], [-100.398, 20.562], [-100.398, 20.545], [-100.415, 20.545], [-100.415, 20.562]],
+  "Distrito Comercial":[[-100.375, 20.572], [-100.360, 20.572], [-100.360, 20.558], [-100.375, 20.558], [-100.375, 20.572]],
+}
+
 function generateZones() {
   const zones = [
     { name: "Centro Histórico", color: "#7c3aed" },
@@ -28,7 +38,31 @@ function generateZones() {
     densidad: randomBetween(50, 300),
     indiceDesarrollo: randomBetween(0.4, 0.95),
     empleos: Math.round(randomBetween(2000, 15000)),
+    coordinates: ZONE_GEOJSON[z.name],
   }))
+}
+
+async function fetchZonasGeoJSON() {
+  await delay(randomBetween(80, 180))
+  const zonas = generateZones()
+  return {
+    type: "FeatureCollection",
+    features: zonas.map((z) => ({
+      type: "Feature",
+      properties: {
+        name: z.name,
+        color: z.color,
+        poblacion: z.poblacion,
+        densidad: z.densidad,
+        indiceDesarrollo: z.indiceDesarrollo,
+        empleos: z.empleos,
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [z.coordinates],
+      },
+    })),
+  }
 }
 
 const cache = new Map()
@@ -97,6 +131,7 @@ async function fetchIndicadoresClave() {
 export const ApiService = {
   getResumenTerritorial: cached("resumen", fetchResumenTerritorial),
   getZonas: cached("zonas", fetchZonas),
+  getZonasGeoJSON: cached("zonasGeoJSON", fetchZonasGeoJSON),
   getPoblacionHistorica: cached("poblacion", fetchPoblacionHistorica),
   getEmpleoHistorico: cached("empleo", fetchEmpleoHistorico),
   getInversionHistorica: cached("inversion", fetchInversionHistorica),
