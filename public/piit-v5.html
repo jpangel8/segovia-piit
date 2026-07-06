@@ -3302,6 +3302,136 @@ body { padding-bottom: 36px !important; }
 
 <!-- ══ S-MAPA ════════════════════════════════════════ -->
 <section class="section" id="s-mapa">
+<style>
+/* ═══ SIG · Rediseño Demoland / macOS ═══════════════════════════════ */
+#s-mapa .sig-shell{position:relative;height:calc(100vh - 150px);min-height:600px;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(10,46,28,.22),0 0 0 .5px rgba(0,0,0,.08);background:#DDE8E2}
+#s-mapa #leaflet-main{position:absolute;inset:0;width:100%;height:100%;min-height:0;background:#DDE8E2}
+
+/* Overlay flotante — patrón Demoland: contenedor sin eventos, hijos sí */
+#s-mapa .sig-float{position:absolute;inset:0;display:flex;flex-flow:row nowrap;align-items:flex-start;padding:16px;gap:16px;pointer-events:none;z-index:600}
+
+/* Paneles vidrio macOS */
+#s-mapa .sig-panel{pointer-events:auto;background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border-radius:16px;box-shadow:0 12px 40px rgba(10,46,28,.18),inset 0 .5px 0 rgba(255,255,255,.7),0 0 0 .5px rgba(0,0,0,.06);padding:14px 16px;max-height:calc(100% - 60px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.18) transparent;animation:sigIn .55s cubic-bezier(.32,.72,.28,1) both}
+#s-mapa .sig-left{width:262px;flex-shrink:0}
+#s-mapa .sig-right{width:296px;flex-shrink:0;margin-left:auto;animation-delay:.08s}
+@keyframes sigIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+#s-mapa .sig-panel::-webkit-scrollbar{width:5px}
+#s-mapa .sig-panel::-webkit-scrollbar-thumb{background:rgba(0,0,0,.16);border-radius:3px}
+
+/* Tipografía panel */
+#s-mapa .sig-title{font-size:13px;font-weight:800;color:#1A3026;letter-spacing:-.01em;display:flex;align-items:center;gap:7px}
+#s-mapa .sig-sub{font-size:10px;color:#8A9E96;margin-top:2px;line-height:1.5}
+#s-mapa .sig-sec-t{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8A9E96;margin:0 0 7px}
+
+/* Collapsibles <details> estilo mac */
+#s-mapa details.sig-col{border-top:1px solid rgba(0,0,0,.06);margin-top:12px;padding-top:10px}
+#s-mapa details.sig-col summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:11.5px;font-weight:700;color:#1A3026;user-select:none;border-radius:8px;padding:3px 4px;transition:background .2s}
+#s-mapa details.sig-col summary:hover{background:rgba(0,0,0,.04)}
+#s-mapa details.sig-col summary::-webkit-details-marker{display:none}
+#s-mapa details.sig-col summary::after{content:'';width:7px;height:7px;border-right:1.5px solid #8A9E96;border-bottom:1.5px solid #8A9E96;transform:rotate(45deg);transition:transform .3s cubic-bezier(.32,.72,.28,1);margin-right:3px}
+#s-mapa details.sig-col[open] summary::after{transform:rotate(225deg) translate(-2px,-2px)}
+#s-mapa details.sig-col .sig-col-body{padding-top:8px;animation:sigFade .35s ease both}
+@keyframes sigFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* Segmented control basemap */
+#s-mapa .bm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:rgba(120,120,128,.14);border-radius:9px;padding:2px}
+#s-mapa .bm-btn{border:none;background:transparent;padding:5.5px 0;font-size:10.5px;font-weight:600;color:#5A7268;border-radius:7px;cursor:pointer;font-family:inherit;transition:all .25s cubic-bezier(.32,.72,.28,1)}
+#s-mapa .bm-btn:hover{color:#1A3026}
+#s-mapa .bm-btn.act{background:#fff;color:#1A3026;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.14),0 0 0 .5px rgba(0,0,0,.04)}
+
+/* Filas de capa con switch iOS */
+#s-mapa .wms-row{display:flex;align-items:center;gap:9px;padding:6px;margin:0 -6px;border-radius:9px;cursor:pointer;transition:background .2s}
+#s-mapa .wms-row:hover{background:rgba(0,0,0,.045)}
+#s-mapa .wms-row:active{transform:scale(.985)}
+#s-mapa .wms-color{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+#s-mapa .wms-info{flex:1;min-width:0}
+#s-mapa .wms-name{font-size:11.5px;font-weight:600;color:#1A3026;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#s-mapa .wms-src{font-size:9px;color:#8A9E96;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#s-mapa .wms-toggle{width:34px;height:20px;border-radius:10px;background:rgba(120,120,128,.28);position:relative;flex-shrink:0;transition:background .25s}
+#s-mapa .wms-toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;box-shadow:0 1.5px 4px rgba(0,0,0,.3);transition:transform .28s cubic-bezier(.32,.72,.28,1)}
+#s-mapa .wms-toggle.on{background:#34C759}
+#s-mapa .wms-toggle.on::after{transform:translateX(14px)}
+
+/* Slider opacidad */
+#s-mapa .opa-label{display:flex;justify-content:space-between;font-size:10.5px;color:#5A7268;font-weight:600;margin-bottom:5px}
+#s-mapa .opa-slider{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:linear-gradient(90deg,#2E7D52 0%,#2E7D52 70%,rgba(120,120,128,.25) 70%);outline:none}
+#s-mapa .opa-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 5px rgba(0,0,0,.3),0 0 0 .5px rgba(0,0,0,.06);cursor:grab;transition:transform .18s}
+#s-mapa .opa-slider::-webkit-slider-thumb:hover{transform:scale(1.12)}
+
+/* Selector de indicador — radio rows */
+#s-mapa .ind-btn{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:none;background:transparent;padding:7px 9px;border-radius:9px;font-size:12px;font-weight:600;color:#5A7268;cursor:pointer;font-family:inherit;transition:all .22s cubic-bezier(.32,.72,.28,1)}
+#s-mapa .ind-btn::before{content:'';width:8px;height:8px;border-radius:50%;background:rgba(120,120,128,.35);flex-shrink:0;transition:all .25s}
+#s-mapa .ind-btn:hover{background:rgba(0,0,0,.045);color:#1A3026}
+#s-mapa .ind-btn:active{transform:scale(.98)}
+#s-mapa .ind-btn.act{background:rgba(46,125,82,.12);color:#1A5C3A;font-weight:700}
+#s-mapa .ind-btn.act::before{background:#2E7D52;box-shadow:0 0 0 3px rgba(46,125,82,.2)}
+
+/* Histograma */
+#s-mapa .sig-hist-wrap{height:118px;margin-top:4px;position:relative}
+#s-mapa .sig-hist-cap{font-size:9.5px;color:#8A9E96;margin-top:6px;text-align:center}
+#s-mapa .sig-legend{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
+#s-mapa .ml-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#5A7268;font-weight:600}
+#s-mapa .ml-dot{width:8px;height:8px;border-radius:3px}
+
+/* Ficha territorial */
+#s-mapa .mip-placeholder{text-align:center;padding:18px 8px;color:#8A9E96}
+#s-mapa .mip-placeholder i{font-size:20px;opacity:.4;margin-bottom:8px;display:block}
+#s-mapa .mip-placeholder p{font-size:10.5px;line-height:1.6;max-width:200px;margin:0 auto}
+#s-mapa .mip-body{display:none}
+#s-mapa .barrio-search{width:100%;border:none;background:rgba(120,120,128,.12);border-radius:9px;padding:7px 11px;font-size:11.5px;font-family:inherit;color:#1A3026;outline:none;transition:background .2s,box-shadow .2s;margin-bottom:6px}
+#s-mapa .barrio-search:focus{background:#fff;box-shadow:0 0 0 3px rgba(46,125,82,.18)}
+#s-mapa .barrio-search::placeholder{color:#8A9E96}
+#s-mapa #barrio-list-items{max-height:180px;overflow-y:auto;scrollbar-width:thin}
+#s-mapa #barrio-list-items>div{border-radius:8px;transition:background .18s}
+#s-mapa #barrio-list-items>div:hover{background:rgba(0,0,0,.05)}
+
+/* Botón re-centrar (firma Demoland) */
+#s-mapa .sig-center{margin:0 auto;pointer-events:none}
+#s-mapa #sig-recentre{pointer-events:auto;border:none;font-family:inherit;font-size:12px;font-weight:600;color:#1A3026;text-decoration:underline;background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:11px;padding:7px 14px;box-shadow:0 6px 20px rgba(10,46,28,.18),0 0 0 .5px rgba(0,0,0,.06);cursor:pointer;opacity:0;transform:translateY(-8px);transition:all .35s cubic-bezier(.32,.72,.28,1);visibility:hidden}
+#s-mapa #sig-recentre.show{opacity:1;transform:none;visibility:visible}
+#s-mapa #sig-recentre:hover{transform:scale(1.04)}
+#s-mapa #sig-recentre:active{transform:scale(.97)}
+
+/* Barra de estado inferior flotante */
+#s-mapa .sig-status{position:absolute;left:16px;bottom:14px;z-index:600;display:flex;gap:8px;align-items:center;pointer-events:none}
+#s-mapa .sig-chip{pointer-events:auto;background:rgba(255,255,255,.8);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-radius:9px;padding:4px 10px;font-size:9.5px;font-weight:600;color:#5A7268;box-shadow:0 4px 14px rgba(10,46,28,.14),0 0 0 .5px rgba(0,0,0,.05);display:flex;align-items:center;gap:5px;white-space:nowrap}
+#s-mapa .sig-chip i{font-size:8.5px;opacity:.55}
+
+/* Transición suave coropleta — cambio de indicador animado */
+#s-mapa path.leaflet-interactive{transition:fill .5s cubic-bezier(.4,0,.2,1),fill-opacity .35s ease,stroke .22s ease,stroke-width .22s ease}
+
+/* Controles Leaflet re-estilizados mac */
+#s-mapa .leaflet-control-zoom{border:none!important;border-radius:11px!important;overflow:hidden;box-shadow:0 6px 20px rgba(10,46,28,.18),0 0 0 .5px rgba(0,0,0,.06)!important;margin-left:294px!important;margin-top:18px!important}
+#s-mapa .leaflet-control-zoom a{background:rgba(255,255,255,.85)!important;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#1A3026!important;border:none!important;width:30px!important;height:30px!important;line-height:30px!important;font-size:15px!important;font-weight:400!important;transition:background .2s}
+#s-mapa .leaflet-control-zoom a:hover{background:#fff!important}
+#s-mapa .leaflet-control-attribution{background:rgba(255,255,255,.6)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-size:8.5px!important;border-radius:8px 0 0 0}
+
+/* Export buttons cabecera */
+#s-mapa .export-btn{transition:all .22s cubic-bezier(.32,.72,.28,1)}
+#s-mapa .export-btn:active{transform:scale(.96)}
+
+/* Ficha territorial — tarjeta oscura estilo widget macOS dentro del panel claro */
+#s-mapa #mip-body{background:linear-gradient(165deg,#123B26 0%,#0A2E1C 100%);border-radius:13px;padding:13px 14px;box-shadow:inset 0 .5px 0 rgba(255,255,255,.1),0 8px 22px rgba(10,46,28,.28);animation:sigFade .4s ease both}
+#s-mapa #mip-body .mip-kpi{margin-bottom:0}
+
+/* Lista de barrios — tema claro */
+#s-mapa .barrio-item{padding:5.5px 8px;border-radius:8px}
+#s-mapa .barrio-item:hover{background:rgba(0,0,0,.05)}
+#s-mapa .barrio-item.hi{background:rgba(222,176,48,.18);border-left:2px solid #C69A1A}
+#s-mapa .bi-id{color:#8A9E96}
+#s-mapa .bi-name{color:#1A3026;font-weight:600}
+
+/* Responsive */
+@media(max-width:960px){
+  #s-mapa .sig-shell{height:auto;min-height:0}
+  #s-mapa #leaflet-main{position:relative;height:380px}
+  #s-mapa .sig-float{position:static;flex-direction:column;padding:12px;gap:12px}
+  #s-mapa .sig-panel{width:100%!important;max-height:none;background:rgba(255,255,255,.95)}
+  #s-mapa .sig-status{display:none}
+  #s-mapa .leaflet-control-zoom{margin-left:12px!important;margin-top:12px!important}
+}
+</style>
+
   <div class="sec-head" style="display:flex;align-items:flex-start;justify-content:space-between">
     <div>
       <h2 class="sec-title">Observatorio territorial · SIG Municipal</h2>
@@ -3313,213 +3443,171 @@ body { padding-bottom: 36px !important; }
     </div>
   </div>
 
-  <div class="map-shell">
-    <!-- ── Panel Izquierdo: Capas ── -->
-    <div class="map-layers-panel">
-      <div class="mlp-head">
-        <div class="mlp-title"><i class="fa-solid fa-layer-group" style="margin-right:5px;opacity:.6"></i>Gestión de capas</div>
-        <div class="mlp-sub">WMS · GeoJSON · Bases cartográficas</div>
-      </div>
-      <div class="mlp-body">
+  <div class="sig-shell">
+    <div id="leaflet-main"></div>
 
-        <!-- Mapas base -->
-        <div class="mlp-section">
-          <div class="mlp-sec-t">Mapa base</div>
-          <div class="bm-grid">
-            <button class="bm-btn act" onclick="PIIT.map.setBasemap('osm',this)">OSM</button>
-            <button class="bm-btn" onclick="PIIT.map.setBasemap('satellite',this)">Satélite</button>
-            <button class="bm-btn" onclick="PIIT.map.setBasemap('dark',this)">Oscuro</button>
-            <button class="bm-btn" onclick="PIIT.map.setBasemap('topo',this)">Topográfico</button>
-          </div>
-        </div>
+    <div class="sig-float">
 
-        <!-- Capas GeoJSON locales — datos reales del GDB oficial -->
-        <div class="mlp-section">
-          <div class="mlp-sec-t" style="color:var(--g300)">Capas locales · GDB oficial</div>
+      <!-- ── Panel izquierdo · Capas ─────────────────────── -->
+      <aside class="sig-panel sig-left">
+        <div class="sig-title"><i class="fa-solid fa-layer-group" style="font-size:11px;color:#2E7D52"></i>Capas</div>
+        <div class="sig-sub">WMS · GeoJSON · GDB oficial IGAC</div>
 
-          <!-- Barrios GDB — capa oficial IGAC -->
-          <div class="wms-row" onclick="PIIT.map.toggleLayer('barrios')">
-            <div class="wms-color" style="background:#5BAF84"></div>
-            <div class="wms-info">
-              <div class="wms-name">Barrios · casco urbano</div>
-              <div class="wms-src">GDB oficial · 21 barrios · IGAC</div>
+        <details class="sig-col" open>
+          <summary>Mapa base</summary>
+          <div class="sig-col-body">
+            <div class="bm-grid">
+              <button class="bm-btn act" onclick="PIIT.map.setBasemap('osm',this)">OSM</button>
+              <button class="bm-btn" onclick="PIIT.map.setBasemap('satellite',this)">Satélite</button>
+              <button class="bm-btn" onclick="PIIT.map.setBasemap('dark',this)">Oscuro</button>
+              <button class="bm-btn" onclick="PIIT.map.setBasemap('topo',this)">Topo</button>
             </div>
-            <div class="wms-toggle on" id="tog-barrios"></div>
           </div>
+        </details>
 
-          <!-- Div_Politica GDB — límites político-administrativos -->
-          <div class="wms-row" onclick="PIIT.map.toggleLayer('div_politica')">
-            <div class="wms-color" style="background:#DEB030;border-radius:2px"></div>
-            <div class="wms-info">
-              <div class="wms-name">Div. Política · límites adm.</div>
-              <div class="wms-src">GDB oficial · 5 líneas · IGAC</div>
+        <details class="sig-col" open>
+          <summary>Capas locales · GDB</summary>
+          <div class="sig-col-body">
+            <div class="wms-row" onclick="PIIT.map.toggleLayer('barrios')">
+              <div class="wms-color" style="background:#5BAF84"></div>
+              <div class="wms-info"><div class="wms-name">Barrios · casco urbano</div><div class="wms-src">GDB oficial · 21 barrios · IGAC</div></div>
+              <div class="wms-toggle on" id="tog-barrios"></div>
             </div>
-            <div class="wms-toggle on" id="tog-div_politica"></div>
-          </div>
-
-          <!-- Indicador coropleta -->
-          <div class="wms-row" onclick="PIIT.map.toggleLayer('indicador')">
-            <div class="wms-color" style="background:#534AB7"></div>
-            <div class="wms-info">
-              <div class="wms-name">Indicador activo</div>
-              <div class="wms-src">Coropletas · clasificación semáforo</div>
+            <div class="wms-row" onclick="PIIT.map.toggleLayer('div_politica')">
+              <div class="wms-color" style="background:#DEB030"></div>
+              <div class="wms-info"><div class="wms-name">Div. Política · límites</div><div class="wms-src">GDB oficial · 5 líneas · IGAC</div></div>
+              <div class="wms-toggle on" id="tog-div_politica"></div>
             </div>
-            <div class="wms-toggle on" id="tog-indicador"></div>
-          </div>
-
-          <!-- Etiquetas -->
-          <div class="wms-row" onclick="PIIT.map.toggleLayer('labels')">
-            <div class="wms-color" style="background:#8ECBA8"></div>
-            <div class="wms-info">
-              <div class="wms-name">Etiquetas barrios</div>
-              <div class="wms-src">Topónimos · código · nombre oficial</div>
+            <div class="wms-row" onclick="PIIT.map.toggleLayer('indicador')">
+              <div class="wms-color" style="background:#534AB7"></div>
+              <div class="wms-info"><div class="wms-name">Indicador activo</div><div class="wms-src">Coropletas · semáforo</div></div>
+              <div class="wms-toggle on" id="tog-indicador"></div>
             </div>
-            <div class="wms-toggle on" id="tog-labels"></div>
+            <div class="wms-row" onclick="PIIT.map.toggleLayer('labels')">
+              <div class="wms-color" style="background:#8ECBA8"></div>
+              <div class="wms-info"><div class="wms-name">Etiquetas barrios</div><div class="wms-src">Topónimos · código oficial</div></div>
+              <div class="wms-toggle on" id="tog-labels"></div>
+            </div>
           </div>
-        </div>
+        </details>
 
-        <!-- ★ Servicio Colombia en Mapas 12524 — Destacado -->
-        <div class="mlp-section">
-          <div class="mlp-sec-t" style="color:var(--au400)">★ Colombia en Mapas · Servicio 12524</div>
-          <!-- Badge CeM -->
-          <div style="background:rgba(222,176,48,.1);border:1px solid rgba(222,176,48,.25);border-radius:8px;padding:8px 10px;margin-bottom:6px">
-            <div style="font-size:10px;font-weight:700;color:var(--au400);margin-bottom:3px">🗺️ CartoBásica 1:100.000 · IGAC</div>
-            <div style="font-size:9px;color:rgba(255,255,255,.4);line-height:1.5;margin-bottom:6px">carto100000colombia2019 · ArcGIS MapServer · Cobertura nacional incluyendo Segovia, Antioquia</div>
-            <div class="wms-row" style="padding:5px 0;margin:0" onclick="PIIT.map.toggleWMS('cem_12524')">
-              <div class="wms-color" style="background:var(--au500);border-radius:50%"></div>
-              <div class="wms-info"><div class="wms-name" style="color:var(--au300)">Activar capa CeM 12524</div><div class="wms-src">mapas.igac.gov.co · WMS 1.1.1</div></div>
+        <details class="sig-col">
+          <summary>Colombia en Mapas · IGAC</summary>
+          <div class="sig-col-body">
+            <div class="wms-row" onclick="PIIT.map.toggleWMS('cem_12524')">
+              <div class="wms-color" style="background:#DEB030;border-radius:50%"></div>
+              <div class="wms-info"><div class="wms-name">CartoBásica 1:100k · CeM 12524</div><div class="wms-src">mapas.igac.gov.co · WMS 1.1.1</div></div>
               <div class="wms-toggle" id="tog-cem_12524"></div>
             </div>
+            <div class="wms-row" onclick="PIIT.map.toggleWMS('igac_segovia_25k')">
+              <div class="wms-color" style="background:#5BAF84"></div>
+              <div class="wms-info"><div class="wms-name">CartoBásica Segovia 1:25k</div><div class="wms-src">IGAC · DIVIPOLA 05736</div></div>
+              <div class="wms-toggle" id="tog-igac_segovia_25k"></div>
+            </div>
           </div>
-          <!-- Segovia 25k -->
-          <div class="wms-row" onclick="PIIT.map.toggleWMS('igac_segovia_25k')">
-            <div class="wms-color" style="background:#5BAF84"></div>
-            <div class="wms-info"><div class="wms-name">CartoBásica Segovia 1:25k</div><div class="wms-src">IGAC · DIVIPOLA 05736 · ArcGIS</div></div>
-            <div class="wms-toggle" id="tog-igac_segovia_25k"></div>
-          </div>
-        </div>
+        </details>
 
-        <!-- Capas WMS Oficiales -->
-        <div class="mlp-section">
-          <div class="mlp-sec-t">Capas WMS · Entidades nacionales</div>
-          <div class="wms-row" onclick="PIIT.map.toggleWMS('igac_catastro')">
-            <div class="wms-color" style="background:#C69A1A"></div>
-            <div class="wms-info"><div class="wms-name">Catastro · Direcciones Territoriales</div><div class="wms-src">IGAC · mapas.igac.gov.co</div></div>
-            <div class="wms-toggle" id="tog-igac_catastro"></div>
+        <details class="sig-col">
+          <summary>WMS · Entidades nacionales</summary>
+          <div class="sig-col-body">
+            <div class="wms-row" onclick="PIIT.map.toggleWMS('igac_catastro')">
+              <div class="wms-color" style="background:#C69A1A"></div>
+              <div class="wms-info"><div class="wms-name">Catastro Territorial</div><div class="wms-src">IGAC · mapas.igac.gov.co</div></div>
+              <div class="wms-toggle" id="tog-igac_catastro"></div>
+            </div>
+            <div class="wms-row" onclick="PIIT.map.toggleWMS('dane_mgn')">
+              <div class="wms-color" style="background:#534AB7"></div>
+              <div class="wms-info"><div class="wms-name">Marco Geoestadístico</div><div class="wms-src">DANE · MGN 2018</div></div>
+              <div class="wms-toggle" id="tog-dane_mgn"></div>
+            </div>
+            <div class="wms-row" onclick="PIIT.map.toggleWMS('invias_vial')">
+              <div class="wms-color" style="background:#C84040"></div>
+              <div class="wms-info"><div class="wms-name">Red Vial Nacional</div><div class="wms-src">INVIAS · hermes.invias.gov.co</div></div>
+              <div class="wms-toggle" id="tog-invias_vial"></div>
+            </div>
+            <div class="wms-row" onclick="PIIT.map.toggleWMS('pnn_areas')">
+              <div class="wms-color" style="background:#1A8080"></div>
+              <div class="wms-info"><div class="wms-name">Áreas protegidas SPNN</div><div class="wms-src">parquesnacionales.gov.co</div></div>
+              <div class="wms-toggle" id="tog-pnn_areas"></div>
+            </div>
+            <div id="wms-status-list" style="font-size:9.5px;color:#8A9E96;padding:6px 4px 0;line-height:1.7">
+              <div>Activa una capa para ver el estado del servicio</div>
+            </div>
           </div>
-          <div class="wms-row" onclick="PIIT.map.toggleWMS('dane_mgn')">
-            <div class="wms-color" style="background:#534AB7"></div>
-            <div class="wms-info"><div class="wms-name">Marco Geoestadístico DANE</div><div class="wms-src">DANE · MGN 2018 · geoportal.dane.gov.co</div></div>
-            <div class="wms-toggle" id="tog-dane_mgn"></div>
-          </div>
-          <div class="wms-row" onclick="PIIT.map.toggleWMS('invias_vial')">
-            <div class="wms-color" style="background:#C84040"></div>
-            <div class="wms-info"><div class="wms-name">Red Vial Nacional</div><div class="wms-src">INVIAS · hermes.invias.gov.co</div></div>
-            <div class="wms-toggle" id="tog-invias_vial"></div>
-          </div>
-          <div class="wms-row" onclick="PIIT.map.toggleWMS('pnn_areas')">
-            <div class="wms-color" style="background:#1A8080"></div>
-            <div class="wms-info"><div class="wms-name">Áreas protegidas SPNN</div><div class="wms-src">PNN · parquesnacionales.gov.co</div></div>
-            <div class="wms-toggle" id="tog-pnn_areas"></div>
-          </div>
-        </div>
+        </details>
 
-        <!-- Estado WMS -->
-        <div class="mlp-section">
-          <div class="mlp-sec-t">Estado de servicios WMS</div>
-          <div id="wms-status-list" style="font-size:10px;color:rgba(255,255,255,.35);padding:0 4px;line-height:1.8">
-            <div>Activar una capa para ver estado del servicio</div>
-          </div>
-        </div>
-
-        <!-- Opacidad general -->
-        <div class="mlp-section">
-          <div class="mlp-sec-t">Opacidad capas</div>
-          <div class="opa-row">
+        <details class="sig-col" open>
+          <summary>Opacidad</summary>
+          <div class="sig-col-body">
             <div class="opa-label"><span>Barrios GeoJSON</span><span id="opa-val">70%</span></div>
             <input class="opa-slider" type="range" min="10" max="100" value="70" oninput="PIIT.map.setOpacity(this.value)">
           </div>
+        </details>
+      </aside>
+
+      <!-- ── Botón re-centrar (Demoland) ─────────────────── -->
+      <div class="sig-center">
+        <button id="sig-recentre" onclick="PIIT.map.centerMap()">Re-centrar mapa</button>
+      </div>
+
+      <!-- ── Panel derecho · Valores del mapa ────────────── -->
+      <aside class="sig-panel sig-right">
+        <div class="sig-title"><i class="fa-solid fa-chart-simple" style="font-size:11px;color:#2E7D52"></i>Valores del mapa</div>
+        <div class="sig-sub">Indicador · <span id="map-indicator-name" style="font-weight:700;color:#1A5C3A">Infraestructura vial</span></div>
+
+        <div style="display:flex;flex-direction:column;gap:1px;margin-top:10px">
+          <button class="ind-btn act" id="ind-infra" onclick="PIIT.map.setIndicator('infra',this)">Infraestructura vial</button>
+          <button class="ind-btn" id="ind-social" onclick="PIIT.map.setIndicator('social',this)">Cobertura social</button>
+          <button class="ind-btn" id="ind-pop" onclick="PIIT.map.setIndicator('pop',this)">Densidad poblacional</button>
+          <button class="ind-btn" id="ind-srv" onclick="PIIT.map.setIndicator('srv',this)">Servicios básicos</button>
         </div>
 
-        <!-- Indicador selector -->
-        <div class="mlp-section">
-          <div class="mlp-sec-t">Indicador territorial</div>
-          <div style="display:flex;flex-direction:column;gap:0">
-            <button class="ind-btn act" id="ind-infra" onclick="PIIT.map.setIndicator('infra',this)">Infraestructura vial</button>
-            <button class="ind-btn" id="ind-social" onclick="PIIT.map.setIndicator('social',this)">Cobertura social</button>
-            <button class="ind-btn" id="ind-pop" onclick="PIIT.map.setIndicator('pop',this)">Densidad poblacional</button>
-            <button class="ind-btn" id="ind-srv" onclick="PIIT.map.setIndicator('srv',this)">Servicios básicos</button>
+        <details class="sig-col" open>
+          <summary>Distribución · 21 barrios</summary>
+          <div class="sig-col-body">
+            <div class="sig-hist-wrap"><canvas id="sig-hist"></canvas></div>
+            <div class="sig-hist-cap" id="sig-hist-cap">Histograma del indicador activo</div>
+            <div class="sig-legend" id="legend-dynamic">
+              <div class="ml-item"><div class="ml-dot" style="background:#2E7D52"></div>Bueno ≥70</div>
+              <div class="ml-item"><div class="ml-dot" style="background:#C69A1A"></div>Atención 40–69</div>
+              <div class="ml-item"><div class="ml-dot" style="background:#C84040"></div>Crítico &lt;40</div>
+              <span id="legend-indicator-label" style="display:none">INFRAESTRUCTURA VIAL</span>
+            </div>
           </div>
-        </div>
+        </details>
 
-      </div><!-- end mlp-body -->
+        <details class="sig-col" open>
+          <summary>Ficha territorial</summary>
+          <div class="sig-col-body">
+            <div class="mip-placeholder" id="mip-placeholder">
+              <i class="fa-solid fa-hand-pointer"></i>
+              <p>Haz clic en un barrio del mapa para ver su ficha territorial</p>
+            </div>
+            <div class="mip-body" id="mip-body"></div>
+          </div>
+        </details>
+
+        <details class="sig-col">
+          <summary>Buscar barrio</summary>
+          <div class="sig-col-body">
+            <input class="barrio-search" type="text" id="barrio-search" placeholder="Buscar barrio…" oninput="PIIT.map.filterBarrios(this.value)">
+            <div id="barrio-list-items"></div>
+          </div>
+        </details>
+      </aside>
     </div>
 
-    <!-- ── Panel Central: Mapa ── -->
-    <div class="map-center">
-      <div class="map-topbar">
-        <span class="map-indicator-label">indicador:</span>
-        <span id="map-indicator-name" style="font-size:11px;font-weight:700;color:var(--au400)">Infraestructura vial</span>
-        <div style="flex:1"></div>
-        <span class="msb-item" id="map-zoom-display"><i class="fa-solid fa-magnifying-glass"></i>z13</span>
-      </div>
-      <div id="leaflet-main"></div>
-      <div class="map-legend-strip" id="legend-dynamic">
-        <!-- Leyenda dinámica: se actualiza con el indicador activo -->
-        <div class="ml-item"><div class="ml-dot" style="background:#2E7D52"></div>Bueno ≥70%</div>
-        <div class="ml-item"><div class="ml-dot" style="background:#C69A1A"></div>Atención 40–69%</div>
-        <div class="ml-item"><div class="ml-dot" style="background:#C84040"></div>Crítico &lt;40%</div>
-        <div class="ml-item" style="margin-left:8px;padding-left:8px;border-left:1px solid rgba(255,255,255,.1)">
-          <div class="ml-dot" style="background:#DEB030;border-radius:0;height:2px;width:14px;margin-top:4px"></div>
-          Div. Política (GDB)
-        </div>
-        <div style="flex:1"></div>
-        <span id="legend-indicator-label" style="font-size:9px;font-weight:700;color:rgba(222,176,48,.7);margin-right:8px">INFRAESTRUCTURA VIAL</span>
-        <span style="font-size:9px;color:rgba(255,255,255,.2)">© IGAC GDB · DANE · OSM</span>
-      </div>
-      <div class="map-statusbar" style="justify-content:space-between">
-        <div style="display:flex;gap:14px;align-items:center">
-          <div class="msb-item"><i class="fa-solid fa-location-dot"></i><span id="map-coords">7.0828°N, 74.7077°O</span></div>
-          <div class="msb-item"><i class="fa-solid fa-layer-group"></i><span id="map-active-layers">4 capas activas</span></div>
-          <div class="msb-item"><i class="fa-solid fa-database" style="color:var(--au400)"></i><span style="color:rgba(222,176,48,.6)">GDB oficial</span></div>
-        </div>
-        <!-- Mini-mapa de localización -->
-        <div id="minimap" title="Segovia en Antioquia · Colombia"
-             style="width:72px;height:52px;border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.12);flex-shrink:0;cursor:pointer"
-             onclick="PIIT.map.centerMap()">
-          <svg viewBox="0 0 72 52" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;background:#0A2E1C">
-            <!-- Contorno simplificado Antioquia -->
-            <path d="M10,8 L22,5 L38,4 L52,7 L62,14 L66,22 L64,32 L58,40 L48,46 L36,48 L24,47 L14,42 L8,34 L6,24 Z" fill="#1A5C3A" stroke="rgba(255,255,255,.15)" stroke-width=".8"/>
-            <!-- Nordeste -->
-            <path d="M46,10 L58,12 L64,20 L62,28 L54,30 L44,26 L42,16 Z" fill="#206B45" stroke="rgba(255,255,255,.2)" stroke-width=".6"/>
-            <!-- Punto Segovia -->
-            <circle cx="53" cy="19" r="3.5" fill="#DEB030" opacity=".95"/>
-            <circle cx="53" cy="19" r="1.5" fill="white"/>
-            <!-- Label -->
-            <text x="53" y="30" text-anchor="middle" font-size="5.5" fill="rgba(255,255,255,.7)" font-family="sans-serif">Segovia</text>
-            <text x="36" y="50" text-anchor="middle" font-size="4.5" fill="rgba(255,255,255,.3)" font-family="sans-serif">ANTIOQUIA</text>
-          </svg>
-        </div>
-      </div>
+    <!-- ── Chips de estado ─────────────────────────────── -->
+    <div class="sig-status">
+      <div class="sig-chip"><i class="fa-solid fa-location-dot"></i><span id="map-coords">7.0828°N, 74.7077°O</span></div>
+      <div class="sig-chip"><i class="fa-solid fa-magnifying-glass"></i><span id="map-zoom-display">z14</span></div>
+      <div class="sig-chip"><i class="fa-solid fa-layer-group"></i><span id="map-active-layers">4 capas activas</span></div>
+      <div class="sig-chip"><i class="fa-solid fa-database" style="color:#C69A1A"></i>GDB oficial</div>
     </div>
 
-    <!-- ── Panel Derecho: Info ── -->
-    <div class="map-info-panel">
-      <div class="mip-head">
-        <div class="mip-title"><i class="fa-solid fa-chart-bar" style="margin-right:5px;opacity:.6"></i>Ficha territorial</div>
-      </div>
-      <!-- Búsqueda barrio -->
-      <div class="barrio-list">
-        <input class="barrio-search" type="text" id="barrio-search" placeholder="Buscar barrio…" oninput="PIIT.map.filterBarrios(this.value)">
-        <div id="barrio-list-items"></div>
-      </div>
-      <div class="mip-placeholder" id="mip-placeholder">
-        <i class="fa-solid fa-hand-pointer"></i>
-        <p>Haz clic en un barrio del mapa para ver su ficha territorial completa</p>
-      </div>
-      <div class="mip-body" id="mip-body"></div>
-    </div>
-  </div><!-- end map-shell -->
+    <!-- Placeholder del Visor 3D — initMinimap() lo reemplaza por #mm-outer (position:fixed) -->
+    <div id="minimap" style="display:none"></div>
+  </div>
 </section>
 
 <!-- ══ S-SISBEN ══════════════════════════════════════ -->
@@ -5853,10 +5941,13 @@ window.PIIT = (function () {
           var l = e.target;
           l.setStyle({ weight: 2.5, color: '#DEB030', fillOpacity: Math.min(STATE.map.opacity + 0.15, 0.95) });
           l.bringToFront();
+          // Enlace mapa → histograma: resaltar el bin del barrio
+          map.renderHist(pk);
         },
         mouseout: function (e) {
           if (STATE.map.selectedBarrio === pk) return;
           if (STATE.map.geojsonLayer) STATE.map.geojsonLayer.resetStyle(e.target);
+          map.renderHist(null);
         },
         click: function (e) {
           // Usar helper getIndByFeature para lookup correcto PK→id→INDICADORES
@@ -5959,6 +6050,19 @@ window.PIIT = (function () {
 
       // Build barrio list in right panel
       map.buildBarrioList();
+
+      // Histograma de distribución (panel derecho)
+      map.renderHist();
+
+      // Botón re-centrar estilo Demoland: aparece al alejarse del centro
+      m.on('moveend zoomend', function () {
+        var c   = m.getCenter();
+        var off = m.getZoom() !== 14
+          || Math.abs(c.lat - 7.0820) > 0.012
+          || Math.abs(c.lng + 74.7083) > 0.012;
+        var b = document.getElementById('sig-recentre');
+        if (b) b.classList.toggle('show', off);
+      });
     },
 
     renderLabels: function () {
@@ -6055,6 +6159,8 @@ window.PIIT = (function () {
       if (btn) btn.classList.add('act');
       // Update barrio list dots
       map.buildBarrioList();
+      // Actualizar histograma con animación
+      map.renderHist();
       // Actualizar panel info si hay barrio seleccionado
       if (STATE.map.selectedBarrio) {
         // Buscar por PK_BARRIO (GDB) o id (legacy)
@@ -6317,7 +6423,83 @@ window.PIIT = (function () {
     },
 
     centerMap: function () {
-      if (STATE.map.instance) STATE.map.instance.setView([7.0820, -74.7083], 14);
+      if (STATE.map.instance) STATE.map.instance.flyTo([7.0820, -74.7083], 14, { duration: 0.85, easeLinearity: 0.22 });
+    },
+
+    /* ── Histograma de distribución — estilo Demoland ─────────── */
+    _hist: null,
+    _histBins: 10,
+    renderHist: function (focusPk) {
+      var cv = document.getElementById('sig-hist');
+      if (!cv || !window.Chart) return;
+      var key  = STATE.map.currentIndicator;
+      var NB   = map._histBins;
+      var vals = Object.values(DATA.INDICADORES);
+      var bins = new Array(NB).fill(0);
+      var binOf = {};
+      vals.forEach(function (d) {
+        var v = Math.max(0, Math.min(99.9, +d[key] || 0));
+        var b = Math.floor(v / (100 / NB));
+        bins[b]++;
+        binOf[d.pk || d.id] = b;
+      });
+      var mean  = vals.reduce(function (s, d) { return s + (+d[key] || 0); }, 0) / vals.length;
+      var colFn = (key === 'pop') ? map.COLOR_POP : map.COLOR_SCALE;
+      var focusBin = (focusPk != null && binOf[focusPk] != null) ? binOf[focusPk] : null;
+      var bg = bins.map(function (_, i) {
+        var mid = (i + 0.5) * (100 / NB);
+        var c = colFn(mid).fill;
+        return (focusBin == null || i === focusBin) ? c : c + '2E';
+      });
+      var cap = document.getElementById('sig-hist-cap');
+      if (cap) cap.textContent = vals.length + ' barrios · media ' + mean.toFixed(0) + '% · bins de ' + (100 / NB) + '%';
+
+      var keyChanged = map._histKey !== key;
+      map._histKey = key;
+      if (map._hist) {
+        map._hist.data.datasets[0].data = bins;
+        map._hist.data.datasets[0].backgroundColor = bg;
+        map._hist.options.plugins._meanVal = mean;
+        map._hist.update(keyChanged ? undefined : 'none');
+        return;
+      }
+      map._hist = new Chart(cv, {
+        type: 'bar',
+        data: {
+          labels: bins.map(function (_, i) { return (i * 10) + '–' + ((i + 1) * 10); }),
+          datasets: [{ data: bins, backgroundColor: bg, borderRadius: 4, borderSkipped: false, barPercentage: 0.92, categoryPercentage: 0.92 }],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, events: [],
+          animation: { duration: 500, easing: 'easeOutQuart' },
+          plugins: { legend: { display: false }, tooltip: { enabled: false }, _meanVal: mean },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 8 }, color: '#8A9E96', maxRotation: 0, autoSkip: true, maxTicksLimit: 6 }, border: { display: false } },
+            y: { grid: { color: 'rgba(0,0,0,.05)' }, ticks: { font: { size: 8.5 }, color: '#8A9E96', stepSize: 2 }, border: { display: false } },
+          },
+        },
+        plugins: [{
+          id: 'sigMeanLine',
+          afterDatasetsDraw: function (c) {
+            var mv = c.options.plugins._meanVal;
+            if (mv == null) return;
+            var xs  = c.scales.x;
+            var idx = mv / (100 / map._histBins) - 0.5;
+            var px  = xs.getPixelForValue(idx);
+            if (!isFinite(px)) return;
+            var ctx = c.ctx;
+            ctx.save();
+            ctx.strokeStyle = 'rgba(26,48,38,.65)';
+            ctx.setLineDash([5, 3]);
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(px, c.chartArea.top);
+            ctx.lineTo(px, c.chartArea.bottom);
+            ctx.stroke();
+            ctx.restore();
+          },
+        }],
+      });
     },
 
     exportPDFBarrio: function (barrio_id) {
