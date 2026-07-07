@@ -5655,20 +5655,26 @@ window.PIIT = (function () {
         icon: '📊',
       },
 
-      /* Red vial nacional — INVIAS ArcGIS Server */
+      /* Red vial nacional — INVIAS ArcGIS Server.
+         El folder 'portal_geovisor' fue retirado del servidor (verificado
+         contra /arcgis/rest/services?f=json: ya no aparece en el listado).
+         El servicio vigente es 'Mapa_Carreteras/RedVial', pero éste NO
+         tiene habilitada la extensión WMSServer (responde HTML, no XML/
+         imagen) — por eso se consume vía el endpoint REST 'export' nativo
+         de ArcGIS (mapMode=dynamic) en lugar de WMS. Ver useArcgisExport. */
       invias_vial: {
-        url: 'https://hermes.invias.gov.co/arcgis/rest/services/portal_geovisor/red_vial/MapServer/WMSServer',
-        layers: '0,1,2,3',
-        version: '1.1.1',
-        format: 'image/png',
+        url: 'https://hermes.invias.gov.co/arcgis/rest/services/Mapa_Carreteras/RedVial/MapServer',
+        layers: 'show:0',
+        format: 'png32',
         transparent: true,
         opacity: 0.80,
         attribution: '© INVIAS — Red Vial Nacional',
         name: 'Red Vial Nacional · INVIAS',
         entidad: 'INVIAS',
         escala: 'Nacional',
-        epsg: 'EPSG:4326',
+        epsg: 'EPSG:3857',
         icon: '🛣️',
+        useArcgisExport: true,
       },
 
       /* Áreas protegidas — Parques Nacionales */
@@ -6383,6 +6389,48 @@ window.PIIT = (function () {
       map.toast('Div. Política GDB: ' + nFeat + ' límites cargados', 'ok');
     },
 
+    /* ── Capa de teselas vía ArcGIS REST '/export' ──────────────────────
+       Alternativa a L.tileLayer.wms para MapServer sin extensión WMS
+       habilitada (p. ej. INVIAS Mapa_Carreteras/RedVial): pide una
+       imagen recortada al bbox de cada tesela usando el endpoint REST
+       nativo de ArcGIS Server, que sí está siempre disponible. */
+    createArcgisExportLayer: function (svc) {
+      const L = window.L;
+      if (!L.TileLayer.ArcGISExport) {
+        L.TileLayer.ArcGISExport = L.TileLayer.extend({
+          getTileUrl: function (coords) {
+            const tileBounds = this._tileCoordsToBounds(coords);
+            const nw = L.CRS.EPSG3857.project(tileBounds.getNorthWest());
+            const se = L.CRS.EPSG3857.project(tileBounds.getSouthEast());
+            const size = this.getTileSize();
+            const params = {
+              bbox: [nw.x, se.y, se.x, nw.y].join(','),
+              bboxSR: 102100,
+              imageSR: 102100,
+              size: size.x + ',' + size.y,
+              format: this.options.arcgisFormat || 'png32',
+              transparent: this.options.arcgisTransparent !== false,
+              dpi: 96,
+              f: 'image',
+            };
+            if (this.options.arcgisLayers) params.layers = this.options.arcgisLayers;
+            const qs = Object.keys(params)
+              .map(function (k) { return k + '=' + encodeURIComponent(params[k]); })
+              .join('&');
+            return this._url.replace(/\/$/, '') + '/export?' + qs;
+          },
+        });
+      }
+      return new L.TileLayer.ArcGISExport(svc.url, {
+        opacity:          svc.opacity !== undefined ? svc.opacity : 0.75,
+        attribution:      svc.attribution || '© ArcGIS',
+        arcgisLayers:     svc.layers,
+        arcgisFormat:     svc.format || 'png32',
+        arcgisTransparent: svc.transparent !== false,
+        maxZoom: 19,
+      });
+    },
+
     /* ── Diagnóstico de disponibilidad de un servicio WMS/REST ──────────
        Distingue el tipo de fallo en vez de un "error" genérico:
        ok · http404 · http500 · http_error · timeout · network ·
@@ -6479,25 +6527,32 @@ window.PIIT = (function () {
         if (tog) tog.classList.add('on');
         map.updateWmsStatus(key, 'loading');
 
-        /* Construir parámetros WMS OGC */
-        const wmsOptions = {
-          layers:      svc.layers || '0',
-          format:      svc.format || 'image/png',
-          transparent: true,
-          version:     svc.version || '1.1.1',
-          opacity:     svc.opacity !== undefined ? svc.opacity : 0.75,
-          attribution: svc.attribution || '© IGAC',
-          /* ArcGIS WMSServer requiere uppercase params */
-          uppercase:   true,
-        };
-
-        const wmsLayer = L.tileLayer.wms(svc.url, wmsOptions);
+        /* Algunos ArcGIS Server no tienen habilitada la extensión
+           WMSServer (responden HTML en vez de imagen/XML) — para esos
+           se usa el endpoint REST nativo '/export' por tile en lugar
+           de OGC WMS (ver flag useArcgisExport en WMS_SERVICES). */
+        const wmsLayer = svc.useArcgisExport
+          ? map.createArcgisExportLayer(svc)
+          : L.tileLayer.wms(svc.url, {
+              layers:      svc.layers || '0',
+              format:      svc.format || 'image/png',
+              transparent: true,
+              version:     svc.version || '1.1.1',
+              opacity:     svc.opacity !== undefined ? svc.opacity : 0.75,
+              attribution: svc.attribution || '© IGAC',
+              /* ArcGIS WMSServer requiere uppercase params */
+              uppercase:   true,
+            });
 
         let tilesOk = 0, tilesFail = 0, diagnosed = false;
 
         /* Diagnóstico paralelo — determina el tipo exacto de fallo si
-           los tiles no cargan, en vez de un "error" genérico */
-        map.probeWmsService(svc.url, 8000).then(function (result) {
+           los tiles no cargan, en vez de un "error" genérico. Para
+           capas useArcgisExport se sondea el endpoint REST (?f=json)
+           en lugar de WMS GetCapabilities, ya que ese servicio no
+           expone WMSServer. */
+        const probeUrl = svc.useArcgisExport ? (svc.url + '?f=json') : svc.url;
+        map.probeWmsService(probeUrl, 8000).then(function (result) {
           if (tilesOk > 0 || diagnosed) return; // ya hay señal (éxito o ya se mostró detalle)
           diagnosed = true;
           if (result.type === 'ok') return; // el endpoint responde: dejar que decidan los tiles
