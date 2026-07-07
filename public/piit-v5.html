@@ -3626,7 +3626,7 @@ body { padding-bottom: 36px !important; }
             </div>
             <div class="wms-row" onclick="PIIT.map.toggleWMS('igac_segovia_25k')">
               <div class="wms-color" style="background:#5BAF84"></div>
-              <div class="wms-info"><div class="wms-name">CartoBásica Segovia 1:25k</div><div class="wms-src">IGAC · DIVIPOLA 05736</div></div>
+              <div class="wms-info"><div class="wms-name">CartoBásica Digital 1:2.000</div><div class="wms-src">IGAC · Segovia 05736000 · 2024</div></div>
               <div class="wms-toggle" id="tog-igac_segovia_25k"></div>
             </div>
           </div>
@@ -5679,39 +5679,59 @@ window.PIIT = (function () {
         useArcgisExport: true,
       },
 
-      /* Cartografía Básica 1:25.000 — cubre Segovia dentro del mosaico
-         nacional (no existe un producto específico por municipio a
-         esta escala en el catálogo IGAC; verificado: no hay ningún
-         'carto25000segovia05736' ni similar). Se usa el mismo servicio
-         nacional 1:25.000 como fuente principal aquí, y el 1:500.000
-         como respaldo más liviano si el de mayor detalle está lento. */
+      /* Cartografía Básica Digital 1:2.000 · Segovia (DIVIPOLA 05736000)
+         ── Producto municipal real (jul-2026) ─────────────────────────
+         A diferencia del intento anterior (no existía ningún
+         'carto25000segovia05736' en el catálogo), este SÍ es un
+         servicio oficial real: cartografía a escala 1:2.000 de la
+         cabecera municipal de Segovia, generada en 2024 por el IGAC a
+         partir de fotografías aéreas CityMapper (~446,54 ha), Servicio
+         IGAC No. 14241. Verificado en vivo: capabilities WMS 1.3.0
+         responde en mapas2.igac.gov.co/server3/services/... (nótese:
+         host/servidor distinto — "server3", sin "/rest/" — al patrón
+         mapas.igac.gov.co usado por los demás servicios de este
+         catálogo). 20 capas: vías, construcciones, curvas de nivel,
+         drenajes, bosque, cercas, muros, nombres geográficos, etc.
+         Fuente primaria = WMS real; respaldo = REST '/export' sobre el
+         mismo servicio; último respaldo = mosaico nacional 1:25.000
+         (cobertura más amplia si el servicio municipal cae). */
       igac_segovia_25k: {
-        name: 'CartoBásica 1:25.000 · Nacional (incluye Segovia)',
+        name: 'CartoBásica Digital 1:2.000 · Segovia',
         entidad: 'IGAC',
-        escala: '1:25.000',
-        epsg: 'EPSG:3857',
+        escala: '1:2.000',
+        epsg: 'EPSG:9377 / MAGNA-SIRGAS',
         icon: '📍',
         opacity: 0.80,
-        attribution: '© IGAC — Cartografía Básica 1:25.000 (2017)',
+        attribution: '© IGAC — CartoBásica Digital 1:2.000 Segovia (2024) · Servicio 14241',
+        cem_url: 'https://mapas2.igac.gov.co/server3/rest/services/carto/carto2000segovia05736000/MapServer',
         sources: [
+          {
+            kind: 'wms',
+            url: 'https://mapas2.igac.gov.co/server3/services/carto/carto2000segovia05736000/MapServer/WMSServer',
+            layers: '8,13,7,18,12,15,6,10,11',
+            version: '1.3.0',
+            format: 'image/png',
+            label: 'IGAC · Segovia 1:2.000 · WMS (2024)',
+          },
+          {
+            kind: 'export',
+            url: 'https://mapas2.igac.gov.co/server3/rest/services/carto/carto2000segovia05736000/MapServer',
+            layers: 'show:8,13,7,18,12,15,6,10,11',
+            format: 'png32',
+            label: 'IGAC · Segovia 1:2.000 · REST export (respaldo)',
+          },
           {
             kind: 'export',
             url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer',
             layers: 'show:0,1,2',
             format: 'png32',
-            label: 'IGAC · Nacional 1:25.000 (2017)',
-          },
-          {
-            kind: 'export',
-            url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto500000colombia2016/MapServer',
-            layers: 'show:2,13,14,25,44',
-            format: 'png32',
-            label: 'IGAC · Nacional 1:500.000 (respaldo liviano)',
+            label: 'IGAC · Nacional 1:25.000 (respaldo de cobertura amplia)',
           },
         ],
-        url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer',
-        layers: 'show:0,1,2',
-        format: 'png32',
+        url: 'https://mapas2.igac.gov.co/server3/services/carto/carto2000segovia05736000/MapServer/WMSServer',
+        layers: '8,13,7,18,12,15,6,10,11',
+        version: '1.3.0',
+        format: 'image/png',
         transparent: true,
         useArcgisExport: true,
       },
@@ -5904,9 +5924,9 @@ window.PIIT = (function () {
       { nom:'IGAC — CartoBásica Nacional (500k / 25k) · Ref. CeM 12524', sub:'CartoBásica · Vías · Hidrografía · Límites · Relieve', ico:'🗺️',
         frq:'Continua · con respaldo automático', ftc:'--blue',
         desc:'Cartografía básica vectorial de cobertura nacional (incluye Segovia). Servicios REST verificados: carto500000colombia2016 y carto25000colombia2017, ambos en mapas.igac.gov.co/server/rest/services/carto/. Se consumen vía endpoint "/export" (no exponen WMSServer) y están protegidos por el motor de resiliencia geoespacial de la plataforma: si una fuente falla o responde lento, conmuta automáticamente a la otra sin interrumpir el servicio.' },
-      { nom:'IGAC — CartoBásica 1:25.000 · Nacional (incluye Segovia)', sub:'Mosaico nacional 1:25.000 · DIVIPOLA 05736 dentro de la cobertura', ico:'📍',
-        frq:'Actualización periódica · con respaldo automático', ftc:'--blue',
-        desc:'No existe en el catálogo de IGAC un producto cartográfico específico por municipio a escala 1:25.000; Segovia se cubre a través del mosaico nacional carto25000colombia2017 (mapas.igac.gov.co/server/rest/services/carto/). Fuente primaria protegida por el motor de resiliencia, con carto500000colombia2016 como respaldo más liviano.' },
+      { nom:'IGAC — CartoBásica Digital 1:2.000 · Segovia (2024)', sub:'Cabecera municipal · DIVIPOLA 05736000 · Servicio IGAC 14241', ico:'📍',
+        frq:'Producto 2024 · con respaldo automático', ftc:'--blue',
+        desc:'Cartografía básica digital a escala 1:2.000 de la cabecera municipal de Segovia, elaborada en 2024 por el IGAC a partir de fotografías aéreas CityMapper (~446,54 ha). Servicio real verificado en mapas2.igac.gov.co/server3/services/carto/carto2000segovia05736000/MapServer/WMSServer (WMS 1.3.0) — nótese que este producto vive en un servidor distinto ("server3") al resto del catálogo IGAC. 20 capas: vías, construcciones, curvas de nivel, drenajes, bosque, cercas, muros. Protegido por el motor de resiliencia: WMS primario, respaldo REST "/export" sobre el mismo servicio, y el mosaico nacional 1:25.000 como último respaldo de cobertura amplia.' },
       { nom:'IGAC — Catastro · Direcciones Territoriales', sub:'Predios · Direcciones Territoriales IGAC · 22 sedes', ico:'📋',
         frq:'Mensual · con respaldo automático', ftc:'--blue',
         desc:'Datos catastrales del servicio catastro/direccionesterritorialesigac (mapas.igac.gov.co/server/rest/services/). El servicio existe pero no expone extensión WMS; se consume vía REST "/export", verificado y protegido por el motor de resiliencia. Información predial georreferenciada, cobertura nacional.' },
