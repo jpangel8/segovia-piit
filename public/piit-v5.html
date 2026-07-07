@@ -5638,21 +5638,61 @@ window.PIIT = (function () {
       },
 
       /* Marco Geoestadístico Nacional — DANE
-         ArcGIS REST: geoportal.dane.gov.co
-         Capas: departamentos, municipios, secciones, manzanas */
+         Capas: departamentos, municipios, secciones, manzanas
+
+         ── Historial de diagnóstico (revisión técnica) ──────────────
+         La ruta original 'geoportal.dane.gov.co/.../geo2018/MGN2018/
+         MapServer/WMSServer' daba HTTP 404: ese folder ('geo2018')
+         nunca existió con ese nombre en el servidor — el catálogo real
+         usa un folder por año ('MGN2018'…'MGN2025'). Verificado en vivo
+         contra el servidor (jul-2026):
+           · geoportal.dane.gov.co/mparcgis/rest/services/MGN2018
+             → servicio real: 'Serv_CapasMGN_2018' (MapServer)
+           · el directorio REST (geoportal.dane.gov.co) NO expone WMS
+             utilizable desde el navegador de forma consistente
+           · el WMS real vive en un subdominio distinto:
+             portalgis.dane.gov.co/mparcgis/services/... (confirmado:
+             WMS 1.3.0 válido, capas 8=Departamento, 7=Municipio)
+         Este es exactamente el tipo de "cambio de infraestructura"
+         que el sistema de resiliencia (GeoResilience, ver más abajo)
+         está pensado para absorber sin exponer el error al usuario:
+         'sources' define un orden de fuentes candidatas con failover
+         automático, salud persistida y reintento en segundo plano. */
       dane_mgn: {
-        url: 'https://geoportal.dane.gov.co/mparcgis/rest/services/geo2018/MGN2018/MapServer/WMSServer',
-        layers: '0,1,2',
-        version: '1.1.1',
-        format: 'image/png',
-        transparent: true,
-        opacity: 0.60,
-        attribution: '© DANE — Marco Geoestadístico Nacional 2018',
         name: 'Marco Geoestadístico · DANE MGN',
         entidad: 'DANE',
         escala: 'Nacional',
-        epsg: 'EPSG:4326',
+        epsg: 'EPSG:3857',
         icon: '📊',
+        opacity: 0.60,
+        attribution: '© DANE — Marco Geoestadístico Nacional 2018',
+        sources: [
+          {
+            kind: 'wms',
+            url: 'https://portalgis.dane.gov.co/mparcgis/services/MGN2018/Serv_CapasMGN_2018/MapServer/WMSServer',
+            layers: '8,7',
+            version: '1.3.0',
+            format: 'image/png',
+            label: 'DANE · WMS oficial (MGN 2018)',
+          },
+          {
+            /* Respaldo: mismo servicio vía REST 'export' nativo de
+               ArcGIS — útil si el WMS puntual cae pero el REST server
+               general sigue en línea (son procesos distintos). */
+            kind: 'export',
+            url: 'https://geoportal.dane.gov.co/mparcgis/rest/services/MGN2018/Serv_CapasMGN_2018/MapServer',
+            layers: '8,7',
+            format: 'png32',
+            label: 'DANE · REST export (respaldo)',
+          },
+        ],
+        /* Compat: si por algún motivo el motor de resiliencia no está
+           disponible, se usa la primera fuente como single-source. */
+        url: 'https://portalgis.dane.gov.co/mparcgis/services/MGN2018/Serv_CapasMGN_2018/MapServer/WMSServer',
+        layers: '8,7',
+        version: '1.3.0',
+        format: 'image/png',
+        transparent: true,
       },
 
       /* Red vial nacional — INVIAS ArcGIS Server.
@@ -6431,6 +6471,140 @@ window.PIIT = (function () {
       });
     },
 
+    /* ════════════════════════════════════════════════════════════════
+       GEO RESILIENCE · mantenimiento y failover automático de fuentes
+       geoespaciales. Cualquier WMS_SERVICES con un array `sources`
+       (ordenado por preferencia) queda protegido por este motor:
+         · arranca por la última fuente que funcionó (salud persistida)
+         · si falla, prueba automáticamente la siguiente fuente
+         · revalida en segundo plano cada 5 min mientras esté activa
+         · si TODAS las fuentes fallan, nunca expone jerga técnica:
+           usa un mensaje amigable y desactiva el toggle sin afectar
+           al resto de capas ni bloquear la navegación
+         · el detalle técnico (tipo de error, fuente, intentos) sólo
+           se imprime en consola si window.__PIIT_DEBUG__ = true
+       ════════════════════════════════════════════════════════════════ */
+    GeoHealth: {
+      KEY: 'piit-geo-health',
+      _read: function () { try { return JSON.parse(localStorage.getItem(this.KEY)) || {}; } catch (e) { return {}; } },
+      _write: function (all) { try { localStorage.setItem(this.KEY, JSON.stringify(all)); } catch (e) {} },
+      get: function (key) { return this._read()[key] || null; },
+      set: function (key, patch) {
+        const all = this._read();
+        all[key] = Object.assign({}, all[key], patch, { updatedAt: Date.now() });
+        this._write(all);
+        return all[key];
+      },
+    },
+
+    GEO_FRIENDLY_MSG: {
+      loading:     'Conectando con el servicio oficial…',
+      ok:          'Información actualizada',
+      switched:    'Mostrando fuente oficial alterna verificada',
+      unavailable: 'Servicio oficial en actualización — se reintentará automáticamente',
+    },
+
+    /* Construye la capa Leaflet para una fuente concreta (WMS o export) */
+    buildGeoSourceLayer: function (svc, source) {
+      const L = window.L;
+      const merged = Object.assign({}, svc, source);
+      return source.kind === 'export'
+        ? map.createArcgisExportLayer(merged)
+        : L.tileLayer.wms(source.url, {
+            layers:      source.layers || '0',
+            format:      source.format || 'image/png',
+            transparent: true,
+            version:     source.version || '1.1.1',
+            opacity:     svc.opacity !== undefined ? svc.opacity : 0.75,
+            attribution: svc.attribution || '© Fuente oficial',
+            uppercase:   true,
+          });
+    },
+
+    /* Activación con failover automático entre svc.sources[] */
+    activateResilientSource: function (key, svc, tog) {
+      const m = STATE.map.instance;
+      const sources = svc.sources;
+      const health = map.GeoHealth.get(key);
+      const startIdx = (health && Number.isInteger(health.activeSourceIndex) && health.activeSourceIndex < sources.length)
+        ? health.activeSourceIndex : 0;
+
+      map.updateWmsStatus(key, 'loading', svc);
+
+      function probe(source) {
+        const probeUrl = source.kind === 'export' ? (source.url + '?f=json') : source.url;
+        return map.probeWmsService(probeUrl, 8000);
+      }
+
+      function stillWanted() { return !!STATE.map.wmsActive[key]; }
+
+      function tryIndex(i, isFailover) {
+        if (!stillWanted()) return; // el usuario ya lo apagó — no seguir intentando
+        if (i >= sources.length) {
+          map.GeoHealth.set(key, { status: 'unavailable', lastFailAt: Date.now() });
+          map.updateWmsStatus(key, 'unavailable', svc);
+          if (window.__PIIT_DEBUG__) console.debug('[GeoResilience]', key, 'todas las fuentes fallaron');
+          if (tog) tog.classList.remove('on');
+          delete STATE.map.wmsActive[key];
+          delete STATE.map.wmsLayers[key];
+          map.updateLayerCount();
+          return;
+        }
+
+        const source = sources[i];
+        const layer = map.buildGeoSourceLayer(svc, source);
+        let tilesOk = 0, tilesFail = 0, settled = false;
+
+        function commitSuccess() {
+          if (settled || !stillWanted()) return;
+          settled = true;
+          map.GeoHealth.set(key, { status: 'ok', activeSourceIndex: i, activeSourceLabel: source.label || source.url });
+          map.updateWmsStatus(key, 'ok', svc);
+          map.toast(svc.name + (isFailover ? ': ' + map.GEO_FRIENDLY_MSG.switched : ' activo'), 'ok');
+          STATE.map.wmsLayers[key] = layer;
+          map.scheduleGeoRevalidation(key, svc, sources, i, tog);
+        }
+        function commitFailure() {
+          if (settled || !stillWanted()) return;
+          settled = true;
+          if (window.__PIIT_DEBUG__) console.debug('[GeoResilience]', key, 'fuente', i, source.url, 'no disponible → probando siguiente');
+          try { m.removeLayer(layer); } catch (e) {}
+          tryIndex(i + 1, true);
+        }
+
+        layer.on('tileload', function () { tilesOk++; if (tilesOk === 1) commitSuccess(); });
+        layer.on('tileerror', function () { tilesFail++; if (tilesFail >= 3 && tilesOk === 0) commitFailure(); });
+
+        probe(source).then(function (result) {
+          if (result.type !== 'ok') commitFailure();
+        });
+
+        layer.addTo(m);
+      }
+
+      tryIndex(startIdx, false);
+    },
+
+    /* Revalidación periódica en segundo plano de la fuente activa
+       (cada 5 min) mientras la capa siga encendida — detecta tanto
+       caídas sobrevenidas como recuperaciones sin acción del usuario. */
+    scheduleGeoRevalidation: function (key, svc, sources, currentIndex, tog) {
+      STATE.map._geoTimers = STATE.map._geoTimers || {};
+      if (STATE.map._geoTimers[key]) clearInterval(STATE.map._geoTimers[key]);
+      STATE.map._geoTimers[key] = setInterval(function () {
+        if (!STATE.map.wmsActive[key]) { clearInterval(STATE.map._geoTimers[key]); return; }
+        const source = sources[currentIndex];
+        const probeUrl = source.kind === 'export' ? (source.url + '?f=json') : source.url;
+        map.probeWmsService(probeUrl, 8000).then(function (result) {
+          if (result.type === 'ok' || !STATE.map.wmsActive[key]) return;
+          if (window.__PIIT_DEBUG__) console.debug('[GeoResilience]', key, 'la fuente activa dejó de responder — failover en segundo plano');
+          if (STATE.map.wmsLayers[key]) { try { STATE.map.instance.removeLayer(STATE.map.wmsLayers[key]); } catch (e) {} }
+          clearInterval(STATE.map._geoTimers[key]);
+          map.activateResilientSource(key, svc, tog);
+        });
+      }, 5 * 60 * 1000);
+    },
+
     /* ── Diagnóstico de disponibilidad de un servicio WMS/REST ──────────
        Distingue el tipo de fallo en vez de un "error" genérico:
        ok · http404 · http500 · http_error · timeout · network ·
@@ -6517,78 +6691,96 @@ window.PIIT = (function () {
       if (STATE.map.wmsActive[key]) {
         /* ─── Desactivar ─── */
         if (STATE.map.wmsLayers[key]) m.removeLayer(STATE.map.wmsLayers[key]);
+        if (STATE.map._geoTimers && STATE.map._geoTimers[key]) {
+          clearInterval(STATE.map._geoTimers[key]);
+          delete STATE.map._geoTimers[key];
+        }
         delete STATE.map.wmsActive[key];
         delete STATE.map.wmsLayers[key];
         if (tog) tog.classList.remove('on');
         map.updateWmsStatus(key, 'off');
+        map.updateLayerCount();
+        return;
+      }
 
-      } else {
-        /* ─── Activar ─── */
-        if (tog) tog.classList.add('on');
-        map.updateWmsStatus(key, 'loading');
+      /* ─── Activar ─── */
+      if (tog) tog.classList.add('on');
+      STATE.map.wmsActive[key] = true;
 
-        /* Algunos ArcGIS Server no tienen habilitada la extensión
-           WMSServer (responden HTML en vez de imagen/XML) — para esos
-           se usa el endpoint REST nativo '/export' por tile en lugar
-           de OGC WMS (ver flag useArcgisExport en WMS_SERVICES). */
-        const wmsLayer = svc.useArcgisExport
-          ? map.createArcgisExportLayer(svc)
-          : L.tileLayer.wms(svc.url, {
-              layers:      svc.layers || '0',
-              format:      svc.format || 'image/png',
-              transparent: true,
-              version:     svc.version || '1.1.1',
-              opacity:     svc.opacity !== undefined ? svc.opacity : 0.75,
-              attribution: svc.attribution || '© IGAC',
-              /* ArcGIS WMSServer requiere uppercase params */
-              uppercase:   true,
-            });
+      /* Servicios con lista de fuentes de respaldo → motor de
+         resiliencia (failover automático, salud persistida, mensajes
+         amigables, revalidación periódica). Ver GeoHealth/
+         activateResilientSource más arriba. */
+      if (svc.sources && svc.sources.length) {
+        map.activateResilientSource(key, svc, tog);
+        map.updateLayerCount();
+        return;
+      }
 
-        let tilesOk = 0, tilesFail = 0, diagnosed = false;
+      /* Servicios de fuente única (sin failover configurado aún):
+         diagnóstico granular clásico, útil para monitoreo/soporte. */
+      map.updateWmsStatus(key, 'loading');
 
-        /* Diagnóstico paralelo — determina el tipo exacto de fallo si
-           los tiles no cargan, en vez de un "error" genérico. Para
-           capas useArcgisExport se sondea el endpoint REST (?f=json)
-           en lugar de WMS GetCapabilities, ya que ese servicio no
-           expone WMSServer. */
-        const probeUrl = svc.useArcgisExport ? (svc.url + '?f=json') : svc.url;
-        map.probeWmsService(probeUrl, 8000).then(function (result) {
-          if (tilesOk > 0 || diagnosed) return; // ya hay señal (éxito o ya se mostró detalle)
+      /* Algunos ArcGIS Server no tienen habilitada la extensión
+         WMSServer (responden HTML en vez de imagen/XML) — para esos
+         se usa el endpoint REST nativo '/export' por tile en lugar
+         de OGC WMS (ver flag useArcgisExport en WMS_SERVICES). */
+      const wmsLayer = svc.useArcgisExport
+        ? map.createArcgisExportLayer(svc)
+        : L.tileLayer.wms(svc.url, {
+            layers:      svc.layers || '0',
+            format:      svc.format || 'image/png',
+            transparent: true,
+            version:     svc.version || '1.1.1',
+            opacity:     svc.opacity !== undefined ? svc.opacity : 0.75,
+            attribution: svc.attribution || '© IGAC',
+            /* ArcGIS WMSServer requiere uppercase params */
+            uppercase:   true,
+          });
+
+      let tilesOk = 0, tilesFail = 0, diagnosed = false;
+
+      /* Diagnóstico paralelo — determina el tipo exacto de fallo si
+         los tiles no cargan, en vez de un "error" genérico. Para
+         capas useArcgisExport se sondea el endpoint REST (?f=json)
+         en lugar de WMS GetCapabilities, ya que ese servicio no
+         expone WMSServer. */
+      const probeUrl = svc.useArcgisExport ? (svc.url + '?f=json') : svc.url;
+      map.probeWmsService(probeUrl, 8000).then(function (result) {
+        if (tilesOk > 0 || diagnosed) return; // ya hay señal (éxito o ya se mostró detalle)
+        diagnosed = true;
+        if (result.type === 'ok') return; // el endpoint responde: dejar que decidan los tiles
+        map.updateWmsStatus(key, result.type, svc);
+        const lbl = map.WMS_ERROR_LABELS[result.type];
+        map.toast(svc.name + ': ' + (lbl ? lbl.msg : 'error desconocido'), 'warn');
+      });
+
+      wmsLayer.on('tileload', function () {
+        tilesOk++;
+        if (tilesOk === 1) {
           diagnosed = true;
-          if (result.type === 'ok') return; // el endpoint responde: dejar que decidan los tiles
-          map.updateWmsStatus(key, result.type, svc);
-          const lbl = map.WMS_ERROR_LABELS[result.type];
-          map.toast(svc.name + ': ' + (lbl ? lbl.msg : 'error desconocido'), 'warn');
-        });
-
-        wmsLayer.on('tileload', function () {
-          tilesOk++;
-          if (tilesOk === 1) {
-            diagnosed = true;
-            map.updateWmsStatus(key, 'ok', svc);
-            map.toast(svc.name + ' activo', 'ok');
-          }
-        });
-
-        wmsLayer.on('tileerror', function (e) {
-          tilesFail++;
-          // WMS tile error — silenciado en producción (activar PIIT_DEBUG para ver)
-          /* Si todos los tiles fallan y el diagnóstico aún no llegó,
-             mostrar un error genérico transitorio (se refina en cuanto
-             resuelva probeWmsService) mantiene el toggle activo. */
-          if (tilesFail >= 2 && tilesOk === 0 && !diagnosed) {
-            map.updateWmsStatus(key, 'network', svc);
-          }
-        });
-
-        wmsLayer.addTo(m);
-        STATE.map.wmsLayers[key] = wmsLayer;
-        STATE.map.wmsActive[key] = true;
-
-        /* Si es la capa CeM 12524, añadir notificación destacada en panel */
-        if (key === 'cem_12524') {
-          map.showCemInfo(svc);
+          map.updateWmsStatus(key, 'ok', svc);
+          map.toast(svc.name + ' activo', 'ok');
         }
+      });
+
+      wmsLayer.on('tileerror', function (e) {
+        tilesFail++;
+        // WMS tile error — silenciado en producción (activar PIIT_DEBUG para ver)
+        /* Si todos los tiles fallan y el diagnóstico aún no llegó,
+           mostrar un error genérico transitorio (se refina en cuanto
+           resuelva probeWmsService) mantiene el toggle activo. */
+        if (tilesFail >= 2 && tilesOk === 0 && !diagnosed) {
+          map.updateWmsStatus(key, 'network', svc);
+        }
+      });
+
+      wmsLayer.addTo(m);
+      STATE.map.wmsLayers[key] = wmsLayer;
+
+      /* Si es la capa CeM 12524, añadir notificación destacada en panel */
+      if (key === 'cem_12524') {
+        map.showCemInfo(svc);
       }
       map.updateLayerCount();
     },
@@ -6601,9 +6793,13 @@ window.PIIT = (function () {
       if (!el) return;
       const svcDef = svc || DATA.WMS_SERVICES[key] || {};
       const base = {
-        loading: { icon: '⏳', color: '#8A9E96', msg: 'Conectando…' },
-        ok:      { icon: '✅', color: '#2E7D52', msg: 'Servicio disponible' },
-        off:     { icon: '—',  color: '#B8C8C0', msg: 'Inactivo' },
+        loading:     { icon: '⏳', color: '#8A9E96', msg: 'Conectando…' },
+        ok:          { icon: '✅', color: '#2E7D52', msg: 'Servicio disponible' },
+        off:         { icon: '—',  color: '#B8C8C0', msg: 'Inactivo' },
+        /* Servicios con motor de resiliencia (sources[]): nunca se
+           expone el detalle técnico si todas las fuentes fallan —
+           mensaje amigable, consistente con el resto de la UI. */
+        unavailable: { icon: '🔄', color: '#C69A1A', msg: map.GEO_FRIENDLY_MSG.unavailable },
       };
       const cfg = base[status] || map.WMS_ERROR_LABELS[status] || { icon: '❌', color: '#C84040', msg: 'Error desconocido' };
 
