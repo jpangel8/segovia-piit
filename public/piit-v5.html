@@ -5621,20 +5621,52 @@ window.PIIT = (function () {
         icon: '📍',
       },
 
-      /* Catastro predial — Direcciones Territoriales IGAC */
+      /* Catastro predial — Direcciones Territoriales IGAC
+         ── Diagnóstico (revisión técnica, jul-2026) ──────────────────
+         Mismo patrón que INVIAS Red Vial: la ruta y el servicio son
+         correctos (verificado contra mapas.igac.gov.co/server/rest/
+         services/catastro/direccionesterritorialesigac/MapServer?f=json
+         → existe, capabilities:"Map,Query,Data"), pero ese MapServer
+         NO tiene habilitada la extensión WMSServer, así que cualquier
+         intento OGC WMS termina bloqueado por el navegador — de ahí el
+         'Error de red · host inalcanzable' que en realidad era 'este
+         sub-recurso no expone lo que se le pide', no una caída real
+         del servidor. Confirmado con un GetMap/export real: el
+         endpoint REST '/export' sí devuelve PNG válido.
+         Se protege con el motor de resiliencia (sources[]): fuente
+         primaria = REST export (la que funciona hoy), respaldo = WMS
+         directo por si IGAC habilita esa extensión más adelante. */
       igac_catastro: {
-        url: 'https://mapas.igac.gov.co/server/rest/services/catastro/direccionesterritorialesigac/MapServer/WMSServer',
-        layers: '0,1,2,3,4',
-        version: '1.1.1',
-        format: 'image/png',
-        transparent: true,
-        opacity: 0.65,
-        attribution: '© IGAC — Catastro',
         name: 'Catastro · Dir. Territoriales IGAC',
         entidad: 'IGAC',
         escala: 'Nacional',
         epsg: 'EPSG:3857',
         icon: '📋',
+        opacity: 0.65,
+        attribution: '© IGAC — Catastro',
+        sources: [
+          {
+            kind: 'export',
+            url: 'https://mapas.igac.gov.co/server/rest/services/catastro/direccionesterritorialesigac/MapServer',
+            layers: 'show:1,2,3',
+            format: 'png32',
+            label: 'IGAC · REST export (Catastro)',
+          },
+          {
+            kind: 'wms',
+            url: 'https://mapas.igac.gov.co/server/rest/services/catastro/direccionesterritorialesigac/MapServer/WMSServer',
+            layers: '1,2,3',
+            version: '1.1.1',
+            format: 'image/png',
+            label: 'IGAC · WMS (respaldo, si se habilita)',
+          },
+        ],
+        /* Compat single-source */
+        url: 'https://mapas.igac.gov.co/server/rest/services/catastro/direccionesterritorialesigac/MapServer',
+        layers: 'show:1,2,3',
+        format: 'png32',
+        transparent: true,
+        useArcgisExport: true,
       },
 
       /* Marco Geoestadístico Nacional — DANE
@@ -6533,7 +6565,12 @@ window.PIIT = (function () {
 
       function probe(source) {
         const probeUrl = source.kind === 'export' ? (source.url + '?f=json') : source.url;
-        return map.probeWmsService(probeUrl, 8000);
+        /* 15s en vez de 8s: varios servicios oficiales (gov.co) son
+           lentos pero perfectamente funcionales — un timeout corto
+           los descartaba como caídos y quemaba fuentes de respaldo
+           innecesariamente. Los tiles siguen siendo la señal de éxito
+           más rápida cuando el servidor responde a tiempo. */
+        return map.probeWmsService(probeUrl, 15000);
       }
 
       function stillWanted() { return !!STATE.map.wmsActive[key]; }
@@ -6595,7 +6632,7 @@ window.PIIT = (function () {
         if (!STATE.map.wmsActive[key]) { clearInterval(STATE.map._geoTimers[key]); return; }
         const source = sources[currentIndex];
         const probeUrl = source.kind === 'export' ? (source.url + '?f=json') : source.url;
-        map.probeWmsService(probeUrl, 8000).then(function (result) {
+        map.probeWmsService(probeUrl, 15000).then(function (result) {
           if (result.type === 'ok' || !STATE.map.wmsActive[key]) return;
           if (window.__PIIT_DEBUG__) console.debug('[GeoResilience]', key, 'la fuente activa dejó de responder — failover en segundo plano');
           if (STATE.map.wmsLayers[key]) { try { STATE.map.instance.removeLayer(STATE.map.wmsLayers[key]); } catch (e) {} }
