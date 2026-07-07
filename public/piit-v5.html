@@ -5791,20 +5791,47 @@ window.PIIT = (function () {
         useArcgisExport: true,
       },
 
-      /* Áreas protegidas — Parques Nacionales */
+      /* Áreas protegidas — Parques Nacionales
+         ── Diagnóstico (revisión técnica, jul-2026) ──────────────────
+         'PNN/Areas_del_SPNN' nunca existió: el folder real es 'pnn'
+         (minúsculas) y no contiene ningún servicio con ese nombre
+         (verificado listando mapas.parquesnacionales.gov.co/arcgis/
+         rest/services/pnn?f=json). El servicio correcto es
+         'pnn/Limites_oficiales_Poligono' — "límites oficiales de
+         Parques Nacionales Naturales para las 64 Áreas Protegidas".
+         Su metadata anuncia WMSServer en 'supportedExtensions', pero
+         al pedirlo devuelve HTML (no XML) — mismo patrón que INVIAS/
+         Catastro: se consume vía REST '/export', que sí respondió con
+         un PNG válido en la verificación. */
       pnn_areas: {
-        url: 'https://mapas.parquesnacionales.gov.co/arcgis/rest/services/PNN/Areas_del_SPNN/MapServer/WMSServer',
-        layers: '0',
-        version: '1.1.1',
-        format: 'image/png',
-        transparent: true,
-        opacity: 0.55,
-        attribution: '© PNN Colombia — Áreas protegidas SPNN',
         name: 'Áreas protegidas · PNN',
         entidad: 'PNN',
         escala: 'Nacional',
-        epsg: 'EPSG:4326',
+        epsg: 'EPSG:4686',
         icon: '🌿',
+        opacity: 0.55,
+        attribution: '© Parques Nacionales Naturales de Colombia',
+        sources: [
+          {
+            kind: 'export',
+            url: 'https://mapas.parquesnacionales.gov.co/arcgis/rest/services/pnn/Limites_oficiales_Poligono/MapServer',
+            layers: 'show:0',
+            format: 'png32',
+            label: 'PNN · Límites oficiales (64 áreas protegidas)',
+          },
+          {
+            kind: 'export',
+            url: 'https://mapas.parquesnacionales.gov.co/arcgis/rest/services/pnn/runap/MapServer',
+            layers: 'show:0',
+            format: 'png32',
+            label: 'RUNAP · Registro Nacional (respaldo)',
+          },
+        ],
+        url: 'https://mapas.parquesnacionales.gov.co/arcgis/rest/services/pnn/Limites_oficiales_Poligono/MapServer',
+        layers: 'show:0',
+        format: 'png32',
+        transparent: true,
+        useArcgisExport: true,
       },
     },
 
@@ -13000,6 +13027,19 @@ function initMinimap(){
         3:'Tiempo de espera agotado'
       };
       setStatus('⚠ '+(msgs[err.code]||'Error de posicionamiento'),'#8a4a4a');
+      /* err.code 1 = PERMISSION_DENIED: es un estado del navegador/SO
+         (el usuario negó el permiso o el sitio no está en la lista de
+         ubicaciones permitidas), no un fallo de la plataforma — no hay
+         nada que reintentar. En vez de dejar al usuario en un callejón
+         sin salida, se abre automáticamente la entrada manual de
+         coordenadas, que es la alternativa funcional ya existente. */
+      if(err.code===1 && manualDiv && getComputedStyle(manualDiv).display==='none'){
+        manualDiv.style.display='flex';
+        if(btnManual) btnManual.classList.add('active');
+        setTimeout(function(){
+          setStatus('⚠ GPS denegado — ingresa tus coordenadas manualmente abajo','#8a4a4a');
+        }, 1400);
+      }
     }
 
     if(btnGeo) btnGeo.addEventListener('click',function(){
