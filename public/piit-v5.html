@@ -3590,82 +3590,25 @@ body { padding-bottom: 36px !important; }
           </div>
         </details>
 
+        <!-- ═══ GESTOR DE CAPAS · estilo ArcGIS Pro ═══════════════════
+             Lista única reordenable (drag & drop), con visibilidad,
+             opacidad, bloqueo y persistencia — reemplaza los antiguos
+             bloques planos "Capas locales GDB / Colombia en Mapas /
+             WMS Entidades nacionales / Opacidad". Desglosa CartoBásica
+             Digital 1:2.000 en sus 9 capas constituyentes. -->
         <details class="sig-col" open>
-          <summary>Capas locales · GDB</summary>
-          <div class="sig-col-body">
-            <div class="wms-row" onclick="PIIT.map.toggleLayer('barrios')">
-              <div class="wms-color" style="background:#5BAF84"></div>
-              <div class="wms-info"><div class="wms-name">Barrios · casco urbano</div><div class="wms-src">GDB oficial · 21 barrios · IGAC</div></div>
-              <div class="wms-toggle on" id="tog-barrios"></div>
-            </div>
-            <div class="wms-row" onclick="PIIT.map.toggleLayer('div_politica')">
-              <div class="wms-color" style="background:#DEB030"></div>
-              <div class="wms-info"><div class="wms-name">Div. Política · límites</div><div class="wms-src">GDB oficial · 5 líneas · IGAC</div></div>
-              <div class="wms-toggle on" id="tog-div_politica"></div>
-            </div>
-            <div class="wms-row" onclick="PIIT.map.toggleLayer('indicador')">
-              <div class="wms-color" style="background:#534AB7"></div>
-              <div class="wms-info"><div class="wms-name">Indicador activo</div><div class="wms-src">Coropletas · semáforo</div></div>
-              <div class="wms-toggle on" id="tog-indicador"></div>
-            </div>
-            <div class="wms-row" onclick="PIIT.map.toggleLayer('labels')">
-              <div class="wms-color" style="background:#8ECBA8"></div>
-              <div class="wms-info"><div class="wms-name">Etiquetas barrios</div><div class="wms-src">Topónimos · código oficial</div></div>
-              <div class="wms-toggle on" id="tog-labels"></div>
-            </div>
+          <summary>Gestor de capas</summary>
+          <div class="sig-col-body" style="padding-top:4px">
+            <div id="layer-manager"></div>
           </div>
         </details>
 
         <details class="sig-col">
-          <summary>Colombia en Mapas · IGAC</summary>
+          <summary>Diagnóstico de servicios WMS</summary>
           <div class="sig-col-body">
-            <div class="wms-row" onclick="PIIT.map.toggleWMS('cem_12524')">
-              <div class="wms-color" style="background:#DEB030;border-radius:50%"></div>
-              <div class="wms-info"><div class="wms-name">CartoBásica 1:100k · CeM 12524</div><div class="wms-src">mapas.igac.gov.co · WMS 1.1.1</div></div>
-              <div class="wms-toggle" id="tog-cem_12524"></div>
+            <div id="wms-status-list" style="font-size:9.5px;color:#8A9E96;padding:0 2px;line-height:1.7">
+              <div>Activa una capa WMS para ver el estado técnico del servicio</div>
             </div>
-            <div class="wms-row" onclick="PIIT.map.toggleWMS('igac_segovia_25k')">
-              <div class="wms-color" style="background:#5BAF84"></div>
-              <div class="wms-info"><div class="wms-name">CartoBásica Digital 1:2.000</div><div class="wms-src">IGAC · Segovia 05736000 · 2024</div></div>
-              <div class="wms-toggle" id="tog-igac_segovia_25k"></div>
-            </div>
-          </div>
-        </details>
-
-        <details class="sig-col">
-          <summary>WMS · Entidades nacionales</summary>
-          <div class="sig-col-body">
-            <div class="wms-row" onclick="PIIT.map.toggleWMS('igac_catastro')">
-              <div class="wms-color" style="background:#C69A1A"></div>
-              <div class="wms-info"><div class="wms-name">Catastro Territorial</div><div class="wms-src">IGAC · mapas.igac.gov.co</div></div>
-              <div class="wms-toggle" id="tog-igac_catastro"></div>
-            </div>
-            <div class="wms-row" onclick="PIIT.map.toggleWMS('dane_mgn')">
-              <div class="wms-color" style="background:#534AB7"></div>
-              <div class="wms-info"><div class="wms-name">Marco Geoestadístico</div><div class="wms-src">DANE · MGN 2018</div></div>
-              <div class="wms-toggle" id="tog-dane_mgn"></div>
-            </div>
-            <div class="wms-row" onclick="PIIT.map.toggleWMS('invias_vial')">
-              <div class="wms-color" style="background:#C84040"></div>
-              <div class="wms-info"><div class="wms-name">Red Vial Nacional</div><div class="wms-src">INVIAS · hermes.invias.gov.co</div></div>
-              <div class="wms-toggle" id="tog-invias_vial"></div>
-            </div>
-            <div class="wms-row" onclick="PIIT.map.toggleWMS('pnn_areas')">
-              <div class="wms-color" style="background:#1A8080"></div>
-              <div class="wms-info"><div class="wms-name">Áreas protegidas SPNN</div><div class="wms-src">parquesnacionales.gov.co</div></div>
-              <div class="wms-toggle" id="tog-pnn_areas"></div>
-            </div>
-            <div id="wms-status-list" style="font-size:9.5px;color:#8A9E96;padding:6px 4px 0;line-height:1.7">
-              <div>Activa una capa para ver el estado del servicio</div>
-            </div>
-          </div>
-        </details>
-
-        <details class="sig-col" open>
-          <summary>Opacidad</summary>
-          <div class="sig-col-body">
-            <div class="opa-label"><span>Barrios GeoJSON</span><span id="opa-val">70%</span></div>
-            <input class="opa-slider" type="range" min="10" max="100" value="70" oninput="PIIT.map.setOpacity(this.value)">
           </div>
         </details>
 
@@ -6319,8 +6262,16 @@ window.PIIT = (function () {
       STATE.map.baseLayers = { osm, satellite, dark, topo };
       osm.addTo(m);
 
+      // Gestor de capas (ArcGIS Pro-style): un pane Leaflet dedicado por
+      // capa permite z-index arbitrario y consistente entre capas
+      // raster (WMS) y vectoriales (GeoJSON), que por defecto viven en
+      // panes distintos y no serían comparables entre sí.
+      if (window.LayerManager) window.LayerManager.setupPanes(m);
+      const paneFor = function (id) { return window.LayerManager ? window.LayerManager.paneFor(id) : undefined; };
+
       // GeoJSON layer
       STATE.map.geojsonLayer = L.geoJSON(DATA.BARRIOS_GEOJSON, {
+        pane: paneFor('gdb_barrios'),
         style: map.styleBarrio,
         onEachFeature: map.onEachBarrio,
       }).addTo(m);
@@ -6412,6 +6363,7 @@ window.PIIT = (function () {
             iconSize: [90, 26],
             iconAnchor: [45, 13],
           }),
+          pane: (window.LayerManager ? window.LayerManager.paneFor('gdb_labels') : undefined),
           interactive: false,
         }).addTo(m);
         STATE.map.labelLayers.push(lbl);
@@ -6575,6 +6527,7 @@ window.PIIT = (function () {
       if (!m || !DATA.DIV_POLITICA_GEOJSON) return;
 
       STATE.map.divPoliticaLayer = L.geoJSON(DATA.DIV_POLITICA_GEOJSON, {
+        pane: (window.LayerManager ? window.LayerManager.paneFor('gdb_div_politica') : undefined),
         style: function (feature) {
           var tipo = feature.properties.TIPO || '4';
           // TIPO 4 = límite municipal, TIPO 5 = límite barrial, etc.
@@ -6641,6 +6594,7 @@ window.PIIT = (function () {
         arcgisLayers:     svc.layers,
         arcgisFormat:     svc.format || 'png32',
         arcgisTransparent: svc.transparent !== false,
+        pane:             svc.pane || undefined,
         maxZoom: 19,
       });
     },
@@ -6691,6 +6645,7 @@ window.PIIT = (function () {
             version:     source.version || '1.1.1',
             opacity:     svc.opacity !== undefined ? svc.opacity : 0.75,
             attribution: svc.attribution || '© Fuente oficial',
+            pane:        svc.pane || undefined,
             uppercase:   true,
           });
     },
@@ -6867,6 +6822,9 @@ window.PIIT = (function () {
       const tog = document.getElementById('tog-' + key);
       const svc = DATA.WMS_SERVICES[key];
       if (!svc) return;
+      // Pane dedicado del Gestor de Capas — permite z-index arbitrario
+      // de esta capa relativo a cualquier otra (raster o vectorial).
+      svc.pane = window.LayerManager ? window.LayerManager.paneFor('wms_' + key) : undefined;
 
       if (STATE.map.wmsActive[key]) {
         /* ─── Desactivar ─── */
@@ -6914,6 +6872,7 @@ window.PIIT = (function () {
             version:     svc.version || '1.1.1',
             opacity:     svc.opacity !== undefined ? svc.opacity : 0.75,
             attribution: svc.attribution || '© IGAC',
+            pane:        svc.pane || undefined,
             /* ArcGIS WMSServer requiere uppercase params */
             uppercase:   true,
           });
@@ -7024,8 +6983,11 @@ window.PIIT = (function () {
 
     setOpacity: function (val) {
       // Fix 6: parseFloat para evitar coerción implícita con string del input
+      // Nota: reemplazado por el control de opacidad por capa del Gestor
+      // de Capas (LayerManager.setOpacity); se conserva por compatibilidad.
       STATE.map.opacity = parseFloat(val) / 100;
-      document.getElementById('opa-val').textContent = Math.round(parseFloat(val)) + '%';
+      var el = document.getElementById('opa-val');
+      if (el) el.textContent = Math.round(parseFloat(val)) + '%';
       if (STATE.map.geojsonLayer) {
         STATE.map.geojsonLayer.setStyle({ fillOpacity: STATE.map.opacity });
       }
@@ -7430,11 +7392,19 @@ window.PIIT = (function () {
     },
 
     updateLayerCount: function () {
-      var vis = STATE.map.layerVisibility || {};
-      const active = Object.values(vis).filter(Boolean).length
-        + Object.keys(STATE.map.wmsActive || {}).length;
       const el = document.getElementById('map-active-layers');
+      /* Fuente única de verdad: el Gestor de Capas conoce el estado real
+         de TODAS las capas (GDB, WMS y sub-capas CartoBásica). Fallback
+         al conteo clásico sólo si el Gestor aún no cargó. */
+      let active;
+      if (window.LayerManager && window.LayerManager.activeCount) {
+        active = window.LayerManager.activeCount();
+      } else {
+        var vis = STATE.map.layerVisibility || {};
+        active = Object.values(vis).filter(Boolean).length + Object.keys(STATE.map.wmsActive || {}).length;
+      }
       if (el) el.textContent = active + ' capa' + (active !== 1 ? 's' : '') + ' activa' + (active !== 1 ? 's' : '');
+      if (window.LayerManager && window.LayerManager.render) window.LayerManager.render();
     },
   };
 
@@ -7812,7 +7782,11 @@ window.PIIT = (function () {
       }
       STATE.currentSection = id;
       if (id === 's-mapa') {
-        setTimeout(function () { map.init(); map.centerMap(); }, 120);
+        setTimeout(function () {
+          map.init();
+          map.centerMap();
+          if (window.LayerManager) window.LayerManager.onMapReady();
+        }, 120);
       }
       if (id === 's-reportes') {
         setTimeout(function () { reportes.init(); }, 80);
@@ -14960,5 +14934,464 @@ else setTimeout(init,400);
 #s-mapa .sig-status{transition:opacity .3s ease}
 #s-mapa .sig-status.sig-yield{opacity:.25;pointer-events:none}
 </style>
+
+<!-- ════════════════════════════════════════════════════════════════
+     GESTOR DE CAPAS · estilo ArcGIS Pro
+     Lista única reordenable por drag & drop (con panes Leaflet
+     dedicados por capa → z-index arbitrario real entre raster y
+     vector), visibilidad, opacidad, bloqueo y persistencia en
+     localStorage. Incluye el desglose de "CartoBásica Digital 1:2.000"
+     en sus 9 capas constituyentes, cada una activable de forma
+     independiente.
+     ════════════════════════════════════════════════════════════════ -->
+<style>
+#layer-manager{display:flex;flex-direction:column;gap:2px;padding:2px 0}
+.lm-toolbar{display:flex;gap:5px;padding:2px 2px 8px;flex-wrap:wrap}
+.lm-filter{border:none;background:rgba(0,0,0,.045);color:#5A7268;font-size:9.5px;font-weight:700;padding:4px 9px;border-radius:20px;cursor:pointer;transition:all .2s cubic-bezier(.32,.72,.28,1);font-family:inherit}
+.lm-filter:hover{background:rgba(0,0,0,.08)}
+.lm-filter.act{background:#2E7D52;color:#fff}
+
+.lm-group-hdr{font-size:8.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#8A9E96;padding:9px 4px 3px;display:flex;align-items:center;gap:5px}
+.lm-group-hdr .lm-group-count{background:rgba(0,0,0,.06);color:#5A7268;border-radius:8px;padding:0 6px;font-size:8px}
+
+.lm-row{
+  display:flex;align-items:center;gap:6px;padding:6px 4px;border-radius:9px;
+  background:rgba(255,255,255,.4);
+  transition:background .18s ease,transform .18s cubic-bezier(.32,.72,.28,1),box-shadow .18s ease,opacity .18s ease;
+  position:relative;
+}
+.lm-row:hover{background:rgba(0,0,0,.035)}
+.lm-row.lm-dragging{opacity:.35}
+.lm-row.lm-ghost{
+  box-shadow:0 8px 20px rgba(10,46,28,.18),0 0 0 1.5px rgba(46,125,82,.35);
+  background:#fff;transform:scale(1.02);z-index:5;
+}
+.lm-row.lm-locked{opacity:.72}
+.lm-row.lm-hidden .lm-name{color:#B8C8C0;text-decoration:line-through;text-decoration-color:rgba(0,0,0,.15)}
+
+/* Zona de inserción durante el drag */
+.lm-insert-line{height:0;margin:0;border-radius:2px;background:#2E7D52;box-shadow:0 0 0 3px rgba(46,125,82,.18);transition:height .16s cubic-bezier(.32,.72,.28,1),margin .16s ease;flex-shrink:0}
+.lm-insert-line.lm-show{height:3px;margin:3px 4px}
+
+.lm-handle{
+  cursor:grab;color:#C4D4CC;font-size:11px;width:14px;text-align:center;flex-shrink:0;
+  touch-action:none;user-select:none;
+}
+.lm-handle:hover{color:#8A9E96}
+.lm-row.lm-locked .lm-handle{cursor:not-allowed;color:#E0E8E4}
+.lm-row.lm-dragging .lm-handle{cursor:grabbing}
+
+.lm-swatch{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.lm-body{flex:1;min-width:0}
+.lm-name{font-size:11px;font-weight:700;color:#1A3026;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lm-meta{font-size:8.5px;color:#8A9E96;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.lm-opacity-row{display:flex;align-items:center;gap:5px;margin-top:4px}
+.lm-opacity-slider{flex:1;height:3px;-webkit-appearance:none;appearance:none;background:rgba(0,0,0,.08);border-radius:2px;outline:none}
+.lm-opacity-slider::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.08);cursor:pointer}
+.lm-opacity-val{font-size:8px;color:#8A9E96;font-family:'Fira Code',monospace;width:26px;text-align:right;flex-shrink:0}
+
+.lm-actions{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.lm-btn{
+  border:none;background:transparent;color:#8A9E96;width:22px;height:22px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10.5px;
+  transition:all .18s cubic-bezier(.32,.72,.28,1);
+}
+.lm-btn:hover{background:rgba(0,0,0,.06);color:#1A3026}
+.lm-btn:active{transform:scale(.88)}
+.lm-btn.lm-btn-on{color:#2E7D52}
+.lm-btn.lm-vis.lm-off{color:#C4D4CC}
+.lm-btn.lm-lock.lm-on{color:#C69A1A}
+.lm-btn.lm-status-err{color:#C84040}
+.lm-btn.lm-status-warn{color:#C69A1A}
+
+.lm-empty{font-size:10.5px;color:#8A9E96;text-align:center;padding:14px 8px}
+.lm-footer{display:flex;justify-content:space-between;align-items:center;font-size:9px;color:#8A9E96;padding:8px 4px 2px;border-top:1px solid rgba(0,0,0,.05);margin-top:6px}
+.lm-footer .sq-link{font-size:9px}
+</style>
+<script>
+window.LayerManager = (function () {
+  'use strict';
+
+  var STORAGE_KEY = 'piit-layer-manager-v1';
+  var Z_BASE = 210; /* por encima del tilePane (200) y por debajo de controles UI de Leaflet */
+
+  /* ── Catálogo de capas gestionables ──────────────────────────────
+     kind: 'gdb' (usa PIIT.map.toggleLayer) · 'wms' (usa
+     PIIT.map.toggleWMS, con resiliencia) · 'sublayer' (tile WMS propio,
+     gestionado íntegramente por este módulo — usado para desglosar
+     CartoBásica Digital 1:2.000 en sus capas constituyentes). */
+  var REGISTRY = [
+    { id: 'gdb_barrios',       group: 'gdb', label: 'Barrios · casco urbano', meta: 'GDB oficial · 21 barrios · IGAC', color: '#5BAF84', kind: 'gdb', toggleKey: 'barrios', defVisible: true },
+    { id: 'gdb_div_politica',  group: 'gdb', label: 'Div. Política · límites', meta: 'GDB oficial · 5 líneas · IGAC', color: '#DEB030', kind: 'gdb', toggleKey: 'div_politica', defVisible: true },
+    { id: 'gdb_indicador',     group: 'gdb', label: 'Indicador activo', meta: 'Coropletas · semáforo', color: '#534AB7', kind: 'gdb', toggleKey: 'indicador', defVisible: true },
+    { id: 'gdb_labels',        group: 'gdb', label: 'Etiquetas barrios', meta: 'Topónimos · código oficial', color: '#8ECBA8', kind: 'gdb', toggleKey: 'labels', defVisible: true },
+
+    { id: 'cb_construccion', group: 'carto2000', label: 'Construcciones', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#C84040', kind: 'sublayer', wmsLayerId: '13', defVisible: false },
+    { id: 'cb_via',          group: 'carto2000', label: 'Vías', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#C69A1A', kind: 'sublayer', wmsLayerId: '8', defVisible: false },
+    { id: 'cb_curvanivel',   group: 'carto2000', label: 'Curvas de nivel', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#8A6A10', kind: 'sublayer', wmsLayerId: '7', defVisible: false },
+    { id: 'cb_bosque',       group: 'carto2000', label: 'Bosque', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#2E7D52', kind: 'sublayer', wmsLayerId: '18', defVisible: false },
+    { id: 'cb_drenaje_l',    group: 'carto2000', label: 'Drenaje (líneas)', meta: 'Quebradas y caños', color: '#3B82F6', kind: 'sublayer', wmsLayerId: '12', defVisible: false },
+    { id: 'cb_drenaje_r',    group: 'carto2000', label: 'Drenaje (áreas)', meta: 'Cuerpos de agua', color: '#2563EB', kind: 'sublayer', wmsLayerId: '15', defVisible: false },
+    { id: 'cb_puente',       group: 'carto2000', label: 'Puentes', meta: 'Infraestructura vial', color: '#6B7280', kind: 'sublayer', wmsLayerId: '6', defVisible: false },
+    { id: 'cb_cerca',        group: 'carto2000', label: 'Cercas', meta: 'Delimitaciones prediales', color: '#A16207', kind: 'sublayer', wmsLayerId: '10', defVisible: false },
+    { id: 'cb_muro',         group: 'carto2000', label: 'Muros', meta: 'Contención y cerramiento', color: '#78716C', kind: 'sublayer', wmsLayerId: '11', defVisible: false },
+
+    { id: 'wms_cem_12524',  group: 'nacional', label: 'CartoBásica Nacional · IGAC', meta: 'mapas.igac.gov.co', color: '#DEB030', kind: 'wms', toggleKey: 'cem_12524', defVisible: false },
+    { id: 'wms_catastro',   group: 'nacional', label: 'Catastro Territorial', meta: 'IGAC · mapas.igac.gov.co', color: '#C69A1A', kind: 'wms', toggleKey: 'igac_catastro', defVisible: false },
+    { id: 'wms_dane',       group: 'nacional', label: 'Marco Geoestadístico', meta: 'DANE · MGN 2018', color: '#534AB7', kind: 'wms', toggleKey: 'dane_mgn', defVisible: false },
+    { id: 'wms_invias',     group: 'nacional', label: 'Red Vial Nacional', meta: 'INVIAS', color: '#C84040', kind: 'wms', toggleKey: 'invias_vial', defVisible: false },
+    { id: 'wms_pnn',        group: 'nacional', label: 'Áreas protegidas SPNN', meta: 'Parques Nacionales', color: '#1A8080', kind: 'wms', toggleKey: 'pnn_areas', defVisible: false },
+  ];
+  var BY_ID = {};
+  REGISTRY.forEach(function (r) { BY_ID[r.id] = r; });
+
+  var GROUPS = [
+    { id: 'gdb', label: 'Capas locales · GDB oficial' },
+    { id: 'carto2000', label: 'CartoBásica Digital 1:2.000 · Segovia' },
+    { id: 'nacional', label: 'WMS · Entidades nacionales' },
+  ];
+
+  var CARTO2000_URL = 'https://mapas2.igac.gov.co/server3/services/carto/carto2000segovia05736000/MapServer/WMSServer';
+
+  var state = null;
+  var sublayerRefs = {}; /* id -> instancia Leaflet de capas 'sublayer' */
+  var dragCtx = null;
+  var activeFilter = 'todas';
+
+  /* ── Persistencia ─────────────────────────────────────────────── */
+  function loadState() {
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) {}
+    var ids = REGISTRY.map(function (r) { return r.id; });
+    var order = (saved && Array.isArray(saved.order)) ? saved.order.filter(function (id) { return ids.indexOf(id) !== -1; }) : [];
+    ids.forEach(function (id) { if (order.indexOf(id) === -1) order.push(id); });
+    var visible = {}, opacity = {}, locked = {};
+    REGISTRY.forEach(function (r) { visible[r.id] = r.defVisible; opacity[r.id] = 1; locked[r.id] = false; });
+    if (saved) {
+      Object.assign(visible, saved.visible || {});
+      Object.assign(opacity, saved.opacity || {});
+      Object.assign(locked, saved.locked || {});
+    }
+    state = { order: order, visible: visible, opacity: opacity, locked: locked };
+  }
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  /* ── Panes Leaflet dedicados (z-index real cross raster/vector) ── */
+  function setupPanes(m) {
+    REGISTRY.forEach(function (r, i) {
+      var name = 'lm-' + r.id;
+      if (!m.getPane(name)) m.createPane(name);
+    });
+    applyZOrder(m);
+  }
+  function paneFor(id) { return 'lm-' + id; }
+  function applyZOrder(m) {
+    m = m || (window.PIIT && PIIT.state && PIIT.state.map && PIIT.state.map.instance || null);
+    if (!m || !state) return;
+    /* index 0 del order = fondo; último = frente */
+    state.order.forEach(function (id, i) {
+      var pane = m.getPane('lm-' + id);
+      if (pane) pane.style.zIndex = Z_BASE + i;
+    });
+  }
+
+  /* ── Construcción/gestión de las 9 sub-capas CartoBásica ─────── */
+  function ensureSublayer(entry) {
+    if (sublayerRefs[entry.id]) return sublayerRefs[entry.id];
+    var m = PIIT.state.map.instance;
+    if (!m || !window.L) return null;
+    var layer = L.tileLayer.wms(CARTO2000_URL, {
+      layers: entry.wmsLayerId,
+      format: 'image/png',
+      transparent: true,
+      version: '1.3.0',
+      uppercase: true,
+      opacity: state.opacity[entry.id],
+      pane: paneFor(entry.id),
+      attribution: '© IGAC — CartoBásica Digital 1:2.000 Segovia (2024)',
+    });
+    layer.on('tileerror', function () {
+      var row = document.querySelector('.lm-row[data-id="' + entry.id + '"]');
+      if (row && !row.querySelector('.lm-status-dot')) {
+        var dot = document.createElement('span');
+        dot.className = 'lm-status-dot';
+        dot.title = 'Esta sub-capa no tiene datos en el área/zoom actual';
+        dot.style.cssText = 'width:5px;height:5px;border-radius:50%;background:#C69A1A;flex-shrink:0';
+        var body = row.querySelector('.lm-body .lm-name');
+        if (body) body.parentNode.insertBefore(dot, body.nextSibling);
+      }
+    });
+    sublayerRefs[entry.id] = layer;
+    return layer;
+  }
+
+  /* ── Aplicar estado (visibilidad/opacidad) a la capa Leaflet real ── */
+  function applyVisible(entry) {
+    var m = PIIT.state.map.instance;
+    if (!m) return;
+    var vis = state.visible[entry.id];
+    if (entry.kind === 'sublayer') {
+      var layer = ensureSublayer(entry);
+      if (!layer) return;
+      if (vis && !m.hasLayer(layer)) layer.addTo(m);
+      else if (!vis && m.hasLayer(layer)) m.removeLayer(layer);
+    } else if (entry.kind === 'wms') {
+      /* Delegar en toggleWMS (ya trae resiliencia, salud y estado real) */
+      var currentlyOn = document.getElementById('tog-' + entry.toggleKey) &&
+        document.getElementById('tog-' + entry.toggleKey).classList.contains('on');
+      if (vis !== !!currentlyOn) PIIT.map.toggleWMS(entry.toggleKey);
+    } else if (entry.kind === 'gdb') {
+      var currentlyVisible = STATE_gdbOn(entry.toggleKey);
+      if (vis !== currentlyVisible) PIIT.map.toggleLayer(entry.toggleKey);
+    }
+  }
+  function STATE_gdbOn(key) {
+    try { return !!PIIT.state.map.layerVisibility[key]; } catch (e) { return false; }
+  }
+  function applyOpacity(entry) {
+    var op = state.opacity[entry.id];
+    if (entry.kind === 'sublayer') {
+      var l = sublayerRefs[entry.id];
+      if (l) l.setOpacity(op);
+    } else if (entry.kind === 'wms') {
+      var wl = PIIT.state.map.wmsLayers[entry.toggleKey];
+      if (wl && wl.setOpacity) wl.setOpacity(op);
+    } else if (entry.kind === 'gdb') {
+      if (entry.toggleKey === 'barrios' || entry.toggleKey === 'indicador') {
+        if (PIIT.state.map.geojsonLayer) PIIT.state.map.geojsonLayer.setStyle({ fillOpacity: op * 0.7 });
+      } else if (entry.toggleKey === 'div_politica' && PIIT.state.map.divPoliticaLayer) {
+        PIIT.state.map.divPoliticaLayer.setStyle({ opacity: op });
+      } else if (entry.toggleKey === 'labels') {
+        (PIIT.state.map.labelLayers || []).forEach(function (l) {
+          var el = l.getElement && l.getElement();
+          if (el) el.style.opacity = op;
+        });
+      }
+    }
+  }
+
+  /* ── Render de la lista ──────────────────────────────────────── */
+  function statusIcon(entry) {
+    if (entry.kind !== 'wms') return '';
+    var health = PIIT.map.GeoHealth.get(entry.toggleKey);
+    if (!health) return '';
+    if (health.status === 'unavailable') return '<span class="lm-btn lm-status-err" title="Servicio en actualización"><i class="fa-solid fa-triangle-exclamation"></i></span>';
+    if (health.status === 'ok') return '<span class="lm-btn lm-btn-on" title="Servicio disponible" style="cursor:default"><i class="fa-solid fa-circle-check"></i></span>';
+    return '';
+  }
+
+  function render() {
+    var el = document.getElementById('layer-manager');
+    if (!el || !state) return;
+    var filtered = state.order.filter(function (id) {
+      if (activeFilter === 'todas') return true;
+      return BY_ID[id] && BY_ID[id].group === activeFilter;
+    });
+
+    var toolbar = '<div class="lm-toolbar">'
+      + '<button class="lm-filter' + (activeFilter === 'todas' ? ' act' : '') + '" onclick="LayerManager.setFilter(\'todas\')">Todas</button>'
+      + GROUPS.map(function (g) { return '<button class="lm-filter' + (activeFilter === g.id ? ' act' : '') + '" onclick="LayerManager.setFilter(\'' + g.id + '\')">' + g.label.split('·')[0].trim() + '</button>'; }).join('')
+      + '</div>';
+
+    var html = toolbar;
+    var lastGroup = null;
+    if (!filtered.length) {
+      html += '<div class="lm-empty">Sin capas en este filtro</div>';
+    }
+    filtered.forEach(function (id, idx) {
+      var e = BY_ID[id];
+      if (!e) return;
+      if (e.group !== lastGroup) {
+        var g = GROUPS.filter(function (x) { return x.id === e.group; })[0];
+        var countInGroup = filtered.filter(function (fid) { return BY_ID[fid].group === e.group; }).length;
+        html += '<div class="lm-group-hdr">' + (g ? g.label : e.group) + '<span class="lm-group-count">' + countInGroup + '</span></div>';
+        lastGroup = e.group;
+      }
+      html += '<div class="lm-insert-line" data-slot="' + idx + '"></div>';
+      var vis = state.visible[id];
+      var op = state.opacity[id];
+      var locked = state.locked[id];
+      html += '<div class="lm-row' + (vis ? '' : ' lm-hidden') + (locked ? ' lm-locked' : '') + '" data-id="' + id + '" draggable="' + (!locked) + '">'
+        + '<span class="lm-handle"><i class="fa-solid fa-grip-vertical"></i></span>'
+        + '<span class="lm-swatch" style="background:' + e.color + '"></span>'
+        + '<div class="lm-body">'
+        + '<div class="lm-name">' + e.label + '</div>'
+        + '<div class="lm-meta">' + e.meta + '</div>'
+        + (vis ? '<div class="lm-opacity-row"><input type="range" class="lm-opacity-slider" min="10" max="100" value="' + Math.round(op * 100) + '" oninput="LayerManager.setOpacity(\'' + id + '\', this.value)"><span class="lm-opacity-val">' + Math.round(op * 100) + '%</span></div>' : '')
+        + '</div>'
+        + '<div class="lm-actions">'
+        + statusIcon(e)
+        + '<button class="lm-btn lm-vis' + (vis ? ' lm-btn-on' : ' lm-off') + '" title="Mostrar/ocultar" onclick="LayerManager.toggleVisible(\'' + id + '\')"><i class="fa-solid ' + (vis ? 'fa-eye' : 'fa-eye-slash') + '"></i></button>'
+        + '<button class="lm-btn lm-lock' + (locked ? ' lm-on' : '') + '" title="Bloquear posición" onclick="LayerManager.toggleLock(\'' + id + '\')"><i class="fa-solid ' + (locked ? 'fa-lock' : 'fa-lock-open') + '"></i></button>'
+        + '<button class="lm-btn" title="Traer al frente" onclick="LayerManager.moveTo(\'' + id + '\',\'top\')"><i class="fa-solid fa-angles-up"></i></button>'
+        + '<button class="lm-btn" title="Enviar al fondo" onclick="LayerManager.moveTo(\'' + id + '\',\'bottom\')"><i class="fa-solid fa-angles-down"></i></button>'
+        + '</div></div>';
+    });
+    html += '<div class="lm-insert-line" data-slot="' + filtered.length + '"></div>';
+    html += '<div class="lm-footer"><span>' + REGISTRY.filter(function(r){return state.visible[r.id];}).length + ' de ' + REGISTRY.length + ' capas activas</span>'
+      + '<span class="sq-link" onclick="LayerManager.resetOrder()">Restablecer orden</span></div>';
+
+    el.innerHTML = html;
+    attachDnD(el);
+  }
+
+  /* ── Acciones públicas ───────────────────────────────────────── */
+  function toggleVisible(id) {
+    state.visible[id] = !state.visible[id];
+    applyVisible(BY_ID[id]);
+    saveState();
+    render();
+    setTimeout(render, 350); /* refrescar ícono de estado tras activar WMS */
+    /* Las sub-capas CartoBásica no pasan por toggleLayer/toggleWMS
+       (que ya llaman a updateLayerCount), así que se sincroniza el
+       chip "N capas activas" aquí para cualquier tipo de capa. */
+    if (BY_ID[id] && BY_ID[id].kind === 'sublayer' && window.PIIT && PIIT.map) PIIT.map.updateLayerCount();
+  }
+  function toggleLock(id) {
+    state.locked[id] = !state.locked[id];
+    saveState();
+    render();
+  }
+  function setOpacity(id, val) {
+    state.opacity[id] = Math.max(0.1, Math.min(1, parseFloat(val) / 100));
+    applyOpacity(BY_ID[id]);
+    var row = document.querySelector('.lm-row[data-id="' + id + '"] .lm-opacity-val');
+    if (row) row.textContent = Math.round(state.opacity[id] * 100) + '%';
+    saveState();
+  }
+  function moveTo(id, where) {
+    if (state.locked[id]) return;
+    var arr = state.order.filter(function (x) { return x !== id; });
+    if (where === 'top') arr.push(id); else arr.unshift(id);
+    state.order = arr;
+    applyZOrder();
+    saveState();
+    render();
+  }
+  function resetOrder() {
+    state.order = REGISTRY.map(function (r) { return r.id; });
+    applyZOrder();
+    saveState();
+    render();
+    PIIT.map.toast('Orden de capas restablecido', 'ok');
+  }
+  function setFilter(f) { activeFilter = f; render(); }
+
+  /* ── Drag & Drop (HTML5 nativo, con línea de inserción) ───────── */
+  function attachDnD(container) {
+    var rows = container.querySelectorAll('.lm-row[draggable="true"]');
+    rows.forEach(function (row) {
+      row.addEventListener('dragstart', function (e) {
+        dragCtx = { id: row.dataset.id };
+        row.classList.add('lm-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', row.dataset.id); } catch (err) {}
+      });
+      row.addEventListener('dragend', function () {
+        row.classList.remove('lm-dragging');
+        container.querySelectorAll('.lm-insert-line').forEach(function (l) { l.classList.remove('lm-show'); });
+        dragCtx = null;
+      });
+    });
+    var lines = container.querySelectorAll('.lm-insert-line');
+    lines.forEach(function (line) {
+      line.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        lines.forEach(function (l) { l.classList.remove('lm-show'); });
+        line.classList.add('lm-show');
+      });
+      line.addEventListener('dragleave', function () { line.classList.remove('lm-show'); });
+      line.addEventListener('drop', function (e) {
+        e.preventDefault();
+        line.classList.remove('lm-show');
+        if (!dragCtx) return;
+        dropAtSlot(dragCtx.id, parseInt(line.dataset.slot, 10));
+      });
+    });
+    /* Permitir soltar directamente sobre una fila (inserta antes de ella) */
+    rows.forEach(function (row) {
+      row.addEventListener('dragover', function (e) { e.preventDefault(); });
+      row.addEventListener('drop', function (e) {
+        e.preventDefault();
+        if (!dragCtx || dragCtx.id === row.dataset.id) return;
+        var arr = state.order.filter(function (x) { return x !== dragCtx.id; });
+        var idx = arr.indexOf(row.dataset.id);
+        arr.splice(idx, 0, dragCtx.id);
+        state.order = arr;
+        applyZOrder();
+        saveState();
+        render();
+      });
+    });
+  }
+  function dropAtSlot(id, slotIdxInFiltered) {
+    /* slotIdxInFiltered es un índice dentro de la lista filtrada visible;
+       se traduce a posición real dentro de state.order completo. */
+    var filtered = state.order.filter(function (fid) {
+      return activeFilter === 'todas' || (BY_ID[fid] && BY_ID[fid].group === activeFilter);
+    });
+    var beforeId = filtered[slotIdxInFiltered]; /* puede ser undefined → al final del filtro */
+    var arr = state.order.filter(function (x) { return x !== id; });
+    if (beforeId == null) {
+      /* insertar al final del grupo filtrado actual */
+      var lastOfFilter = filtered[filtered.length - 1];
+      var pos = arr.indexOf(lastOfFilter);
+      arr.splice(pos + 1, 0, id);
+    } else {
+      var pos2 = arr.indexOf(beforeId);
+      arr.splice(pos2, 0, id);
+    }
+    state.order = arr;
+    applyZOrder();
+    saveState();
+    render();
+  }
+
+  /* ── Arranque ─────────────────────────────────────────────────── */
+  function boot() {
+    loadState();
+    render();
+  }
+  function onMapReady() {
+    /* Re-aplicar visibilidad/orden guardados una vez el mapa exista
+       (capas que el usuario había dejado activas en la sesión previa) */
+    var m = PIIT.state.map.instance;
+    if (!m) { setTimeout(onMapReady, 300); return; }
+    applyZOrder(m);
+    REGISTRY.forEach(function (r) {
+      if (state.visible[r.id] && r.kind !== 'gdb') applyVisible(r); /* gdb ya se activa en map.init() */
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 500); });
+  } else {
+    setTimeout(boot, 500);
+  }
+
+  function activeCount() {
+    if (!state) return 0;
+    return REGISTRY.filter(function (r) { return state.visible[r.id]; }).length;
+  }
+
+  return {
+    setupPanes: setupPanes,
+    paneFor: paneFor,
+    applyZOrder: applyZOrder,
+    toggleVisible: toggleVisible,
+    toggleLock: toggleLock,
+    setOpacity: setOpacity,
+    moveTo: moveTo,
+    resetOrder: resetOrder,
+    setFilter: setFilter,
+    render: render,
+    onMapReady: onMapReady,
+    activeCount: activeCount,
+    REGISTRY: REGISTRY,
+  };
+})();
+</script>
 </body>
 </html>
