@@ -3410,13 +3410,86 @@ body { padding-bottom: 36px !important; }
 #s-mapa .export-btn{transition:all .22s cubic-bezier(.32,.72,.28,1)}
 #s-mapa .export-btn:active{transform:scale(.96)}
 
-/* Ficha territorial — tarjeta oscura estilo widget macOS dentro del panel claro */
-#s-mapa #mip-body{background:linear-gradient(165deg,#123B26 0%,#0A2E1C 100%);border-radius:13px;padding:13px 14px;box-shadow:inset 0 .5px 0 rgba(255,255,255,.1),0 8px 22px rgba(10,46,28,.28);animation:sigFade .4s ease both}
-#s-mapa #mip-body .mip-kpi{margin-bottom:0}
+/* ══════════════════════════════════════════════════════════════════
+   FICHA TERRITORIAL · iOS glass — mismo lenguaje visual que el resto
+   de widgets del SIG (sig-panel, wms-row, ind-btn): blanco translúcido,
+   blur, radios 12-14px, sombras suaves, tipografía Inter, semáforo
+   verde/ámbar/rojo consistente con el mapa.
+   ══════════════════════════════════════════════════════════════════ */
+#s-mapa #mip-body{
+  background:rgba(255,255,255,.55);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  backdrop-filter:blur(18px) saturate(160%);
+  border:.5px solid rgba(0,0,0,.06);
+  border-radius:14px;padding:14px 15px;
+  box-shadow:0 8px 24px rgba(10,46,28,.10),inset 0 .5px 0 rgba(255,255,255,.8);
+  animation:sigFade .4s cubic-bezier(.32,.72,.28,1) both;
+}
+#s-mapa .mip-barrio-name{font-size:16px;font-weight:800;color:#1A3026;letter-spacing:-.01em;margin-bottom:3px}
+#s-mapa .mip-barrio-id{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:11px;font-size:10.5px;color:#8A9E96;font-weight:600}
+#s-mapa .mip-mono{font-family:'Fira Code',monospace;font-size:9px;color:#8A9E96;background:rgba(0,0,0,.04);padding:1px 6px;border-radius:6px}
+#s-mapa .mip-mono-sm{font-family:'Fira Code',monospace;font-size:10px;color:#5A7268}
 
-/* Lista de barrios — tema claro */
-#s-mapa .barrio-item{padding:5.5px 8px;border-radius:8px}
+/* Tarjeta ICV — jerarquía visual principal, mismo radio/blur que el resto */
+#s-mapa .mip-icv-card{border-radius:12px;padding:11px 13px;margin-bottom:10px;border:.5px solid rgba(0,0,0,.05);transition:transform .25s cubic-bezier(.32,.72,.28,1)}
+#s-mapa .mip-icv-label{font-size:9px;font-weight:800;color:#8A9E96;letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px}
+#s-mapa .mip-icv-row{display:flex;align-items:center;gap:10px}
+#s-mapa .mip-icv-num{font-family:'Fira Code',monospace;font-size:30px;font-weight:600;line-height:1}
+#s-mapa .mip-icv-bar-wrap{flex:1;min-width:0}
+#s-mapa .mip-icv-bar-track{height:5px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden;margin-bottom:4px}
+#s-mapa .mip-icv-bar-fill{height:5px;border-radius:3px;transition:width .6s cubic-bezier(.32,.72,.28,1)}
+#s-mapa .mip-icv-formula{font-size:8.5px;color:#8A9E96;line-height:1.4}
+
+/* Tarjetas KPI — mismas dimensiones/tipografía que ind-btn/wms-row */
+#s-mapa .mip-grid4{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+#s-mapa .mip-kpi{background:rgba(255,255,255,.55);border:.5px solid rgba(0,0,0,.05);border-radius:10px;padding:8px 10px;margin-bottom:6px;transition:transform .2s cubic-bezier(.32,.72,.28,1),background .2s ease}
+#s-mapa .mip-kpi:hover{background:rgba(255,255,255,.8);transform:translateY(-1px)}
+#s-mapa .mip-grid4 .mip-kpi{margin-bottom:0}
+#s-mapa .mip-kpi-featured{padding:10px 12px}
+#s-mapa .mip-kpi-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1px}
+#s-mapa .mip-kpi-l{font-size:9.5px;font-weight:600;color:#8A9E96}
+#s-mapa .mip-kpi-v{font-family:'Fira Code',monospace;font-size:15px;font-weight:600}
+#s-mapa .mip-kpi-featured .mip-kpi-v{font-size:17px}
+#s-mapa .mip-kpi-b{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+#s-mapa .mip-kpi-b.kpi-ok{background:rgba(46,125,82,.14);color:#1A5C3A}
+#s-mapa .mip-kpi-b.kpi-warn{background:rgba(198,154,26,.16);color:#8A6A10}
+#s-mapa .mip-kpi-b.kpi-crit{background:rgba(200,64,64,.14);color:#8A2E2E}
+
+#s-mapa .mip-divider{height:1px;background:rgba(0,0,0,.06);margin:11px 0}
+#s-mapa .mip-wms-title{font-size:9.5px;font-weight:800;color:#8A9E96;letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px}
+#s-mapa .wms-info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 2px;border-bottom:.5px solid rgba(0,0,0,.045);font-size:11px}
+#s-mapa .wms-info-row:last-child{border-bottom:none}
+#s-mapa .wms-info-key{color:#8A9E96;font-weight:500}
+#s-mapa .wms-info-val{color:#1A3026;font-weight:700;font-family:'Fira Code',monospace;text-align:right}
+#s-mapa .mip-strong{font-weight:700}
+#s-mapa .mip-tag{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:8px}
+#s-mapa .mip-tag-amber{background:rgba(198,154,26,.14);color:#8A6A10}
+#s-mapa .mip-tag-green{background:rgba(46,125,82,.12);color:#1A5C3A}
+
+/* Botones de acción — mismos radios y easing que ind-btn/bm-btn/wms-toggle */
+#s-mapa .mip-actions{display:flex;gap:6px;margin-top:12px}
+#s-mapa .mip-btn{border:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;border-radius:10px;padding:8px 6px;transition:all .22s cubic-bezier(.32,.72,.28,1)}
+#s-mapa .mip-btn:active{transform:scale(.96)}
+#s-mapa .mip-btn-primary{flex:1;background:#C69A1A;color:#1A3026}
+#s-mapa .mip-btn-primary:hover{background:#D4A822;transform:translateY(-1px)}
+#s-mapa .mip-btn-secondary{flex:1;background:rgba(0,0,0,.055);color:#1A3026}
+#s-mapa .mip-btn-secondary:hover{background:rgba(0,0,0,.09)}
+#s-mapa .mip-btn-icon{padding:8px 11px;background:rgba(0,0,0,.045);color:#5A7268;font-size:12px}
+#s-mapa .mip-btn-icon:hover{background:rgba(200,64,64,.12);color:#C84040}
+
+/* Estado de servicios WMS — distingue tipo de error (404/500/timeout/
+   red/CORS/URL inválida/autenticación) con la misma piel iOS */
+#s-mapa .wms-status-row{display:flex;align-items:center;gap:7px;padding:5px 2px;border-bottom:.5px solid rgba(0,0,0,.045)}
+#s-mapa .wms-status-row:last-child{border-bottom:none}
+#s-mapa .wms-status-ico{font-size:10px;flex-shrink:0}
+#s-mapa .wms-status-txt{flex:1;min-width:0}
+#s-mapa .wms-status-name{font-size:10px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#s-mapa .wms-status-msg{font-size:9px;color:#8A9E96;margin-top:1px}
+
+/* Lista de barrios — tema claro, misma interacción que wms-row */
+#s-mapa .barrio-item{padding:5.5px 8px;border-radius:8px;transition:background .18s ease}
 #s-mapa .barrio-item:hover{background:rgba(0,0,0,.05)}
+#s-mapa .barrio-item:active{transform:scale(.985)}
 #s-mapa .barrio-item.hi{background:rgba(222,176,48,.18);border-left:2px solid #C69A1A}
 #s-mapa .bi-id{color:#8A9E96}
 #s-mapa .bi-name{color:#1A3026;font-weight:600}
@@ -6310,6 +6383,77 @@ window.PIIT = (function () {
       map.toast('Div. Política GDB: ' + nFeat + ' límites cargados', 'ok');
     },
 
+    /* ── Diagnóstico de disponibilidad de un servicio WMS/REST ──────────
+       Distingue el tipo de fallo en vez de un "error" genérico:
+       ok · http404 · http500 · http_error · timeout · network ·
+       cors · invalid_url · auth. No todos los casos son distinguibles
+       al 100% desde un navegador (las respuestas cross-origin opacas
+       ocultan el status), así que se usa una estrategia de dos
+       intentos: 1) fetch en modo 'cors' (da status real si el server
+       responde con cabeceras CORS) 2) si eso lanza, un fetch en modo
+       'no-cors' revela si el host es alcanzable (entonces es CORS) o
+       no (entonces es red/DNS/conexión rechazada).                    */
+    probeWmsService: function (url, timeoutMs) {
+      return new Promise(function (resolve) {
+        var urlObj;
+        /* Sin base: los servicios WMS/REST del catálogo siempre son
+           absolutos (https://…). Resolver contra location.href aceptaría
+           casi cualquier texto como ruta relativa válida, anulando la
+           detección de URLs realmente inválidas. */
+        try { urlObj = new URL(url); }
+        catch (e) { return resolve({ type: 'invalid_url' }); }
+        if (!/^https?:$/.test(urlObj.protocol)) return resolve({ type: 'invalid_url' });
+
+        var settled = false;
+        var controller = ('AbortController' in window) ? new AbortController() : null;
+        var timer = setTimeout(function () {
+          if (settled) return;
+          settled = true;
+          if (controller) controller.abort();
+          resolve({ type: 'timeout' });
+        }, timeoutMs || 8000);
+
+        function finish(result) {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          resolve(result);
+        }
+
+        fetch(urlObj.href, { method: 'GET', mode: 'cors', cache: 'no-store', signal: controller ? controller.signal : undefined })
+          .then(function (res) {
+            if (res.status === 401 || res.status === 403) return finish({ type: 'auth', httpStatus: res.status });
+            if (res.status === 404) return finish({ type: 'http404' });
+            if (res.status >= 500) return finish({ type: 'http500', httpStatus: res.status });
+            if (!res.ok) return finish({ type: 'http_error', httpStatus: res.status });
+            finish({ type: 'ok' });
+          })
+          .catch(function (err) {
+            if (settled) return;
+            if (err && err.name === 'AbortError') return finish({ type: 'timeout' });
+            /* fetch en modo cors falló sin status → puede ser CORS o red caída.
+               Un segundo intento 'no-cors' distingue: si ESE también falla,
+               el host es inalcanzable (red); si resuelve (aunque opaco),
+               el host respondió y lo que bloqueó fue la política CORS. */
+            fetch(urlObj.href, { method: 'GET', mode: 'no-cors', cache: 'no-store' })
+              .then(function () { finish({ type: 'cors' }); })
+              .catch(function () { finish({ type: 'network' }); });
+          });
+      });
+    },
+
+    /* Traduce el resultado del diagnóstico al vocabulario de updateWmsStatus */
+    WMS_ERROR_LABELS: {
+      http404:    { icon: '❌', color: '#C84040', msg: 'Error HTTP 404 · recurso no encontrado' },
+      http500:    { icon: '❌', color: '#C84040', msg: 'Error HTTP 500 · error del servidor' },
+      http_error: { icon: '❌', color: '#C84040', msg: 'Error HTTP · respuesta no exitosa' },
+      timeout:    { icon: '❌', color: '#C69A1A', msg: 'Tiempo de espera agotado' },
+      network:    { icon: '❌', color: '#C84040', msg: 'Error de red · host inalcanzable' },
+      cors:       { icon: '❌', color: '#C69A1A', msg: 'Restricción CORS detectada' },
+      invalid_url:{ icon: '❌', color: '#C84040', msg: 'URL del servicio inválida' },
+      auth:       { icon: '❌', color: '#C84040', msg: 'Error de autenticación' },
+    },
+
     toggleWMS: function (key) {
       const L = window.L;
       const m = STATE.map.instance;
@@ -6349,11 +6493,23 @@ window.PIIT = (function () {
 
         const wmsLayer = L.tileLayer.wms(svc.url, wmsOptions);
 
-        let tilesOk = 0, tilesFail = 0;
+        let tilesOk = 0, tilesFail = 0, diagnosed = false;
+
+        /* Diagnóstico paralelo — determina el tipo exacto de fallo si
+           los tiles no cargan, en vez de un "error" genérico */
+        map.probeWmsService(svc.url, 8000).then(function (result) {
+          if (tilesOk > 0 || diagnosed) return; // ya hay señal (éxito o ya se mostró detalle)
+          diagnosed = true;
+          if (result.type === 'ok') return; // el endpoint responde: dejar que decidan los tiles
+          map.updateWmsStatus(key, result.type, svc);
+          const lbl = map.WMS_ERROR_LABELS[result.type];
+          map.toast(svc.name + ': ' + (lbl ? lbl.msg : 'error desconocido'), 'warn');
+        });
 
         wmsLayer.on('tileload', function () {
           tilesOk++;
           if (tilesOk === 1) {
+            diagnosed = true;
             map.updateWmsStatus(key, 'ok', svc);
             map.toast(svc.name + ' activo', 'ok');
           }
@@ -6362,10 +6518,11 @@ window.PIIT = (function () {
         wmsLayer.on('tileerror', function (e) {
           tilesFail++;
           // WMS tile error — silenciado en producción (activar PIIT_DEBUG para ver)
-          /* Si todos los tiles fallan, mostrar error pero mantener toggle */
-          if (tilesFail >= 2 && tilesOk === 0) {
-            map.updateWmsStatus(key, 'error', svc);
-            map.toast(svc.name + ': sin respuesta (posible restricción CORS)', 'warn');
+          /* Si todos los tiles fallan y el diagnóstico aún no llegó,
+             mostrar un error genérico transitorio (se refina en cuanto
+             resuelva probeWmsService) mantiene el toggle activo. */
+          if (tilesFail >= 2 && tilesOk === 0 && !diagnosed) {
+            map.updateWmsStatus(key, 'network', svc);
           }
         });
 
@@ -6381,14 +6538,19 @@ window.PIIT = (function () {
       map.updateLayerCount();
     },
 
-    /* Muestra estado de servicio WMS en el panel inferior izquierdo */
+    /* Muestra estado de servicio WMS en el panel inferior izquierdo,
+       distinguiendo el tipo exacto de error (404/500/timeout/red/
+       CORS/URL inválida/autenticación) en vez de un mensaje genérico. */
     updateWmsStatus: function (key, status, svc) {
       const el = document.getElementById('wms-status-list');
       if (!el) return;
       const svcDef = svc || DATA.WMS_SERVICES[key] || {};
-      const icons = { loading:'⏳', ok:'✅', error:'⚠️', off:'—' };
-      const colors = { loading:'rgba(255,255,255,.4)', ok:'#8ECBA8', error:'#F09595', off:'rgba(255,255,255,.2)' };
-      const msgs   = { loading:'Conectando…', ok:'Servicio activo', error:'Sin respuesta (CORS/red)', off:'Inactivo' };
+      const base = {
+        loading: { icon: '⏳', color: '#8A9E96', msg: 'Conectando…' },
+        ok:      { icon: '✅', color: '#2E7D52', msg: 'Servicio disponible' },
+        off:     { icon: '—',  color: '#B8C8C0', msg: 'Inactivo' },
+      };
+      const cfg = base[status] || map.WMS_ERROR_LABELS[status] || { icon: '❌', color: '#C84040', msg: 'Error desconocido' };
 
       /* Update or create row for this key */
       // Fix 7: Limpiar texto inicial si es la primera entrada real
@@ -6402,10 +6564,10 @@ window.PIIT = (function () {
         row.dataset.wmsKey = key;
         el.appendChild(row);
       }
-      row.style.cssText = 'display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)';
-      row.innerHTML = `<span style="font-size:10px">${icons[status]}</span>
-        <div style="flex:1;min-width:0"><div style="font-size:9px;font-weight:600;color:${colors[status]};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${svcDef.name||key}</div>
-        <div style="font-size:8px;color:rgba(255,255,255,.3)">${msgs[status]}</div></div>`;
+      row.className = 'wms-status-row';
+      row.innerHTML = `<span class="wms-status-ico">${cfg.icon}</span>
+        <div class="wms-status-txt"><div class="wms-status-name" style="color:${cfg.color}">${svcDef.name||key}</div>
+        <div class="wms-status-msg">${cfg.msg}${svcDef && cfg.httpStatus ? ' · HTTP ' + cfg.httpStatus : ''}</div></div>`;
     },
 
     cleanStatusPanel: function () {
@@ -6658,14 +6820,14 @@ window.PIIT = (function () {
         { k:'srv',    label:'Servicios'         },
         { k:'pop',    label:'Densidad pob.'     },
       ];
-      var gridHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px">';
+      var gridHTML = '<div class="mip-grid4">';
       INDS.forEach(function(it) {
         var v  = +(ind[it.k] || 0);
         var sc = (it.k === 'pop') ? map.COLOR_POP(v) : map.COLOR_SCALE(v);
-        gridHTML += '<div class="mip-kpi" style="padding:7px 9px">'
-          + '<div style="display:flex;justify-content:space-between;align-items:baseline">'
-          + '<div class="mip-kpi-l" style="color:rgba(255,255,255,.4);font-size:9px">' + it.label + '</div>'
-          + '<div class="mip-kpi-v" style="color:' + sc.fill + ';font-size:15px">' + v + '%</div>'
+        gridHTML += '<div class="mip-kpi">'
+          + '<div class="mip-kpi-row">'
+          + '<div class="mip-kpi-l">' + it.label + '</div>'
+          + '<div class="mip-kpi-v" style="color:' + sc.fill + '">' + v + '%</div>'
           + '</div>'
           + pctBar(v, sc.fill)
           + '</div>';
@@ -6685,31 +6847,29 @@ window.PIIT = (function () {
 
         /* Cabecera barrio */
         '<div class="mip-barrio-name">' + _esc(nomOf) + '</div>'
-        + '<div class="mip-barrio-id" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">'
+        + '<div class="mip-barrio-id">'
           + '<span>Barrio ' + _esc(codBar) + '</span>'
-          + (pk && pk !== '—' ? '<span style="font-family:var(--fm);font-size:9px;color:rgba(255,255,255,.3)">PK: ' + _esc(pk) + '</span>' : '')
-          + '<span style="font-size:9px;font-family:var(--fm);color:rgba(255,255,255,.3)">' + _esc(latStr) + ', ' + _esc(lonStr) + '</span>'
+          + (pk && pk !== '—' ? '<span class="mip-mono">PK: ' + _esc(pk) + '</span>' : '')
+          + '<span class="mip-mono">' + _esc(latStr) + ', ' + _esc(lonStr) + '</span>'
         + '</div>'
 
         /* ICV compuesto */
-        + '<div style="background:' + icvBg + ';border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 12px;margin-bottom:10px">'
-          + '<div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Índice de Calidad de Vida (ICV)</div>'
-          + '<div style="display:flex;align-items:center;gap:8px">'
-            + '<div style="font-family:var(--fm);font-size:30px;font-weight:500;color:' + icvColor + '">' + icv + '</div>'
-            + '<div style="flex:1">'
-              + '<div style="height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:3px">'
-                + '<div style="height:5px;width:' + icv + '%;background:' + icvColor + ';border-radius:3px;transition:width .6s ease"></div>'
-              + '</div>'
-              + '<div style="font-size:8px;color:rgba(255,255,255,.3);line-height:1.4">Infra 30% · Social 25% · Srv 25% · Pob 20%</div>'
+        + '<div class="mip-icv-card" style="background:' + icvBg + '">'
+          + '<div class="mip-icv-label">Índice de Calidad de Vida (ICV)</div>'
+          + '<div class="mip-icv-row">'
+            + '<div class="mip-icv-num" style="color:' + icvColor + '">' + icv + '</div>'
+            + '<div class="mip-icv-bar-wrap">'
+              + '<div class="mip-icv-bar-track"><div class="mip-icv-bar-fill" style="width:' + icv + '%;background:' + icvColor + '"></div></div>'
+              + '<div class="mip-icv-formula">Infra 30% · Social 25% · Srv 25% · Pob 20%</div>'
             + '</div>'
-            + '<span class="mip-kpi-b ' + scale.cls + '" style="font-size:10px;white-space:nowrap">' + scale.label + '</span>'
+            + '<span class="mip-kpi-b ' + scale.cls + '">' + scale.label + '</span>'
           + '</div>'
         + '</div>'
 
         /* Indicador activo destacado */
-        + '<div class="mip-kpi" style="padding:9px 12px;margin-bottom:8px">'
-          + '<div style="display:flex;justify-content:space-between;align-items:baseline">'
-            + '<div class="mip-kpi-l" style="color:rgba(255,255,255,.5)">' + (DATA.INDICADOR_META[key] || key) + '</div>'
+        + '<div class="mip-kpi mip-kpi-featured">'
+          + '<div class="mip-kpi-row">'
+            + '<div class="mip-kpi-l">' + (DATA.INDICADOR_META[key] || key) + '</div>'
             + '<div class="mip-kpi-v" style="color:' + scale.fill + '">' + val + '%</div>'
           + '</div>'
           + pctBar(val, scale.fill)
@@ -6725,7 +6885,7 @@ window.PIIT = (function () {
         + attrRow('Población', '<strong>' + num(ind.poblacion) + '</strong> hab.')
         + attrRow('Hogares', num(ind.hogares))
         + attrRow('SISBEN A+B',
-            '<span style="color:' + (+(ind.sisben_ab||0) > 40 ? '#F09595' : +(ind.sisben_ab||0) > 25 ? '#F0B860' : '#8ECBA8') + ';font-weight:700">'
+            '<span class="mip-strong" style="color:' + (+(ind.sisben_ab||0) > 40 ? '#C84040' : +(ind.sisben_ab||0) > 25 ? '#C69A1A' : '#2E7D52') + '">'
             + (+(ind.sisben_ab||0)) + '%</span>')
         + attrRow('Puntaje SISBEN', Math.round(+(ind.puntaje||0)))
         + attrRow('Acueducto',  Math.round(+(ind.cobertura_acueducto||0)) + '%')
@@ -6736,18 +6896,15 @@ window.PIIT = (function () {
 
         /* Fuente GDB */
         + '<div class="mip-wms-title">Fuente geoespacial</div>'
-        + attrRow('GDB', '<span style="color:var(--au300);font-size:10px">SEGOVIA_URBANO.gdb</span>')
-        + attrRow('Capa', '<span style="color:var(--g300);font-size:10px">Barrios · IGAC</span>')
-        + attrRow('CRS origen', '<span style="font-size:10px">EPSG:3116 \u2192 4326</span>')
+        + attrRow('GDB', '<span class="mip-tag mip-tag-amber">SEGOVIA_URBANO.gdb</span>')
+        + attrRow('Capa', '<span class="mip-tag mip-tag-green">Barrios · IGAC</span>')
+        + attrRow('CRS origen', '<span class="mip-mono-sm">EPSG:3116 → 4326</span>')
 
         /* Botones de acción */
-        + '<div style="display:flex;gap:5px;margin-top:12px">'
-          + '<button onclick="PIIT.ui.goSection(\'s-sisben\',null)"'
-            + ' style="flex:1;padding:7px 4px;background:var(--au500);color:var(--g900);border:none;border-radius:7px;font-size:10px;font-weight:700;cursor:pointer;font-family:var(--fb)">SISBEN \u2192</button>'
-          + '<button onclick="PIIT.ui.goSection(\'s-analisis\',null)"'
-            + ' style="flex:1;padding:7px 4px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:none;border-radius:7px;font-size:10px;font-weight:700;cursor:pointer;font-family:var(--fb)">An\u00e1lisis \u2192</button>'
-          + '<button onclick="PIIT.map.exportPDFBarrio(\'' + (ind.id || codBar || '') + '\')"'
-            + ' style="padding:7px 9px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border:none;border-radius:7px;font-size:11px;cursor:pointer" title="Exportar ficha PDF">'
+        + '<div class="mip-actions">'
+          + '<button class="mip-btn mip-btn-primary" onclick="PIIT.ui.goSection(\'s-sisben\',null)">SISBEN →</button>'
+          + '<button class="mip-btn mip-btn-secondary" onclick="PIIT.ui.goSection(\'s-analisis\',null)">Análisis →</button>'
+          + '<button class="mip-btn mip-btn-icon" onclick="PIIT.map.exportPDFBarrio(\'' + (ind.id || codBar || '') + '\')" title="Exportar ficha PDF">'
             + '<i class=\'fa-solid fa-file-pdf\'></i></button>'
         + '</div>';
     },
@@ -11964,8 +12121,10 @@ if(document.readyState === 'loading'){
 </script>
 <style>
 /* ══════════════════════════════════════════════════════════════
-   VISOR CARTOGRÁFICO 3D · Estética ESRI / ArcGIS Dashboard
-   Paleta: slate oscuro · teal técnico · sin neones ni brillos
+   VISOR CARTOGRÁFICO 3D · iOS glass — misma piel que el resto del
+   SIG (sig-panel/mip-body): chrome claro translúcido con blur; el
+   globo WebGL conserva su escena nocturna a modo de "widget oscuro
+   embebido" (mismo patrón que el globo 3D del Apple Weather).
    ══════════════════════════════════════════════════════════════ */
 
 /* ── Contenedor principal · integrado en el flujo del panel "Capas"
@@ -11973,51 +12132,53 @@ if(document.readyState === 'loading'){
 #mm-outer{
   position:relative;
   width:100%;display:flex;flex-direction:column;
-  border-radius:12px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.09);
-  background:#12161d;
-  box-shadow:0 6px 18px rgba(0,0,0,0.32);
+  border-radius:14px;overflow:hidden;
+  border:.5px solid rgba(0,0,0,.06);
+  background:rgba(255,255,255,.55);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  backdrop-filter:blur(18px) saturate(160%);
+  box-shadow:0 8px 22px rgba(10,46,28,.10),inset 0 .5px 0 rgba(255,255,255,.8);
 }
 
 /* ── Header institucional ── */
 #mm-header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:6px 10px 5px;
-  background:#1a1f28;
-  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:9px 11px;
+  background:transparent;
+  border-bottom:.5px solid rgba(0,0,0,.06);
   flex-shrink:0;
 }
 #mm-header-title{
   display:flex;flex-direction:column;gap:1px;
 }
 #mm-header-title .mm-ht-main{
-  font-size:9px;font-weight:700;letter-spacing:0.08em;
-  color:#c8d2dc;text-transform:uppercase;
+  font-size:11px;font-weight:800;letter-spacing:-.01em;
+  color:#1A3026;
   font-family:'Inter',system-ui,sans-serif;
 }
 #mm-header-title .mm-ht-sub{
-  font-size:7.5px;color:#5c6b7a;letter-spacing:0.04em;
-  font-family:'Inter',system-ui,sans-serif;font-weight:400;
+  font-size:9px;color:#8A9E96;letter-spacing:.03em;
+  font-family:'Inter',system-ui,sans-serif;font-weight:600;
 }
 #mm-header-badge{
-  display:flex;align-items:center;gap:4px;
-  background:#0e1420;border:1px solid rgba(255,255,255,0.07);
-  border-radius:3px;padding:2px 6px;
+  display:flex;align-items:center;gap:5px;
+  background:rgba(46,125,82,.12);border:none;
+  border-radius:20px;padding:3px 9px;
 }
 #mm-header-badge .mm-hb-dot{
   width:5px;height:5px;border-radius:50%;
-  background:#237938;flex-shrink:0;
+  background:#2E7D52;flex-shrink:0;
   animation:mm-dot-blink 2.5s ease-in-out infinite;
 }
 #mm-header-badge .mm-hb-txt{
-  font-size:7.5px;font-weight:600;color:#2d9445;
-  font-family:'Inter',system-ui,sans-serif;letter-spacing:0.06em;
+  font-size:8.5px;font-weight:700;color:#1A5C3A;
+  font-family:'Inter',system-ui,sans-serif;letter-spacing:.05em;
 }
 
 /* El colapsar/expandir ahora lo resuelve el <details class="sig-col">
    contenedor (misma interacción que "Mapa base", "Opacidad", etc.) */
 
-/* ── Canvas WebGL ── */
+/* ── Canvas WebGL · viewport nocturno embebido en el card claro ── */
 #mm-map{
   width:100%;height:158px;display:block;
   position:relative;overflow:hidden;
@@ -12072,140 +12233,142 @@ if(document.readyState === 'loading'){
 /* ── Barra de metadatos ── */
 #mm-meta-bar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:4px 10px;
-  background:#141820;
-  border-bottom:1px solid rgba(255,255,255,0.05);
+  padding:7px 11px;
+  background:transparent;
+  border-bottom:.5px solid rgba(0,0,0,.06);
   flex-shrink:0;
 }
 .mm-meta-item{display:flex;flex-direction:column;gap:1px;}
-.mm-meta-lbl{font-size:6.5px;color:#4a5568;letter-spacing:0.06em;text-transform:uppercase;font-family:'Inter',system-ui,sans-serif;font-weight:500;}
-.mm-meta-val{font-size:8.5px;color:#7a9bb0;font-family:'Fira Code',monospace,sans-serif;font-weight:500;letter-spacing:0.02em;}
-.mm-meta-sep{width:1px;height:22px;background:rgba(255,255,255,0.06);}
+.mm-meta-lbl{font-size:7.5px;color:#8A9E96;letter-spacing:.06em;text-transform:uppercase;font-family:'Inter',system-ui,sans-serif;font-weight:700;}
+.mm-meta-val{font-size:9.5px;color:#1A3026;font-family:'Fira Code',monospace,sans-serif;font-weight:600;letter-spacing:.01em;}
+.mm-meta-sep{width:1px;height:20px;background:rgba(0,0,0,.06);}
 
 /* ── Ticker de fuentes técnicas ── */
 #mm-ticker{
-  height:18px;overflow:hidden;position:relative;
-  background:#0e1218;
-  border-top:1px solid rgba(255,255,255,0.05);
+  height:20px;overflow:hidden;position:relative;
+  background:transparent;
+  border-bottom:.5px solid rgba(0,0,0,.06);
   flex-shrink:0;
 }
 #mm-ticker-inner{
-  display:inline-flex;align-items:center;white-space:nowrap;height:18px;
+  display:inline-flex;align-items:center;white-space:nowrap;height:20px;
   animation:mm-ticker-scroll 45s linear infinite;
-  font-size:8px;font-family:'Inter',system-ui,sans-serif;
-  letter-spacing:0.03em;padding-left:8px;color:#3d4f5e;
+  font-size:8.5px;font-family:'Inter',system-ui,sans-serif;
+  letter-spacing:.02em;padding-left:11px;color:#8A9E96;font-weight:500;
 }
 .mm-t-live{
   display:inline-flex;align-items:center;gap:3px;margin-right:8px;
-  color:#3d8b65;font-weight:700;font-size:7.5px;letter-spacing:0.07em;
-  border-right:1px solid rgba(255,255,255,0.06);padding-right:8px;
+  color:#1A5C3A;font-weight:700;font-size:8px;letter-spacing:.06em;
+  border-right:.5px solid rgba(0,0,0,.08);padding-right:8px;
 }
 .mm-t-live::before{
   content:'';display:inline-block;width:4px;height:4px;border-radius:50%;
-  background:#3d8b65;animation:mm-dot-blink 2.5s ease-in-out infinite;
+  background:#2E7D52;animation:mm-dot-blink 2.5s ease-in-out infinite;
 }
-.mm-t-src{color:#3d4f5e;}
-.mm-t-sep{color:#252e38;margin:0 4px;}
-.mm-t-badge{color:#4a7a62;font-size:7.5px;font-weight:600;}
+.mm-t-src{color:#8A9E96;}
+.mm-t-sep{color:#C4D4CC;margin:0 4px;}
+.mm-t-badge{color:#1A5C3A;font-size:8px;font-weight:700;}
 @keyframes mm-ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 @keyframes mm-dot-blink{0%,100%{opacity:1;}50%{opacity:.35;}}
 
-/* ══ Panel Georreferenciación · Estilo ArcGIS Widget ══ */
+/* ══ Panel Georreferenciación · iOS glass ══ */
 #mm-geo-panel{
-  background:#12161d;
-  border-top:1px solid rgba(255,255,255,0.06);
+  background:transparent;
+  border-top:none;
   padding:0;display:flex;flex-direction:column;
   flex-shrink:0;
 }
 #mm-geo-header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:5px 10px 4px;
-  background:#0f1319;
-  border-bottom:1px solid rgba(255,255,255,0.05);
+  padding:8px 11px 6px;
+  background:transparent;
+  border-bottom:none;
 }
 #mm-geo-header-lbl{
-  font-size:7px;font-weight:700;letter-spacing:0.12em;
-  color:#4a5e6e;text-transform:uppercase;
+  font-size:9px;font-weight:800;letter-spacing:.08em;
+  color:#8A9E96;text-transform:uppercase;
   font-family:'Inter',system-ui,sans-serif;
 }
 #mm-geo-header-scope{
-  font-size:7px;color:#2d6a48;font-weight:600;
-  font-family:'Inter',system-ui,sans-serif;letter-spacing:0.04em;
+  font-size:8.5px;color:#1A5C3A;font-weight:700;
+  font-family:'Inter',system-ui,sans-serif;letter-spacing:.02em;
 }
-#mm-geo-body{padding:6px 10px 6px;display:flex;flex-direction:column;gap:5px;}
+#mm-geo-body{padding:0 11px 11px;display:flex;flex-direction:column;gap:7px;}
 
-/* Botones ESRI-style */
-#mm-geo-bar{display:flex;gap:5px;}
+/* Botones — mismo radio/easing que ind-btn/bm-btn */
+#mm-geo-bar{display:flex;gap:6px;}
 #mm-geo-btn,#mm-geo-manual-btn{
   flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
-  background:#1a1f28;
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:3px;padding:5px 8px;
-  color:#8a9eb0;font-size:8.5px;font-weight:500;
-  font-family:'Inter',system-ui,sans-serif;letter-spacing:0.03em;
-  cursor:pointer;transition:all .15s ease;
+  background:rgba(0,0,0,.045);
+  border:none;
+  border-radius:10px;padding:8px 8px;
+  color:#5A7268;font-size:10.5px;font-weight:700;
+  font-family:'Inter',system-ui,sans-serif;letter-spacing:.01em;
+  cursor:pointer;transition:all .22s cubic-bezier(.32,.72,.28,1);
 }
 #mm-geo-btn:hover,#mm-geo-manual-btn:hover{
-  background:#1e2530;border-color:rgba(61,139,101,0.4);color:#a8bfcc;
+  background:rgba(46,125,82,.12);color:#1A5C3A;transform:translateY(-1px);
 }
+#mm-geo-btn:active,#mm-geo-manual-btn:active{transform:scale(.96)}
 #mm-geo-btn:disabled{opacity:.4;cursor:not-allowed;}
 #mm-geo-btn .mm-btn-icon,#mm-geo-manual-btn .mm-btn-icon{
-  font-size:9px;line-height:1;
+  font-size:10px;line-height:1;
 }
 #mm-geo-manual-btn.active{
-  background:#162318;border-color:rgba(61,139,101,0.5);color:#5fb896;
+  background:rgba(46,125,82,.16);color:#1A5C3A;
 }
 
-/* Inputs técnicos monoespaciados */
+/* Inputs monoespaciados */
 #mm-geo-manual{
-  display:none;flex-direction:column;gap:4px;
-  background:#0e1218;border:1px solid rgba(255,255,255,0.06);
-  border-radius:3px;padding:6px 7px;
-  animation:mm-geo-slide .15s ease;
+  display:none;flex-direction:column;gap:5px;
+  background:rgba(0,0,0,.035);border:.5px solid rgba(0,0,0,.05);
+  border-radius:10px;padding:8px 9px;
+  animation:mm-geo-slide .25s cubic-bezier(.32,.72,.28,1);
 }
-@keyframes mm-geo-slide{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:translateY(0);}}
-.mm-coord-row{display:flex;align-items:center;gap:5px;}
+@keyframes mm-geo-slide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.mm-coord-row{display:flex;align-items:center;gap:6px;}
 .mm-coord-lbl{
-  font-size:7px;font-weight:700;letter-spacing:0.08em;color:#3d5060;
+  font-size:8px;font-weight:800;letter-spacing:.06em;color:#8A9E96;
   font-family:'Inter',system-ui,sans-serif;text-transform:uppercase;
-  min-width:14px;text-align:center;
+  min-width:16px;text-align:center;
 }
 #mm-geo-lat,#mm-geo-lon{
-  flex:1;background:#080c10;
-  border:1px solid rgba(255,255,255,0.08);border-radius:2px;
-  padding:4px 6px;font-size:8.5px;color:#7a9bb0;
+  flex:1;background:#fff;
+  border:.5px solid rgba(0,0,0,.08);border-radius:7px;
+  padding:6px 8px;font-size:10px;color:#1A3026;
   font-family:'Fira Code',monospace,sans-serif;
-  outline:none;min-width:0;transition:border-color .15s;
+  outline:none;min-width:0;transition:border-color .2s,box-shadow .2s;
 }
 #mm-geo-lat:focus,#mm-geo-lon:focus{
-  border-color:rgba(61,139,101,0.5);color:#9ab8c8;
+  border-color:rgba(46,125,82,.5);box-shadow:0 0 0 3px rgba(46,125,82,.14);
 }
 #mm-geo-lat::placeholder,#mm-geo-lon::placeholder{
-  color:#2a3540;font-size:8px;
+  color:#B8C8C0;font-size:9.5px;
 }
 #mm-geo-apply{
   display:flex;align-items:center;justify-content:center;
   width:100%;
-  background:#1a3028;border:1px solid rgba(61,139,101,0.4);
-  border-radius:2px;padding:4px 8px;margin-top:2px;
-  color:#5fb896;font-size:8px;font-weight:600;letter-spacing:0.06em;
-  cursor:pointer;transition:all .15s;text-transform:uppercase;
+  background:#2E7D52;border:none;
+  border-radius:9px;padding:8px 8px;margin-top:2px;
+  color:#fff;font-size:10px;font-weight:700;letter-spacing:.03em;
+  cursor:pointer;transition:all .22s cubic-bezier(.32,.72,.28,1);text-transform:uppercase;
   font-family:'Inter',system-ui,sans-serif;
 }
-#mm-geo-apply:hover{background:#1e3830;border-color:rgba(61,139,101,0.7);color:#7dcca8;}
+#mm-geo-apply:hover{background:#256b46;transform:translateY(-1px)}
+#mm-geo-apply:active{transform:scale(.97)}
 
-/* Estado / feedback · sutil, institucional */
+/* Estado / feedback */
 #mm-geo-status{
-  display:flex;align-items:center;gap:5px;
-  min-height:14px;padding:0 1px;
-  font-size:7.5px;font-weight:500;letter-spacing:0.04em;
+  display:flex;align-items:center;gap:6px;
+  min-height:16px;padding:1px;
+  font-size:9.5px;font-weight:600;letter-spacing:.01em;
   font-family:'Inter',system-ui,sans-serif;
-  color:#3d4f5e;transition:color .25s;
+  color:#8A9E96;transition:color .25s;
 }
 #mm-geo-status::before{
   content:'';flex-shrink:0;
-  width:4px;height:4px;border-radius:50%;
-  background:currentColor;opacity:0.7;
+  width:5px;height:5px;border-radius:50%;
+  background:currentColor;opacity:.8;
   display:none;
 }
 #mm-geo-status.has-msg::before{display:inline-block;}
