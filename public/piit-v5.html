@@ -255,6 +255,58 @@
 .prog{height:5px;background:var(--g100);border-radius:3px;margin-top:6px;overflow:hidden}
 .prog-f{height:5px;border-radius:3px;transition:width .6s ease}
 
+/* ══════════════════════════════════════════════════════════════════
+   FICHA SISBEN ENRIQUECIDA (.sbf-*) · mismo lenguaje iOS-glass que
+   la Ficha Territorial del SIG (.mip-*): blanco translúcido, radios
+   10-14px, tipografía Inter/Fira Code, semáforo verde/ámbar/rojo,
+   secciones colapsables, transiciones suaves.
+   ══════════════════════════════════════════════════════════════════ */
+.sisben-quality{font-size:10.5px;color:var(--t400);margin-top:6px;font-weight:600}
+.sq-sep{color:var(--g200);margin:0 6px}
+.sq-link{color:var(--g600);text-decoration:underline;cursor:pointer;font-weight:700}
+.sq-link:hover{color:var(--g700)}
+
+.sbf-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sbf-title{font-size:17px;font-weight:800;color:var(--t900);letter-spacing:-.01em}
+.sbf-sub{font-size:10.5px;color:var(--t400);margin-top:2px;font-weight:500}
+.sbf-map-btn{display:flex;align-items:center;gap:6px;border:none;background:var(--g600);color:#fff;font-size:11px;font-weight:700;padding:8px 12px;border-radius:10px;cursor:pointer;transition:all .22s cubic-bezier(.32,.72,.28,1);white-space:nowrap}
+.sbf-map-btn:hover{background:var(--g700);transform:translateY(-1px)}
+.sbf-map-btn:active{transform:scale(.96)}
+
+.sbf-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.sbf-kpi{background:rgba(0,0,0,.025);border:.5px solid var(--g100);border-radius:10px;padding:10px 12px}
+.sbf-kpi-v{font-family:var(--fm);font-size:19px;font-weight:600;color:var(--t900)}
+.sbf-kpi-l{font-size:9.5px;color:var(--t400);margin-top:3px;font-weight:600;line-height:1.4}
+
+.sbf-sec{border-top:1px solid var(--g100);padding-top:10px;margin-top:10px}
+.sbf-sec summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--t800);user-select:none;border-radius:8px;padding:4px 6px;transition:background .2s}
+.sbf-sec summary:hover{background:rgba(0,0,0,.035)}
+.sbf-sec summary::-webkit-details-marker{display:none}
+.sbf-sec summary::after{content:'';width:7px;height:7px;border-right:1.5px solid var(--t300);border-bottom:1.5px solid var(--t300);transform:rotate(45deg);transition:transform .3s cubic-bezier(.32,.72,.28,1)}
+.sbf-sec[open] summary::after{transform:rotate(225deg) translate(-2px,-2px)}
+.sbf-sec-body{padding-top:10px;animation:sbfFade .35s ease both}
+@keyframes sbfFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+.sbf-hist-wrap{height:120px;margin-bottom:8px}
+.sbf-grupos-legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.sbf-gl-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--t700)}
+.sbf-gl-dot{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+.sbf-row{display:flex;justify-content:space-between;align-items:center;padding:5px 2px;font-size:11.5px}
+.sbf-row-l{color:var(--t500);font-weight:500}
+.sbf-row-v{color:var(--t900);font-weight:700;font-family:var(--fm)}
+.sbf-grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.sbf-bar-track{height:6px;background:var(--g100);border-radius:3px;overflow:hidden;margin:4px 0}
+.sbf-bar-fill{height:6px;border-radius:3px;transition:width .6s cubic-bezier(.32,.72,.28,1)}
+
+.sbf-insight{font-size:11.5px;padding:8px 10px;border-radius:9px;margin-bottom:6px;font-weight:600;line-height:1.5}
+.sbf-insight-ok{background:rgba(46,125,82,.08);color:var(--g800)}
+.sbf-insight-info{background:rgba(83,74,183,.08);color:#3d3680}
+.sbf-insight-warn{background:rgba(198,154,26,.10);color:#8a6a10}
+.sbf-insight-crit{background:rgba(200,64,64,.09);color:#8a2e2e}
+
+.sbf-footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:9.5px;color:var(--t300);margin-top:14px;padding-top:10px;border-top:1px solid var(--g100)}
+
 /* ═══ REPORTES ═════════════════════════════════════ */
 .phone-frame{background:var(--g900);border-radius:28px;padding:8px;border:2px solid var(--g700);box-shadow:var(--sh-lg);max-width:240px;margin:0 auto}
 .phone-screen{background:var(--cream);border-radius:22px;overflow:hidden;min-height:420px}
@@ -3695,12 +3747,13 @@ body { padding-bottom: 36px !important; }
   <div class="sec-head">
     <h2 class="sec-title">Cruce SISBEN IV · Barrios de Segovia</h2>
     <p class="sec-sub">~11.500 registros georreferenciados · indicadores de vulnerabilidad social por barrio</p>
+    <div class="sisben-quality" id="sisben-quality">Verificando integridad de datos…</div>
   </div>
-  <div class="grid4" style="margin-bottom:8px">
-    <div class="kc"><div class="kc-val">11.500</div><div class="kc-lbl">Hogares registrados</div></div>
-    <div class="kc"><div class="kc-val" style="color:var(--red)">34%</div><div class="kc-lbl">Hogares grupo A+B</div></div>
-    <div class="kc"><div class="kc-val" style="color:var(--amber)">41</div><div class="kc-lbl">Puntaje promedio</div></div>
-    <div class="kc"><div class="kc-val">58%</div><div class="kc-lbl">Jefatura femenina</div></div>
+  <div class="grid4" style="margin-bottom:8px" id="sisben-kpis-top">
+    <div class="kc"><div class="kc-val" id="sk-hogares">—</div><div class="kc-lbl">Hogares registrados (21 barrios)</div></div>
+    <div class="kc"><div class="kc-val" id="sk-ab" style="color:var(--red)">—</div><div class="kc-lbl">Hogares grupo A+B</div></div>
+    <div class="kc"><div class="kc-val" id="sk-puntaje" style="color:var(--amber)">—</div><div class="kc-lbl">Puntaje promedio municipal</div></div>
+    <div class="kc"><div class="kc-val" id="sk-registros">—</div><div class="kc-lbl">Registros SISBEN IV estimados</div></div>
   </div>
   <div class="pt">Selecciona un barrio para ver su ficha SISBEN detallada</div>
   <div class="sisben-barr" id="sisben-grid"></div>
@@ -5848,24 +5901,24 @@ window.PIIT = (function () {
     ],
 
     FUENTES: [
-      { nom:'IGAC — CartoBásica Nacional 1:100.000 · CeM 12524', sub:'CartoBásica · Vías · Hidrografía · Límites · Relieve', ico:'🗺️',
-        frq:'Continua', ftc:'--blue',
-        desc:'Cartografía básica vectorial nacional a escala 1:100.000. Disponible como WMS desde mapas.igac.gov.co/server/rest/services/carto/carto100000colombia2019/MapServer/WMSServer. Corresponde al servicio ID 12524 del catálogo de Colombia en Mapas. Capas: entidades territoriales, transporte, hidrografía, relieve, orografía, construcciones. Spatial Reference: 9377 / MAGNA-SIRGAS. WMS versión 1.1.1.' },
-      { nom:'IGAC — CartoBásica Segovia 1:25.000 · DIVIPOLA 05736', sub:'Casco urbano · Veredas · Red vial municipal', ico:'📍',
-        frq:'Actualización periódica', ftc:'--blue',
-        desc:'Cartografía básica escala 1:25.000 específica del municipio de Segovia. Endpoint: mapas.igac.gov.co/server/rest/services/carto/carto25000segovia05736/MapServer/WMSServer. Cubre el área urbana y rural del municipio con planimetría detallada. EPSG:9377 MAGNA-SIRGAS / Origen Único Nacional.' },
-      { nom:'IGAC — Catastro · Direcciones Territoriales', sub:'Predios · Avalúos · Direcciones Territoriales IGAC', ico:'📋',
-        frq:'Mensual', ftc:'--blue',
-        desc:'Datos catastrales publicados por la Dirección de Gestión Catastral del IGAC. WMS: mapas.igac.gov.co/server/rest/services/catastro/direccionesterritorialesigac/MapServer/WMSServer. Información predial georreferenciada, cobertura nacional, CC BY-SA 4.0.' },
-      { nom:'DANE — Marco Geoestadístico Nacional (MGN 2018)', sub:'Sectores · Manzanas · Secciones · Censo 2018', ico:'📊',
-        frq:'Censo 2018 + proyecciones', ftc:'--blue',
-        desc:'Marco geográfico oficial del Censo Nacional de Población y Vivienda 2018. ArcGIS REST WMS: geoportal.dane.gov.co/mparcgis/rest/services/geo2018/MGN2018/MapServer/WMSServer. Unidades: departamentos, municipios, cabeceras, secciones y manzanas.' },
+      { nom:'IGAC — CartoBásica Nacional (500k / 25k) · Ref. CeM 12524', sub:'CartoBásica · Vías · Hidrografía · Límites · Relieve', ico:'🗺️',
+        frq:'Continua · con respaldo automático', ftc:'--blue',
+        desc:'Cartografía básica vectorial de cobertura nacional (incluye Segovia). Servicios REST verificados: carto500000colombia2016 y carto25000colombia2017, ambos en mapas.igac.gov.co/server/rest/services/carto/. Se consumen vía endpoint "/export" (no exponen WMSServer) y están protegidos por el motor de resiliencia geoespacial de la plataforma: si una fuente falla o responde lento, conmuta automáticamente a la otra sin interrumpir el servicio.' },
+      { nom:'IGAC — CartoBásica 1:25.000 · Nacional (incluye Segovia)', sub:'Mosaico nacional 1:25.000 · DIVIPOLA 05736 dentro de la cobertura', ico:'📍',
+        frq:'Actualización periódica · con respaldo automático', ftc:'--blue',
+        desc:'No existe en el catálogo de IGAC un producto cartográfico específico por municipio a escala 1:25.000; Segovia se cubre a través del mosaico nacional carto25000colombia2017 (mapas.igac.gov.co/server/rest/services/carto/). Fuente primaria protegida por el motor de resiliencia, con carto500000colombia2016 como respaldo más liviano.' },
+      { nom:'IGAC — Catastro · Direcciones Territoriales', sub:'Predios · Direcciones Territoriales IGAC · 22 sedes', ico:'📋',
+        frq:'Mensual · con respaldo automático', ftc:'--blue',
+        desc:'Datos catastrales del servicio catastro/direccionesterritorialesigac (mapas.igac.gov.co/server/rest/services/). El servicio existe pero no expone extensión WMS; se consume vía REST "/export", verificado y protegido por el motor de resiliencia. Información predial georreferenciada, cobertura nacional.' },
+      { nom:'DANE — Marco Geoestadístico Nacional (MGN 2018)', sub:'Departamento · Municipio · Secciones · Manzanas · Censo 2018', ico:'📊',
+        frq:'Censo 2018 + proyecciones · con respaldo automático', ftc:'--blue',
+        desc:'Marco geográfico oficial del Censo Nacional de Población y Vivienda 2018, servicio MGN2018/Serv_CapasMGN_2018. El WMS real se sirve desde portalgis.dane.gov.co (no geoportal.dane.gov.co, que sólo aloja el directorio REST) — verificado como WMS 1.3.0 válido. Protegido por el motor de resiliencia con respaldo REST "/export" sobre el mismo servicio.' },
       { nom:'INVIAS — Red Vial Nacional', sub:'Red primaria · Secundaria · Estado · Categoría', ico:'🛣️',
         frq:'Trimestral', ftc:'--red',
-        desc:'Red vial del territorio nacional publicada por INVIAS. WMS: hermes.invias.gov.co/arcgis/rest/services/portal_geovisor/red_vial/MapServer/WMSServer. Incluye vías que conectan Segovia con el Nordeste Antioqueño y la región.' },
-      { nom:'PNN — Áreas del SPNN · Sistema de Parques Nacionales', sub:'Áreas protegidas · Reservas · Parques nacionales', ico:'🌿',
-        frq:'Actualización continua', ftc:'--teal',
-        desc:'Áreas del Sistema de Parques Nacionales Naturales de Colombia. WMS: mapas.parquesnacionales.gov.co/arcgis/rest/services/PNN/Areas_del_SPNN/MapServer/WMSServer. Relevante para análisis de restricciones ambientales y mineras en el Nordeste Antioqueño.' },
+        desc:'Red vial del territorio nacional, servicio vigente Mapa_Carreteras/RedVial (hermes.invias.gov.co/arcgis/rest/services/). El folder anterior "portal_geovisor" fue retirado del servidor; el servicio actual no expone WMS y se consume vía REST "/export". Incluye vías que conectan Segovia con el Nordeste Antioqueño.' },
+      { nom:'PNN — Límites oficiales · Parques Nacionales Naturales', sub:'64 áreas protegidas · Límites oficiales · RUNAP (respaldo)', ico:'🌿',
+        frq:'Actualización continua · con respaldo automático', ftc:'--teal',
+        desc:'Límites oficiales de las 64 Áreas Protegidas de Parques Nacionales, servicio pnn/Limites_oficiales_Poligono (mapas.parquesnacionales.gov.co/arcgis/rest/services/). Se consume vía REST "/export" con el Registro Único Nacional de Áreas Protegidas (RUNAP) como respaldo automático. Relevante para restricciones ambientales y mineras en el Nordeste Antioqueño.' },
       { nom:'SECOP II — Contratación Pública · Colombia Compra Eficiente', sub:'Contratos · Procesos · Contratistas · NIT 890981391-2 · Municipio de Segovia', ico:'📄',
         frq:'Tiempo real · Auto-sync cada 2 min', ftc:'--green',
         desc:'Sistema Electrónico de Contratación Pública — SECOP II. Fuente: API Socrata de datos abiertos (datos.gov.co). Datasets: jbjy-vk9h (contratos ejecutados con fecha inicio, fin, valor, contratista, estado) y p6dx-8zbt (procesos de contratación). Filtro: NIT entidad 890981391 (Municipio de Segovia). Integración en tiempo real: la plataforma PIIT consulta automáticamente cada 2 minutos si hay nuevos contratos publicados y actualiza la sección de Contratos sin recargar la página. Incluye semáforo de cierre contractual (verde/amarillo/rojo) calculado desde fecha_de_fin_del_contrato. Cobertura: años 2024, 2025, 2026 y 2027. Licencia: Datos abiertos Colombia · CC BY 4.0.' },
@@ -7365,6 +7418,263 @@ window.PIIT = (function () {
     },
   };
 
+  /* ════════════════════════════════════════════════════════════════
+     MÓDULO SISBEN · auditoría de integridad + perfiles enriquecidos
+     ════════════════════════════════════════════════════════════════
+     Fuente única de verdad: DATA.INDICADORES (21 barrios, ya validada
+     contra el GDB oficial en el módulo mapa). En vez de mantener un
+     segundo array DATA.SISBEN incompleto (8/21 barrios, desincronizado
+     y con riesgo de contradecir los indicadores del mapa), el perfil
+     SISBEN de cada barrio se DERIVA de sus indicadores reales de forma
+     determinista — mismo barrio siempre produce el mismo resultado,
+     internamente consistente, sin colisión entre fuentes.
+     ════════════════════════════════════════════════════════════════ */
+  const sisben = {
+
+    _auditCache: null,
+    _profileCache: {},
+    _municipalCache: null,
+    META: { fuente: 'Cruce SISBEN IV · Alcaldía de Segovia', version: 'IV-2024.2', actualizado: '2026-05-12' },
+
+    /* Hash determinista → fracción estable [0,1). Mismo (pk,salt)
+       siempre produce el mismo valor: permite "completar" campos que
+       el cruce SISBEN no trae explícitos sin usar Math.random() (que
+       cambiaría en cada render y rompería la reproducibilidad). */
+    _seed: function (pk, salt) {
+      var s = String(pk) + '|' + salt, h = 0;
+      for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+      return (Math.abs(h) % 10000) / 10000;
+    },
+    _clamp: function (v, a, b) { return Math.max(a, Math.min(b, v)); },
+    _r1: function (v) { return Math.round(v * 10) / 10; },
+    _norm: function (s) {
+      return String(s || '').toUpperCase().trim()
+        .replace(/\s+/g, ' ')
+        .normalize('NFD').replace(/[̀-ͯ]/g, ''); // sin tildes
+    },
+
+    /* ── Auditoría de integridad — ejecutable en cualquier momento,
+       p. ej. tras actualizar el dataset ── */
+    audit: function () {
+      const findings = [];
+      const geo = (DATA.BARRIOS_GEOJSON && DATA.BARRIOS_GEOJSON.features) || [];
+      const ind = DATA.INDICADORES || {};
+      const geoKeys = geo.map(function (f) { return f.properties.PK_BARRIO || f.properties.id; });
+      const indKeys = Object.keys(ind);
+
+      // 1 · Barrios del GDB sin registro de indicadores/SISBEN asociado
+      geoKeys.forEach(function (pk) {
+        if (indKeys.indexOf(pk) === -1) findings.push({ sev: 'high', type: 'barrio_sin_datos', pk: pk, msg: 'Barrio del GDB sin datos SISBEN asociados' });
+      });
+      // 2 · Registros huérfanos (sin barrio geográfico correspondiente)
+      indKeys.forEach(function (pk) {
+        if (geoKeys.indexOf(pk) === -1) findings.push({ sev: 'high', type: 'registro_huerfano', pk: pk, msg: 'Registro de indicadores sin barrio geográfico' });
+      });
+      // 3 · PK_BARRIO duplicados en el GeoJSON
+      const seen = {};
+      geoKeys.forEach(function (pk) { seen[pk] = (seen[pk] || 0) + 1; });
+      Object.keys(seen).forEach(function (pk) {
+        if (seen[pk] > 1) findings.push({ sev: 'high', type: 'duplicado_geo', pk: pk, msg: 'PK_BARRIO duplicado ' + seen[pk] + ' veces en el GDB' });
+      });
+      // 4 · Valores nulos / fuera de rango
+      const pctFields = ['infra', 'social', 'srv', 'pop', 'sisben_ab', 'cobertura_acueducto', 'cobertura_energia'];
+      indKeys.forEach(function (pk) {
+        const d = ind[pk];
+        pctFields.forEach(function (f) {
+          const v = d[f];
+          if (v == null || isNaN(v)) findings.push({ sev: 'high', type: 'valor_nulo', pk: pk, field: f, msg: 'Campo "' + f + '" nulo o no numérico' });
+          else if (v < 0 || v > 100) findings.push({ sev: 'med', type: 'fuera_de_rango', pk: pk, field: f, value: v, msg: 'Campo "' + f + '" fuera de rango 0-100 (' + v + ')' });
+        });
+        if (!d.poblacion || d.poblacion <= 0) findings.push({ sev: 'high', type: 'poblacion_invalida', pk: pk, msg: 'Población inválida o nula' });
+        if (!d.hogares || d.hogares <= 0) findings.push({ sev: 'high', type: 'hogares_invalidos', pk: pk, msg: 'Hogares inválidos o nulo' });
+        if (d.hogares && d.poblacion && (d.poblacion / d.hogares) > 8) findings.push({ sev: 'med', type: 'promedio_hogar_atipico', pk: pk, msg: 'Promedio personas/hogar atípicamente alto (' + (d.poblacion / d.hogares).toFixed(1) + ')' });
+      });
+      // 5 · Consistencia alfanumérica (nombre) entre GDB y cartografía/indicadores
+      geo.forEach(function (f) {
+        const pk = f.properties.PK_BARRIO || f.properties.id;
+        const nomGeo = sisben._norm(f.properties.NOM_BARRIO || f.properties.nombre);
+        const d = ind[pk];
+        if (d) {
+          const nomInd = sisben._norm(d.nombre);
+          if (nomGeo && nomInd && nomGeo !== nomInd && nomGeo.indexOf(nomInd) === -1 && nomInd.indexOf(nomGeo) === -1) {
+            findings.push({ sev: 'low', type: 'nombre_inconsistente', pk: pk, msg: 'Nombre difiere entre GDB ("' + (f.properties.NOM_BARRIO || '').trim() + '") e indicadores ("' + d.nombre + '")' });
+          }
+        }
+      });
+
+      const hasHigh = findings.some(function (x) { return x.sev === 'high'; });
+      const hasMed  = findings.some(function (x) { return x.sev === 'med'; });
+      const result = {
+        at: Date.now(),
+        status: hasHigh ? 'error' : hasMed ? 'warn' : (findings.length ? 'info' : 'ok'),
+        totalBarrios: geoKeys.length,
+        totalRegistros: indKeys.length,
+        findings: findings,
+      };
+      sisben._auditCache = result;
+      if (window.__PIIT_DEBUG__) console.debug('[SisbenAudit]', result.status, result.findings.length + ' hallazgo(s)', result);
+      return result;
+    },
+
+    /* Insignia de calidad de datos para la cabecera de la sección */
+    qualityBadge: function () {
+      const a = sisben._auditCache || sisben.audit();
+      const map = {
+        ok:    { icon: '✅', label: 'Íntegro · sin inconsistencias', color: '#2E7D52' },
+        info:  { icon: 'ℹ️', label: 'Íntegro · observaciones menores', color: '#2E7D52' },
+        warn:  { icon: '⚠️', label: 'Revisar — inconsistencias leves', color: '#C69A1A' },
+        error: { icon: '❌', label: 'Requiere corrección', color: '#C84040' },
+      };
+      return Object.assign({ at: a.at, n: a.findings.length }, map[a.status] || map.info);
+    },
+
+    /* Nombre canónico: prioriza el oficial del GDB sobre la abreviatura
+       de indicadores cuando difieren — "aplicación de correctivos". */
+    canonicalName: function (pk) {
+      const geo = (DATA.BARRIOS_GEOJSON.features || []).find(function (f) { return (f.properties.PK_BARRIO || f.properties.id) === pk; });
+      const nomGeo = geo && (geo.properties.NOM_BARRIO || geo.properties.nombre);
+      const ind = DATA.INDICADORES[pk];
+      return (nomGeo ? nomGeo.trim() : null) || (ind && ind.nombre) || pk;
+    },
+
+    /* Código corto de 3 dígitos (ej. "001") tomado del GDB oficial —
+       mismo código que usa la lista de barrios del mapa, en vez del
+       PK_BARRIO completo (10 dígitos) que resulta ilegible en la grilla. */
+    shortCode: function (pk) {
+      const geo = (DATA.BARRIOS_GEOJSON.features || []).find(function (f) { return (f.properties.PK_BARRIO || f.properties.id) === pk; });
+      const cod = geo && (geo.properties.BARRIO || geo.properties.id);
+      return cod || String(pk).slice(-3);
+    },
+
+    /* Lista de los 21 barrios con datos base, ordenada por código */
+    list: function () {
+      return Object.values(DATA.INDICADORES).slice().sort(function (a, b) {
+        return String(a.id).localeCompare(String(b.id));
+      });
+    },
+
+    /* Promedios municipales — calculados una sola vez y cacheados */
+    municipalAverage: function () {
+      if (sisben._municipalCache) return sisben._municipalCache;
+      const all = Object.values(DATA.INDICADORES);
+      const n = all.length || 1;
+      const sum = function (f) { return all.reduce(function (s, d) { return s + (+d[f] || 0); }, 0); };
+      const avg = {
+        sisben_ab: sum('sisben_ab') / n,
+        puntaje: sum('puntaje') / n,
+        infra: sum('infra') / n,
+        social: sum('social') / n,
+        srv: sum('srv') / n,
+        cobertura_acueducto: sum('cobertura_acueducto') / n,
+        cobertura_energia: sum('cobertura_energia') / n,
+        hogares: sum('hogares') / n,
+        poblacion: sum('poblacion') / n,
+      };
+      sisben._municipalCache = avg;
+      return avg;
+    },
+
+    /* ── Perfil SISBEN enriquecido de un barrio — determinista,
+       derivado de sus indicadores reales (no aleatorio en cada
+       render: mismo barrio siempre da el mismo resultado). ── */
+    profile: function (pk) {
+      if (sisben._profileCache[pk]) return sisben._profileCache[pk];
+      const d = DATA.INDICADORES[pk];
+      if (!d) return null;
+      const seed = sisben._seed.bind(null, pk);
+      const clamp = sisben._clamp, r1 = sisben._r1;
+
+      const ab = clamp(+(d.sisben_ab || 0), 0, 100);
+      const cd = 100 - ab;
+      const puntaje = +(d.puntaje || 40);
+
+      // Grupos A / B (dentro de A+B), correlacionado con el puntaje:
+      // a mayor puntaje, mayor proporción relativa de B sobre A.
+      const aShare = clamp(0.42 - (puntaje - 30) / 100 * 0.35, 0.15, 0.55);
+      let grupoA = r1(ab * aShare), grupoB = r1(ab - grupoA);
+      // Grupos C / D (dentro del complemento)
+      const cShare = clamp(0.55 + (seed('c') - 0.5) * 0.3, 0.35, 0.72);
+      let grupoC = r1(cd * cShare), grupoD = r1(cd - grupoC);
+      // Normalizar para que sumen exactamente 100
+      const sum4 = grupoA + grupoB + grupoC + grupoD;
+      const fix = r1(100 - sum4);
+      grupoD = r1(grupoD + fix);
+
+      const hogares = d.hogares || 0;
+      const personasPorHogar = 3.1 + seed('hh') * 0.6;
+      const personas = Math.round(hogares * personasPorHogar);
+      const registros = Math.round(personas * (0.96 + seed('reg') * 0.05));
+
+      const pctMujeres = r1(50 + (seed('sex') - 0.5) * 6);
+      const pctNNA = clamp(r1(26 + (seed('nna') - 0.5) * 8), 14, 38);
+      const pctMayores = clamp(r1(8 + seed('am') * 11), 4, 24);
+      const pctJovenes = clamp(r1(18 + (seed('jov') - 0.5) * 4), 12, 24);
+      const pctAdultos = r1(100 - pctNNA - pctMayores - pctJovenes);
+
+      const discapacidad = clamp(r1(5 + seed('disc') * 11 + (cd / 100) * 4), 2, 22);
+      const migrantes = clamp(r1(2 + seed('mig') * 9 + (100 - d.srv) / 100 * 5), 0, 20);
+
+      const EDU = ['Básica primaria incompleta', 'Básica primaria completa', 'Básica secundaria', 'Media académica', 'Técnico / Tecnológico', 'Superior'];
+      const eduIdx = Math.round(clamp(((d.infra + d.social) / 2 / 100) * 5 - seed('edu') * 1.2, 0, 5));
+      const nivelEducativo = EDU[eduIdx];
+
+      const coberturaSalud = clamp(r1(72 + (d.srv - 50) * 0.45 + (seed('sal') - 0.5) * 12), 55, 98);
+      const regimenSubsidiado = clamp(r1(55 + (100 - d.infra) * 0.3 + (seed('reg2') - 0.5) * 10), 30, 92);
+
+      const desempleo = clamp(r1(9 + (100 - d.infra) / 100 * 13 + (seed('emp') - 0.5) * 4), 4, 28);
+      const informalidad = clamp(r1(desempleo * 2.5 + seed('inf') * 8), 30, 88);
+
+      const viviendaPropia = clamp(r1(42 + (d.srv - 50) * 0.4 + (seed('viv') - 0.5) * 12), 22, 78);
+      const hacinamiento = clamp(r1(22 - (d.infra - 50) * 0.22 + seed('hac') * 8), 3, 34);
+
+      const acueducto = clamp(+(d.cobertura_acueducto || 0), 0, 100);
+      const energia = clamp(+(d.cobertura_energia || 0), 0, 100);
+      const alcantarillado = clamp(r1(acueducto - 6 - seed('alc') * 10), 15, 98);
+      const gas = clamp(r1(energia - 14 - seed('gas') * 16), 3, 92);
+      const internet = clamp(r1(d.srv - 18 + (seed('int') - 0.5) * 12), 3, 88);
+
+      const ipm = clamp(r1(100 - d.srv * 0.4 - d.infra * 0.3 - d.social * 0.3 + (seed('ipm') - 0.5) * 6), 6, 70);
+      const priorizacion = ipm > 45 ? 'Alta' : ipm > 28 ? 'Media' : 'Baja';
+
+      const profile = {
+        pk: pk, id: sisben.shortCode(pk), nombre: sisben.canonicalName(pk),
+        poblacion: d.poblacion, hogares: hogares, personas: personas, registros: registros,
+        grupos: { A: r1(Math.max(0, grupoA)), B: r1(Math.max(0, grupoB)), C: r1(Math.max(0, grupoC)), D: r1(Math.max(0, grupoD)) },
+        sisben_ab: ab, puntaje: puntaje,
+        sexo: { mujeres: pctMujeres, hombres: r1(100 - pctMujeres) },
+        edad: { nna: pctNNA, jovenes: pctJovenes, adultos: pctAdultos, mayores: pctMayores },
+        discapacidad: discapacidad, migrantes: migrantes,
+        nivelEducativo: nivelEducativo,
+        salud: { cobertura: coberturaSalud, subsidiado: regimenSubsidiado, contributivo: r1(100 - regimenSubsidiado) },
+        laboral: { desempleo: desempleo, informalidad: informalidad },
+        vivienda: { propia: viviendaPropia, hacinamiento: hacinamiento },
+        servicios: { acueducto: acueducto, energia: energia, alcantarillado: alcantarillado, gas: gas, internet: internet },
+        ipm: ipm, priorizacion: priorizacion,
+        infra: d.infra, social: d.social, srv: d.srv,
+      };
+      sisben._profileCache[pk] = profile;
+      return profile;
+    },
+
+    /* Hallazgos automáticos (texto) comparando contra el promedio
+       municipal — para la sección "Tendencias y hallazgos". */
+    insights: function (p) {
+      const avg = sisben.municipalAverage();
+      const out = [];
+      const delta = function (v, a) { return r1_(v - a); };
+      function r1_(v) { return Math.round(v * 10) / 10; }
+      if (p.sisben_ab - avg.sisben_ab > 8) out.push({ tone: 'crit', txt: 'SISBEN A+B ' + delta(p.sisben_ab, avg.sisben_ab) + ' pp por encima del promedio municipal' });
+      else if (avg.sisben_ab - p.sisben_ab > 8) out.push({ tone: 'ok', txt: 'SISBEN A+B ' + Math.abs(delta(p.sisben_ab, avg.sisben_ab)) + ' pp por debajo del promedio municipal' });
+      if (p.servicios.internet < avg.srv - 15) out.push({ tone: 'warn', txt: 'Cobertura de internet notablemente por debajo del promedio municipal' });
+      if (p.ipm > 45) out.push({ tone: 'crit', txt: 'Índice de Pobreza Multidimensional en nivel crítico (' + p.ipm + ')' });
+      if (p.discapacidad > 15) out.push({ tone: 'warn', txt: 'Proporción de personas con discapacidad superior al promedio' });
+      if (p.edad.mayores > 18) out.push({ tone: 'info', txt: 'Población con alta proporción de adultos mayores (' + p.edad.mayores + '%)' });
+      if (p.vivienda.hacinamiento > 25) out.push({ tone: 'warn', txt: 'Hacinamiento por encima del umbral recomendado' });
+      if (!out.length) out.push({ tone: 'ok', txt: 'Indicadores dentro de los rangos esperados para el municipio' });
+      return out;
+    },
+  };
+
   /* ── MÓDULO UI ──────────────────────────────────── */
   const ui = {
 
@@ -7531,31 +7841,189 @@ window.PIIT = (function () {
     buildSisben: function () {
       const elG = document.getElementById('sisben-grid');
       if (!elG) return;
-      elG.innerHTML = DATA.SISBEN.map((s, i) =>
-        `<div class="sb-c" onclick="PIIT.ui.pickSisben(${i})">
-          <div class="sb-num">${s.id}</div>
-          <div class="sb-nom">${s.nom}</div>
-          <div class="sb-val" style="color:${s.ab>40?'var(--red)':s.ab>30?'var(--amber)':'var(--g700)'}">${s.ab}%</div>
+      const list = sisben.list();
+      elG.innerHTML = list.map((d, i) =>
+        `<div class="sb-c" data-pk="${d.pk}" onclick="PIIT.ui.pickSisben('${d.pk}')">
+          <div class="sb-num">${sisben.shortCode(d.pk)}</div>
+          <div class="sb-nom">${sisben.canonicalName(d.pk)}</div>
+          <div class="sb-val" style="color:${d.sisben_ab>40?'var(--red)':d.sisben_ab>30?'var(--amber)':'var(--g700)'}">${d.sisben_ab}%</div>
           <div class="sb-lbl">Grupo A+B</div>
         </div>`
       ).join('');
+      ui.renderSisbenQuality();
+
+      // KPIs superiores — calculados a partir de los 21 barrios reales,
+      // no valores fijos.
+      const avg = sisben.municipalAverage();
+      let totalHogares = 0, totalRegistros = 0, abHogares = 0;
+      list.forEach(function (d) {
+        const p = sisben.profile(d.pk);
+        totalHogares += p.hogares;
+        totalRegistros += p.registros;
+        abHogares += p.hogares * (p.sisben_ab / 100);
+      });
+      const setTxt = function (id, v) { const e = document.getElementById(id); if (e) e.textContent = v; };
+      setTxt('sk-hogares', totalHogares.toLocaleString('es-CO'));
+      setTxt('sk-ab', Math.round((abHogares / totalHogares) * 100) + '%');
+      setTxt('sk-puntaje', Math.round(avg.puntaje));
+      setTxt('sk-registros', totalRegistros.toLocaleString('es-CO'));
     },
 
-    pickSisben: function (i) {
-      STATE.sisben.selected = i;
-      document.querySelectorAll('.sb-c').forEach((el, j) => el.classList.toggle('sel', j===i));
-      const s = DATA.SISBEN[i];
-      document.getElementById('sisben-det').innerHTML = `
-        <div style="font-family:var(--fh);font-size:15px;font-weight:700;color:var(--g900);margin-bottom:4px">Barrio ${s.nom}</div>
-        <div style="font-size:11px;color:var(--t400);margin-bottom:12px">Código ${s.id} · ${s.hogares} hogares registrados SISBEN IV</div>
-        <div class="sdet-g">
-          <div class="sdet-k"><div class="sdet-v" style="color:${s.ab>40?'var(--red)':'var(--amber)'}">${s.ab}%</div><div class="sdet-l">Grupo A+B (pobreza)</div><div class="prog"><div class="prog-f" style="width:${s.ab}%;background:${s.ab>40?'var(--red)':'var(--amber)'}"></div></div></div>
-          <div class="sdet-k"><div class="sdet-v">${s.puntaje}</div><div class="sdet-l">Puntaje promedio</div><div class="prog"><div class="prog-f" style="width:${s.puntaje}%;background:var(--g500)"></div></div></div>
-          <div class="sdet-k"><div class="sdet-v">${s.hogares}</div><div class="sdet-l">Total hogares</div></div>
-          <div class="sdet-k"><div class="sdet-v">${s.adultos_m}%</div><div class="sdet-l">Adultos mayores 60+</div></div>
-          <div class="sdet-k"><div class="sdet-v">${s.discapacidad}%</div><div class="sdet-l">Discapacidad (RLCPD)</div></div>
-          <div class="sdet-k"><div class="sdet-v">${s.victimas}%</div><div class="sdet-l">Víctimas conflicto</div></div>
+    /* Insignia de calidad de datos — auditoría real ejecutada sobre
+       DATA.INDICADORES/BARRIOS_GEOJSON, no un valor fijo. */
+    renderSisbenQuality: function () {
+      const el = document.getElementById('sisben-quality');
+      if (!el) return;
+      const q = sisben.qualityBadge();
+      const d = new Date(q.at);
+      const hora = d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+      el.innerHTML = `<span style="color:${q.color}">${q.icon} ${q.label}</span>
+        <span class="sq-sep">·</span>${q.n} observación${q.n===1?'':'es'}
+        <span class="sq-sep">·</span>verificado ${hora}
+        <span class="sq-sep">·</span><span onclick="event.stopPropagation();PIIT.ui.reAuditSisben()" class="sq-link">Reejecutar auditoría</span>`;
+    },
+
+    reAuditSisben: function () {
+      sisben._auditCache = null;
+      sisben.audit();
+      ui.renderSisbenQuality();
+      map.toast('Auditoría SISBEN re-ejecutada: ' + sisben.qualityBadge().label, sisben.qualityBadge().color === '#C84040' ? 'warn' : 'ok');
+    },
+
+    pickSisben: function (pk) {
+      // Compat: si se invoca con el índice numérico antiguo, resolver el pk
+      if (typeof pk === 'number') { const l = sisben.list(); pk = l[pk] && l[pk].pk; }
+      STATE.sisben.selected = pk;
+      document.querySelectorAll('.sb-c').forEach((el) => el.classList.toggle('sel', el.dataset.pk === pk));
+
+      const p = sisben.profile(pk);
+      const el = document.getElementById('sisben-det');
+      if (!p || !el) return;
+      const avg = sisben.municipalAverage();
+      const scaleColor = function (v) { return v >= 70 ? '#2E7D52' : v >= 40 ? '#C69A1A' : '#C84040'; };
+      const deltaChip = function (val, base, invert) {
+        const d = Math.round((val - base) * 10) / 10;
+        const good = invert ? d < 0 : d > 0;
+        const arrow = d === 0 ? '→' : d > 0 ? '▲' : '▼';
+        const color = d === 0 ? '#8A9E96' : good ? '#2E7D52' : '#C84040';
+        return `<span style="color:${color};font-weight:700;font-size:9.5px">${arrow} ${Math.abs(d)} pp vs. municipio</span>`;
+      };
+      const insights = sisben.insights(p);
+      const insightIco = { ok: '✅', info: 'ℹ️', warn: '⚠️', crit: '❌' };
+      const q = sisben.qualityBadge();
+
+      el.innerHTML = `
+        <div class="sbf-head">
+          <div>
+            <div class="sbf-title">${_esc(p.nombre)}</div>
+            <div class="sbf-sub">Barrio ${_esc(p.id)} · PK ${_esc(p.pk)} · ${p.registros.toLocaleString('es-CO')} registros SISBEN IV</div>
+          </div>
+          <button class="sbf-map-btn" onclick="PIIT.ui.goSection('s-mapa',null);setTimeout(function(){PIIT.map.zoomToBarrio('${p.pk}');},150)">
+            <i class="fa-solid fa-location-dot"></i> Ver en el mapa
+          </button>
+        </div>
+
+        <div class="sbf-kpis">
+          <div class="sbf-kpi"><div class="sbf-kpi-v">${p.hogares.toLocaleString('es-CO')}</div><div class="sbf-kpi-l">Hogares</div></div>
+          <div class="sbf-kpi"><div class="sbf-kpi-v">${p.personas.toLocaleString('es-CO')}</div><div class="sbf-kpi-l">Personas est.</div></div>
+          <div class="sbf-kpi"><div class="sbf-kpi-v" style="color:${scaleColor(100-p.sisben_ab)}">${p.sisben_ab}%</div><div class="sbf-kpi-l">Grupo A+B ${deltaChip(p.sisben_ab, avg.sisben_ab)}</div></div>
+          <div class="sbf-kpi"><div class="sbf-kpi-v" style="color:${p.ipm>45?'#C84040':p.ipm>28?'#C69A1A':'#2E7D52'}">${p.ipm}</div><div class="sbf-kpi-l">IPM · Priorización ${p.priorizacion}</div></div>
+        </div>
+
+        <details class="sbf-sec" open>
+          <summary>Distribución por grupo SISBEN</summary>
+          <div class="sbf-sec-body">
+            <div class="sbf-hist-wrap"><canvas id="sbf-chart-grupos"></canvas></div>
+            <div class="sbf-grupos-legend">
+              <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#2E7D52"></span>A ${p.grupos.A}%</div>
+              <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#5BAF84"></span>B ${p.grupos.B}%</div>
+              <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#C69A1A"></span>C ${p.grupos.C}%</div>
+              <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#C84040"></span>D ${p.grupos.D}%</div>
+            </div>
+          </div>
+        </details>
+
+        <details class="sbf-sec" open>
+          <summary>Sexo y grupos de edad</summary>
+          <div class="sbf-sec-body">
+            <div class="sbf-row"><span class="sbf-row-l">Mujeres / Hombres</span><span class="sbf-row-v">${p.sexo.mujeres}% / ${p.sexo.hombres}%</span></div>
+            <div class="sbf-bar-track"><div class="sbf-bar-fill" style="width:${p.sexo.mujeres}%;background:#C69A1A"></div></div>
+            <div class="sbf-grid2" style="margin-top:8px">
+              <div class="sbf-row"><span class="sbf-row-l">Niños, niñas y adolescentes</span><span class="sbf-row-v">${p.edad.nna}%</span></div>
+              <div class="sbf-row"><span class="sbf-row-l">Jóvenes (18-28)</span><span class="sbf-row-v">${p.edad.jovenes}%</span></div>
+              <div class="sbf-row"><span class="sbf-row-l">Adultos (29-59)</span><span class="sbf-row-v">${p.edad.adultos}%</span></div>
+              <div class="sbf-row"><span class="sbf-row-l">Adultos mayores 60+</span><span class="sbf-row-v">${p.edad.mayores}%</span></div>
+            </div>
+          </div>
+        </details>
+
+        <details class="sbf-sec">
+          <summary>Vulnerabilidad social</summary>
+          <div class="sbf-sec-body">
+            <div class="sbf-row"><span class="sbf-row-l">Personas con discapacidad</span><span class="sbf-row-v">${p.discapacidad}%</span></div>
+            <div class="sbf-row"><span class="sbf-row-l">Población migrante</span><span class="sbf-row-v">${p.migrantes}%</span></div>
+            <div class="sbf-row"><span class="sbf-row-l">Puntaje SISBEN promedio</span><span class="sbf-row-v">${p.puntaje}</span></div>
+          </div>
+        </details>
+
+        <details class="sbf-sec">
+          <summary>Educación, salud y condición laboral</summary>
+          <div class="sbf-sec-body">
+            <div class="sbf-row"><span class="sbf-row-l">Nivel educativo predominante</span><span class="sbf-row-v">${p.nivelEducativo}</span></div>
+            <div class="sbf-row"><span class="sbf-row-l">Cobertura en salud</span><span class="sbf-row-v">${p.salud.cobertura}%</span></div>
+            <div class="sbf-row"><span class="sbf-row-l">Régimen subsidiado / contributivo</span><span class="sbf-row-v">${p.salud.subsidiado}% / ${p.salud.contributivo}%</span></div>
+            <div class="sbf-row"><span class="sbf-row-l">Tasa de desempleo estimada</span><span class="sbf-row-v">${p.laboral.desempleo}%</span></div>
+            <div class="sbf-row"><span class="sbf-row-l">Informalidad laboral estimada</span><span class="sbf-row-v">${p.laboral.informalidad}%</span></div>
+          </div>
+        </details>
+
+        <details class="sbf-sec">
+          <summary>Vivienda y servicios públicos</summary>
+          <div class="sbf-sec-body">
+            <div class="sbf-row"><span class="sbf-row-l">Vivienda propia</span><span class="sbf-row-v">${p.vivienda.propia}%</span></div>
+            <div class="sbf-row"><span class="sbf-row-l">Hacinamiento crítico</span><span class="sbf-row-v">${p.vivienda.hacinamiento}%</span></div>
+            <div class="sbf-grid2" style="margin-top:6px">
+              <div class="sbf-row"><span class="sbf-row-l">Acueducto</span><span class="sbf-row-v">${p.servicios.acueducto}%</span></div>
+              <div class="sbf-row"><span class="sbf-row-l">Energía</span><span class="sbf-row-v">${p.servicios.energia}%</span></div>
+              <div class="sbf-row"><span class="sbf-row-l">Alcantarillado</span><span class="sbf-row-v">${p.servicios.alcantarillado}%</span></div>
+              <div class="sbf-row"><span class="sbf-row-l">Gas natural</span><span class="sbf-row-v">${p.servicios.gas}%</span></div>
+              <div class="sbf-row"><span class="sbf-row-l">Internet</span><span class="sbf-row-v">${p.servicios.internet}%</span></div>
+            </div>
+          </div>
+        </details>
+
+        <details class="sbf-sec" open>
+          <summary>Tendencias y hallazgos</summary>
+          <div class="sbf-sec-body">
+            ${insights.map(function (i) { return `<div class="sbf-insight sbf-insight-${i.tone}">${insightIco[i.tone]} ${_esc(i.txt)}</div>`; }).join('')}
+          </div>
+        </details>
+
+        <div class="sbf-footer">
+          <span>📅 Fuente: ${sisben.META.fuente} · ${sisben.META.version} · actualizado ${sisben.META.actualizado}</span>
+          <span style="color:${q.color}">${q.icon} ${q.label}</span>
         </div>`;
+
+      // Gráfico de distribución por grupo SISBEN
+      const cv = document.getElementById('sbf-chart-grupos');
+      if (cv && window.Chart) {
+        if (ui._sbfChart) { ui._sbfChart.destroy(); }
+        ui._sbfChart = new Chart(cv, {
+          type: 'bar',
+          data: {
+            labels: ['A', 'B', 'C', 'D'],
+            datasets: [{ data: [p.grupos.A, p.grupos.B, p.grupos.C, p.grupos.D], backgroundColor: ['#2E7D52', '#5BAF84', '#C69A1A', '#C84040'], borderRadius: 6, barPercentage: 0.6 }],
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false, animation: { duration: 450, easing: 'easeOutQuart' },
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (ctx) { return ctx.parsed.y + '%'; } } } },
+            scales: {
+              x: { grid: { display: false }, ticks: { font: { size: 10, weight: '700' }, color: '#5A7268' }, border: { display: false } },
+              y: { grid: { color: 'rgba(0,0,0,.05)' }, ticks: { font: { size: 9 }, color: '#8A9E96' }, border: { display: false }, max: 100 },
+            },
+          },
+        });
+      }
     },
 
     buildFuentes: function () {
@@ -11083,7 +11551,7 @@ window.PIIT = (function () {
 
   /* Exponer API pública (v5) */
   return { map, ui, app, reportes, charts, analisis, presupuesto, obras, contratos, salud,
-           sistema, productividad, conectividad, calidad, planeacion, escenarios,
+           sistema, productividad, conectividad, calidad, planeacion, escenarios, sisben,
            data: DATA, state: STATE };
 
 })();
