@@ -12530,6 +12530,199 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 })();
 </script>
+
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   BUQUE SISBEN · motor de auto-verificación y actualización continua
+   Mismo lenguaje visual del buque DANE (#dane-buque): header con
+   indicador en vivo, ticker de métricas, grid de estado, footer con
+   marca de tiempo — pero aquí conectado a datos reales y vivos vía
+   PIIT.sisben.audit(), re-ejecutado automáticamente cada 3 minutos.
+   ══════════════════════════════════════════════════════════════════ */
+#sisben-buque{
+  margin-bottom:16px;
+  border-radius:12px;overflow:hidden;
+  border:1.5px solid rgba(30,122,76,0.28);
+  box-shadow:0 2px 12px rgba(9,38,22,0.10);
+  background:#fff;
+}
+#sisben-buque-hdr{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(90deg,#092614 0%,#0F3D1E 60%,#0A2E16 100%);
+  padding:10px 16px;
+}
+#sisben-buque-hdr .bh-ico{font-size:18px;}
+#sisben-buque-hdr .bh-title{font-size:12px;font-weight:700;color:#fff;font-family:'Inter',system-ui,sans-serif;letter-spacing:.01em}
+#sisben-buque-hdr .bh-sub{font-size:9px;color:rgba(180,220,195,.75);margin-top:1px}
+#sisben-buque-hdr .bh-live{
+  margin-left:auto;display:inline-flex;align-items:center;gap:5px;
+  font-size:9px;font-weight:700;letter-spacing:.07em;
+  color:#3BB378;background:rgba(59,179,120,.15);
+  border:1px solid rgba(59,179,120,.35);border-radius:4px;
+  padding:3px 9px;flex-shrink:0;transition:all .3s ease;
+}
+#sisben-buque-hdr .bh-live::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;animation:dane-dot-blink 1.5s ease-in-out infinite}
+#sisben-buque-hdr .bh-live.bh-live-warn{color:#D99A1E;background:rgba(217,154,30,.14);border-color:rgba(217,154,30,.35)}
+#sisben-buque-hdr .bh-live.bh-live-err{color:#E05C5C;background:rgba(224,92,92,.14);border-color:rgba(224,92,92,.35)}
+
+#sisben-ticker-wrap{
+  background:linear-gradient(90deg,#0D1F12 0%,#132A18 50%,#0D1F12 100%);
+  height:26px;overflow:hidden;position:relative;
+  border-bottom:1px solid rgba(30,122,76,.2);
+}
+#sisben-ticker-wrap::before,#sisben-ticker-wrap::after{content:'';position:absolute;top:0;bottom:0;z-index:2;pointer-events:none;width:40px}
+#sisben-ticker-wrap::before{left:0;background:linear-gradient(90deg,#0D1F12,transparent)}
+#sisben-ticker-wrap::after{right:0;background:linear-gradient(270deg,#0D1F12,transparent)}
+#sisben-ticker-inner{display:inline-flex;align-items:center;height:26px;white-space:nowrap;padding-left:20px;animation:dane-scroll 45s linear infinite;font-size:10px;font-family:'Inter',system-ui,sans-serif}
+
+#sisben-buque-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+#sisben-buque-grid .dane-cell:nth-child(4n){border-right:none}
+@media(max-width:640px){
+  #sisben-buque-grid{grid-template-columns:repeat(2,1fr)}
+  #sisben-buque-grid .dane-cell:nth-child(4n){border-right:1px solid var(--g50)}
+  #sisben-buque-grid .dane-cell:nth-child(2n){border-right:none}
+  #sisben-buque-grid .dane-cell:nth-child(n+3){border-bottom:none}
+  #sisben-buque-hdr{flex-wrap:wrap}
+  #sisben-buque-hdr .bh-live{margin-left:0}
+  #sisben-buque-ftr{flex-direction:column;align-items:flex-start}
+  #sisben-buque-ts{margin-left:0}
+}
+
+#sisben-buque-ftr{
+  background:#F8FDF9;border-top:1px solid var(--g50);
+  padding:7px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-size:9px;color:var(--t400);
+}
+#sisben-buque-ts{color:var(--t300);margin-left:auto;font-family:monospace;font-size:8px}
+#sisben-buque-ftr .sq-link{font-size:9px}
+</style>
+<script>
+(function(){
+  'use strict';
+
+  function fmtTs(d){
+    return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})
+      +' '+d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }
+
+  var REFRESH_MS = 3 * 60 * 1000; /* auto-verificación cada 3 minutos */
+  var _timer = null;
+
+  function refresh(){
+    if (!window.PIIT || !window.PIIT.sisben) return;
+    var S = window.PIIT.sisben;
+    S._auditCache = null; /* forzar recálculo real, no servir caché */
+    var a = S.audit();
+    var q = S.qualityBadge();
+    var list = S.list();
+    var totalHogares = 0, totalRegistros = 0;
+    list.forEach(function (d) {
+      var p = S.profile(d.pk);
+      totalHogares += p.hogares;
+      totalRegistros += p.registros;
+    });
+
+    var live = document.getElementById('sb-buque-live');
+    if (live) {
+      live.textContent = a.status === 'error' ? 'REQUIERE ATENCIÓN' : a.status === 'warn' ? 'CON OBSERVACIONES' : 'VERIFICADO';
+      live.className = 'bh-live' + (a.status === 'error' ? ' bh-live-err' : a.status === 'warn' ? ' bh-live-warn' : '');
+    }
+
+    var inner = document.getElementById('sisben-ticker-inner');
+    if (inner) {
+      var items = [
+        { label: 'Barrios auditados', val: a.totalBarrios + '/21', src: 'GDB' },
+        { label: 'Registros base cruzados', val: a.totalRegistros, src: 'INDICADORES' },
+        { label: 'Hogares totales', val: totalHogares.toLocaleString('es-CO'), src: 'SISBEN IV' },
+        { label: 'Registros estimados', val: totalRegistros.toLocaleString('es-CO'), src: 'SISBEN IV' },
+        { label: 'Observaciones detectadas', val: a.findings.length, src: 'Motor QA' },
+        { label: 'Estado de integridad', val: q.label, src: 'Auditoría continua' },
+      ];
+      var html = '';
+      [items, items].forEach(function (arr) {
+        arr.forEach(function (it) {
+          html += '<span class="dt-label">' + it.label + '</span><span class="dt-val">' + it.val + '</span>'
+            + '<span class="dt-src">' + it.src + '</span><span class="dt-sep">|</span>';
+        });
+      });
+      inner.innerHTML = html;
+    }
+
+    var grid = document.getElementById('sisben-buque-grid');
+    if (grid) {
+      var pctIntegro = Math.round((a.totalBarrios / 21) * 100);
+      var cells = [
+        { cat: 'Integridad', val: pctIntegro + '%', cls: a.status === 'error' ? 'red' : a.status === 'warn' ? 'amber' : 'green', lbl: 'Barrios con datos completos', sub: a.totalBarrios + '/21 verificados contra el GDB' },
+        { cat: 'Calidad', val: a.findings.length, cls: a.findings.length ? 'amber' : 'green', lbl: 'Observaciones detectadas', sub: a.findings.length ? a.findings[0].msg.slice(0, 46) + (a.findings[0].msg.length > 46 ? '…' : '') : 'Sin inconsistencias registradas' },
+        { cat: 'Cobertura', val: totalRegistros.toLocaleString('es-CO'), cls: 'blue', lbl: 'Registros SISBEN IV estimados', sub: '21 barrios georreferenciados' },
+        { cat: 'Auto-verificación', val: '3 min', cls: '', lbl: 'Frecuencia de re-chequeo', sub: 'Motor activo · sin intervención manual' },
+      ];
+      grid.innerHTML = cells.map(function (c) {
+        return '<div class="dane-cell"><div class="dc-category">' + c.cat + '</div>'
+          + '<div class="dc-val ' + c.cls + '">' + c.val + '</div>'
+          + '<div class="dc-lbl">' + c.lbl + '</div>'
+          + '<div class="dc-sub">' + c.sub + '</div></div>';
+      }).join('');
+    }
+
+    var ftr = document.getElementById('sisben-buque-ftr');
+    if (ftr) {
+      ftr.innerHTML = '🛰️ Auto-verificación cada 3 min · Motor: PIIT SisbenAudit · Fuente: Cruce SISBEN IV · Alcaldía de Segovia'
+        + ' · <span class="sq-link" onclick="PIIT.ui.reAuditSisben ? PIIT.ui.reAuditSisben() : null; if(window.__sisbenBuqueRefresh)window.__sisbenBuqueRefresh();">Verificar ahora</span>'
+        + '<span id="sisben-buque-ts">Última verificación: ' + fmtTs(new Date()) + '</span>';
+    }
+
+    if (window.__PIIT_DEBUG__) console.debug('[SisbenBuque] verificación completada', a.status, a.findings.length + ' hallazgo(s)');
+  }
+  window.__sisbenBuqueRefresh = refresh;
+
+  function build(){
+    if (!window.PIIT || !window.PIIT.sisben) { setTimeout(build, 300); return; }
+    var sec = document.getElementById('s-sisben');
+    var grid = document.getElementById('sisben-grid');
+    if (!sec || !grid || document.getElementById('sisben-buque')) return;
+
+    var buque = document.createElement('div');
+    buque.id = 'sisben-buque';
+    buque.innerHTML =
+      '<div id="sisben-buque-hdr">'
+      + '<span class="bh-ico">🛰️</span>'
+      + '<div><div class="bh-title">SISBEN IV · Motor de Auto-Verificación</div>'
+      + '<div class="bh-sub">Auditoría continua de integridad geoespacial y alfanumérica · 21 barrios · Segovia, Antioquia</div></div>'
+      + '<span class="bh-live" id="sb-buque-live">VERIFICANDO…</span>'
+      + '</div>'
+      + '<div id="sisben-ticker-wrap"><div id="sisben-ticker-inner"></div></div>'
+      + '<div id="sisben-buque-grid"></div>'
+      + '<div id="sisben-buque-ftr"></div>';
+
+    // Insertar justo debajo de la cabecera de la sección, antes de los KPIs
+    var kpis = document.getElementById('sisben-kpis-top');
+    sec.insertBefore(buque, kpis || grid);
+
+    refresh();
+    if (_timer) clearInterval(_timer);
+    _timer = setInterval(refresh, REFRESH_MS);
+  }
+
+  // Refrescar también al entrar a la sección, para mostrar siempre el
+  // estado más reciente (no esperar hasta el próximo ciclo de 3 min).
+  function hookGoSection(){
+    if (!window.PIIT || !window.PIIT.ui || !window.PIIT.ui.goSection) { setTimeout(hookGoSection, 300); return; }
+    var orig = window.PIIT.ui.goSection.bind(window.PIIT.ui);
+    window.PIIT.ui.goSection = function (id, el) {
+      orig(id, el);
+      if (id === 's-sisben') setTimeout(refresh, 80);
+    };
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(build, 700); setTimeout(hookGoSection, 700); });
+  } else {
+    setTimeout(build, 700);
+    setTimeout(hookGoSection, 700);
+  }
+})();
+</script>
 <style>
 /* ── IGAC Panel Territorial ── */
 #igac-panel{
