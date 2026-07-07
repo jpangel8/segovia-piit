@@ -5580,45 +5580,87 @@ window.PIIT = (function () {
     WMS_SERVICES: {
 
       /* ★ SERVICIO PRINCIPAL — Colombia en Mapas ID 12524
-         Cartografía Básica Nacional escala 1:100.000 — IGAC 2019
-         Cobertura: República de Colombia completa (incluye Segovia)
-         Entidades: vías, hidrografía, relieve, límites adm., construcciones
-         Fuente: mapas.igac.gov.co · ArcGIS MapServer 2.9.0
-         CEM: https://www.colombiaenmapas.gov.co/?servicio=12524 */
+         ── Diagnóstico (revisión técnica, jul-2026) ──────────────────
+         'carto100000colombia2019' NUNCA existió en el catálogo de
+         mapas.igac.gov.co — verificado listando el folder 'carto'
+         completo (700+ servicios): no hay ningún producto nacional a
+         escala 1:100.000 con ese ni ningún otro nombre. Los productos
+         de escala 100.000 del catálogo son todos POR MUNICIPIO
+         (carto100000florencia18001, etc.), nunca un mosaico nacional.
+         El único servicio de cobertura nacional real a esta escala
+         "amplia" es 'carto500000colombia2016' (1:500.000); el más
+         detallado de cobertura país es 'carto25000colombia2017'
+         (1:25.000). Ninguno tiene WMSServer habilitado (Map,Query,Data
+         solamente) → se consumen vía REST '/export', protegidos por
+         el motor de resiliencia con failover entre ambos. */
       cem_12524: {
-        url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto100000colombia2019/MapServer/WMSServer',
-        layers: '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15',
-        version: '1.1.1',
-        format: 'image/png',
-        transparent: true,
-        opacity: 0.75,
-        attribution: '© IGAC — Cartografía Básica 1:100.000 2019',
-        name: 'CartoBásica 1:100k · CeM 12524',
+        name: 'CartoBásica Nacional · IGAC',
         cem_id: 12524,
         cem_url: 'https://www.colombiaenmapas.gov.co/?servicio=12524',
         entidad: 'IGAC',
-        escala: '1:100.000',
-        año: '2019',
-        epsg: 'EPSG:3857 / EPSG:4326',
+        escala: '1:500.000 / 1:25.000',
+        epsg: 'EPSG:3857',
         icon: '🗺️',
+        opacity: 0.75,
+        attribution: '© IGAC — Cartografía Básica Nacional',
+        sources: [
+          {
+            kind: 'export',
+            url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto500000colombia2016/MapServer',
+            layers: 'show:2,13,14,25,44',
+            format: 'png32',
+            label: 'IGAC · Nacional 1:500.000 (2016)',
+          },
+          {
+            kind: 'export',
+            url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer',
+            layers: 'show:0,1,2',
+            format: 'png32',
+            label: 'IGAC · Nacional 1:25.000 (2017, respaldo)',
+          },
+        ],
+        url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto500000colombia2016/MapServer',
+        layers: 'show:2,13,14,25,44',
+        format: 'png32',
+        transparent: true,
+        useArcgisExport: true,
       },
 
-      /* Cartografía Básica Segovia 1:25.000 (si disponible en IGAC server)
-         DIVIPOLA Segovia, Antioquia: 05736
-         Endpoint sigue patrón: carto{escala}{municipio}{divipola} */
+      /* Cartografía Básica 1:25.000 — cubre Segovia dentro del mosaico
+         nacional (no existe un producto específico por municipio a
+         esta escala en el catálogo IGAC; verificado: no hay ningún
+         'carto25000segovia05736' ni similar). Se usa el mismo servicio
+         nacional 1:25.000 como fuente principal aquí, y el 1:500.000
+         como respaldo más liviano si el de mayor detalle está lento. */
       igac_segovia_25k: {
-        url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto25000segovia05736/MapServer/WMSServer',
-        layers: '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19',
-        version: '1.1.1',
-        format: 'image/png',
-        transparent: true,
-        opacity: 0.80,
-        attribution: '© IGAC — CartoBásica Segovia 1:25.000',
-        name: 'CartoBásica Segovia 1:25k',
+        name: 'CartoBásica 1:25.000 · Nacional (incluye Segovia)',
         entidad: 'IGAC',
         escala: '1:25.000',
-        epsg: 'EPSG:9377 / MAGNA-SIRGAS',
+        epsg: 'EPSG:3857',
         icon: '📍',
+        opacity: 0.80,
+        attribution: '© IGAC — Cartografía Básica 1:25.000 (2017)',
+        sources: [
+          {
+            kind: 'export',
+            url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer',
+            layers: 'show:0,1,2',
+            format: 'png32',
+            label: 'IGAC · Nacional 1:25.000 (2017)',
+          },
+          {
+            kind: 'export',
+            url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto500000colombia2016/MapServer',
+            layers: 'show:2,13,14,25,44',
+            format: 'png32',
+            label: 'IGAC · Nacional 1:500.000 (respaldo liviano)',
+          },
+        ],
+        url: 'https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer',
+        layers: 'show:0,1,2',
+        format: 'png32',
+        transparent: true,
+        useArcgisExport: true,
       },
 
       /* Catastro predial — Direcciones Territoriales IGAC
@@ -6600,6 +6642,7 @@ window.PIIT = (function () {
           map.toast(svc.name + (isFailover ? ': ' + map.GEO_FRIENDLY_MSG.switched : ' activo'), 'ok');
           STATE.map.wmsLayers[key] = layer;
           map.scheduleGeoRevalidation(key, svc, sources, i, tog);
+          if (key === 'cem_12524') map.showCemInfo(svc);
         }
         function commitFailure() {
           if (settled || !stillWanted()) return;
