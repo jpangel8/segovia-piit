@@ -3543,6 +3543,16 @@ body { padding-bottom: 36px !important; }
             <input class="opa-slider" type="range" min="10" max="100" value="70" oninput="PIIT.map.setOpacity(this.value)">
           </div>
         </details>
+
+        <!-- Visor Cartográfico 3D — integrado como sección más del panel
+             de Capas (misma disclosure <details> que el resto); ya no es
+             una ventana flotante y por tanto no puede solaparse con nada -->
+        <details class="sig-col" id="sig-visor3d">
+          <summary>Visor Cartográfico 3D</summary>
+          <div class="sig-col-body">
+            <div id="minimap"></div>
+          </div>
+        </details>
       </aside>
 
       <!-- ── Botón re-centrar (Demoland) ─────────────────── -->
@@ -3604,9 +3614,6 @@ body { padding-bottom: 36px !important; }
       <div class="sig-chip"><i class="fa-solid fa-layer-group"></i><span id="map-active-layers">4 capas activas</span></div>
       <div class="sig-chip"><i class="fa-solid fa-database" style="color:#C69A1A"></i>GDB oficial</div>
     </div>
-
-    <!-- Placeholder del Visor 3D — initMinimap() lo reemplaza por #mm-outer (position:fixed) -->
-    <div id="minimap" style="display:none"></div>
   </div>
 </section>
 
@@ -11961,21 +11968,15 @@ if(document.readyState === 'loading'){
    Paleta: slate oscuro · teal técnico · sin neones ni brillos
    ══════════════════════════════════════════════════════════════ */
 
-/* ── Contenedor principal · posición fija esquina inferior derecha ── */
+/* ── Contenedor principal · integrado en el flujo del panel "Capas"
+      (ya no es ventana flotante: no puede solaparse con nada) ── */
 #mm-outer{
-  position:fixed;
-  bottom:54px;right:18px;
-  z-index:9000;
-  width:242px;display:flex;flex-direction:column;
-  border-radius:4px;overflow:hidden;
+  position:relative;
+  width:100%;display:flex;flex-direction:column;
+  border-radius:12px;overflow:hidden;
   border:1px solid rgba(255,255,255,0.09);
   background:#12161d;
-  box-shadow:0 4px 20px rgba(0,0,0,0.55),0 1px 4px rgba(0,0,0,0.4);
-  transition:box-shadow .2s ease,transform .2s ease;
-}
-#mm-outer:hover{
-  box-shadow:0 6px 28px rgba(0,0,0,0.65),0 2px 6px rgba(0,0,0,0.5);
-  transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(0,0,0,0.32);
 }
 
 /* ── Header institucional ── */
@@ -12013,32 +12014,12 @@ if(document.readyState === 'loading'){
   font-family:'Inter',system-ui,sans-serif;letter-spacing:0.06em;
 }
 
-/* ── Botón minimizar / restaurar (estilo semáforo macOS) ── */
-#mm-min-btn{
-  width:14px;height:14px;border-radius:50%;flex-shrink:0;
-  border:none;cursor:pointer;padding:0;margin-left:6px;
-  background:#F5BF4F;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.25);
-  display:flex;align-items:center;justify-content:center;
-  font-size:9px;line-height:1;color:rgba(0,0,0,0);
-  transition:all .2s cubic-bezier(.32,.72,.28,1);
-}
-#mm-min-btn:hover{color:rgba(90,60,0,.85);transform:scale(1.12)}
-#mm-min-btn:active{transform:scale(.94)}
-
-/* Estado minimizado: solo la píldora del header */
-#mm-outer.mm-min{width:auto;border-radius:24px}
-#mm-outer.mm-min #mm-map,
-#mm-outer.mm-min #mm-meta-bar,
-#mm-outer.mm-min #mm-ticker,
-#mm-outer.mm-min #mm-geo-panel{display:none}
-#mm-outer.mm-min #mm-header{border-bottom:none;border-radius:24px;padding:6px 12px 6px 14px;gap:8px}
-#mm-outer.mm-min #mm-header-title .mm-ht-sub{display:none}
-#mm-outer.mm-min #mm-min-btn{background:#63C554}
-#mm-outer{transition:width .35s cubic-bezier(.32,.72,.28,1),border-radius .35s cubic-bezier(.32,.72,.28,1),box-shadow .2s ease,transform .2s ease}
+/* El colapsar/expandir ahora lo resuelve el <details class="sig-col">
+   contenedor (misma interacción que "Mapa base", "Opacidad", etc.) */
 
 /* ── Canvas WebGL ── */
 #mm-map{
-  width:238px;height:158px;display:block;
+  width:100%;height:158px;display:block;
   position:relative;overflow:hidden;
   background:#0b0f14;flex-shrink:0;
 }
@@ -12352,24 +12333,8 @@ function initMinimap(){
     +'<div id="mm-header-badge">'
     +'<span class="mm-hb-dot"></span>'
     +'<span class="mm-hb-txt">EN LÍNEA</span>'
-    +'</div>'
-    +'<button id="mm-min-btn" title="Minimizar / restaurar visor">–</button>';
+    +'</div>';
   outer.appendChild(header);
-
-  /* ── Minimizar / restaurar — arranca minimizado para no solapar paneles ── */
-  outer.classList.add('mm-min');
-  header.style.cursor='pointer';
-  var mmBtn=header.querySelector('#mm-min-btn');
-  if(mmBtn) mmBtn.textContent='+';
-  function mmToggle(e){
-    if(e) e.stopPropagation();
-    var min=outer.classList.toggle('mm-min');
-    if(mmBtn) mmBtn.textContent = min ? '+' : '–';
-    if(!min && window._PIIT_minimap3D && window._PIIT_minimap3D.resize){
-      setTimeout(function(){window._PIIT_minimap3D.resize();},380);
-    }
-  }
-  header.addEventListener('click', mmToggle);
 
   /* Map container */
   var mapDiv=document.createElement('div');
@@ -12427,8 +12392,8 @@ function initMinimap(){
     +'</button>'
     +'</div>'
     +'<div id="mm-geo-manual">'
-    +'<div class="mm-coord-row"><span class="mm-coord-lbl">LAT</span><input id="mm-geo-lat" type="number" placeholder="7.0832" step="0.0001"></div>'
-    +'<div class="mm-coord-row"><span class="mm-coord-lbl">LON</span><input id="mm-geo-lon" type="number" placeholder="-74.6784" step="0.0001"></div>'
+    +'<div class="mm-coord-row"><span class="mm-coord-lbl">LAT</span><input id="mm-geo-lat" type="number" placeholder="7.0828" step="0.0001"></div>'
+    +'<div class="mm-coord-row"><span class="mm-coord-lbl">LON</span><input id="mm-geo-lon" type="number" placeholder="-74.7077" step="0.0001"></div>'
     +'<button id="mm-geo-apply">Aplicar coordenadas</button>'
     +'</div>'
     +'<div id="mm-geo-status"></div>'
@@ -12523,8 +12488,12 @@ function initMinimap(){
       var accTxt = acc<1000 ? ' · ±'+Math.round(acc)+' m' : '';
       setStatus('⊙ Refinando'+accTxt,'#3a8a6a');
 
-      /* Detener si ya es suficientemente preciso (≤1 m = chip GPS nativo) */
-      if(acc<=1){
+      /* Detener si ya es suficientemente preciso. Umbral realista: la
+         mayoría de dispositivos GPS/Wi-Fi no baja de ~5-8 m, así que
+         exigir ≤1 m dejaba el widget "Refinando…" indefinidamente
+         hasta el timeout de 20-30 s. Con ≤8 m se alcanza el estado de
+         éxito en la práctica sin sacrificar precisión útil. */
+      if(acc<=8){
         stopWatch('✓ '+gpsLabel(acc)+' · ±'+acc.toFixed(1)+' m');
       }
     }
@@ -12615,6 +12584,27 @@ function initMinimap(){
   loadThree(function(){
     init3DMap(mapDiv);
   });
+
+  /* ── Pausar/reanudar el render WebGL según el <details> esté abierto ──
+     El visor ahora vive dentro de "Capas" como una sección más: si está
+     colapsada no tiene sentido seguir renderizando cada frame. */
+  var detailsEl = document.getElementById('sig-visor3d');
+  if(detailsEl){
+    function syncVisor3D(){
+      var v = window._PIIT_minimap3D;
+      if(!v){ setTimeout(syncVisor3D, 200); return; }
+      if(detailsEl.open){ v.resume(); v.resize(); }
+      else{ v.pause(); }
+    }
+    detailsEl.addEventListener('toggle', function(){
+      var v = window._PIIT_minimap3D;
+      if(!v) return;
+      if(detailsEl.open){ v.resume(); setTimeout(function(){v.resize();}, 260); }
+      else{ v.pause(); }
+    });
+    /* estado inicial: si arranca cerrado, pausar en cuanto exista la escena */
+    syncVisor3D();
+  }
 }
 
 function init3DMap(container){
@@ -12798,8 +12788,10 @@ function init3DMap(container){
   /* ── Animación (sin rotación automática) ── */
   var tick=0;
   var rafId=0;
+  var paused=false; /* se pausa cuando la sección "Visor 3D" está colapsada */
   function animate(){
     rafId=requestAnimationFrame(animate);
+    if(paused) return;
     tick+=0.006;
     /* Sin rotación: mapa fijo para máxima identificación */
     mapGroup.rotation.z=0;
@@ -12833,6 +12825,8 @@ function init3DMap(container){
       camera.aspect=w/h;
       camera.updateProjectionMatrix();
     },
+    pause:function(){paused=true;},
+    resume:function(){paused=false;},
     dispose:function(){cancelAnimationFrame(rafId);renderer.dispose();}
   };
 }
@@ -12863,7 +12857,6 @@ if(document.readyState==='loading'){
 })();
 </script>
 <style>
-#mm-outer { z-index: 9000 !important; }
 nav button { cursor: pointer !important; }
 
 /* ══ GPS — marcador pulsante de ubicación en mapa Leaflet ═════ */
@@ -13638,30 +13631,14 @@ else setTimeout(init,400);
   }
 
   /* ── correcciones específicas del SIG ───────────────────────────── */
+  /* Nota: el Visor Cartográfico 3D ya no es una ventana flotante — vive
+     dentro de "Capas" como una sección <details> más, sujeta al mismo
+     scroll y clamp que el resto del panel izquierdo. Por eso ya no
+     existen correcciones dedicadas visor-vs-panel: el clamp genérico
+     de sig-left (más abajo) cubre también su presencia. */
 
-  /* 1 · Panel derecho vs Visor 3D: reservar espacio con clamp suave de
-        max-height. Función determinista del layout → sin oscilación.  */
-  function fixRightVsVisor(shell){
-    var right = document.querySelector('#s-mapa .sig-right');
-    if(!right) return;
-    var vr = rect('#mm-outer');
-    if(!vr){ if(right.style.maxHeight){ right.style.maxHeight = ''; } return; }
-    var rr = rect(right);
-    if(!rr) return;
-    /* sólo cuando comparten franja horizontal */
-    var sharesX = vr.x < rr.r && vr.r > rr.x;
-    if(!sharesX){ if(right.style.maxHeight){ right.style.maxHeight = ''; } return; }
-    var limit = Math.max(180, Math.floor(vr.y - shell.y - MARGIN - 4));
-    var natural = Math.floor(shell.h - 60);
-    if(natural <= limit){
-      if(right.style.maxHeight){ right.style.maxHeight = ''; }
-    } else if(right.style.maxHeight !== limit + 'px'){
-      right.style.maxHeight = limit + 'px';
-      note('sig-right', 'mm-outer', 'clamp altura panel → ' + limit + 'px');
-    }
-  }
-
-  /* 2 · Panel izquierdo vs chips de estado: mismo clamp determinista. */
+  /* 1 · Panel izquierdo vs chips de estado: clamp determinista de
+        altura para que el panel nunca tape la barra de chips.        */
   function fixLeftVsChips(shell){
     var left = document.querySelector('#s-mapa .sig-left');
     if(!left) return;
@@ -13681,44 +13658,13 @@ else setTimeout(init,400);
     }
   }
 
-  /* 3 · Visor 3D expandido que invade el panel derecho en pantallas
-        bajas: si tras el clamp el panel quedaría inutilizable
-        (<220px), se minimiza el visor automáticamente.               */
-  function fixVisorIntrusion(shell){
-    var outer = document.getElementById('mm-outer');
-    if(!outer || outer.classList.contains('mm-min')) return;
-    var vr = rect(outer);
-    if(!vr) return;
-    var room = vr.y - shell.y;
-    if(room < 220 + MARGIN){
-      outer.classList.add('mm-min');
-      var btn = document.getElementById('mm-min-btn');
-      if(btn) btn.textContent = '+';
-      note('mm-outer', 'sig-right', 'visor minimizado automáticamente (espacio insuficiente)');
-    }
-  }
-
-  /* 4 · Chips de estado vs visor minimizado (viewport muy estrecho):
-        atenuar chips —prioridad informativa menor—.                  */
-  function fixChipsVsVisor(){
-    var chips = document.querySelector('#s-mapa .sig-status');
-    if(!chips) return;
-    var cr = rect(chips), vr = rect('#mm-outer');
-    var conflict = cr && vr && overlap(cr, vr, 4) > 0;
-    var faded = chips.classList.contains('sig-yield');
-    if(conflict && !faded){
-      chips.classList.add('sig-yield');
-      note('sig-status', 'mm-outer', 'chips atenuados por conflicto');
-    } else if(!conflict && faded){
-      chips.classList.remove('sig-yield');
-    }
-  }
-
-  /* 5 · Auditoría genérica: pares de HUD registrados. Cualquier
+  /* 2 · Auditoría genérica: pares de HUD flotantes registrados (todos
+        hermanos, ninguno anidado — evita falsos positivos de
+        "contención" reportados como solapamiento). Cualquier
         intersección no resuelta queda en el informe (PIITGuard.report). */
   var HUD = [
     '#s-mapa .sig-left', '#s-mapa .sig-right', '#s-mapa .sig-status',
-    '#mm-outer', '#sig-recentre', '#s-mapa .leaflet-control-zoom',
+    '#sig-recentre', '#s-mapa .leaflet-control-zoom',
   ];
   function audit(){
     var out = [];
@@ -13744,10 +13690,7 @@ else setTimeout(init,400);
       var shell = rect(sec.querySelector('.sig-shell'));
       var floating = window.innerWidth > 960;
       if(shell && floating){
-        fixRightVsVisor(shell);
         fixLeftVsChips(shell);
-        fixVisorIntrusion(shell);
-        fixChipsVsVisor();
       } else {
         /* modo apilado (móvil): limpiar clamps */
         ['#s-mapa .sig-left', '#s-mapa .sig-right'].forEach(function(s){
@@ -13767,7 +13710,15 @@ else setTimeout(init,400);
   /* ── disparadores: interacción, layout, DOM y latido ────────────── */
   window.addEventListener('resize', schedule, { passive: true });
   window.addEventListener('orientationchange', schedule, { passive: true });
-  document.addEventListener('scroll', schedule, { passive: true, capture: true });
+  /* Sólo scroll de página (window), NUNCA con capture:true en document:
+     eso también dispara con el scroll interno del propio panel
+     (.sig-left tiene su overflow-y:auto), recalculando el clamp en
+     pleno gesto de scroll/click y desplazando momentáneamente el
+     layout bajo el puntero — la distancia shell↔chips no cambia con
+     el scroll de página (ambos son rects del mismo contenedor), así
+     que ni siquiera hace falta re-evaluar en ese caso; se deja sólo
+     como red de seguridad ante reflows de terceros. */
+  window.addEventListener('scroll', schedule, { passive: true });
   document.addEventListener('click', function(){ setTimeout(schedule, 60); }, { passive: true });
   document.addEventListener('transitionend', schedule, { passive: true });
 
@@ -13775,8 +13726,6 @@ else setTimeout(init,400);
   function attachMO(){
     var sec = document.getElementById('s-mapa');
     if(sec) mo.observe(sec, { attributes: true, attributeFilter: ['class', 'style'], subtree: true, childList: true });
-    var mm = document.getElementById('mm-outer');
-    if(mm) mo.observe(mm, { attributes: true, attributeFilter: ['class'] });
   }
 
   setInterval(schedule, 1200);           /* latido de respaldo          */
@@ -13795,9 +13744,6 @@ else setTimeout(init,400);
 #s-mapa .sig-panel{transition:max-height .45s cubic-bezier(.32,.72,.28,1)}
 #s-mapa .sig-status{transition:opacity .3s ease}
 #s-mapa .sig-status.sig-yield{opacity:.25;pointer-events:none}
-/* En layout apilado (móvil/tablet) el visor 3D flotante taparía el
-   contenido en flujo → se oculta; el mapa principal sigue disponible */
-@media(max-width:960px){#mm-outer{display:none!important}}
 </style>
 </body>
 </html>
