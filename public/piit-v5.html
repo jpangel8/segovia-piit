@@ -15371,6 +15371,11 @@ document.addEventListener('DOMContentLoaded', function(){
   var enhanced = new WeakSet();
   var fecha = new Date().toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' });
 
+  function closeAllMenus(){
+    document.querySelectorAll('.pchart-menu.open').forEach(function(m){ m.classList.remove('open'); });
+  }
+  document.addEventListener('click', closeAllMenus);
+
   function scan(){
     if(!window.Chart) return;
     document.querySelectorAll('canvas').forEach(function(cv){
@@ -15378,15 +15383,48 @@ document.addEventListener('DOMContentLoaded', function(){
       var chart = Chart.getChart(cv);
       if(!chart) return;
       var card = cv.closest('.card');
-      if(!card || card.querySelector('.pchart-bar')) { enhanced.add(cv); return; }
+      if(!card || card.querySelector('.pchart-head')) { enhanced.add(cv); return; }
       enhanced.add(cv);
-      var bar = document.createElement('div');
-      bar.className = 'pchart-bar';
-      bar.innerHTML =
-        '<span class="pchart-updated"><i class="fa-regular fa-clock"></i> Actualizado ' + fecha + '</span>' +
-        '<button class="pchart-export" type="button" title="Exportar gráfica como imagen PNG"><i class="fa-solid fa-download"></i> Exportar</button>';
-      card.appendChild(bar);
-      bar.querySelector('.pchart-export').addEventListener('click', function(){
+      card.style.position = 'relative';
+
+      /* Encabezado de tarjeta estilo panel estadístico: título (tomado
+         del '.pt' que ya precede a la tarjeta en el HTML existente) +
+         botones de acción — replica la composición de encabezado de
+         los dashboards de organismos de datos internacionales, sin
+         duplicar el título como texto nuevo. */
+      var titleEl = card.parentElement && card.parentElement.querySelector('.pt');
+      var head = document.createElement('div');
+      head.className = 'pchart-head';
+      head.innerHTML =
+        '<span class="pchart-head-t">' + (titleEl ? titleEl.textContent : '') + '</span>' +
+        '<div class="pchart-actions">' +
+          '<button class="pchart-icobtn pchart-info" type="button" title="Fuente y fecha de actualización" aria-haspopup="true"><i class="fa-solid fa-circle-info"></i></button>' +
+          '<button class="pchart-icobtn pchart-more" type="button" title="Más opciones" aria-haspopup="true"><i class="fa-solid fa-ellipsis-vertical"></i></button>' +
+          '<div class="pchart-menu" role="menu"><button type="button" class="pchart-menu-item" data-act="export"><i class="fa-solid fa-download"></i> Exportar PNG</button></div>' +
+        '</div>';
+      if(titleEl){ titleEl.style.display = 'none'; }
+      card.insertBefore(head, card.firstChild);
+
+      var foot = document.createElement('div');
+      foot.className = 'pchart-bar';
+      foot.innerHTML = '<span class="pchart-updated"><i class="fa-regular fa-clock"></i> Fuente: PIIT Segovia · Sistema de Inteligencia Territorial · Actualizado ' + fecha + '</span>';
+      card.appendChild(foot);
+
+      var menu = head.querySelector('.pchart-menu');
+      head.querySelector('.pchart-more').addEventListener('click', function(e){
+        e.stopPropagation();
+        var willOpen = !menu.classList.contains('open');
+        closeAllMenus();
+        menu.classList.toggle('open', willOpen);
+      });
+      head.querySelector('.pchart-info').addEventListener('click', function(e){
+        e.stopPropagation();
+        closeAllMenus();
+        if(window.PIIT && PIIT.map && PIIT.map.toast) PIIT.map.toast('Fuente: PIIT Segovia · Actualizado ' + fecha, 'ok');
+      });
+      menu.addEventListener('click', function(e){ e.stopPropagation(); });
+      menu.querySelector('[data-act="export"]').addEventListener('click', function(){
+        closeAllMenus();
         var link = document.createElement('a');
         link.href = chart.toBase64Image('image/png', 1);
         link.download = 'piit-segovia-' + (cv.id || 'grafica') + '.png';
@@ -15430,10 +15468,19 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 <style>
 .pchart-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:8px;border-top:1px solid var(--g100)}
-.pchart-updated{font-size:9.5px;color:var(--t300);white-space:nowrap}
+.pchart-updated{font-size:9.5px;color:var(--t300);white-space:normal;line-height:1.5}
 .pchart-updated i{margin-right:3px;opacity:.8}
-.pchart-export{display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;border:1px solid var(--g200);background:var(--white);color:var(--g700);font-size:9.5px;font-weight:700;cursor:pointer;transition:background var(--dur-fast) var(--ease);font-family:var(--fb)}
-.pchart-export:hover{background:var(--g50)}
+
+/* ─── Encabezado de tarjeta estilo panel estadístico (ref. dashboards OECD) ─── */
+.pchart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.pchart-head-t{font-size:12.5px;font-weight:800;color:var(--t900);letter-spacing:-.005em;line-height:1.4;padding-top:2px}
+.pchart-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;position:relative}
+.pchart-icobtn{width:26px;height:26px;border-radius:7px;border:1px solid var(--g200);background:var(--white);color:var(--g700);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
+.pchart-icobtn:hover{background:var(--g50);border-color:var(--g400)}
+.pchart-menu{display:none;position:absolute;top:32px;right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:var(--r-sm);box-shadow:var(--sh-lg);min-width:150px;padding:5px;z-index:60}
+.pchart-menu.open{display:block;animation:tbPopIn .14s ease}
+.pchart-menu-item{display:flex;align-items:center;gap:7px;width:100%;padding:7px 9px;border:none;background:transparent;border-radius:6px;font-size:11px;font-weight:600;color:var(--t700);cursor:pointer;text-align:left;transition:background var(--dur-fast) var(--ease)}
+.pchart-menu-item:hover{background:var(--g50);color:var(--g700)}
 </style>
 <style>
 /* ─── PIITTable: búsqueda/orden/paginación genéricos ─── */
