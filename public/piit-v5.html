@@ -3217,7 +3217,6 @@ body { padding-bottom: 36px !important; }
     </button>
   </div>
   <button class="nav-btn" onclick="PIIT.ui.goSection('s-reportes',this)"><i class="fa-solid fa-location-dot"></i>Reportes ciudadanos</button>
-  <button class="nav-btn" onclick="PIIT.ui.goSection('s-secs',this)"><i class="fa-solid fa-building-columns"></i>Secretarías</button>
   
   
   <button class="nav-btn" onclick="PIIT.ui.goSection('s-contratos',this)"><i class="fa-solid fa-file-contract"></i>Contratación pública</button>
@@ -3313,6 +3312,10 @@ body { padding-bottom: 36px !important; }
   <button class="nav-dd-item" onclick="PIIT.ui.goSectionDD('s-fuentes',this,'dash')" role="menuitem">
     <i class="fa-solid fa-database" style="color:var(--au600)"></i>
     <div><strong>Fuentes de datos</strong><span>IGAC · DANE · SIVIGILA · MinTIC · INVIAS</span></div>
+  </button>
+  <button class="nav-dd-item" onclick="PIIT.ui.goSectionDD('s-secs',this,'dash')" role="menuitem">
+    <i class="fa-solid fa-building-columns" style="color:var(--au600)"></i>
+    <div><strong>Secretarías</strong><span>Arquitectura de integración por dependencia</span></div>
   </button>
 </div>
 
@@ -14562,7 +14565,7 @@ var SECTION_META = {
   's-salud':         { label: 'Salud · Vigilancia',                group: 'SIG · Territorio' },
   's-riesgo':        { label: 'Gestión del Riesgo',                group: 'SIG · Territorio' },
   's-reportes':      { label: 'Reportes ciudadanos',               group: 'Plataforma' },
-  's-secs':          { label: 'Secretarías',                       group: 'Plataforma' },
+  's-secs':          { label: 'Secretarías',                       group: 'Dashboard' },
   's-contratos':     { label: 'Contratación pública',              group: 'Plataforma' },
   's-sistema':       { label: 'Sistema de Ciudades',               group: 'Misión Ciudades · BID' },
   's-productividad': { label: 'Productividad Territorial',         group: 'Misión Ciudades · BID' },
@@ -14630,7 +14633,7 @@ else setTimeout(init,400);
     function goTo(id){
       closePanel();
       input.value = '';
-      var groupKey = id === 's-dash' || id === 's-fuentes' ? 'dash'
+      var groupKey = id === 's-dash' || id === 's-fuentes' || id === 's-secs' ? 'dash'
         : id === 's-mapa' || id === 's-sisben' || id === 's-analisis' ? 'sig'
         : (meta[id] && meta[id].group === 'Misión Ciudades · BID') ? 'bid' : null;
       if(window.PIIT && window.PIIT.ui){
