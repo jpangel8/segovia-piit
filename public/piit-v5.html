@@ -15176,7 +15176,163 @@ else setTimeout(init,400);
   };
 })();
 </script>
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   PIITTable — búsqueda rápida, ordenamiento y paginación GENÉRICOS,
+   aplicados por encima de las tablas existentes sin tocar su lógica
+   real de datos/filtros/exportación. Opera únicamente sobre las filas
+   <tr> ya renderizadas por cada módulo (contratos, obras, análisis):
+   nunca modifica los datos, sólo cuáles filas se muestran y su orden
+   visual. Se re-aplica automáticamente cuando el módulo dueño de la
+   tabla vuelve a renderizar su tbody (filtro, recarga SECOP, etc.).
+   ══════════════════════════════════════════════════════════════════ */
+window.PIITTable = (function(){
+  'use strict';
+  var STORE = {};
+
+  function allRows(tbody){ return [].slice.call(tbody.children).filter(function(tr){ return tr.tagName === 'TR'; }); }
+
+  function apply(id){
+    var st = STORE[id];
+    var tbody = document.getElementById(id);
+    if(!st || !tbody) return;
+    var rows = allRows(tbody);
+    var q = st.search.trim().toLowerCase();
+    var visible = rows.filter(function(tr){
+      if(!q) return true;
+      return tr.textContent.toLowerCase().indexOf(q) > -1;
+    });
+    var totalPages = Math.max(1, Math.ceil(visible.length / st.perPage));
+    if(st.page > totalPages) st.page = totalPages;
+    var start = (st.page - 1) * st.perPage;
+    var end = start + st.perPage;
+    rows.forEach(function(tr){ tr.style.display = 'none'; });
+    visible.slice(start, end).forEach(function(tr){ tr.style.display = ''; });
+
+    var countEl = document.getElementById('ptbl-count-' + id);
+    if(countEl) countEl.textContent = visible.length + (visible.length === 1 ? ' resultado' : ' resultados') + (q ? ' · filtrado' : '');
+
+    var foot = document.getElementById('ptbl-foot-' + id);
+    if(foot){
+      if(totalPages <= 1){ foot.innerHTML = ''; }
+      else {
+        foot.innerHTML =
+          '<button class="ptbl-pg-btn" data-act="prev" '+(st.page<=1?'disabled':'')+'><i class="fa-solid fa-chevron-left"></i></button>'+
+          '<span class="ptbl-pg-lbl">Página '+st.page+' de '+totalPages+'</span>'+
+          '<button class="ptbl-pg-btn" data-act="next" '+(st.page>=totalPages?'disabled':'')+'><i class="fa-solid fa-chevron-right"></i></button>';
+        foot.querySelector('[data-act="prev"]').addEventListener('click', function(){ st.page--; apply(id); });
+        foot.querySelector('[data-act="next"]').addEventListener('click', function(){ st.page++; apply(id); });
+      }
+    }
+  }
+
+  function cellValue(tr, idx){
+    var td = tr.children[idx];
+    return td ? td.textContent.trim() : '';
+  }
+  function attachSort(table, id){
+    var ths = table.querySelectorAll('thead th');
+    ths.forEach(function(th, idx){
+      th.style.cursor = 'pointer';
+      th.title = 'Ordenar por esta columna';
+      th.addEventListener('click', function(){
+        var st = STORE[id];
+        st.sortDir = (st.sortCol === idx) ? -st.sortDir : 1;
+        st.sortCol = idx;
+        var tbody = document.getElementById(id);
+        var rows = allRows(tbody);
+        var numeric = rows.length && !isNaN(parseFloat(cellValue(rows[0], idx).replace(/[.,$%\s]/g,'')));
+        rows.sort(function(a, b){
+          var av = cellValue(a, idx), bv = cellValue(b, idx);
+          if(numeric){
+            av = parseFloat(av.replace(/[^0-9.-]/g,'')) || 0;
+            bv = parseFloat(bv.replace(/[^0-9.-]/g,'')) || 0;
+          }
+          if(av < bv) return -st.sortDir;
+          if(av > bv) return st.sortDir;
+          return 0;
+        });
+        st._silent = true;
+        rows.forEach(function(tr){ tbody.appendChild(tr); });
+        setTimeout(function(){ st._silent = false; }, 0);
+        apply(id);
+      });
+    });
+  }
+
+  function enhance(id, opts){
+    opts = opts || {};
+    var tbody = document.getElementById(id);
+    if(!tbody || STORE[id]) return;
+    var table = tbody.closest('table');
+    if(!table) return;
+    var wrap = table.parentElement;
+
+    STORE[id] = { page: 1, perPage: opts.perPage || 12, search: '', sortCol: -1, sortDir: 1, _silent: false };
+
+    var toolbar = document.createElement('div');
+    toolbar.className = 'ptbl-toolbar';
+    toolbar.innerHTML =
+      '<div class="ptbl-search-wrap"><i class="fa-solid fa-magnifying-glass"></i>'+
+      '<input type="text" class="ptbl-search" placeholder="'+(opts.placeholder || 'Buscar en la tabla…')+'"></div>'+
+      '<span class="ptbl-count" id="ptbl-count-'+id+'"></span>';
+    wrap.parentElement.insertBefore(toolbar, wrap);
+
+    var foot = document.createElement('div');
+    foot.className = 'ptbl-foot';
+    foot.id = 'ptbl-foot-' + id;
+    wrap.parentElement.insertBefore(foot, wrap.nextSibling);
+
+    toolbar.querySelector('.ptbl-search').addEventListener('input', function(e){
+      STORE[id].search = e.target.value;
+      STORE[id].page = 1;
+      apply(id);
+    });
+
+    if(opts.sortable !== false) attachSort(table, id);
+
+    var mo = new MutationObserver(function(){
+      if(STORE[id]._silent) return;
+      STORE[id].page = 1;
+      apply(id);
+    });
+    mo.observe(tbody, { childList: true });
+
+    apply(id);
+  }
+
+  return { enhance: enhance, refresh: function(id){ apply(id); } };
+})();
+
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(function(){
+    ['contratos-tbody', 'obras-tbody'].forEach(function(id){
+      if(document.getElementById(id)) window.PIITTable.enhance(id, { perPage: 12 });
+    });
+    /* analisis-tbody ya tiene ordenamiento propio por columna (an-th
+       onclick="PIIT.analisis.ordenar(...)"); sólo se añade búsqueda y
+       paginación, sin duplicar el manejador de clic de las cabeceras. */
+    if(document.getElementById('analisis-tbody')){
+      window.PIITTable.enhance('analisis-tbody', { perPage: 12, sortable: false });
+    }
+  }, 600);
+});
+</script>
 <style>
+/* ─── PIITTable: búsqueda/orden/paginación genéricos ─── */
+.ptbl-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--white);border:1px solid var(--g100);border-bottom:none;border-radius:var(--r-lg) var(--r-lg) 0 0}
+.ptbl-search-wrap{display:flex;align-items:center;gap:7px;flex:1;max-width:280px;padding:6px 10px;border:1px solid var(--g200);border-radius:var(--r-sm);background:var(--g50)}
+.ptbl-search-wrap i{font-size:11px;color:var(--t300)}
+.ptbl-search{flex:1;border:none;background:transparent;outline:none;font-family:var(--fb);font-size:11.5px;color:var(--t900)}
+.ptbl-count{font-size:10.5px;color:var(--t400);font-weight:600;white-space:nowrap}
+.ptbl-foot{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px;background:var(--white);border:1px solid var(--g100);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg)}
+.ptbl-pg-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--g200);background:var(--white);color:var(--g700);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:background var(--dur-fast) var(--ease)}
+.ptbl-pg-btn:hover:not(:disabled){background:var(--g50)}
+.ptbl-pg-btn:disabled{opacity:.35;cursor:not-allowed}
+.ptbl-pg-lbl{font-size:11px;color:var(--t400);font-weight:600}
+/* Resaltado uniforme al pasar el cursor sobre cualquier tabla de datos */
+table tbody tr:hover{background:rgba(35,121,56,.045)}
+
 /* Estilos de apoyo del PIIT Guard */
 #s-mapa .sig-panel{transition:max-height .45s cubic-bezier(.32,.72,.28,1)}
 #s-mapa .sig-status{transition:opacity .3s ease}
