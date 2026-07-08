@@ -731,7 +731,7 @@ footer a:hover{color:var(--au400)}
 
 .sev-bar{display:flex;gap:6px;margin-bottom:12px}
 .sev-btn{flex:1;padding:8px 4px;border:1px solid var(--g100);border-radius:var(--r-sm);text-align:center;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;background:var(--white);font-family:var(--fb)}
-.sev-btn.leve{--bc:#3D9467;--bg:var(--g50)}.sev-btn.media{--bc:var(--amber);--bg:#FFFBF0}.sev-btn.alta{--bc:var(--red);--bg:#FEF9F9}
+.sev-btn.leve{--bc:#48B72C;--bg:var(--g50)}.sev-btn.media{--bc:var(--amber);--bg:#FFFBF0}.sev-btn.alta{--bc:var(--red);--bg:#FEF9F9}
 .sev-btn.sel{border-color:var(--bc)!important;background:var(--bg)!important}
 .sev-btn.leve.sel{color:var(--g800)}.sev-btn.media.sel{color:#78350F}.sev-btn.alta.sel{color:var(--red)}
 
@@ -783,7 +783,7 @@ footer a:hover{color:var(--au400)}
 /* ═══════════════════════════════════════════════════════════════════
    SISTEMA TIPOGRÁFICO — PIIT SEGOVIA v5
    Auditoría WCAG 2.1 AA aplicada · Ratio mín: 4.5:1 normal · 3:1 grande
-   Paleta: Verde territorial (#0A2E1C → #3D9467) + Oro institucional (#DEB030)
+   Paleta: Verde territorial (#0A2E1C → #48B72C) + Oro institucional (#D6B000)
    Escala: base 16px · clamp() fluid · 5 breakpoints · NTC 5854 Colombia
 ══════════════════════════════════════════════════════════════════════ */
 
@@ -1125,7 +1125,7 @@ a:hover { color: var(--g900); }
 
 /* ── 22. FOCO VISIBLE WCAG 2.4.7 (gold institucional) ────────── */
 :focus-visible {
-  outline: 3px solid var(--au500);   /* #DEB030 — oro sobre verde ✓      */
+  outline: 3px solid var(--au500);   /* #D6B000 — oro sobre verde ✓      */
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -1454,7 +1454,7 @@ button:focus:not(:focus-visible) { outline: none; }
 body {
   background: var(--surface) !important;
   color: var(--text-1) !important;
-  font-family: 'Inter', 'Nunito', system-ui, sans-serif !important;
+  font-family: 'Inter', 'Inter', system-ui, sans-serif !important;
   -webkit-font-smoothing: antialiased !important;
 }
 
@@ -3539,7 +3539,7 @@ body { padding-bottom: 36px !important; }
 #s-mapa .mip-btn-secondary{flex:1;background:rgba(0,0,0,.055);color:#1A3026}
 #s-mapa .mip-btn-secondary:hover{background:rgba(0,0,0,.09)}
 #s-mapa .mip-btn-icon{padding:8px 11px;background:rgba(0,0,0,.045);color:#5A7268;font-size:12px}
-#s-mapa .mip-btn-icon:hover{background:rgba(200,64,64,.12);color:#C84040}
+#s-mapa .mip-btn-icon:hover{background:rgba(200,64,64,.12);color:#DC0B2C}
 
 /* Estado de servicios WMS — distingue tipo de error (404/500/timeout/
    red/CORS/URL inválida/autenticación) con la misma piel iOS */
@@ -3660,7 +3660,7 @@ body { padding-bottom: 36px !important; }
             <div class="sig-legend" id="legend-dynamic">
               <div class="ml-item"><div class="ml-dot" style="background:#2E7D52"></div>Bueno ≥70</div>
               <div class="ml-item"><div class="ml-dot" style="background:#C69A1A"></div>Atención 40–69</div>
-              <div class="ml-item"><div class="ml-dot" style="background:#C84040"></div>Crítico &lt;40</div>
+              <div class="ml-item"><div class="ml-dot" style="background:#DC0B2C"></div>Crítico &lt;40</div>
               <span id="legend-indicator-label" style="display:none">INFRAESTRUCTURA VIAL</span>
             </div>
           </div>
@@ -5921,8 +5921,8 @@ window.PIIT = (function () {
         mods:[
           {col:'#854F0B', t:'Capa infraestructura vial con semáforo de estado por tramo'},
           {col:'#1A5C3A', t:'Panel de seguimiento obras con avance en tiempo real'},
-          {col:'#2A6CA8', t:'Mapa cobertura acueducto y alcantarillado por barrio'},
-          {col:'#C84040', t:'Alertas fallas alumbrado y reportes ciudadanos urgentes'},
+          {col:'#00A0E4', t:'Mapa cobertura acueducto y alcantarillado por barrio'},
+          {col:'#DC0B2C', t:'Alertas fallas alumbrado y reportes ciudadanos urgentes'},
         ],
         flujo:'Formulario digital semanal diligenciado por inspector de campo con tablet y GPS. Contratos se sincronizan automáticamente desde SECOP II mediante API REST. Responsable: profesional SIG de la secretaría.',
       },
@@ -5941,7 +5941,7 @@ window.PIIT = (function () {
         ],
         mods:[
           {col:'#2A3F8A', t:'Mapa de convivencia y seguridad por barrio'},
-          {col:'#C84040', t:'Alertas puntos críticos conflictividad territorial'},
+          {col:'#DC0B2C', t:'Alertas puntos críticos conflictividad territorial'},
           {col:'#1A5C3A', t:'Dashboard JAC: cobertura y participación comunitaria'},
         ],
         flujo:'Carga mensual desde Policía Nacional (SIEDCO) y registros internos. Datos de convivencia anonimizados. Coordinación con Secretaría de Seguridad Departamental.',
@@ -5963,7 +5963,7 @@ window.PIIT = (function () {
         ],
         mods:[
           {col:'#3B6D11', t:'Mapa cobertura educativa con alertas de cupos disponibles'},
-          {col:'#C84040', t:'Alertas deserción para brigadas de retención escolar'},
+          {col:'#DC0B2C', t:'Alertas deserción para brigadas de retención escolar'},
           {col:'#1A5C3A', t:'Estado infraestructura educativa para Plan de Inversiones'},
           {col:'#C69A1A', t:'Mapa escenarios culturales y deportivos geolocalizados'},
         ],
@@ -5987,7 +5987,7 @@ window.PIIT = (function () {
           {col:'#6B4C11', t:'Mapa títulos mineros ANM sobre cartografía IGAC'},
           {col:'#1A5C3A', t:'Dashboard empleo y unidades productivas por barrio'},
           {col:'#C69A1A', t:'Seguimiento regalías: ingreso y ejecución por proyecto'},
-          {col:'#C84040', t:'Alertas zonas restricción ambiental y minera (ANLA)'},
+          {col:'#DC0B2C', t:'Alertas zonas restricción ambiental y minera (ANLA)'},
         ],
         flujo:'Capas mineras descargadas del Catastro Minero Colombiano (CMC) de la ANM vía servicio WFS/WMS trimestral. Datos económicos integrados desde DANE SISFUT y Cámara de Comercio.',
       },
@@ -6008,7 +6008,7 @@ window.PIIT = (function () {
           {col:'#1A4A7A', t:'Mapa puntos negros accidentalidad vial (SIAT)'},
           {col:'#C69A1A', t:'Dashboard señalización: estado y prioridades de intervención'},
           {col:'#2E7D52', t:'Rutas transporte público georreferenciadas con frecuencias'},
-          {col:'#C84040', t:'Alertas zonas alta accidentalidad para intervención'},
+          {col:'#DC0B2C', t:'Alertas zonas alta accidentalidad para intervención'},
         ],
         flujo:'Datos SIAT del RNAT (RUNT) mensualmente. Señalización actualizada por inspector con formulario de campo. Comparendos exportados desde sistema SIMIT.',
       },
@@ -6033,8 +6033,8 @@ window.PIIT = (function () {
           {col:'#993C1D', t:'Dashboard salud pública con alertas de brote epidémico'},
           {col:'#1A5C3A', t:'Mapa cobertura vacunación para jornadas extramurales'},
           {col:'#C69A1A', t:'Capa primera infancia para focalización ICBF'},
-          {col:'#534AB7', t:'Dashboard vulnerabilidad social con índice compuesto'},
-          {col:'#C84040', t:'Alertas concentración grupos vulnerables por barrio'},
+          {col:'#8A4AA3', t:'Dashboard vulnerabilidad social con índice compuesto'},
+          {col:'#DC0B2C', t:'Alertas concentración grupos vulnerables por barrio'},
         ],
         flujo:'Carga mensual desde SIVIGILA y PAIWEB (vacunación). SISBEN sincronizado vía convenio DNP. Datos anonimizados antes del ingreso a la plataforma. Articuladora principal del módulo social.',
       },
@@ -6056,8 +6056,8 @@ window.PIIT = (function () {
         mods:[
           {col:'#1A5C3A', t:'Mapa base y capas POT del observatorio territorial'},
           {col:'#C69A1A', t:'Módulo seguimiento obras e inversión geolocalizadas'},
-          {col:'#C84040', t:'Capa de riesgo territorial con alertas IDEAM / UNGRD'},
-          {col:'#2A6CA8', t:'Visor licencias de construcción y estratificación predial'},
+          {col:'#DC0B2C', t:'Capa de riesgo territorial con alertas IDEAM / UNGRD'},
+          {col:'#00A0E4', t:'Visor licencias de construcción y estratificación predial'},
         ],
         flujo:'Carga mensual SHP + Excel de proyectos desde BPIN. Responsable SIG designado en secretaría. Motor ETL valida geometrías y publica en plataforma. Articuladora del sistema de información geográfica municipal.',
       },
@@ -6078,8 +6078,8 @@ window.PIIT = (function () {
         mods:[
           {col:'#0F6E56', t:'Dashboard fiscal con ejecución presupuestal en tiempo real'},
           {col:'#C69A1A', t:'Indicador inversión per cápita por barrio (equidad)'},
-          {col:'#C84040', t:'Alerta subejecución presupuestal en proyectos estratégicos'},
-          {col:'#2A6CA8', t:'Mapa recaudo predial por zona para fiscalización'},
+          {col:'#DC0B2C', t:'Alerta subejecución presupuestal en proyectos estratégicos'},
+          {col:'#00A0E4', t:'Mapa recaudo predial por zona para fiscalización'},
         ],
         flujo:'Exportación mensual del sistema contable municipal + portal CHIP del Ministerio de Hacienda. Carga semiautomática mediante ETL. Datos SGR integrados desde Mapa Regalías de DNP.',
       },
@@ -6123,12 +6123,12 @@ window.PIIT = (function () {
     COLOR_SCALE: function (val) {
       if (val >= 70) return { fill:'#2E7D52', cls:'kpi-ok', label:'Bueno' };
       if (val >= 40) return { fill:'#C69A1A', cls:'kpi-warn', label:'Atención' };
-      return { fill:'#C84040', cls:'kpi-crit', label:'Crítico' };
+      return { fill:'#DC0B2C', cls:'kpi-crit', label:'Crítico' };
     },
 
     COLOR_POP: function (val) {
-      if (val >= 70) return { fill:'#2A6CA8', cls:'kpi-ok', label:'Alta' };
-      if (val >= 40) return { fill:'#534AB7', cls:'kpi-warn', label:'Media' };
+      if (val >= 70) return { fill:'#00A0E4', cls:'kpi-ok', label:'Alta' };
+      if (val >= 40) return { fill:'#8A4AA3', cls:'kpi-warn', label:'Media' };
       return { fill:'#8ECBA8', cls:'kpi-crit', label:'Baja' };
     },
 
@@ -6194,7 +6194,7 @@ window.PIIT = (function () {
         mouseover: function (e) {
           if (STATE.map.selectedBarrio === pk) return;
           var l = e.target;
-          l.setStyle({ weight: 2.5, color: '#DEB030', fillOpacity: Math.min(STATE.map.opacity + 0.15, 0.95) });
+          l.setStyle({ weight: 2.5, color: '#D6B000', fillOpacity: Math.min(STATE.map.opacity + 0.15, 0.95) });
           l.bringToFront();
           // Enlace mapa → histograma: resaltar el bin del barrio
           map.renderHist(pk);
@@ -6222,7 +6222,7 @@ window.PIIT = (function () {
           STATE.map.geojsonLayer.eachLayer(function (l) {
             STATE.map.geojsonLayer.resetStyle(l);
           });
-          e.target.setStyle({ weight: 2.5, color: '#DEB030', fillOpacity: 0.9 });
+          e.target.setStyle({ weight: 2.5, color: '#D6B000', fillOpacity: 0.9 });
           e.target.bringToFront();
 
           document.querySelectorAll('.barrio-item').forEach(function (el) {
@@ -6544,13 +6544,13 @@ window.PIIT = (function () {
           var tipo = feature.properties.TIPO || '4';
           // TIPO 4 = límite municipal, TIPO 5 = límite barrial, etc.
           var styles = {
-            '1': { color:'#DEB030', weight:3.5, dashArray:'', opacity:0.95 },
-            '2': { color:'#DEB030', weight:2.5, dashArray:'8,4', opacity:0.85 },
+            '1': { color:'#D6B000', weight:3.5, dashArray:'', opacity:0.95 },
+            '2': { color:'#D6B000', weight:2.5, dashArray:'8,4', opacity:0.85 },
             '3': { color:'#E8C450', weight:2,   dashArray:'4,4', opacity:0.8  },
             '4': { color:'#F0D680', weight:1.5, dashArray:'3,3', opacity:0.75 },
             '5': { color:'#F0D680', weight:1,   dashArray:'2,2', opacity:0.65 },
           };
-          return styles[tipo] || { color:'#DEB030', weight:1.5, dashArray:'', opacity:0.8 };
+          return styles[tipo] || { color:'#D6B000', weight:1.5, dashArray:'', opacity:0.8 };
         },
         onEachFeature: function (feature, layer) {
           var p = feature.properties;
@@ -6813,14 +6813,14 @@ window.PIIT = (function () {
 
     /* Traduce el resultado del diagnóstico al vocabulario de updateWmsStatus */
     WMS_ERROR_LABELS: {
-      http404:    { icon: '❌', color: '#C84040', msg: 'Error HTTP 404 · recurso no encontrado' },
-      http500:    { icon: '❌', color: '#C84040', msg: 'Error HTTP 500 · error del servidor' },
-      http_error: { icon: '❌', color: '#C84040', msg: 'Error HTTP · respuesta no exitosa' },
+      http404:    { icon: '❌', color: '#DC0B2C', msg: 'Error HTTP 404 · recurso no encontrado' },
+      http500:    { icon: '❌', color: '#DC0B2C', msg: 'Error HTTP 500 · error del servidor' },
+      http_error: { icon: '❌', color: '#DC0B2C', msg: 'Error HTTP · respuesta no exitosa' },
       timeout:    { icon: '❌', color: '#C69A1A', msg: 'Tiempo de espera agotado' },
-      network:    { icon: '❌', color: '#C84040', msg: 'Error de red · host inalcanzable' },
+      network:    { icon: '❌', color: '#DC0B2C', msg: 'Error de red · host inalcanzable' },
       cors:       { icon: '❌', color: '#C69A1A', msg: 'Restricción CORS detectada' },
-      invalid_url:{ icon: '❌', color: '#C84040', msg: 'URL del servicio inválida' },
-      auth:       { icon: '❌', color: '#C84040', msg: 'Error de autenticación' },
+      invalid_url:{ icon: '❌', color: '#DC0B2C', msg: 'URL del servicio inválida' },
+      auth:       { icon: '❌', color: '#DC0B2C', msg: 'Error de autenticación' },
     },
 
     toggleWMS: function (key) {
@@ -6952,7 +6952,7 @@ window.PIIT = (function () {
            mensaje amigable, consistente con el resto de la UI. */
         unavailable: { icon: '🔄', color: '#C69A1A', msg: map.GEO_FRIENDLY_MSG.unavailable },
       };
-      const cfg = base[status] || map.WMS_ERROR_LABELS[status] || { icon: '❌', color: '#C84040', msg: 'Error desconocido' };
+      const cfg = base[status] || map.WMS_ERROR_LABELS[status] || { icon: '❌', color: '#DC0B2C', msg: 'Error desconocido' };
 
       /* Update or create row for this key */
       // Fix 7: Limpiar texto inicial si es la primera entrada real
@@ -7091,7 +7091,7 @@ window.PIIT = (function () {
 
       var icv   = Math.round((ind.infra||0)*0.30+(ind.social||0)*0.25+(ind.srv||0)*0.25+(ind.pop||0)*0.20);
       var nivel = icv >= 70 ? 'Bueno' : icv >= 40 ? 'En atención' : 'Crítico';
-      var colorIcv = icv >= 70 ? '#2E7D52' : icv >= 40 ? '#C9852A' : '#C84040';
+      var colorIcv = icv >= 70 ? '#2E7D52' : icv >= 40 ? '#C9852A' : '#DC0B2C';
       var bgBadge  = icv >= 70 ? '#EAF5EF'  : icv >= 40 ? '#FEF3C7' : '#FCEBEB';
       var fecha    = new Date().toLocaleDateString('es-CO');
 
@@ -7290,7 +7290,7 @@ window.PIIT = (function () {
         + attrRow('Población', '<strong>' + num(ind.poblacion) + '</strong> hab.')
         + attrRow('Hogares', num(ind.hogares))
         + attrRow('SISBEN A+B',
-            '<span class="mip-strong" style="color:' + (+(ind.sisben_ab||0) > 40 ? '#C84040' : +(ind.sisben_ab||0) > 25 ? '#C69A1A' : '#2E7D52') + '">'
+            '<span class="mip-strong" style="color:' + (+(ind.sisben_ab||0) > 40 ? '#DC0B2C' : +(ind.sisben_ab||0) > 25 ? '#C69A1A' : '#2E7D52') + '">'
             + (+(ind.sisben_ab||0)) + '%</span>')
         + attrRow('Puntaje SISBEN', Math.round(+(ind.puntaje||0)))
         + attrRow('Acueducto',  Math.round(+(ind.cobertura_acueducto||0)) + '%')
@@ -7381,7 +7381,7 @@ window.PIIT = (function () {
             map.showInfoPanel(ind, scale, clat, clon, nom, cod, pk);
             STATE.map.selectedBarrio = pk;
             STATE.map.geojsonLayer.eachLayer(function (l) { STATE.map.geojsonLayer.resetStyle(l); });
-            layer.setStyle({ weight: 2.5, color: '#DEB030', fillOpacity: 0.9 });
+            layer.setStyle({ weight: 2.5, color: '#D6B000', fillOpacity: 0.9 });
             layer.bringToFront();
             layer.openTooltip();
           }
@@ -7525,7 +7525,7 @@ window.PIIT = (function () {
         ok:    { icon: '✅', label: 'Íntegro · sin inconsistencias', color: '#2E7D52' },
         info:  { icon: 'ℹ️', label: 'Íntegro · observaciones menores', color: '#2E7D52' },
         warn:  { icon: '⚠️', label: 'Revisar — inconsistencias leves', color: '#C69A1A' },
-        error: { icon: '❌', label: 'Requiere corrección', color: '#C84040' },
+        error: { icon: '❌', label: 'Requiere corrección', color: '#DC0B2C' },
       };
       return Object.assign({ at: a.at, n: a.findings.length }, map[a.status] || map.info);
     },
@@ -7834,7 +7834,7 @@ window.PIIT = (function () {
         .sort((a, b) => b.infra - a.infra).slice(0, 10);
       const max = items[0].infra;
       el.innerHTML = items.map((d, i) => {
-        const color = d.infra >= 70 ? '#2E7D52' : d.infra >= 40 ? '#C69A1A' : '#C84040';
+        const color = d.infra >= 70 ? '#2E7D52' : d.infra >= 40 ? '#C69A1A' : '#DC0B2C';
         return `<div class="bar-row">
           <div class="bar-num">${i+1}</div>
           <div class="bar-name">${d.nombre}</div>
@@ -7893,7 +7893,7 @@ window.PIIT = (function () {
       sisben._auditCache = null;
       sisben.audit();
       ui.renderSisbenQuality();
-      map.toast('Auditoría SISBEN re-ejecutada: ' + sisben.qualityBadge().label, sisben.qualityBadge().color === '#C84040' ? 'warn' : 'ok');
+      map.toast('Auditoría SISBEN re-ejecutada: ' + sisben.qualityBadge().label, sisben.qualityBadge().color === '#DC0B2C' ? 'warn' : 'ok');
     },
 
     pickSisben: function (pk) {
@@ -7906,12 +7906,12 @@ window.PIIT = (function () {
       const el = document.getElementById('sisben-det');
       if (!p || !el) return;
       const avg = sisben.municipalAverage();
-      const scaleColor = function (v) { return v >= 70 ? '#2E7D52' : v >= 40 ? '#C69A1A' : '#C84040'; };
+      const scaleColor = function (v) { return v >= 70 ? '#2E7D52' : v >= 40 ? '#C69A1A' : '#DC0B2C'; };
       const deltaChip = function (val, base, invert) {
         const d = Math.round((val - base) * 10) / 10;
         const good = invert ? d < 0 : d > 0;
         const arrow = d === 0 ? '→' : d > 0 ? '▲' : '▼';
-        const color = d === 0 ? '#8A9E96' : good ? '#2E7D52' : '#C84040';
+        const color = d === 0 ? '#8A9E96' : good ? '#2E7D52' : '#DC0B2C';
         return `<span style="color:${color};font-weight:700;font-size:9.5px">${arrow} ${Math.abs(d)} pp vs. municipio</span>`;
       };
       const insights = sisben.insights(p);
@@ -7933,7 +7933,7 @@ window.PIIT = (function () {
           <div class="sbf-kpi"><div class="sbf-kpi-v">${p.hogares.toLocaleString('es-CO')}</div><div class="sbf-kpi-l">Hogares</div></div>
           <div class="sbf-kpi"><div class="sbf-kpi-v">${p.personas.toLocaleString('es-CO')}</div><div class="sbf-kpi-l">Personas est.</div></div>
           <div class="sbf-kpi"><div class="sbf-kpi-v" style="color:${scaleColor(100-p.sisben_ab)}">${p.sisben_ab}%</div><div class="sbf-kpi-l">Grupo A+B ${deltaChip(p.sisben_ab, avg.sisben_ab)}</div></div>
-          <div class="sbf-kpi"><div class="sbf-kpi-v" style="color:${p.ipm>45?'#C84040':p.ipm>28?'#C69A1A':'#2E7D52'}">${p.ipm}</div><div class="sbf-kpi-l">IPM · Priorización ${p.priorizacion}</div></div>
+          <div class="sbf-kpi"><div class="sbf-kpi-v" style="color:${p.ipm>45?'#DC0B2C':p.ipm>28?'#C69A1A':'#2E7D52'}">${p.ipm}</div><div class="sbf-kpi-l">IPM · Priorización ${p.priorizacion}</div></div>
         </div>
 
         <details class="sbf-sec" open>
@@ -7944,7 +7944,7 @@ window.PIIT = (function () {
               <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#2E7D52"></span>A ${p.grupos.A}%</div>
               <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#5BAF84"></span>B ${p.grupos.B}%</div>
               <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#C69A1A"></span>C ${p.grupos.C}%</div>
-              <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#C84040"></span>D ${p.grupos.D}%</div>
+              <div class="sbf-gl-item"><span class="sbf-gl-dot" style="background:#DC0B2C"></span>D ${p.grupos.D}%</div>
             </div>
           </div>
         </details>
@@ -8018,7 +8018,7 @@ window.PIIT = (function () {
           type: 'bar',
           data: {
             labels: ['A', 'B', 'C', 'D'],
-            datasets: [{ data: [p.grupos.A, p.grupos.B, p.grupos.C, p.grupos.D], backgroundColor: ['#2E7D52', '#5BAF84', '#C69A1A', '#C84040'], borderRadius: 6, barPercentage: 0.6 }],
+            datasets: [{ data: [p.grupos.A, p.grupos.B, p.grupos.C, p.grupos.D], backgroundColor: ['#2E7D52', '#5BAF84', '#C69A1A', '#DC0B2C'], borderRadius: 6, barPercentage: 0.6 }],
           },
           options: {
             responsive: true, maintainAspectRatio: false, animation: { duration: 450, easing: 'easeOutQuart' },
@@ -8102,7 +8102,7 @@ window.PIIT = (function () {
         { lbl:'Obras y construcción', n:33, pct:4 },
       ];
       document.getElementById('rep-cats').innerHTML = cats.map(c => {
-        const color = c.pct > 30 ? '#C84040' : c.pct > 15 ? '#C9852A' : '#2E7D52';
+        const color = c.pct > 30 ? '#DC0B2C' : c.pct > 15 ? '#C9852A' : '#2E7D52';
         return `<div class="bar-row">
           <div class="bar-name" style="width:160px">${c.lbl}</div>
           <div class="bar-track"><div class="bar-fill" style="width:${c.pct}%;background:${color}"></div></div>
@@ -8191,7 +8191,7 @@ window.PIIT = (function () {
                {ico:'🕳️',t:'Alcantarillado obstruido',s:'Desbordamiento, taponamiento o malos olores',dot:'var(--amber)'},
                {ico:'💰',t:'Problema de facturación',s:'Error en cobro o lectura del medidor',dot:'var(--blue)'}],
         contacto:'PQR: aguaspocune@segovia.gov.co · Tel: 604-XXX-XXXX',
-        sla:'72h hábiles · Urgencias: 4 horas',total:357,resueltos:268,dias:4.9,color_fill:'#2A6CA8'},
+        sla:'72h hábiles · Urgencias: 4 horas',total:357,resueltos:268,dias:4.9,color_fill:'#00A0E4'},
     };
     const HISTORICO=[
       {rad:'RAD-2026-01204',prest:'Aguas del Pocuné',tipo:'Rotura de tubería',barrio:'Briceño',fecha:'16/04/2025',estado:'En proceso',dias:1,ep:'ep-proc'},
@@ -8331,7 +8331,7 @@ window.PIIT = (function () {
         data:{
           labels:p.tipos.map(t=>t.t.length>24?t.t.slice(0,24)+'…':t.t),
           datasets:[{label:'Reportes',data:p.tipos.map(()=>Math.floor(10+Math.random()*60)),
-            backgroundColor:p.tipos.map(t=>t.dot==='var(--red)'?'#C84040':t.dot==='var(--amber)'?'#C9852A':t.dot==='var(--blue)'?'#2A6CA8':'#3D9467'),
+            backgroundColor:p.tipos.map(t=>t.dot==='var(--red)'?'#DC0B2C':t.dot==='var(--amber)'?'#C9852A':t.dot==='var(--blue)'?'#00A0E4':'#48B72C'),
             borderRadius:4,borderSkipped:false}]
         },
         options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},
@@ -8784,18 +8784,18 @@ window.PIIT = (function () {
       var C = window.Chart;
 
       // Fuentes y colores base
-      C.defaults.font.family = "'Nunito', system-ui, sans-serif";
+      C.defaults.font.family = "'Inter', system-ui, sans-serif";
       C.defaults.font.size = 12;                   // base: 11 → 12 (+9% legibilidad)
       C.defaults.font.weight = '500';
-      C.defaults.color = '#1A3026';                // t700 · ratio 12.8:1 ✓ AAA
+      C.defaults.color = '#1D3129';                // t700 · ratio 12.8:1 ✓ AAA
 
       // Leyendas — más legibles y espaciadas
       C.defaults.plugins.legend.labels.font = {
-        family: "'Nunito', system-ui, sans-serif",
+        family: "'Inter', system-ui, sans-serif",
         size: 12.5,
         weight: '600',
       };
-      C.defaults.plugins.legend.labels.color = '#1A3026';
+      C.defaults.plugins.legend.labels.color = '#1D3129';
       C.defaults.plugins.legend.labels.padding = 14;     // era 10px
       C.defaults.plugins.legend.labels.boxWidth = 14;
       C.defaults.plugins.legend.labels.boxHeight = 10;
@@ -8803,12 +8803,12 @@ window.PIIT = (function () {
 
       // Tooltips — más grandes, contrastados
       C.defaults.plugins.tooltip.titleFont = {
-        family: "'Nunito', sans-serif",
+        family: "'Inter', sans-serif",
         size: 12.5,
         weight: '700',
       };
       C.defaults.plugins.tooltip.bodyFont = {
-        family: "'Nunito', sans-serif",
+        family: "'Inter', sans-serif",
         size: 12,
         weight: '500',
       };
@@ -8817,20 +8817,20 @@ window.PIIT = (function () {
       C.defaults.plugins.tooltip.displayColors = true;
       C.defaults.plugins.tooltip.boxPadding = 4;
       C.defaults.plugins.tooltip.titleMarginBottom = 6;
-      C.defaults.plugins.tooltip.backgroundColor = 'rgba(10,46,28,.95)';   // g900 casi opaco
+      C.defaults.plugins.tooltip.backgroundColor = 'rgba(13,46,23,.95)';   // g900 institucional
       C.defaults.plugins.tooltip.titleColor = '#FFFFFF';
       C.defaults.plugins.tooltip.bodyColor = 'rgba(255,255,255,.95)';
-      C.defaults.plugins.tooltip.borderColor = 'rgba(252,220,0,.4)';     // au500 borde
+      C.defaults.plugins.tooltip.borderColor = 'rgba(72,183,44,.4)';     // verde complementario institucional
       C.defaults.plugins.tooltip.borderWidth = 1;
 
       // Escalas — ticks más legibles
       if (C.defaults.scale) {
         C.defaults.scale.ticks.font = {
-          family: "'Nunito', sans-serif",
+          family: "'Inter', sans-serif",
           size: 11.5,
           weight: '500',
         };
-        C.defaults.scale.ticks.color = '#3D5C4A';     // t500 · 5.8:1 ✓
+        C.defaults.scale.ticks.color = '#43594E';     // t500 · 5.8:1 ✓
         C.defaults.scale.ticks.padding = 6;
       }
 
@@ -8839,8 +8839,8 @@ window.PIIT = (function () {
         if (C.defaults.scales && C.defaults.scales[scaleType]) {
           C.defaults.scales[scaleType].ticks = Object.assign(
             C.defaults.scales[scaleType].ticks || {}, {
-            font: { family: "'Nunito', sans-serif", size: 11.5, weight: '500' },
-            color: '#3D5C4A',
+            font: { family: "'Inter', sans-serif", size: 11.5, weight: '500' },
+            color: '#43594E',
             padding: 6,
           });
           C.defaults.scales[scaleType].grid = Object.assign(
@@ -8850,8 +8850,8 @@ window.PIIT = (function () {
           });
           C.defaults.scales[scaleType].title = Object.assign(
             C.defaults.scales[scaleType].title || {}, {
-            font: { family: "'Nunito', sans-serif", size: 11.5, weight: '700' },
-            color: '#1A3026',
+            font: { family: "'Inter', sans-serif", size: 11.5, weight: '700' },
+            color: '#1D3129',
           });
         }
       });
@@ -8869,7 +8869,8 @@ window.PIIT = (function () {
       // Diseño general
       C.defaults.layout.padding = { top: 6, right: 10, bottom: 4, left: 6 };
       C.defaults.interaction = { mode: 'index', intersect: false };
-      C.defaults.animation.duration = 600;
+      C.defaults.animation.duration = 550;
+      C.defaults.animation.easing = 'easeOutQuart';
 
       charts._themed = true;
     },
@@ -8882,8 +8883,8 @@ window.PIIT = (function () {
           legend: {
             position: 'bottom',
             labels: {
-              font: { family: "'Nunito', sans-serif", size: 12.5, weight: '600' },
-              color: '#1A3026',
+              font: { family: "'Inter', sans-serif", size: 12.5, weight: '600' },
+              color: '#1D3129',
               boxWidth: 14,
               boxHeight: 10,
               padding: 14,
@@ -8912,9 +8913,9 @@ window.PIIT = (function () {
         data: {
           labels: ['2019','2020','2021','2022','2023','2024','2025'],
           datasets: [
-            {label:'ICV Municipal promedio', data:[48,46,49,52,55,59,62], borderColor:'#3D9467', backgroundColor:'rgba(61,148,103,.1)', tension:0.4, fill:true, pointRadius:4, borderWidth:2.5},
-            {label:'Infraestructura', data:[51,49,52,55,58,62,66], borderColor:'#DEB030', backgroundColor:'transparent', tension:0.4, borderDash:[5,3], pointRadius:3, borderWidth:1.5},
-            {label:'Cobertura social', data:[44,43,47,50,53,57,60], borderColor:'#2A6CA8', backgroundColor:'transparent', tension:0.4, borderDash:[3,3], pointRadius:3, borderWidth:1.5},
+            {label:'ICV Municipal promedio', data:[48,46,49,52,55,59,62], borderColor:'#48B72C', backgroundColor:'rgba(61,148,103,.1)', tension:0.4, fill:true, pointRadius:4, borderWidth:2.5},
+            {label:'Infraestructura', data:[51,49,52,55,58,62,66], borderColor:'#D6B000', backgroundColor:'transparent', tension:0.4, borderDash:[5,3], pointRadius:3, borderWidth:1.5},
+            {label:'Cobertura social', data:[44,43,47,50,53,57,60], borderColor:'#00A0E4', backgroundColor:'transparent', tension:0.4, borderDash:[3,3], pointRadius:3, borderWidth:1.5},
           ],
         },
         options: Object.assign(charts._defaults(), {
@@ -8941,14 +8942,14 @@ window.PIIT = (function () {
             label: 'Promedio municipal',
             data: [avg('infra'), avg('social'), avg('srv'), avg('pop'), avg('cobertura_acueducto'), avg('cobertura_energia')],
             backgroundColor: 'rgba(61,148,103,.18)',
-            borderColor: '#3D9467',
+            borderColor: '#48B72C',
             borderWidth: 2,
-            pointBackgroundColor: '#3D9467',
+            pointBackgroundColor: '#48B72C',
             pointRadius: 4,
           }],
         },
         options: Object.assign(charts._defaults(), {
-          scales: { r: { beginAtZero: true, max: 100, min: 0, ticks: { color: '#8A9E96', font:{size:11.5 }, stepSize: 20 }, grid: { color: 'rgba(0,0,0,.06)' }, pointLabels: { color: '#3D5C4A', font:{size:12 } } } },
+          scales: { r: { beginAtZero: true, max: 100, min: 0, ticks: { color: '#8A9E96', font:{size:11.5 }, stepSize: 20 }, grid: { color: 'rgba(0,0,0,.06)' }, pointLabels: { color: '#43594E', font:{size:12 } } } },
         }),
       });
     },
@@ -8962,8 +8963,8 @@ window.PIIT = (function () {
         data: {
           labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
           datasets: [
-            { label: 'Total reportes', data: [52, 61, 78, 85, 90, 72, 88, 95, 103, 89, 76, 58], borderColor: '#3D9467', backgroundColor: 'rgba(61,148,103,.08)', tension: 0.4, fill: true, pointRadius: 3, borderWidth: 2 },
-            { label: 'Resueltos', data: [38, 45, 60, 67, 72, 55, 71, 78, 84, 74, 62, 47], borderColor: '#DEB030', backgroundColor: 'transparent', tension: 0.4, borderDash: [5,3], pointRadius: 3, borderWidth: 1.5 },
+            { label: 'Total reportes', data: [52, 61, 78, 85, 90, 72, 88, 95, 103, 89, 76, 58], borderColor: '#48B72C', backgroundColor: 'rgba(61,148,103,.08)', tension: 0.4, fill: true, pointRadius: 3, borderWidth: 2 },
+            { label: 'Resueltos', data: [38, 45, 60, 67, 72, 55, 71, 78, 84, 74, 62, 47], borderColor: '#D6B000', backgroundColor: 'transparent', tension: 0.4, borderDash: [5,3], pointRadius: 3, borderWidth: 1.5 },
           ],
         },
         options: Object.assign(charts._defaults(), {
@@ -8983,7 +8984,7 @@ window.PIIT = (function () {
         type: 'doughnut',
         data: {
           labels: ['Grupo A (extrema pobreza)', 'Grupo B (pobreza)', 'Grupo C (vulnerabilidad)', 'Grupo D (no pobre)'],
-          datasets: [{ data: [12, 22, 38, 28], backgroundColor: ['#C84040', '#C9852A', '#DEB030', '#2E7D52'], borderWidth: 2, borderColor: '#fff' }],
+          datasets: [{ data: [12, 22, 38, 28], backgroundColor: ['#DC0B2C', '#C9852A', '#D6B000', '#2E7D52'], borderWidth: 2, borderColor: '#fff' }],
         },
         options: Object.assign(charts._defaults(), {
           cutout: '60%',
@@ -9005,7 +9006,7 @@ window.PIIT = (function () {
           datasets: [{
             label: '% ejecutado',
             data: vals,
-            backgroundColor: vals.map(function (v) { return v >= 70 ? '#2E7D52' : v >= 50 ? '#C9852A' : '#C84040'; }),
+            backgroundColor: vals.map(function (v) { return v >= 70 ? '#2E7D52' : v >= 50 ? '#C9852A' : '#DC0B2C'; }),
             borderRadius: 4,
           }],
         },
@@ -9031,7 +9032,7 @@ window.PIIT = (function () {
           labels: noms,
           datasets: [
             { label: 'Servicios (%)', data: vals, backgroundColor: vals.map(function (v) { return v >= 70 ? 'rgba(46,125,82,.7)' : v >= 40 ? 'rgba(201,133,42,.7)' : 'rgba(200,64,64,.7)'; }), borderRadius: 3 },
-            { label: 'Meta 85%', data: new Array(vals.length).fill(85), type: 'line', borderColor: '#DEB030', borderDash: [6, 3], borderWidth: 1.5, pointRadius: 0, fill: false },
+            { label: 'Meta 85%', data: new Array(vals.length).fill(85), type: 'line', borderColor: '#D6B000', borderDash: [6, 3], borderWidth: 1.5, pointRadius: 0, fill: false },
           ],
         },
         options: Object.assign(charts._defaults(), {
@@ -9077,7 +9078,7 @@ window.PIIT = (function () {
         type: 'pie',
         data: {
           labels: ['SGR Regalías', 'SGP Transferencias', 'Recaudo propio', 'Cofinanciación', 'Otros'],
-          datasets: [{ data: [32, 28, 18, 15, 7], backgroundColor: ['#DEB030', '#3D9467', '#2A6CA8', '#534AB7', '#8A9E96'], borderWidth: 2, borderColor: '#fff' }],
+          datasets: [{ data: [32, 28, 18, 15, 7], backgroundColor: ['#D6B000', '#48B72C', '#00A0E4', '#8A4AA3', '#8A9E96'], borderWidth: 2, borderColor: '#fff' }],
         },
         options: Object.assign(charts._defaults(), {
           plugins: { legend: { position: 'bottom', labels: { font:{size:12 }, boxWidth: 10 } } },
@@ -9233,7 +9234,7 @@ window.PIIT = (function () {
       var scale = function (v) {
         if (v >= 70) return { color:'#2E7D52', bg:'rgba(46,125,82,.12)', label:'Bueno' };
         if (v >= 40) return { color:'#C9852A', bg:'rgba(201,133,42,.12)', label:'Atención' };
-        return { color:'#C84040', bg:'rgba(200,64,64,.12)', label:'Crítico' };
+        return { color:'#DC0B2C', bg:'rgba(200,64,64,.12)', label:'Crítico' };
       };
 
       tbody.innerHTML = data.map(function (d) {
@@ -9249,7 +9250,7 @@ window.PIIT = (function () {
           + barCell(d.infra)
           + barCell(d.social)
           + barCell(d.srv)
-          + '<td class="an-td center"><span style="font-family:var(--fm);font-size:11px;color:' + (d.sisben_ab > 40 ? '#C84040' : d.sisben_ab > 25 ? '#C9852A' : '#3D9467') + ';font-weight:700">' + (d.sisben_ab || 0) + '%</span></td>'
+          + '<td class="an-td center"><span style="font-family:var(--fm);font-size:11px;color:' + (d.sisben_ab > 40 ? '#DC0B2C' : d.sisben_ab > 25 ? '#C9852A' : '#48B72C') + ';font-weight:700">' + (d.sisben_ab || 0) + '%</span></td>'
           + barCell(d.cobertura_acueducto)
           + '<td class="an-td center" style="font-family:var(--fm);font-size:11px">' + (d.reportes || 0) + '</td>'
           + '<td class="an-td center"><span class="an-badge" style="background:' + s.bg + ';color:' + s.color + '">' + s.label + '</span></td>'
@@ -9324,7 +9325,7 @@ window.PIIT = (function () {
       var el = document.getElementById('pres-sec-bars');
       if (!el) return;
       el.innerHTML = presupuesto.SECS_PRES.map(function (s) {
-        var color = s.ejecucion >= 70 ? '#2E7D52' : s.ejecucion >= 50 ? '#C9852A' : '#C84040';
+        var color = s.ejecucion >= 70 ? '#2E7D52' : s.ejecucion >= 50 ? '#C9852A' : '#DC0B2C';
         return '<div class="pres-row">'
           + '<div class="pres-sec" title="' + s.nom + '">' + s.nom + '</div>'
           + '<div class="pres-track"><div class="pres-fill" style="width:' + s.ejecucion + '%;background:' + color + '"></div></div>'
@@ -9338,12 +9339,12 @@ window.PIIT = (function () {
       var tbody = document.getElementById('sgr-tbody');
       if (!tbody) return;
       tbody.innerHTML = presupuesto.SGR_PROYECTOS.map(function (p) {
-        var colorFis = p.fis >= 70 ? '#2E7D52' : p.fis >= 40 ? '#C9852A' : '#C84040';
-        var colorFin = p.fin >= 70 ? '#2E7D52' : p.fin >= 40 ? '#C9852A' : '#C84040';
+        var colorFis = p.fis >= 70 ? '#2E7D52' : p.fis >= 40 ? '#C9852A' : '#DC0B2C';
+        var colorFin = p.fin >= 70 ? '#2E7D52' : p.fin >= 40 ? '#C9852A' : '#DC0B2C';
         var badge = p.estado === 'Finalizado'
           ? 'background:var(--g100);color:var(--g800)'
           : p.estado === 'Iniciando'
-          ? 'background:#E6F1FB;color:#2A6CA8'
+          ? 'background:#E6F1FB;color:#00A0E4'
           : 'background:#FEF3C7;color:#78350F';
         return '<tr class="sgr-row">'
           + '<td class="sgr-td" style="font-weight:600;max-width:280px">' + p.nom + '</td>'
@@ -9585,7 +9586,7 @@ window.PIIT = (function () {
         });
     }
 
-    function colorFis(v){ return v>=70?'#2E7D52':v>=40?'#C9852A':'#C84040'; }
+    function colorFis(v){ return v>=70?'#2E7D52':v>=40?'#C9852A':'#DC0B2C'; }
 
     function stClass(s){
       return {
@@ -9605,12 +9606,12 @@ window.PIIT = (function () {
     // Etiqueta de sector con color
     function sectorBadge(s){
       var cfg = {
-        'Agua y Saneamiento': {bg:'#E6F1FB', col:'#2A6CA8', icon:'💧'},
+        'Agua y Saneamiento': {bg:'#E6F1FB', col:'#00A0E4', icon:'💧'},
         'Vias':               {bg:'#FEF3C7', col:'#78350F', icon:'🛣️'},
         'Social':             {bg:'#EAF5EF', col:'#1A5C3A', icon:'🏘️'},
-        'Infraestructura':    {bg:'#FCEBEB', col:'#C84040', icon:'🏗️'},
+        'Infraestructura':    {bg:'#FCEBEB', col:'#DC0B2C', icon:'🏗️'},
         'Estudios y Disenos': {bg:'#FBF4D8', col:'#7A5A0A', icon:'📐'},
-      }[s] || {bg:'#F4FAF6', col:'#3D5C4A', icon:'📋'};
+      }[s] || {bg:'#F4FAF6', col:'#43594E', icon:'📋'};
       return '<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;white-space:nowrap;background:'+cfg.bg+';color:'+cfg.col+'">'+cfg.icon+' '+s+'</span>';
     }
 
@@ -9669,7 +9670,7 @@ window.PIIT = (function () {
           +'<td class="obra-td" style="text-align:center">'
           +  '<a class="secop-link" href="'+secopUrl+'" target="_blank" rel="noopener noreferrer"'
           +  ' style="display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;font-weight:700;'
-          +  'padding:3px 8px;border-radius:5px;background:#E6F1FB;color:#2A6CA8;border:1px solid #C8DFF5;'
+          +  'padding:3px 8px;border-radius:5px;background:#E6F1FB;color:#00A0E4;border:1px solid #C8DFF5;'
           +  'text-decoration:none;white-space:nowrap;transition:background .15s"'
           +  ' onmouseover="this.style.background=\'#C8DFF5\'" onmouseout="this.style.background=\'#E6F1FB\'">'
           +    '<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px"></i>'
@@ -9721,7 +9722,7 @@ window.PIIT = (function () {
       });
       var secNom = Object.keys(secMap);
       var secVal = secNom.map(function(k){return secMap[k];});
-      var paleta = ['#2A6CA8','#2E7D52','#3D9467','#DEB030','#C9852A','#534AB7'];
+      var paleta = ['#00A0E4','#2E7D52','#48B72C','#D6B000','#C9852A','#8A4AA3'];
       charts._instances['chart-obras-barrio'] = new Chart(ctx2,{
         type:'doughnut',
         data:{labels:secNom,datasets:[{data:secVal,
@@ -9949,7 +9950,7 @@ window.PIIT = (function () {
         return { color:'#923030', bg:'#FCEBEB', icon:'fa-circle-exclamation', label:'Vencido (' + Math.abs(diff) + 'd)', cls:'sem-rojo', dias:diff };
       }
       if (diff <= 7) {
-        return { color:'#C84040', bg:'#FEF2F2', icon:'fa-triangle-exclamation', label:diff + 'd restantes', cls:'sem-rojo', dias:diff };
+        return { color:'#DC0B2C', bg:'#FEF2F2', icon:'fa-triangle-exclamation', label:diff + 'd restantes', cls:'sem-rojo', dias:diff };
       }
       if (diff <= 14) {
         return { color:'#C9852A', bg:'#FEF8F0', icon:'fa-clock',             label:diff + 'd restantes', cls:'sem-naranja', dias:diff };
@@ -10160,7 +10161,7 @@ window.PIIT = (function () {
         var sNom = Object.keys(secMap), sVal = sNom.map(function(k){ return secMap[k]; });
         charts._instances['chart-cont-sec'] = new Chart(ctx1, { type:'bar',
           data:{ labels:sNom, datasets:[{ label:'Valor M$', data:sVal,
-            backgroundColor:['#3D9467bb','#DEB030bb','#2A6CA8bb','#534AB7bb','#C9852Abb','#993C1Dbb','#854F0Bbb','#1A5C3Abb'], borderRadius:4 }] },
+            backgroundColor:['#48B72Cbb','#D6B000bb','#00A0E4bb','#8A4AA3bb','#C9852Abb','#993C1Dbb','#854F0Bbb','#1A5C3Abb'], borderRadius:4 }] },
           options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{ display:false } },
             scales:{ x:{ ticks:{ font:{ size:11.5 }, maxRotation:35 }, grid:{ display:false } },
                     y:{ beginAtZero:true, ticks:{ font:{ size:11.5 }, callback:function(v){ return '$'+v+'M'; } }, grid:{ color:'rgba(0,0,0,.08)' } } } }
@@ -10173,7 +10174,7 @@ window.PIIT = (function () {
         data.forEach(function(d){ if(!tipMap[d.tipo]) tipMap[d.tipo]=0; tipMap[d.tipo]++; });
         charts._instances['chart-cont-tipo'] = new Chart(ctx2, { type:'doughnut',
           data:{ labels:Object.keys(tipMap), datasets:[{ data:Object.values(tipMap),
-            backgroundColor:['#3D9467','#DEB030','#2A6CA8','#534AB7','#C9852A','#1A8080'], borderWidth:2, borderColor:'#fff' }] },
+            backgroundColor:['#48B72C','#D6B000','#00A0E4','#8A4AA3','#C9852A','#1A8080'], borderWidth:2, borderColor:'#fff' }] },
           options:{ cutout:'60%', responsive:true, maintainAspectRatio:true,
             plugins:{ legend:{ position:'bottom', labels:{ font:{ size:12 }, boxWidth:10 } } } }
         });
@@ -10524,14 +10525,14 @@ window.PIIT = (function () {
     // Eventos de notificación obligatoria priorizados Nordeste Antioqueño
     // ══════════════════════════════════════════════════════════════════
     var SIVIGILA_EVENTOS = [
-      { cod:'275', nom:'Leishmaniasis cutánea',        cie:'B55',      casos:1847, casos23:1502, tasa:4589, prio:'alta',   tend:'up',    color:'#C84040' },
+      { cod:'275', nom:'Leishmaniasis cutánea',        cie:'B55',      casos:1847, casos23:1502, tasa:4589, prio:'alta',   tend:'up',    color:'#DC0B2C' },
       { cod:'995', nom:'EDA · Enfermedad diarreica',   cie:'A09',      casos:3256, casos23:3539, tasa:8090, prio:'media',  tend:'down',  color:'#C9852A' },
       { cod:'348', nom:'IRA · Infección respiratoria', cie:'J00-J22',  casos:2108, casos23:1976, tasa:5238, prio:'media',  tend:'flat',  color:'#C9852A' },
-      { cod:'210', nom:'Dengue clásico',               cie:'A90',      casos:362,  casos23:218,  tasa:900,  prio:'alta',   tend:'up',    color:'#C84040' },
-      { cod:'220', nom:'Dengue grave',                 cie:'A91',      casos:50,   casos23:29,   tasa:124,  prio:'alta',   tend:'up',    color:'#C84040' },
+      { cod:'210', nom:'Dengue clásico',               cie:'A90',      casos:362,  casos23:218,  tasa:900,  prio:'alta',   tend:'up',    color:'#DC0B2C' },
+      { cod:'220', nom:'Dengue grave',                 cie:'A91',      casos:50,   casos23:29,   tasa:124,  prio:'alta',   tend:'up',    color:'#DC0B2C' },
       { cod:'550', nom:'Mortalidad materna',           cie:'O95',      casos:0,    casos23:1,    tasa:0,    prio:'alta',   tend:'down',  color:'#2E7D52' },
       { cod:'560', nom:'Mortalidad perinatal/neonatal',cie:'P95',      casos:14,   casos23:18,   tasa:35,   prio:'media',  tend:'down',  color:'#C9852A' },
-      { cod:'362', nom:'Intox. mercurio · mineros',    cie:'T56.1',    casos:87,   casos23:72,   tasa:216,  prio:'alta',   tend:'up',    color:'#C84040' },
+      { cod:'362', nom:'Intox. mercurio · mineros',    cie:'T56.1',    casos:87,   casos23:72,   tasa:216,  prio:'alta',   tend:'up',    color:'#DC0B2C' },
       { cod:'310', nom:'Malaria · vivax + falciparum', cie:'B50-B54',  casos:128,  casos23:156,  tasa:318,  prio:'media',  tend:'down',  color:'#C9852A' },
       { cod:'810', nom:'VIH / Sida',                   cie:'B20-B24',  casos:23,   casos23:19,   tasa:57,   prio:'media',  tend:'up',    color:'#C9852A' },
       { cod:'820', nom:'Sífilis gestacional',          cie:'A53',      casos:18,   casos23:14,   tasa:45,   prio:'media',  tend:'up',    color:'#C9852A' },
@@ -10556,7 +10557,7 @@ window.PIIT = (function () {
       var tb = document.getElementById('sv-tabla-body');
       if (tb) {
         tb.innerHTML = SIVIGILA_EVENTOS.map(function(e){
-          var tend = e.tend === 'up'   ? '<span style="color:#C84040;font-weight:700">▲ +'+Math.round((e.casos-e.casos23)/Math.max(e.casos23,1)*100)+'%</span>'
+          var tend = e.tend === 'up'   ? '<span style="color:#DC0B2C;font-weight:700">▲ +'+Math.round((e.casos-e.casos23)/Math.max(e.casos23,1)*100)+'%</span>'
                    : e.tend === 'down' ? '<span style="color:#2E7D52;font-weight:700">▼ '+Math.round((e.casos-e.casos23)/Math.max(e.casos23,1)*100)+'%</span>'
                    : '<span style="color:var(--t400);font-weight:700">— 0%</span>';
           var prio = e.prio === 'alta'
@@ -10589,13 +10590,13 @@ window.PIIT = (function () {
               labels: SIVIGILA_SEMANAL.semanas,
               datasets: [
                 { label:'Leishmaniasis', data: SIVIGILA_SEMANAL.datasets.leish,
-                  borderColor:'#C84040', backgroundColor:'rgba(200,64,64,.08)',
+                  borderColor:'#DC0B2C', backgroundColor:'rgba(200,64,64,.08)',
                   tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true },
                 { label:'EDA', data: SIVIGILA_SEMANAL.datasets.eda,
                   borderColor:'#C9852A', backgroundColor:'rgba(201,133,42,.08)',
                   tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4 },
                 { label:'Dengue', data: SIVIGILA_SEMANAL.datasets.dengue,
-                  borderColor:'#2A6CA8', backgroundColor:'rgba(42,108,168,.08)',
+                  borderColor:'#00A0E4', backgroundColor:'rgba(42,108,168,.08)',
                   tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4 },
                 { label:'Mercurio', data: SIVIGILA_SEMANAL.datasets.mercur,
                   borderColor:'#7A5A0A', backgroundColor:'rgba(122,90,10,.1)',
@@ -10668,10 +10669,10 @@ window.PIIT = (function () {
       { bio:'Polio IPV-OPV', etario:'2-18 meses',       pobjet:742,  dosis:665,  cob:89.6, meta:95, color:'#C9852A' },
       { bio:'Rotavirus',     etario:'2-4 meses',        pobjet:742,  dosis:669,  cob:90.2, meta:95, color:'#C9852A' },
       { bio:'SRP (1ª dosis)',etario:'12 meses',         pobjet:720,  dosis:630,  cob:87.5, meta:95, color:'#C9852A' },
-      { bio:'SRP (refuerzo)',etario:'5 años',           pobjet:695,  dosis:592,  cob:85.2, meta:95, color:'#C84040' },
-      { bio:'DPT (refuerzo)',etario:'5 años',           pobjet:695,  dosis:585,  cob:84.2, meta:95, color:'#C84040' },
-      { bio:'VPH (1ª dosis)',etario:'Niñas 9-17 años',  pobjet:2450, dosis:1538, cob:62.8, meta:80, color:'#C84040' },
-      { bio:'VPH (2ª dosis)',etario:'Niñas 9-17 años',  pobjet:2450, dosis:1220, cob:49.8, meta:80, color:'#C84040' },
+      { bio:'SRP (refuerzo)',etario:'5 años',           pobjet:695,  dosis:592,  cob:85.2, meta:95, color:'#DC0B2C' },
+      { bio:'DPT (refuerzo)',etario:'5 años',           pobjet:695,  dosis:585,  cob:84.2, meta:95, color:'#DC0B2C' },
+      { bio:'VPH (1ª dosis)',etario:'Niñas 9-17 años',  pobjet:2450, dosis:1538, cob:62.8, meta:80, color:'#DC0B2C' },
+      { bio:'VPH (2ª dosis)',etario:'Niñas 9-17 años',  pobjet:2450, dosis:1220, cob:49.8, meta:80, color:'#DC0B2C' },
       { bio:'Fiebre amarilla',etario:'18 meses',        pobjet:720,  dosis:640,  cob:88.9, meta:95, color:'#C9852A' },
       { bio:'Influenza',     etario:'Grupo riesgo',     pobjet:8500, dosis:5780, cob:68.0, meta:75, color:'#C9852A' },
     ];
@@ -10691,10 +10692,10 @@ window.PIIT = (function () {
     var SISPRO_RIPS = {
       tipos: [
         { tipo:'Consulta externa',     casos:52840, pct:47.3, color:'#2E7D52' },
-        { tipo:'Procedimientos',       casos:38975, pct:34.9, color:'#DEB030' },
+        { tipo:'Procedimientos',       casos:38975, pct:34.9, color:'#D6B000' },
         { tipo:'Urgencias',            casos:14206, pct:12.7, color:'#C9852A' },
-        { tipo:'Hospitalización',      casos:1948,  pct:1.7,  color:'#2A6CA8' },
-        { tipo:'Medicamentos',         casos:3720,  pct:3.3,  color:'#534AB7' },
+        { tipo:'Hospitalización',      casos:1948,  pct:1.7,  color:'#00A0E4' },
+        { tipo:'Medicamentos',         casos:3720,  pct:3.3,  color:'#8A4AA3' },
       ],
       topDx: [
         { dx:'Hipertensión esencial',          cie:'I10',   n:4218, pct:8.0, ambito:'Consulta' },
@@ -10728,11 +10729,11 @@ window.PIIT = (function () {
       defunc:  [205, 212, 218, 225, 232, 285, 275, 248, 242, 238],
     };
     var SISPRO_MORT = [
-      { causa:'Causas externas (accidentes, violencia)', pct:31, casos:74, color:'#C84040' },
+      { causa:'Causas externas (accidentes, violencia)', pct:31, casos:74, color:'#DC0B2C' },
       { causa:'Enfermedades cardiovasculares',            pct:22, casos:52, color:'#C9852A' },
       { causa:'Neoplasias (cáncer)',                      pct:15, casos:36, color:'#7A5A0A' },
-      { causa:'Enfermedades respiratorias',               pct:9,  casos:21, color:'#2A6CA8' },
-      { causa:'Enfermedades digestivas',                  pct:7,  casos:17, color:'#534AB7' },
+      { causa:'Enfermedades respiratorias',               pct:9,  casos:21, color:'#00A0E4' },
+      { causa:'Enfermedades digestivas',                  pct:7,  casos:17, color:'#8A4AA3' },
       { causa:'Diabetes y metabólicas',                   pct:6,  casos:14, color:'#1A8080' },
       { causa:'Perinatales',                              pct:4,  casos:10, color:'#C9852A' },
       { causa:'Otras causas',                             pct:6,  casos:14, color:'#8A9E96' },
@@ -10766,7 +10767,7 @@ window.PIIT = (function () {
             : brecha > 10
               ? '<span class="badge badge-red" style="font-size:10.5px">✗ Brecha '+brecha+'%</span>'
               : '<span class="badge badge-gold" style="font-size:10.5px">⚠ Brecha '+brecha+'%</span>';
-          var pctColor = cumple ? '#2E7D52' : r.cob >= r.meta-5 ? '#C9852A' : '#C84040';
+          var pctColor = cumple ? '#2E7D52' : r.cob >= r.meta-5 ? '#C9852A' : '#DC0B2C';
           return '<tr style="border-bottom:1px solid var(--g100)">'
             + '<td style="padding:10px 12px;font-weight:700;color:var(--t700)">'+r.bio+'</td>'
             + '<td style="padding:10px 12px;color:var(--t500);font-size:12px">'+r.etario+'</td>'
@@ -10820,8 +10821,8 @@ window.PIIT = (function () {
             datasets:[
               { label:'BCG',          data:SISPRO_PAI_TREND.datasets.bcg,   borderColor:'#2E7D52', backgroundColor:'rgba(46,125,82,.08)', tension:.3, borderWidth:2.5, pointRadius:4, pointHoverRadius:6, fill:true },
               { label:'Pentavalente 3', data:SISPRO_PAI_TREND.datasets.penta, borderColor:'#C9852A', backgroundColor:'rgba(201,133,42,.08)', tension:.3, borderWidth:2.5, pointRadius:4, pointHoverRadius:6 },
-              { label:'SRP 1ª dosis', data:SISPRO_PAI_TREND.datasets.srp,   borderColor:'#2A6CA8', backgroundColor:'rgba(42,108,168,.08)', tension:.3, borderWidth:2.5, pointRadius:4, pointHoverRadius:6 },
-              { label:'VPH 1ª dosis', data:SISPRO_PAI_TREND.datasets.vph,   borderColor:'#C84040', backgroundColor:'rgba(200,64,64,.08)',  tension:.3, borderWidth:2.5, pointRadius:4, pointHoverRadius:6 },
+              { label:'SRP 1ª dosis', data:SISPRO_PAI_TREND.datasets.srp,   borderColor:'#00A0E4', backgroundColor:'rgba(42,108,168,.08)', tension:.3, borderWidth:2.5, pointRadius:4, pointHoverRadius:6 },
+              { label:'VPH 1ª dosis', data:SISPRO_PAI_TREND.datasets.vph,   borderColor:'#DC0B2C', backgroundColor:'rgba(200,64,64,.08)',  tension:.3, borderWidth:2.5, pointRadius:4, pointHoverRadius:6 },
               // Línea meta 95%
               { label:'Meta 95%', data:[95,95,95], borderColor:'#0A2E1C', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false }
             ]
@@ -10911,7 +10912,7 @@ window.PIIT = (function () {
       var tb = document.getElementById('sp-tabla-eps');
       if (tb) {
         tb.innerHTML = SISPRO_EPS.map(function(r){
-          var regColor = r.regimen === 'Contributivo' ? '#2A6CA8'
+          var regColor = r.regimen === 'Contributivo' ? '#00A0E4'
                        : r.regimen === 'Subsidiado'   ? '#2E7D52'
                        : '#7A5A0A';
           var estBadge = r.estado === 'Activo'
@@ -10949,7 +10950,7 @@ window.PIIT = (function () {
           data:{
             labels:['Contributivo','Subsidiado','Mixto','Especial','No afiliados'],
             datasets:[{ data:[contrib,subsid,mixto,espec,noAfil],
-              backgroundColor:['#2A6CA8','#2E7D52','#C9852A','#7A5A0A','#C84040'],
+              backgroundColor:['#00A0E4','#2E7D52','#C9852A','#7A5A0A','#DC0B2C'],
               borderWidth:2, borderColor:'#fff' }]
           },
           options:{
@@ -10977,7 +10978,7 @@ window.PIIT = (function () {
               label:'Afiliados',
               data: SISPRO_EPS.map(function(e){return e.afiliados;}),
               backgroundColor: SISPRO_EPS.map(function(e){
-                return e.regimen==='Contributivo'?'#2A6CA8cc' : e.regimen==='Subsidiado'?'#2E7D52cc' : e.regimen==='Mixto'?'#C9852Acc' : '#7A5A0Acc';
+                return e.regimen==='Contributivo'?'#00A0E4cc' : e.regimen==='Subsidiado'?'#2E7D52cc' : e.regimen==='Mixto'?'#C9852Acc' : '#7A5A0Acc';
               }),
               borderRadius:4
             }]
@@ -11005,7 +11006,7 @@ window.PIIT = (function () {
                 borderColor:'#2E7D52', backgroundColor:'rgba(46,125,82,.1)',
                 tension:.3, borderWidth:2.5, pointRadius:4, pointHoverRadius:6, fill:true },
               { label:'Defunciones', data:SISPRO_EEVV.defunc,
-                borderColor:'#C84040', backgroundColor:'rgba(200,64,64,.08)',
+                borderColor:'#DC0B2C', backgroundColor:'rgba(200,64,64,.08)',
                 tension:.3, borderWidth:2.5, pointRadius:4, pointHoverRadius:6, fill:true },
             ]
           },
@@ -11131,17 +11132,17 @@ window.PIIT = (function () {
 
     icvBarrios: [
       { nom:'CENTRO',         icv:82, color:'#2E7D52' },
-      { nom:'BOLÍVAR',        icv:78, color:'#3D9467' },
-      { nom:'MARQUETALIA',    icv:75, color:'#3D9467' },
+      { nom:'BOLÍVAR',        icv:78, color:'#48B72C' },
+      { nom:'MARQUETALIA',    icv:75, color:'#48B72C' },
       { nom:'GALÁN',          icv:72, color:'#C9852A' },
       { nom:'20 DE JULIO',    icv:70, color:'#C9852A' },
       { nom:'SANTA MARTA',    icv:68, color:'#C9852A' },
       { nom:'LA MADRE',       icv:66, color:'#C9852A' },
-      { nom:'BUENOS AIRES',   icv:64, color:'#C84040' },
-      { nom:'CAMPO ALEGRE',   icv:58, color:'#C84040' },
-      { nom:'MARMAJITO',      icv:55, color:'#C84040' },
-      { nom:'FRAGUAS',        icv:52, color:'#C84040' },
-      { nom:'LA PAZ',         icv:50, color:'#C84040' },
+      { nom:'BUENOS AIRES',   icv:64, color:'#DC0B2C' },
+      { nom:'CAMPO ALEGRE',   icv:58, color:'#DC0B2C' },
+      { nom:'MARMAJITO',      icv:55, color:'#DC0B2C' },
+      { nom:'FRAGUAS',        icv:52, color:'#DC0B2C' },
+      { nom:'LA PAZ',         icv:50, color:'#DC0B2C' },
     ],
 
     alertasInteligentes: [
@@ -11209,7 +11210,7 @@ window.PIIT = (function () {
           data:{
             labels:['Minería aurífera','Comercio y servicios','Agropecuario','Construcción','Adm. pública','Otros'],
             datasets:[{ data:[71,14.8,14.2,4.5,3.2,2.3],
-              backgroundColor:['#DEB030','#2E7D52','#2A6CA8','#C9852A','#534AB7','#8A9E96'],
+              backgroundColor:['#D6B000','#2E7D52','#00A0E4','#C9852A','#8A4AA3','#8A9E96'],
               borderWidth:2, borderColor:'#fff' }]
           },
           options:{ cutout:'55%', responsive:true, maintainAspectRatio:true,
@@ -11228,9 +11229,9 @@ window.PIIT = (function () {
             labels:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
             datasets:[
               { label:'IPM Segovia', data:[42.1,40.8,39.2,37.5,35.8,36.4,33.2,31.5,30.1,28.4],
-                borderColor:'#C84040', backgroundColor:'rgba(200,64,64,.08)', tension:.3, borderWidth:2.5, pointRadius:4, fill:true },
+                borderColor:'#DC0B2C', backgroundColor:'rgba(200,64,64,.08)', tension:.3, borderWidth:2.5, pointRadius:4, fill:true },
               { label:'IPM Antioquia', data:[32.1,31.2,30.5,29.8,28.9,29.5,27.2,25.8,24.5,23.1],
-                borderColor:'#2A6CA8', backgroundColor:'rgba(42,108,168,.08)', tension:.3, borderWidth:2, pointRadius:3, borderDash:[4,4] },
+                borderColor:'#00A0E4', backgroundColor:'rgba(42,108,168,.08)', tension:.3, borderWidth:2, pointRadius:3, borderDash:[4,4] },
               { label:'Meta PDM 2027', data:[null,null,null,null,null,null,null,null,null,22],
                 borderColor:'#2E7D52', borderWidth:1.5, borderDash:[6,3], pointRadius:0, showLine:false }
             ]
@@ -11265,7 +11266,7 @@ window.PIIT = (function () {
             datasets:[
               { label:'Urbano', data:[22,78,85,65], backgroundColor:'rgba(46,125,82,.78)', borderRadius:4 },
               { label:'Rural',  data:[2,30,45,8],   backgroundColor:'rgba(200,64,64,.7)',  borderRadius:4 },
-              { label:'Meta DNP', data:[60,85,90,80], type:'line', borderColor:'#DEB030',
+              { label:'Meta DNP', data:[60,85,90,80], type:'line', borderColor:'#D6B000',
                 borderWidth:2, borderDash:[4,4], pointRadius:3, fill:false },
             ]
           },
@@ -11328,7 +11329,7 @@ window.PIIT = (function () {
           options:{ responsive:true, maintainAspectRatio:true,
             plugins:{ legend:{ position:'bottom' } },
             scales:{ r:{ beginAtZero:true, max:100, ticks:{ stepSize:20, font:{ size:10 } },
-              pointLabels:{ font:{ size:12, weight:'600' }, color:'#1A3026' } } }
+              pointLabels:{ font:{ size:12, weight:'600' }, color:'#1D3129' } } }
           }
         });
       }
@@ -11406,7 +11407,7 @@ window.PIIT = (function () {
         charts._instances['chart-priorizacion'] = new Chart(c1, {
           type:'bubble',
           data:{ datasets: DATA_V5.proyectos.slice(0,7).map(function(p, i){
-            var colores = ['#2E7D52','#DEB030','#2A6CA8','#C9852A','#534AB7','#C84040','#1A8080'];
+            var colores = ['#2E7D52','#D6B000','#00A0E4','#C9852A','#8A4AA3','#DC0B2C','#1A8080'];
             return { label: p.proj.slice(0,20)+'…',
               data:[{ x: 60+Math.random()*35, y: 50+Math.random()*45, r: Math.sqrt(p.inv/500) }],
               backgroundColor: colores[i%colores.length]+'99', borderColor: colores[i%colores.length] };
@@ -11430,7 +11431,7 @@ window.PIIT = (function () {
           data:{
             labels:['SGR · Regalías','PGN · Nación','PGM · Municipio','Cooperación BID/UE','OCAD-Paz PDET'],
             datasets:[{ data:[42,28,15,10,5],
-              backgroundColor:['#DEB030','#2E7D52','#2A6CA8','#C9852A','#534AB7'],
+              backgroundColor:['#D6B000','#2E7D52','#00A0E4','#C9852A','#8A4AA3'],
               borderWidth:2, borderColor:'#fff' }]
           },
           options:{ cutout:'55%', responsive:true, maintainAspectRatio:true,
@@ -11468,7 +11469,7 @@ window.PIIT = (function () {
       var sc = DATA_V5.escenarios[_escActual];
       var anios = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035];
       var pobHist = [34820,35480,36120,36780,37400,37900,38300,38900,39500,40100,null,null,null,null,null,null,null,null,null,null,null];
-      var colores = { base:'#2E7D52', optimista:'#2A6CA8', pesimista:'#C84040' };
+      var colores = { base:'#2E7D52', optimista:'#00A0E4', pesimista:'#DC0B2C' };
 
       // Chart proyección población
       var c1 = document.getElementById('chart-pob-proyeccion');
@@ -11500,9 +11501,9 @@ window.PIIT = (function () {
           data:{
             labels:['2020','2021','2022','2023','2024','2025','2026','2027','2028','2029','2030'],
             datasets:[
-              { label:'IPM (invertido)', data:[56,58,62,65,68,70,72,74,75,77,78], borderColor:'#C84040', tension:.3, borderWidth:2.5, pointRadius:3, fill:false },
-              { label:'Conectividad',    data:[40,45,50,58,65,68,72,76,80,82,85], borderColor:'#2A6CA8', tension:.3, borderWidth:2.5, pointRadius:3, fill:false },
-              { label:'Score Calidad',   data:[48,51,56,62,68,70,72,74,76,78,80], borderColor:'#DEB030', tension:.3, borderWidth:2.5, pointRadius:3, fill:false },
+              { label:'IPM (invertido)', data:[56,58,62,65,68,70,72,74,75,77,78], borderColor:'#DC0B2C', tension:.3, borderWidth:2.5, pointRadius:3, fill:false },
+              { label:'Conectividad',    data:[40,45,50,58,65,68,72,76,80,82,85], borderColor:'#00A0E4', tension:.3, borderWidth:2.5, pointRadius:3, fill:false },
+              { label:'Score Calidad',   data:[48,51,56,62,68,70,72,74,76,78,80], borderColor:'#D6B000', tension:.3, borderWidth:2.5, pointRadius:3, fill:false },
               { label:'ICV compuesto',   data:[58,60,64,68,72,74,76,78,79,80,82], borderColor:'#2E7D52', backgroundColor:'rgba(46,125,82,.08)', tension:.3, borderWidth:3, pointRadius:4, fill:true },
             ]
           },
@@ -11686,9 +11687,9 @@ window.addEventListener('load',function(){
           <div style="font-size:10px;color:var(--text-4,#7A9E8C);margin-top:2px">Segovia · Nordeste Antioqueño · SIMMA · SGC · IDEAM</div>
         </div>
         <div style="display:flex;gap:10px;font-size:10px;color:var(--text-4,#7A9E8C)">
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#2A6CA8;display:inline-block"></span>Inundación</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#00A0E4;display:inline-block"></span>Inundación</span>
           <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#C9852A;display:inline-block"></span>Masa</span>
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#C84040;display:inline-block"></span>Incendio</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#DC0B2C;display:inline-block"></span>Incendio</span>
         </div>
       </div>
       <div id="sat-mapa"></div>
@@ -11838,12 +11839,12 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
   var _satMap=null, _nivel='verde';
 
   var AMENAZAS=[
-    {tipo:'Inundación',zona:'Q. El Bagre · Q. La Cianuración',nivel:'Moderado',prob:65,color:'#2A6CA8',icon:'fa-water'},
+    {tipo:'Inundación',zona:'Q. El Bagre · Q. La Cianuración',nivel:'Moderado',prob:65,color:'#00A0E4',icon:'fa-water'},
     {tipo:'Movimiento en masa',zona:'Vda. La Cruzada · Cerros Galán',nivel:'Alto',prob:78,color:'#C9852A',icon:'fa-hill-rockslide'},
     {tipo:'Sismo',zona:'Nordeste Antioqueño · Falla Palestina',nivel:'Bajo',prob:22,color:'#16A34A',icon:'fa-wave-square'},
-    {tipo:'Incendio forestal',zona:'Zona rural norte · Corredor veredal',nivel:'Moderado',prob:48,color:'#C84040',icon:'fa-fire'},
+    {tipo:'Incendio forestal',zona:'Zona rural norte · Corredor veredal',nivel:'Moderado',prob:48,color:'#DC0B2C',icon:'fa-fire'},
     {tipo:'Lluvias extremas',zona:'Municipio completo · Cuenca alta',nivel:'Alto',prob:72,color:'#C9852A',icon:'fa-cloud-showers-heavy'},
-    {tipo:'Avenida torrencial',zona:'Q. La Cianuración · Barrio Briceño',nivel:'Moderado',prob:55,color:'#2A6CA8',icon:'fa-house-flood-water'},
+    {tipo:'Avenida torrencial',zona:'Q. La Cianuración · Barrio Briceño',nivel:'Moderado',prob:55,color:'#00A0E4',icon:'fa-house-flood-water'},
   ];
 
   var EVENTOS=[
@@ -11898,16 +11899,16 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
     _satMap.setView([7.083,-74.678],12);
     L.control.zoom({position:'bottomright'}).addTo(_satMap);
     L.control.attribution({position:'bottomleft',prefix:false}).addTo(_satMap).addAttribution('&copy; CARTO · SGC · IDEAM');
-    L.circle([7.075,-74.675],{radius:900,color:'#2A6CA8',fillColor:'#2A6CA8',fillOpacity:0.25,weight:2})
+    L.circle([7.075,-74.675],{radius:900,color:'#00A0E4',fillColor:'#00A0E4',fillOpacity:0.25,weight:2})
       .bindPopup('<b style="color:#1D4ED8">⚠ Inundación</b><br>Q. El Bagre · Riesgo Moderado<br><small style="color:#666">SIMMA · IDEAM</small>').addTo(_satMap);
     L.polygon([[7.095,-74.690],[7.100,-74.680],[7.092,-74.675],[7.088,-74.685]],
       {color:'#C9852A',fillColor:'#C9852A',fillOpacity:0.25,weight:2})
       .bindPopup('<b style="color:#92400E">⚠ Movimiento en masa</b><br>Vda. La Cruzada · Riesgo Alto<br><small style="color:#666">SIMMA · SGC</small>').addTo(_satMap);
     L.polygon([[7.110,-74.660],[7.115,-74.650],[7.107,-74.645],[7.103,-74.655]],
-      {color:'#C84040',fillColor:'#C84040',fillOpacity:0.20,weight:2})
+      {color:'#DC0B2C',fillColor:'#DC0B2C',fillOpacity:0.20,weight:2})
       .bindPopup('<b style="color:#991B1B">⚠ Incendio forestal</b><br>Zona rural norte · Riesgo Moderado<br><small style="color:#666">IDEAM · SINIF</small>').addTo(_satMap);
     L.polygon([[7.068,-74.665],[7.072,-74.658],[7.065,-74.653],[7.061,-74.661]],
-      {color:'#2A6CA8',fillColor:'#2A6CA8',fillOpacity:0.20,weight:2})
+      {color:'#00A0E4',fillColor:'#00A0E4',fillOpacity:0.20,weight:2})
       .bindPopup('<b style="color:#1D4ED8">⚠ Avenida torrencial</b><br>Q. La Cianuración · Riesgo Moderado').addTo(_satMap);
     L.circle([7.083,-74.678],{radius:1400,color:'#16A34A',fillColor:'#16A34A',fillOpacity:0.05,weight:1.5,dashArray:'6,4'})
       .bindPopup('<b style="color:#15803D">Perímetro urbano Segovia</b><br>Área de monitoreo SAT').addTo(_satMap);
@@ -14524,7 +14525,7 @@ else setTimeout(init,400);
       var accLabel = acc<=1 ?'<span style="color:#237938;font-weight:700">Alta precisión</span>'
                    : acc<=5 ?'<span style="color:#4a9e72">Buena señal</span>'
                    : acc<=15?'<span style="color:#C69A1A">Señal media</span>'
-                   : '<span style="color:#C84040">Señal débil</span>';
+                   : '<span style="color:#DC0B2C">Señal débil</span>';
       var extraRows = '';
       if(speed!=null && !isNaN(speed) && speed>0.5)
         extraRows += '<div style="font-size:9px;color:#888">Velocidad: '+Math.round(speed*3.6)+' km/h</div>';
@@ -15013,7 +15014,7 @@ else setTimeout(init,400);
 .lm-btn.lm-btn-on{color:#2E7D52}
 .lm-btn.lm-vis.lm-off{color:#C4D4CC}
 .lm-btn.lm-lock.lm-on{color:#C69A1A}
-.lm-btn.lm-status-err{color:#C84040}
+.lm-btn.lm-status-err{color:#DC0B2C}
 .lm-btn.lm-status-warn{color:#C69A1A}
 
 .lm-empty{font-size:10.5px;color:#8A9E96;text-align:center;padding:14px 8px}
@@ -15034,11 +15035,11 @@ window.LayerManager = (function () {
      CartoBásica Digital 1:2.000 en sus capas constituyentes). */
   var REGISTRY = [
     { id: 'gdb_barrios',       group: 'gdb', label: 'Barrios · casco urbano', meta: 'GDB oficial · 21 barrios · IGAC', color: '#5BAF84', kind: 'gdb', toggleKey: 'barrios', defVisible: true },
-    { id: 'gdb_div_politica',  group: 'gdb', label: 'Div. Política · límites', meta: 'GDB oficial · 5 líneas · IGAC', color: '#DEB030', kind: 'gdb', toggleKey: 'div_politica', defVisible: true },
-    { id: 'gdb_indicador',     group: 'gdb', label: 'Indicador activo', meta: 'Coropletas · semáforo', color: '#534AB7', kind: 'gdb', toggleKey: 'indicador', defVisible: true },
+    { id: 'gdb_div_politica',  group: 'gdb', label: 'Div. Política · límites', meta: 'GDB oficial · 5 líneas · IGAC', color: '#D6B000', kind: 'gdb', toggleKey: 'div_politica', defVisible: true },
+    { id: 'gdb_indicador',     group: 'gdb', label: 'Indicador activo', meta: 'Coropletas · semáforo', color: '#8A4AA3', kind: 'gdb', toggleKey: 'indicador', defVisible: true },
     { id: 'gdb_labels',        group: 'gdb', label: 'Etiquetas barrios', meta: 'Topónimos · código oficial', color: '#8ECBA8', kind: 'gdb', toggleKey: 'labels', defVisible: true },
 
-    { id: 'cb_construccion', group: 'carto2000', label: 'Construcciones', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#C84040', kind: 'sublayer', wmsLayerId: '13', defVisible: false },
+    { id: 'cb_construccion', group: 'carto2000', label: 'Construcciones', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#DC0B2C', kind: 'sublayer', wmsLayerId: '13', defVisible: false },
     { id: 'cb_via',          group: 'carto2000', label: 'Vías', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#C69A1A', kind: 'sublayer', wmsLayerId: '8', defVisible: false },
     { id: 'cb_curvanivel',   group: 'carto2000', label: 'Curvas de nivel', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#8A6A10', kind: 'sublayer', wmsLayerId: '7', defVisible: false },
     { id: 'cb_bosque',       group: 'carto2000', label: 'Bosque', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#2E7D52', kind: 'sublayer', wmsLayerId: '18', defVisible: false },
@@ -15048,10 +15049,10 @@ window.LayerManager = (function () {
     { id: 'cb_cerca',        group: 'carto2000', label: 'Cercas', meta: 'Delimitaciones prediales', color: '#A16207', kind: 'sublayer', wmsLayerId: '10', defVisible: false },
     { id: 'cb_muro',         group: 'carto2000', label: 'Muros', meta: 'Contención y cerramiento', color: '#78716C', kind: 'sublayer', wmsLayerId: '11', defVisible: false },
 
-    { id: 'wms_cem_12524',  group: 'nacional', label: 'CartoBásica Nacional · IGAC', meta: 'mapas.igac.gov.co', color: '#DEB030', kind: 'wms', toggleKey: 'cem_12524', defVisible: false },
+    { id: 'wms_cem_12524',  group: 'nacional', label: 'CartoBásica Nacional · IGAC', meta: 'mapas.igac.gov.co', color: '#D6B000', kind: 'wms', toggleKey: 'cem_12524', defVisible: false },
     { id: 'wms_catastro',   group: 'nacional', label: 'Catastro Territorial', meta: 'IGAC · mapas.igac.gov.co', color: '#C69A1A', kind: 'wms', toggleKey: 'igac_catastro', defVisible: false },
-    { id: 'wms_dane',       group: 'nacional', label: 'Marco Geoestadístico', meta: 'DANE · MGN 2018', color: '#534AB7', kind: 'wms', toggleKey: 'dane_mgn', defVisible: false },
-    { id: 'wms_invias',     group: 'nacional', label: 'Red Vial Nacional', meta: 'INVIAS', color: '#C84040', kind: 'wms', toggleKey: 'invias_vial', defVisible: false },
+    { id: 'wms_dane',       group: 'nacional', label: 'Marco Geoestadístico', meta: 'DANE · MGN 2018', color: '#8A4AA3', kind: 'wms', toggleKey: 'dane_mgn', defVisible: false },
+    { id: 'wms_invias',     group: 'nacional', label: 'Red Vial Nacional', meta: 'INVIAS', color: '#DC0B2C', kind: 'wms', toggleKey: 'invias_vial', defVisible: false },
     { id: 'wms_pnn',        group: 'nacional', label: 'Áreas protegidas SPNN', meta: 'Parques Nacionales', color: '#1A8080', kind: 'wms', toggleKey: 'pnn_areas', defVisible: false },
   ];
   var BY_ID = {};
