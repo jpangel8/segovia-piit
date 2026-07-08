@@ -11,7 +11,7 @@
 <meta property="og:description" content="Sistema de Inteligencia Territorial del municipio de Segovia, Antioquia — Misión Sistema de Ciudades DNP-BID.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CO">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 2L17 6v6c0 4-7 7-7 7S3 16 3 12V6l7-4z' fill='%231A5C3A'/%3E%3Ccircle cx='10' cy='10' r='3' fill='white' opacity='.9'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 2L17 6v6c0 4-7 7-7 7S3 16 3 12V6l7-4z' fill='%23237938'/%3E%3Cg stroke='%23FCDC00' stroke-width='1.7' stroke-linecap='round'%3E%3Cline x1='6' y1='7' x2='14' y2='13'/%3E%3Cline x1='14' y1='7' x2='6' y2='13'/%3E%3C/g%3E%3Ccircle cx='10' cy='10' r='1.2' fill='%23FCDC00'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,6 +41,8 @@
   --green-ok:#2E8F45;
   /* Secundarios institucionales */
   --sec-orange:#FF5900; --sec-blue:#00A0E4; --sec-purple:#8A4AA3; --sec-green:#48B72C;
+  /* Plata — herramientas del escudo (herencia minera de Segovia), uso puntual en precisión/GDB oficial */
+  --plata:#6B7580; --plata-l:#9FA8B0;
   /* Vidrio — glassmorphism macOS */
   --glass-bg:rgba(255,255,255,.68); --glass-bg-strong:rgba(255,255,255,.86);
   --glass-bg-dark:rgba(13,46,23,.62); --glass-border:rgba(255,255,255,.4);
@@ -3120,8 +3122,8 @@ body { padding-bottom: 36px !important; }
 <!-- ═══ TOPBAR ══════════════════════════════════════ -->
 <div class="topbar">
   <div class="tb-brand">
-    <div class="tb-escudo">
-      <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L17 6v6c0 4-7 7-7 7S3 16 3 12V6l7-4z" fill="#1A5C3A"/><circle cx="10" cy="10" r="3" fill="white" opacity=".9"/></svg>
+    <div class="tb-escudo" title="Escudo institucional · herencia minera de Segovia">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L17 6v6c0 4-7 7-7 7S3 16 3 12V6l7-4z" fill="#155224"/><g stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".95"><line x1="6" y1="7" x2="14" y2="13"/><line x1="14" y1="7" x2="6" y2="13"/></g><circle cx="10" cy="10" r="1.2" fill="#fff"/></svg>
     </div>
     <div>
       <div class="tb-name">Alcaldía de Segovia</div>
@@ -3701,7 +3703,7 @@ body { padding-bottom: 36px !important; }
       <div class="sig-chip"><i class="fa-solid fa-location-dot"></i><span id="map-coords">7.0828°N, 74.7077°O</span></div>
       <div class="sig-chip"><i class="fa-solid fa-magnifying-glass"></i><span id="map-zoom-display">z14</span></div>
       <div class="sig-chip"><i class="fa-solid fa-layer-group"></i><span id="map-active-layers">4 capas activas</span></div>
-      <div class="sig-chip"><i class="fa-solid fa-database" style="color:#C69A1A"></i>GDB oficial</div>
+      <div class="sig-chip"><i class="fa-solid fa-database" style="color:var(--plata)"></i>GDB oficial</div>
     </div>
   </div>
 </section>
