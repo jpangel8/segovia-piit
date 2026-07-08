@@ -163,6 +163,9 @@ html{scroll-behavior:smooth}
 .kc-trend.ok{background:var(--g50);color:var(--t400)}
 .kc-val{font-family:var(--fm);font-size:24px;font-weight:500;color:var(--t900);margin-bottom:2px}
 .kc-lbl{font-size:11px;color:var(--t400);font-weight:500}
+.kc-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--g100);font-size:9.5px;color:var(--t300)}
+.kc-meta i{font-size:8.5px;margin-right:3px;opacity:.8}
+.kc-meta-src{font-weight:700;color:var(--t400);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ─── BADGES ─── */
 .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em}
@@ -3352,10 +3355,10 @@ body { padding-bottom: 36px !important; }
 
   <!-- KPI cards -->
   <div class="grid4">
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-users" style="color:var(--g700)"></i></div><div class="kc-trend up">+1,5%</div></div><div class="kc-val">41.222</div><div class="kc-lbl">Habitantes (DANE 2026)</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-map-location-dot" style="color:var(--au700)"></i></div><div class="kc-trend ok">100%</div></div><div class="kc-val">19</div><div class="kc-lbl">Barrios monitoreados</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FEF3C7"><i class="fa-solid fa-briefcase" style="color:var(--amber)"></i></div><div class="kc-trend dn">Brecha 17%</div></div><div class="kc-val" style="color:var(--amber)">68%</div><div class="kc-lbl">Cobertura servicios básicos</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i></div><div class="kc-trend dn">Urgentes</div></div><div class="kc-val" style="color:var(--red)">4</div><div class="kc-lbl">Alertas territoriales</div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-users" style="color:var(--g700)"></i></div><div class="kc-trend up">+1,5%</div></div><div class="kc-val">41.222</div><div class="kc-lbl">Habitantes (DANE 2026)</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>Ene 2026</span><span class="kc-meta-src">DANE · CNPV</span></div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-map-location-dot" style="color:var(--au700)"></i></div><div class="kc-trend ok">100%</div></div><div class="kc-val">19</div><div class="kc-lbl">Barrios monitoreados</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>Hoy</span><span class="kc-meta-src">GDB oficial · IGAC</span></div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FEF3C7"><i class="fa-solid fa-briefcase" style="color:var(--amber)"></i></div><div class="kc-trend dn">Brecha 17%</div></div><div class="kc-val" style="color:var(--amber)">68%</div><div class="kc-lbl">Cobertura servicios básicos</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>2024</span><span class="kc-meta-src">SSPD · SUI</span></div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i></div><div class="kc-trend dn">Urgentes</div></div><div class="kc-val" style="color:var(--red)">4</div><div class="kc-lbl">Alertas territoriales</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>hace 2 días</span><span class="kc-meta-src">Reportes ciudadanos</span></div></div>
   </div>
 
   <!-- Fila 1: Ranking + Alertas -->
