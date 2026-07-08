@@ -15318,6 +15318,55 @@ document.addEventListener('DOMContentLoaded', function(){
   }, 600);
 });
 </script>
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   PIITChartTools — barra inferior genérica para TODAS las gráficas
+   Chart.js de la plataforma: exportación a PNG + fecha de
+   actualización visible. Se apoya en el registro público de Chart.js
+   (Chart.getChart) para detectar instancias ya creadas por cada
+   módulo — no requiere tocar ni un solo new Chart(...) existente.
+   Se re-escanea periódicamente porque muchos módulos crean sus
+   gráficas de forma perezosa (al abrir una sección/tab).
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+  var enhanced = new WeakSet();
+  var fecha = new Date().toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' });
+
+  function scan(){
+    if(!window.Chart) return;
+    document.querySelectorAll('canvas').forEach(function(cv){
+      if(enhanced.has(cv)) return;
+      var chart = Chart.getChart(cv);
+      if(!chart) return;
+      var card = cv.closest('.card');
+      if(!card || card.querySelector('.pchart-bar')) { enhanced.add(cv); return; }
+      enhanced.add(cv);
+      var bar = document.createElement('div');
+      bar.className = 'pchart-bar';
+      bar.innerHTML =
+        '<span class="pchart-updated"><i class="fa-regular fa-clock"></i> Actualizado ' + fecha + '</span>' +
+        '<button class="pchart-export" type="button" title="Exportar gráfica como imagen PNG"><i class="fa-solid fa-download"></i> Exportar</button>';
+      card.appendChild(bar);
+      bar.querySelector('.pchart-export').addEventListener('click', function(){
+        var link = document.createElement('a');
+        link.href = chart.toBase64Image('image/png', 1);
+        link.download = 'piit-segovia-' + (cv.id || 'grafica') + '.png';
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      });
+    });
+  }
+  setInterval(scan, 1500);
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(scan, 800); });
+})();
+</script>
+<style>
+.pchart-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:8px;border-top:1px solid var(--g100)}
+.pchart-updated{font-size:9.5px;color:var(--t300);white-space:nowrap}
+.pchart-updated i{margin-right:3px;opacity:.8}
+.pchart-export{display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;border:1px solid var(--g200);background:var(--white);color:var(--g700);font-size:9.5px;font-weight:700;cursor:pointer;transition:background var(--dur-fast) var(--ease);font-family:var(--fb)}
+.pchart-export:hover{background:var(--g50)}
+</style>
 <style>
 /* ─── PIITTable: búsqueda/orden/paginación genéricos ─── */
 .ptbl-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--white);border:1px solid var(--g100);border-bottom:none;border-radius:var(--r-lg) var(--r-lg) 0 0}
