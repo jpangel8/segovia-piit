@@ -83,6 +83,7 @@ html{scroll-behavior:smooth}
 .tb-live span{color:var(--g200);font-size:10px;font-weight:700;letter-spacing:.1em}
 .tb-version{background:rgba(252,220,0,.15);border:0.5px solid rgba(252,220,0,.3);padding:3px 10px;border-radius:20px;color:var(--au300);font-size:10px;font-family:var(--fm);font-weight:500}
 .tb-time{color:var(--g300);font-size:11px;font-family:var(--fm);font-weight:500}
+.tb-legal-time{display:flex;align-items:center;gap:6px;color:#fff;font-size:10.5px;font-family:var(--fm);font-weight:600;white-space:nowrap;background:rgba(0,160,228,.16);border:.5px solid rgba(0,160,228,.4);padding:4px 10px;border-radius:20px}
 
 /* ─── NAVBAR ─── */
 .navbar{background:var(--glass-bg-strong);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom:1px solid rgba(13,32,23,.06);padding:0 24px;display:flex;align-items:center;position:sticky;top:44px;z-index:500;box-shadow:var(--sh-sm)}
@@ -1340,9 +1341,7 @@ button:focus:not(:focus-visible) { outline: none; }
 @media (max-width: 900px) {
   .tb-dep, .tb-version { display: none; }
   .tb-right { gap: 6px; }
-  .tb-user-role { display: none; }
-  .tb-user-badge { padding: 3px 8px 3px 4px; }
-  .tb-logout-btn { padding: 4px 8px !important; font-size: 10.5px !important; }
+  .tb-legal-time-lbl-full { display: none; }
 }
 
 /* ── MOBILE PEQUEÑO (≤380px) ─────────────────────────────── */
@@ -2703,7 +2702,8 @@ td, th, li, a {
   color: var(--seg-green-d) !important;
 }
 .nav-btn:not(.act), .nav-dd-trigger:not(.act) {
-  color: rgba(0,0,0,0.65) !important;
+  color: rgba(0,0,0,0.87) !important;
+  font-weight: 600 !important;
 }
 
 /* Dropdown: hover verde sólido */
@@ -3142,7 +3142,7 @@ body { padding-bottom: 36px !important; }
   <div class="tb-right">
     <div class="tb-version">v5.0 · 2026</div>
     <div class="tb-live"><div class="live-dot"></div><span>EN VIVO</span></div>
-    <div class="tb-time" id="reloj" style="display:flex;align-items:center;gap:2px;white-space:nowrap">Cargando…</div>
+    <div class="tb-legal-time" id="reloj" title="Hora legal · República de Colombia">Cargando…</div>
   </div>
 </div>
 
@@ -11782,26 +11782,46 @@ window.addEventListener('load',function(){
 
 </section>
 <style>
-.tb-user-badge{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:.5px solid rgba(255,255,255,.18);padding:4px 10px 4px 5px;border-radius:20px}
-.tb-user-av{width:22px;height:22px;border-radius:50%;background:var(--au500);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--g900);flex-shrink:0}
-.tb-user-name{font-size:10px;font-weight:700;color:rgba(255,255,255,.88)}
-.tb-user-role{font-size:9px;color:rgba(255,255,255,.55);letter-spacing:.04em}
-.tb-logout-btn{margin-left:4px;padding:3px 10px;border-radius:20px;border:.5px solid rgba(255,255,255,.18);background:rgba(220,38,38,.15);color:#FCA5A5;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
-.tb-logout-btn:hover{background:rgba(220,38,38,.3);color:#fff}
+.tb-user-trigger{width:26px;height:26px;border-radius:50%;background:var(--au500);border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--g900);flex-shrink:0;cursor:pointer;transition:box-shadow .15s;padding:0}
+.tb-user-trigger:hover,.tb-user-trigger[aria-expanded="true"]{box-shadow:0 0 0 3px rgba(252,220,0,.25)}
+.tb-user-pop{position:absolute;top:38px;right:24px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.18);min-width:170px;padding:10px;z-index:1000;display:none;animation:tbPopIn .16s ease}
+.tb-user-pop.open{display:block}
+@keyframes tbPopIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.tb-user-pop .tb-user-name{font-size:12px;font-weight:700;color:#111;padding:2px 6px}
+.tb-user-pop .tb-user-role{font-size:10px;color:#6b7280;padding:0 6px 8px;border-bottom:1px solid #eee;margin-bottom:6px}
+.tb-logout-btn{width:100%;padding:7px 10px;border-radius:8px;border:none;background:rgba(220,38,38,.08);color:#DC0B2C;font-size:11.5px;font-weight:700;cursor:pointer;transition:background .15s;text-align:left}
+.tb-logout-btn:hover{background:rgba(220,38,38,.14)}
 </style>
 <script>
 window.__piitLogout=function(){localStorage.removeItem("piit-session");window.location.replace("/");};
 (function(){
   function doInsert(){
-    if(document.querySelector(".tb-user-badge"))return;
+    if(document.querySelector(".tb-user-trigger"))return;
     var u=window.__PIIT_USER__;if(!u)return;
     var initials=(u.name||"U").split(" ").map(function(w){return w[0]||"";}).join("").toUpperCase().slice(0,2);
     var tbRight=document.querySelector(".tb-right");if(!tbRight)return;
-    var div=document.createElement("div");div.className="tb-user-badge";
-    div.innerHTML="<div class=\"tb-user-av\">"+initials+"</div><div><div class=\"tb-user-name\">"+u.name+"</div><div class=\"tb-user-role\">"+u.role+"</div></div>";
-    var btn=document.createElement("button");btn.className="tb-logout-btn";btn.textContent="\u2192 Salir";
-    btn.addEventListener("click",window.__piitLogout);
-    tbRight.appendChild(div);tbRight.appendChild(btn);
+    tbRight.style.position="relative";
+    var btn=document.createElement("button");btn.className="tb-user-trigger";btn.type="button";
+    btn.setAttribute("aria-haspopup","true");btn.setAttribute("aria-expanded","false");
+    btn.title=u.name+" \u00b7 "+u.role+" \u2014 clic para opciones de sesi\u00f3n";
+    btn.textContent=initials;
+    var pop=document.createElement("div");pop.className="tb-user-pop";pop.setAttribute("role","menu");
+    pop.innerHTML="<div class=\"tb-user-name\">"+u.name+"</div><div class=\"tb-user-role\">"+u.role+"</div>";
+    var logoutBtn=document.createElement("button");logoutBtn.className="tb-logout-btn";logoutBtn.textContent="\u2192 Cerrar sesi\u00f3n";
+    logoutBtn.addEventListener("click",window.__piitLogout);
+    pop.appendChild(logoutBtn);
+    btn.addEventListener("click",function(e){
+      e.stopPropagation();
+      var willOpen=!pop.classList.contains("open");
+      pop.classList.toggle("open",willOpen);
+      btn.setAttribute("aria-expanded",willOpen?"true":"false");
+    });
+    pop.addEventListener("click",function(e){ e.stopPropagation(); });
+    document.addEventListener("click",function(e){
+      if(e.target===btn||btn.contains(e.target)||pop.contains(e.target))return;
+      pop.classList.remove("open"); btn.setAttribute("aria-expanded","false");
+    });
+    tbRight.appendChild(btn);tbRight.appendChild(pop);
   }
   document.addEventListener("DOMContentLoaded",function(){setTimeout(doInsert,80);});
   window.addEventListener("load",function(){setTimeout(doInsert,150);});
