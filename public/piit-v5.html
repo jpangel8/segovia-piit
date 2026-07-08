@@ -87,15 +87,37 @@ html{scroll-behavior:smooth}
 
 /* ─── NAVBAR ─── */
 .navbar{background:var(--glass-bg-strong);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom:1px solid rgba(13,32,23,.06);padding:0 24px;display:flex;align-items:center;position:sticky;top:44px;z-index:500;box-shadow:var(--sh-sm)}
-.nav-logo{display:flex;align-items:center;gap:8px;padding:10px 18px 10px 0;border-right:1px solid var(--g100);margin-right:10px;flex-shrink:0}
+.nav-logo{display:flex;align-items:center;gap:8px;padding:10px 18px 10px 0;border-right:1px solid var(--g100);margin-right:10px;flex-shrink:0;max-width:200px}
 .nav-logo-icon{width:32px;height:32px;background:var(--g100);border-radius:9px;display:flex;align-items:center;justify-content:center}
-.nav-logo-t{font-family:var(--fh);font-size:13px;color:var(--g800);font-weight:800}
+.nav-logo-t{font-family:var(--fh);font-size:12px;line-height:1.25;color:var(--g800);font-weight:800}
 .nav-logo-s{font-size:10px;color:var(--t400);font-weight:500}
 .nav-btn{padding:10px 13px;border:none;border-radius:var(--r-sm);background:transparent;cursor:pointer;font-family:var(--fb);font-size:12px;font-weight:600;color:var(--t400);border-bottom:2.5px solid transparent;transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);display:flex;align-items:center;gap:6px;white-space:nowrap;letter-spacing:.01em}
 .nav-btn:hover{color:var(--g700);background:var(--g50)}
 .nav-btn.act{color:var(--g800);border-bottom-color:var(--g600);background:var(--g50)}
 .nav-btn i{font-size:12px;width:13px;text-align:center}
 .nav-spacer{flex:1}
+
+/* ─── BÚSQUEDA GLOBAL ─── */
+.nav-search-wrap{position:relative;flex-shrink:0}
+.nav-search-trigger{width:32px;height:32px;border-radius:50%;border:1px solid var(--g100);background:var(--g50);color:var(--g700);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:background var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease)}
+.nav-search-trigger:hover,.nav-search-trigger[aria-expanded="true"]{background:var(--g100);box-shadow:0 0 0 3px var(--g100)}
+.nav-search-panel{display:none;position:absolute;top:42px;right:0;width:340px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:var(--r-md);box-shadow:var(--sh-lg);padding:10px;z-index:1000}
+.nav-search-panel.open{display:block;animation:tbPopIn .16s ease}
+.nav-search-input{width:100%;padding:9px 12px;border:1px solid var(--g200);border-radius:var(--r-sm);font-family:var(--fb);font-size:12.5px;color:var(--t900);outline:none;transition:border-color var(--dur-fast) var(--ease)}
+.nav-search-input:focus{border-color:var(--g500)}
+.nav-search-results{max-height:320px;overflow-y:auto;margin-top:6px}
+.nav-search-item{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background var(--dur-fast) var(--ease)}
+.nav-search-item:hover,.nav-search-item.sel{background:var(--g50)}
+.nav-search-item-t{font-size:12px;font-weight:700;color:var(--t900)}
+.nav-search-item-g{font-size:10px;color:var(--t400)}
+.nav-search-empty{padding:14px 10px;text-align:center;font-size:11.5px;color:var(--t300)}
+
+/* ─── MIGAS DE PAN ─── */
+.breadcrumb-bar{display:flex;align-items:center;gap:8px;padding:8px 24px;background:var(--g50);border-bottom:1px solid var(--g100);font-size:11.5px;color:var(--t400);position:sticky;top:94px;z-index:290}
+.breadcrumb-bar-inner{max-width:1140px;margin:0 auto;display:flex;align-items:center;gap:8px;width:100%}
+.breadcrumb-bar i{font-size:10px;color:var(--t300)}
+.breadcrumb-bar .bc-sep{color:var(--t200)}
+.breadcrumb-bar .bc-current{color:var(--g700);font-weight:700}
 
 /* ─── HERO ─── */
 .hero{background:linear-gradient(135deg,var(--g900) 0%,#0E3A20 60%,#1A5225 100%);padding:40px 24px 44px;position:relative;overflow:hidden}
@@ -537,7 +559,10 @@ html{scroll-behavior:smooth}
 .navbar::-webkit-scrollbar-thumb{background:var(--g300)}
 
 /* ═══ NAVBAR — overflow scroll en pantallas medianas */
-.navbar{overflow-x:auto;overflow-y:visible;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+.navbar{overflow:visible;flex-wrap:nowrap}
+.nav-scroll{display:flex;align-items:center;flex:1;min-width:0;overflow-x:auto;overflow-y:visible;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+.nav-scroll::-webkit-scrollbar{height:2px}
+.nav-scroll::-webkit-scrollbar-thumb{background:var(--g300)}
 .sec-btn{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ═══ INDICADOR BOTONES — clase propia ══════════════ */
@@ -1982,7 +2007,7 @@ body {
   -webkit-backdrop-filter: var(--mac-blur) !important;
   border-bottom: 0.5px solid rgba(0,0,0,0.10) !important;
   box-shadow: 0 1px 0 rgba(0,0,0,0.06) !important;
-  position: sticky !important; top: 0 !important; z-index: 300 !important;
+  position: sticky !important; top: 44px !important; z-index: 300 !important;
   height: 50px !important;
   transition: background 0.3s var(--mac-ease) !important;
 }
@@ -3148,16 +3173,9 @@ body { padding-bottom: 36px !important; }
 
 <!-- ═══ NAVBAR ══════════════════════════════════════ -->
 <nav class="navbar">
+<div class="nav-scroll">
   <div class="nav-logo">
-    <div class="nav-logo-icon">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <rect x="1" y="1" width="7" height="7" rx="1.5" fill="var(--g400)" opacity=".7"/>
-        <rect x="10" y="1" width="7" height="7" rx="1.5" fill="var(--g600)" opacity=".8"/>
-        <rect x="1" y="10" width="7" height="7" rx="1.5" fill="var(--g600)" opacity=".8"/>
-        <rect x="10" y="10" width="7" height="7" rx="1.5" fill="var(--au500)" opacity=".85"/>
-      </svg>
-    </div>
-    <div><div class="nav-logo-t">PIIT Segovia</div><div class="nav-logo-s">Inteligencia Territorial</div></div>
+    <div class="nav-logo-t">Plataforma Integral de Inteligencia Territorial</div>
   </div>
   <!-- ── Dropdown Dashboard · Fuentes ── -->
   <div class="nav-dropdown" id="nav-dd-dash">
@@ -3197,7 +3215,24 @@ body { padding-bottom: 36px !important; }
   </div>
   <button class="nav-btn" onclick="PIIT.ui.goSection('s-riesgo',this);setTimeout(function(){if(window.PIIT&&window.PIIT.riesgo)PIIT.riesgo.init();},150)"><i class="fa-solid fa-triangle-exclamation" style="color:#EA580C"></i> Gestión del Riesgo</button>
   <div class="nav-spacer"></div>
+</div>
+  <div class="nav-search-wrap">
+    <button class="nav-search-trigger" id="piit-search-trigger" type="button" aria-haspopup="true" aria-expanded="false" title="Búsqueda global (Alt+B)">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+    <div class="nav-search-panel" id="piit-search-panel" role="search">
+      <input type="text" id="piit-search-input" class="nav-search-input" placeholder="Buscar módulo, indicador o barrio…" autocomplete="off">
+      <div class="nav-search-results" id="piit-search-results"></div>
+    </div>
+  </div>
 </nav>
+<div class="breadcrumb-bar" id="piit-breadcrumb" aria-label="Ruta de navegación">
+  <div class="breadcrumb-bar-inner">
+    <i class="fa-solid fa-house"></i>
+    <span class="bc-sep">/</span>
+    <span class="bc-current" id="piit-breadcrumb-current">Dashboard municipal</span>
+  </div>
+</div>
 
 <!-- ═══ DROPDOWN PORTAL — fuera del navbar para evitar overflow clipping ═══ -->
 <div id="nav-dd-portal" role="menu" aria-labelledby="nav-dd-trigger-bid"
@@ -14471,10 +14506,37 @@ function patch(){
   var _gs  = window.PIIT.ui.goSection.bind(window.PIIT.ui);
   var _gsd = window.PIIT.ui.goSectionDD
              ? window.PIIT.ui.goSectionDD.bind(window.PIIT.ui) : null;
-  window.PIIT.ui.goSection = function(id,el){ _gs(id,el); scrollToVisibleSectionSettled(); };
-  if(_gsd) window.PIIT.ui.goSectionDD = function(id,el,dd){ _gsd(id,el,dd); scrollToVisibleSectionSettled(); };
+  window.PIIT.ui.goSection = function(id,el){ _gs(id,el); scrollToVisibleSectionSettled(); updateBreadcrumb(id); };
+  if(_gsd) window.PIIT.ui.goSectionDD = function(id,el,dd){ _gsd(id,el,dd); scrollToVisibleSectionSettled(); updateBreadcrumb(id); };
   return true;
 }
+
+/* ── Migas de pan: etiqueta legible por sección ──────────────────── */
+var SECTION_META = {
+  's-dash':          { label: 'Dashboard municipal',              group: 'Dashboard' },
+  's-fuentes':       { label: 'Fuentes de datos oficiales',       group: 'Dashboard' },
+  's-mapa':          { label: 'SIG · Mapa municipal',             group: 'SIG · Territorio' },
+  's-sisben':        { label: 'SISBEN · Social',                  group: 'SIG · Territorio' },
+  's-analisis':      { label: 'Análisis comparativo',             group: 'SIG · Territorio' },
+  's-salud':         { label: 'Salud · Vigilancia',                group: 'SIG · Territorio' },
+  's-riesgo':        { label: 'Gestión del Riesgo',                group: 'SIG · Territorio' },
+  's-reportes':      { label: 'Reportes ciudadanos',               group: 'Plataforma' },
+  's-secs':          { label: 'Secretarías',                       group: 'Plataforma' },
+  's-contratos':     { label: 'Contratos',                         group: 'Plataforma' },
+  's-sistema':       { label: 'Sistema de Ciudades',               group: 'Misión Ciudades · BID' },
+  's-productividad': { label: 'Productividad Territorial',         group: 'Misión Ciudades · BID' },
+  's-conectividad':  { label: 'Conectividad',                      group: 'Misión Ciudades · BID' },
+  's-calidad':       { label: 'Calidad de Vida',                   group: 'Misión Ciudades · BID' },
+  's-planeacion':    { label: 'Planeación Estratégica',            group: 'Misión Ciudades · BID' },
+  's-escenarios':    { label: 'Escenarios y Proyecciones',         group: 'Misión Ciudades · BID' },
+};
+function updateBreadcrumb(id){
+  var el = document.getElementById('piit-breadcrumb-current');
+  if(!el) return;
+  var meta = SECTION_META[id];
+  el.textContent = meta ? meta.group + ' · ' + meta.label : (id || 'Dashboard municipal');
+}
+window.__PIIT_SECTION_META__ = SECTION_META;
 
 function init(){
   if(!patch()){ var iv=setInterval(function(){ if(patch()) clearInterval(iv); },250); }
@@ -14482,6 +14544,83 @@ function init(){
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(init,400); });
 else setTimeout(init,400);
+})();
+
+/* ── Búsqueda global (Alt+B) ──────────────────────────────────────── */
+(function(){
+  function boot(){
+    var trigger = document.getElementById('piit-search-trigger');
+    var panel   = document.getElementById('piit-search-panel');
+    var input   = document.getElementById('piit-search-input');
+    var results = document.getElementById('piit-search-results');
+    if(!trigger || !panel || !input || !results || !window.__PIIT_SECTION_META__) return false;
+
+    var meta = window.__PIIT_SECTION_META__;
+    var entries = Object.keys(meta).map(function(id){ return { id: id, label: meta[id].label, group: meta[id].group }; });
+
+    function openPanel(){
+      panel.classList.add('open');
+      trigger.setAttribute('aria-expanded','true');
+      render(input.value);
+      setTimeout(function(){ input.focus(); }, 10);
+    }
+    function closePanel(){
+      panel.classList.remove('open');
+      trigger.setAttribute('aria-expanded','false');
+    }
+    function render(query){
+      var q = (query || '').trim().toLowerCase();
+      var matches = q
+        ? entries.filter(function(e){ return e.label.toLowerCase().indexOf(q) > -1 || e.group.toLowerCase().indexOf(q) > -1; })
+        : entries;
+      if(!matches.length){
+        results.innerHTML = '<div class="nav-search-empty">Sin resultados para "'+q+'"</div>';
+        return;
+      }
+      results.innerHTML = matches.map(function(e, i){
+        return '<div class="nav-search-item'+(i===0?' sel':'')+'" data-id="'+e.id+'" role="option">'
+          + '<div class="nav-search-item-t">'+e.label+'</div>'
+          + '<div class="nav-search-item-g">'+e.group+'</div></div>';
+      }).join('');
+      [].slice.call(results.querySelectorAll('.nav-search-item')).forEach(function(row){
+        row.addEventListener('click', function(){ goTo(row.getAttribute('data-id')); });
+      });
+    }
+    function goTo(id){
+      closePanel();
+      input.value = '';
+      var groupKey = id === 's-dash' || id === 's-fuentes' ? 'dash'
+        : id === 's-mapa' || id === 's-sisben' || id === 's-analisis' ? 'sig'
+        : (meta[id] && meta[id].group === 'Misión Ciudades · BID') ? 'bid' : null;
+      if(window.PIIT && window.PIIT.ui){
+        if(groupKey && window.PIIT.ui.goSectionDD) window.PIIT.ui.goSectionDD(id, null, groupKey);
+        else window.PIIT.ui.goSection(id, null);
+      }
+    }
+
+    trigger.addEventListener('click', function(e){
+      e.stopPropagation();
+      panel.classList.contains('open') ? closePanel() : openPanel();
+    });
+    panel.addEventListener('click', function(e){ e.stopPropagation(); });
+    document.addEventListener('click', function(e){
+      if(trigger.contains(e.target) || panel.contains(e.target)) return;
+      closePanel();
+    });
+    input.addEventListener('input', function(){ render(input.value); });
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'Escape'){ closePanel(); return; }
+      if(e.key === 'Enter'){
+        var sel = results.querySelector('.nav-search-item.sel') || results.querySelector('.nav-search-item');
+        if(sel) goTo(sel.getAttribute('data-id'));
+      }
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.altKey && (e.key === 'b' || e.key === 'B')){ e.preventDefault(); openPanel(); }
+    });
+    return true;
+  }
+  if(!boot()){ var iv = setInterval(function(){ if(boot()) clearInterval(iv); }, 250); }
 })();
 
 /* ── GPS locateUser: sincroniza visor 3D → mapa Leaflet principal ── */
