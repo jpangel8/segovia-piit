@@ -14418,7 +14418,14 @@ function scrollToVisibleSection(){
   var navH  = navEl ? navEl.offsetHeight : 50;
   var absTop = vis.getBoundingClientRect().top + window.scrollY;
   var target = Math.max(0, absTop - navH - 2);
-  window.scrollTo({ top: target, behavior: 'smooth' });
+  window.scrollTo({ top: target, behavior: 'auto' });
+}
+
+/* Espera a que el navegador termine layout/paint del cambio de sección
+   antes de medir su posición — evita "saltar" a un hueco vacío cuando
+   el contenido (tarjetas, gráficas) aún no ha terminado de dibujarse. */
+function scrollToVisibleSectionSettled(){
+  requestAnimationFrame(function(){ requestAnimationFrame(scrollToVisibleSection); });
 }
 
 /* Listener de click en la navbar */
@@ -14435,8 +14442,8 @@ function patch(){
   var _gs  = window.PIIT.ui.goSection.bind(window.PIIT.ui);
   var _gsd = window.PIIT.ui.goSectionDD
              ? window.PIIT.ui.goSectionDD.bind(window.PIIT.ui) : null;
-  window.PIIT.ui.goSection = function(id,el){ _gs(id,el); setTimeout(scrollToVisibleSection,70); };
-  if(_gsd) window.PIIT.ui.goSectionDD = function(id,el,dd){ _gsd(id,el,dd); setTimeout(scrollToVisibleSection,70); };
+  window.PIIT.ui.goSection = function(id,el){ _gs(id,el); scrollToVisibleSectionSettled(); };
+  if(_gsd) window.PIIT.ui.goSectionDD = function(id,el,dd){ _gsd(id,el,dd); scrollToVisibleSectionSettled(); };
   return true;
 }
 
@@ -14895,6 +14902,46 @@ else setTimeout(init,400);
     if(window.__PIIT_DEBUG__) console.debug('[PIITGuard]', a, '×', b, '→', action);
   }
 
+  /* ── centinela de espacio vacío ──────────────────────────────────────
+     Detecta huecos anómalos en la sección activa: espacio en blanco
+     entre hijos directos consecutivos (transiciones de sección a medio
+     pintar, tarjetas/gráficas que aún no calculan su altura real) o
+     espacio sobrante al final de la sección respecto a su último hijo
+     visible. No corrige layout — sólo lo reporta, para que un cambio
+     de contenido dinámico (filtros, WMS, gráficas) no deje huecos
+     silenciosos sin que quede constancia.                             */
+  var SPACING_GAP_THRESHOLD = 180;   // px — hueco entre hermanos que se considera anómalo
+  var lastSpacingReport = [];
+  function auditSpacing(){
+    var out = [];
+    var sec = document.querySelector('.section.act') || document.getElementById('s-salud');
+    if(!sec || getComputedStyle(sec).display === 'none') return out;
+    var kids = [].slice.call(sec.children).filter(function(el){
+      var cs = getComputedStyle(el);
+      return cs.display !== 'none' && el.getBoundingClientRect().height > 0;
+    });
+    for(var i = 0; i < kids.length - 1; i++){
+      var a = kids[i].getBoundingClientRect();
+      var b = kids[i + 1].getBoundingClientRect();
+      var gap = Math.round(b.top - a.bottom);
+      if(gap > SPACING_GAP_THRESHOLD){
+        out.push({ tipo: 'hueco-entre-hermanos', entre: [describe(kids[i]), describe(kids[i + 1])], px: gap });
+      }
+    }
+    if(kids.length){
+      var secRect = sec.getBoundingClientRect();
+      var lastRect = kids[kids.length - 1].getBoundingClientRect();
+      var trailing = Math.round(secRect.bottom - lastRect.bottom);
+      if(trailing > SPACING_GAP_THRESHOLD){
+        out.push({ tipo: 'hueco-al-final-de-seccion', seccion: sec.id, px: trailing });
+      }
+    }
+    return out;
+  }
+  function describe(el){
+    return el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : '');
+  }
+
   /* ── pasada completa ────────────────────────────────────────────── */
   function run(){
     pending = false;
@@ -14912,6 +14959,10 @@ else setTimeout(init,400);
         });
       }
       lastReport = audit();
+    }
+    lastSpacingReport = auditSpacing();
+    if(lastSpacingReport.length && window.__PIIT_DEBUG__){
+      console.warn('[PIITGuard] espacio anómalo detectado:', lastSpacingReport);
     }
   }
   function schedule(){
@@ -14934,6 +14985,7 @@ else setTimeout(init,400);
   window.addEventListener('scroll', schedule, { passive: true });
   document.addEventListener('click', function(){ setTimeout(schedule, 60); }, { passive: true });
   document.addEventListener('transitionend', schedule, { passive: true });
+  document.addEventListener('toggle', schedule, { passive: true, capture: true });   /* <details> del SIG */
 
   var mo = new MutationObserver(schedule);
   function attachMO(){
@@ -14949,6 +15001,7 @@ else setTimeout(init,400);
   window.PIITGuard = {
     validate: function(){ run(); return lastReport; },
     report:   function(){ return lastReport; },
+    spacing:  function(){ run(); return lastSpacingReport; },
   };
 })();
 </script>
