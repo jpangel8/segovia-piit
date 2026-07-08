@@ -2069,6 +2069,15 @@ body {
   background: var(--apple-bg) !important;
   min-height: calc(100vh - 92px) !important;
 }
+/* Las secciones "Misión Ciudades · BID" (Sistema de Ciudades,
+   Productividad, Conectividad, Calidad, Planeación, Escenarios) viven
+   como hermanas de .main en el DOM, no como hijas — cuando una de ellas
+   está activa, .main no contiene la sección visible y no debe reservar
+   el alto completo del viewport: eso dejaba un bloque vacío entre el
+   hero y el contenido real. */
+.main:not(:has(.section.act)) {
+  min-height: 0 !important;
+}
 
 /* Sección activa — macOS page transition */
 .section.act {
