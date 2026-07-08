@@ -134,7 +134,7 @@ html{scroll-behavior:smooth}
 .kc-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .kc-trend{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
 .kc-trend.up{background:var(--g100);color:var(--g700)}
-.kc-trend.dn{background:#FCEBEB;color:var(--red)}
+.kc-trend.dn{background:#FFF5F5;color:var(--red)}
 .kc-trend.ok{background:var(--g50);color:var(--t400)}
 .kc-val{font-family:var(--fm);font-size:24px;font-weight:500;color:var(--t900);margin-bottom:2px}
 .kc-lbl{font-size:11px;color:var(--t400);font-weight:500}
@@ -143,7 +143,7 @@ html{scroll-behavior:smooth}
 .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em}
 .badge-green{background:var(--g100);color:var(--g800)}
 .badge-gold{background:var(--au100);color:var(--au800)}
-.badge-red{background:#FCEBEB;color:var(--red)}
+.badge-red{background:#FFF5F5;color:var(--red)}
 .badge-blue{background:#E6F1FB;color:var(--blue)}
 .badge-teal{background:#E0F5F5;color:var(--teal)}
 .badge-warn{background:#FEF3C7;color:#78350F}
@@ -657,7 +657,7 @@ footer a:hover{color:var(--au400)}
 .st-proc{background:#E6F1FB;color:var(--blue)}
 .st-alerta{background:#FEF3C7;color:#78350F}
 .st-ter{background:var(--g50);color:var(--t400)}
-.st-sus{background:#FCEBEB;color:var(--red)}
+.st-sus{background:#FFF5F5;color:var(--red)}
 .st-liq{background:var(--g50);color:var(--t300)}
 .st-ini{background:var(--au100);color:var(--au800)}
 /* ─── TABLA CONTRATOS — anchos fijos y word-wrap ─── */
@@ -1332,6 +1332,15 @@ button:focus:not(:focus-visible) { outline: none; }
   .tb-dep  { display: none; }
   .tb-version { display: none; }
   .tb-right { gap: 8px; }
+}
+
+/* ── TABLET (≤900px) — evita overflow horizontal del topbar ── */
+@media (max-width: 900px) {
+  .tb-dep, .tb-version { display: none; }
+  .tb-right { gap: 6px; }
+  .tb-user-role { display: none; }
+  .tb-user-badge { padding: 3px 8px 3px 4px; }
+  .tb-logout-btn { padding: 4px 8px !important; font-size: 10.5px !important; }
 }
 
 /* ── MOBILE PEQUEÑO (≤380px) ─────────────────────────────── */
@@ -3300,7 +3309,7 @@ body { padding-bottom: 36px !important; }
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-users" style="color:var(--g700)"></i></div><div class="kc-trend up">+1,5%</div></div><div class="kc-val">41.222</div><div class="kc-lbl">Habitantes (DANE 2026)</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-map-location-dot" style="color:var(--au700)"></i></div><div class="kc-trend ok">100%</div></div><div class="kc-val">19</div><div class="kc-lbl">Barrios monitoreados</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FEF3C7"><i class="fa-solid fa-briefcase" style="color:var(--amber)"></i></div><div class="kc-trend dn">Brecha 17%</div></div><div class="kc-val" style="color:var(--amber)">68%</div><div class="kc-lbl">Cobertura servicios básicos</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FCEBEB"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i></div><div class="kc-trend dn">Urgentes</div></div><div class="kc-val" style="color:var(--red)">4</div><div class="kc-lbl">Alertas territoriales</div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i></div><div class="kc-trend dn">Urgentes</div></div><div class="kc-val" style="color:var(--red)">4</div><div class="kc-lbl">Alertas territoriales</div></div>
   </div>
 
   <!-- Fila 1: Ranking + Alertas -->
@@ -4251,7 +4260,7 @@ body { padding-bottom: 36px !important; }
 
   <!-- Resumen rápido -->
   <div class="grid4" style="margin-bottom:16px">
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FCEBEB"><i class="fa-solid fa-circle-xmark" style="color:var(--red)"></i></div></div><div class="kc-val" style="color:var(--red)" id="an-crit">—</div><div class="kc-lbl">Barrios críticos (&lt;40%)</div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-circle-xmark" style="color:var(--red)"></i></div></div><div class="kc-val" style="color:var(--red)" id="an-crit">—</div><div class="kc-lbl">Barrios críticos (&lt;40%)</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FEF3C7"><i class="fa-solid fa-circle-exclamation" style="color:var(--amber)"></i></div></div><div class="kc-val" style="color:var(--amber)" id="an-warn">—</div><div class="kc-lbl">En atención (40–69%)</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-circle-check" style="color:var(--g700)"></i></div></div><div class="kc-val" style="color:var(--g700)" id="an-ok">—</div><div class="kc-lbl">Barrios buenos (≥70%)</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-star" style="color:var(--au700)"></i></div></div><div class="kc-val" style="color:var(--au700)" id="an-top">—</div><div class="kc-lbl">Mejor barrio (infra.)</div></div>
@@ -4409,7 +4418,7 @@ body { padding-bottom: 36px !important; }
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FEF3C7"><i class="fa-solid fa-hard-hat" style="color:var(--amber)"></i></div><div class="kc-trend ok" id="ob-kpi-total">—</div></div><div class="kc-val" id="ob-kpi-n">—</div><div class="kc-lbl">Proyectos registrados</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-circle-check" style="color:var(--g700)"></i></div><div class="kc-trend up" id="ob-kpi-avfis-lbl">Prom.</div></div><div class="kc-val" style="color:var(--g700)" id="ob-kpi-avfis">—</div><div class="kc-lbl">Avance físico promedio</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-sack-dollar" style="color:var(--au700)"></i></div><div class="kc-trend ok">Total</div></div><div class="kc-val" id="ob-kpi-valor">—</div><div class="kc-lbl">Valor total (M$)</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FCEBEB"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i></div><div class="kc-trend dn" id="ob-kpi-alerta-lbl">Alerta</div></div><div class="kc-val" style="color:var(--red)" id="ob-kpi-alertas">—</div><div class="kc-lbl">En alerta o proceso crítico</div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i></div><div class="kc-trend dn" id="ob-kpi-alerta-lbl">Alerta</div></div><div class="kc-val" style="color:var(--red)" id="ob-kpi-alertas">—</div><div class="kc-lbl">En alerta o proceso crítico</div></div>
   </div>
 
   <!-- Gráfica avance + tabla -->
@@ -4650,7 +4659,7 @@ body { padding-bottom: 36px !important; }
         <div class="skpi-ref" style="color:var(--t400)">Filtro municipal estándar</div>
       </div>
       <div class="skpi">
-        <div class="skpi-ico" style="background:#FCEBEB">🏥</div>
+        <div class="skpi-ico" style="background:#FFF5F5">🏥</div>
         <div class="skpi-v">ESE</div>
         <div class="skpi-l">Empresa Social del Estado</div>
         <div class="skpi-ref" style="color:var(--red)">Hospital local Segovia</div>
@@ -4729,7 +4738,7 @@ body { padding-bottom: 36px !important; }
       <!-- ── KPIs epidemiológicos Segovia ── -->
       <div class="salud-kpis" style="margin-bottom:14px">
         <div class="skpi">
-          <div class="skpi-ico" style="background:#FCEBEB">🦟</div>
+          <div class="skpi-ico" style="background:#FFF5F5">🦟</div>
           <div class="skpi-v" style="color:var(--red)">1.847</div>
           <div class="skpi-l">Casos Leishmaniasis · 2024</div>
           <div class="skpi-ref" style="color:var(--red)">▲ 23% vs 2023 (1.502)</div>
@@ -4741,7 +4750,7 @@ body { padding-bottom: 36px !important; }
           <div class="skpi-ref" style="color:var(--g700)">▼ 8% vs 2023</div>
         </div>
         <div class="skpi">
-          <div class="skpi-ico" style="background:#FCEBEB">🪲</div>
+          <div class="skpi-ico" style="background:#FFF5F5">🪲</div>
           <div class="skpi-v" style="color:var(--red)">412</div>
           <div class="skpi-l">Casos Dengue · 2024</div>
           <div class="skpi-ref" style="color:var(--red)">▲ 67% brote abril-julio</div>
@@ -4901,7 +4910,7 @@ body { padding-bottom: 36px !important; }
             <div class="skpi-ref" style="color:var(--amber)">⚠ Meta 95% no alcanzada</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#FCEBEB">🛡️</div>
+            <div class="skpi-ico" style="background:#FFF5F5">🛡️</div>
             <div class="skpi-v" style="color:var(--red)">62,8<span style="font-size:15px">%</span></div>
             <div class="skpi-l">VPH · Niñas 9-17 años</div>
             <div class="skpi-ref" style="color:var(--red)">✗ Brecha 17% vs meta 80%</div>
@@ -4973,7 +4982,7 @@ body { padding-bottom: 36px !important; }
             <div class="skpi-ref" style="color:var(--au700)">▲ 12% vs 2023</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#FCEBEB">💊</div>
+            <div class="skpi-ico" style="background:#FFF5F5">💊</div>
             <div class="skpi-v" style="color:var(--red)">38.975</div>
             <div class="skpi-l">Procedimientos 2024</div>
             <div class="skpi-ref" style="color:var(--t500)">Lab, imágenes, rehab.</div>
@@ -5038,7 +5047,7 @@ body { padding-bottom: 36px !important; }
             <div class="skpi-ref" style="color:var(--au700)">22,1% de afiliados</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#FCEBEB">🏛️</div>
+            <div class="skpi-ico" style="background:#FFF5F5">🏛️</div>
             <div class="skpi-v" style="color:var(--red)">28.970</div>
             <div class="skpi-l">Régimen subsidiado</div>
             <div class="skpi-ref" style="color:var(--red)">77,9% de afiliados</div>
@@ -5091,7 +5100,7 @@ body { padding-bottom: 36px !important; }
             <div class="skpi-ref" style="color:var(--g700)">17,7 × 1.000 hab.</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#FCEBEB">⚰️</div>
+            <div class="skpi-ico" style="background:#FFF5F5">⚰️</div>
             <div class="skpi-v" style="color:var(--red)">238</div>
             <div class="skpi-l">Defunciones totales</div>
             <div class="skpi-ref" style="color:var(--red)">5,9 × 1.000 hab.</div>
@@ -5301,7 +5310,7 @@ body { padding-bottom: 36px !important; }
 
   <div class="grid4" style="margin-bottom:18px">
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-coins" style="color:var(--au700)"></i></div><div class="kc-trend ok">2024</div></div><div class="kc-val" style="font-size:20px">$2.142M</div><div class="kc-lbl">PIB per cápita territorial estimado</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FCEBEB"><i class="fa-solid fa-person-walking-luggage" style="color:var(--red)"></i></div><div class="kc-trend dn">vs 9,7% Antioquia</div></div><div class="kc-val" style="color:var(--red)">12,1%</div><div class="kc-lbl">Tasa de desempleo · DANE 2024</div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-person-walking-luggage" style="color:var(--red)"></i></div><div class="kc-trend dn">vs 9,7% Antioquia</div></div><div class="kc-val" style="color:var(--red)">12,1%</div><div class="kc-lbl">Tasa de desempleo · DANE 2024</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FEF3C7"><i class="fa-solid fa-handshake-slash" style="color:var(--amber)"></i></div><div class="kc-trend dn">Brecha 25%</div></div><div class="kc-val" style="color:var(--amber)">68%</div><div class="kc-lbl">Informalidad laboral · GEIH 2024</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-pickaxe" style="color:var(--g700)"></i></div><div class="kc-trend ok">Especializ.</div></div><div class="kc-val">71%</div><div class="kc-lbl">Economía dependiente de minería</div></div>
   </div>
@@ -5334,7 +5343,7 @@ body { padding-bottom: 36px !important; }
 
   <div class="grid4" style="margin-bottom:18px">
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-wifi" style="color:var(--au700)"></i></div><div class="kc-trend dn">Brecha 20%</div></div><div class="kc-val" style="color:var(--amber)">65%</div><div class="kc-lbl">Cobertura internet total</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FCEBEB"><i class="fa-solid fa-road" style="color:var(--red)"></i></div><div class="kc-trend dn">Deterioro</div></div><div class="kc-val" style="color:var(--red)">Regular</div><div class="kc-lbl">Estado vías primarias INVIAS</div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-road" style="color:var(--red)"></i></div><div class="kc-trend dn">Deterioro</div></div><div class="kc-val" style="color:var(--red)">Regular</div><div class="kc-lbl">Estado vías primarias INVIAS</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-hospital" style="color:var(--g700)"></i></div><div class="kc-trend ok">Cabecera</div></div><div class="kc-val">8 min</div><div class="kc-lbl">Acceso ESE · tiempo promedio</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#E6F1FB"><i class="fa-solid fa-signal" style="color:var(--blue)"></i></div><div class="kc-trend dn">Rural 30%</div></div><div class="kc-val">78%</div><div class="kc-lbl">Cobertura internet urbana</div></div>
   </div>
@@ -5426,7 +5435,7 @@ body { padding-bottom: 36px !important; }
   <div class="grid4" style="margin-bottom:18px">
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-gem" style="color:var(--au700)"></i></div><div class="kc-trend ok">2024</div></div><div class="kc-val" style="font-size:20px">$18.420M</div><div class="kc-lbl">Regalías SGR recibidas 2024</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-building-flag" style="color:var(--g700)"></i></div><div class="kc-trend ok">Activos</div></div><div class="kc-val">18</div><div class="kc-lbl">Proyectos EDURSEG activos</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FCEBEB"><i class="fa-solid fa-percent" style="color:var(--red)"></i></div><div class="kc-trend dn">Subejecución</div></div><div class="kc-val" style="color:var(--amber)">66%</div><div class="kc-lbl">Ejecución presupuestal 2024</div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-percent" style="color:var(--red)"></i></div><div class="kc-trend dn">Subejecución</div></div><div class="kc-val" style="color:var(--amber)">66%</div><div class="kc-lbl">Ejecución presupuestal 2024</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#E6F1FB"><i class="fa-solid fa-trophy" style="color:var(--blue)"></i></div><div class="kc-trend ok">PDM</div></div><div class="kc-val">12</div><div class="kc-lbl">Metas estratégicas al 2027</div></div>
   </div>
 
@@ -5481,7 +5490,7 @@ body { padding-bottom: 36px !important; }
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-person-shelter" style="color:var(--g700)"></i></div><div class="kc-trend up" id="esc-kpi-pob-trend">+1,5%/año</div></div><div class="kc-val" id="esc-kpi-pob">45.120</div><div class="kc-lbl">Población proyectada 2030</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-chart-line" style="color:var(--au700)"></i></div><div class="kc-trend up" id="esc-kpi-icv-trend">+7 pts</div></div><div class="kc-val" id="esc-kpi-icv">79</div><div class="kc-lbl">ICV proyectado 2030</div></div>
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#E6F1FB"><i class="fa-solid fa-wifi" style="color:var(--blue)"></i></div><div class="kc-trend up" id="esc-kpi-cnet-trend">+20pp</div></div><div class="kc-val" id="esc-kpi-cnet">85%</div><div class="kc-lbl">Conectividad proyectada 2030</div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FCEBEB"><i class="fa-solid fa-sack-dollar" style="color:var(--red)"></i></div><div class="kc-trend ok" id="esc-kpi-inv-trend">Acumulada</div></div><div class="kc-val" id="esc-kpi-inv" style="font-size:20px">$94.200M</div><div class="kc-lbl">Inversión pública 2026-2030</div></div>
+    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-sack-dollar" style="color:var(--red)"></i></div><div class="kc-trend ok" id="esc-kpi-inv-trend">Acumulada</div></div><div class="kc-val" id="esc-kpi-inv" style="font-size:20px">$94.200M</div><div class="kc-lbl">Inversión pública 2026-2030</div></div>
   </div>
 
   <div class="grid2" style="margin-bottom:18px">
@@ -7092,7 +7101,7 @@ window.PIIT = (function () {
       var icv   = Math.round((ind.infra||0)*0.30+(ind.social||0)*0.25+(ind.srv||0)*0.25+(ind.pop||0)*0.20);
       var nivel = icv >= 70 ? 'Bueno' : icv >= 40 ? 'En atención' : 'Crítico';
       var colorIcv = icv >= 70 ? '#2E7D52' : icv >= 40 ? '#C9852A' : '#DC0B2C';
-      var bgBadge  = icv >= 70 ? '#EAF5EF'  : icv >= 40 ? '#FEF3C7' : '#FCEBEB';
+      var bgBadge  = icv >= 70 ? '#EAF5EF'  : icv >= 40 ? '#FEF3C7' : '#FFF5F5';
       var fecha    = new Date().toLocaleDateString('es-CO');
 
       var semaforo = function(v) { return v>=70 ? '✅ Bueno' : v>=40 ? '⚠ Atención' : '❌ Crítico'; };
@@ -9609,7 +9618,7 @@ window.PIIT = (function () {
         'Agua y Saneamiento': {bg:'#E6F1FB', col:'#00A0E4', icon:'💧'},
         'Vias':               {bg:'#FEF3C7', col:'#78350F', icon:'🛣️'},
         'Social':             {bg:'#EAF5EF', col:'#1A5C3A', icon:'🏘️'},
-        'Infraestructura':    {bg:'#FCEBEB', col:'#DC0B2C', icon:'🏗️'},
+        'Infraestructura':    {bg:'#FFF5F5', col:'#DC0B2C', icon:'🏗️'},
         'Estudios y Disenos': {bg:'#FBF4D8', col:'#7A5A0A', icon:'📐'},
       }[s] || {bg:'#F4FAF6', col:'#43594E', icon:'📋'};
       return '<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;white-space:nowrap;background:'+cfg.bg+';color:'+cfg.col+'">'+cfg.icon+' '+s+'</span>';
@@ -9947,7 +9956,7 @@ window.PIIT = (function () {
       var fin = new Date(fechaFin);
       var diff = Math.ceil((fin - hoy) / (1000*60*60*24));
       if (diff < 0) {
-        return { color:'#923030', bg:'#FCEBEB', icon:'fa-circle-exclamation', label:'Vencido (' + Math.abs(diff) + 'd)', cls:'sem-rojo', dias:diff };
+        return { color:'#923030', bg:'#FFF5F5', icon:'fa-circle-exclamation', label:'Vencido (' + Math.abs(diff) + 'd)', cls:'sem-rojo', dias:diff };
       }
       if (diff <= 7) {
         return { color:'#DC0B2C', bg:'#FEF2F2', icon:'fa-triangle-exclamation', label:diff + 'd restantes', cls:'sem-rojo', dias:diff };
@@ -10248,7 +10257,7 @@ window.PIIT = (function () {
         'checking': { bg:'var(--au100)',color:'var(--au800)', icon:'fa-rotate fa-spin',   text:'Verificando…' },
         'updating': { bg:'#E6F1FB',    color:'var(--blue)',  icon:'fa-cloud-arrow-down', text:'Actualizando…' },
         'paused':   { bg:'var(--g50)',  color:'var(--t400)',  icon:'fa-moon',             text:'Pausado (pestaña inactiva)' },
-        'error':    { bg:'#FCEBEB',    color:'var(--red)',   icon:'fa-circle-xmark',     text:'Error de conexión' },
+        'error':    { bg:'#FFF5F5',    color:'var(--red)',   icon:'fa-circle-xmark',     text:'Error de conexión' },
       };
       var c = cfg[status] || cfg['off'];
       el.style.background = c.bg;
@@ -11385,7 +11394,7 @@ window.PIIT = (function () {
       // Tabla proyectos
       var tb = document.getElementById('plan-tabla');
       if (tb) {
-        var ejCol = { 'Conectividad':'#E6F1FB', 'Calidad de Vida':'#EAF5EF', 'Sostenibilidad':'#FEF3C7', 'Inclusión':'#F3E8FF', 'Infraestructura':'#FCEBEB' };
+        var ejCol = { 'Conectividad':'#E6F1FB', 'Calidad de Vida':'#EAF5EF', 'Sostenibilidad':'#FEF3C7', 'Inclusión':'#F3E8FF', 'Infraestructura':'#FFF5F5' };
         var estCls = { 'Ejecución':'st-eje', 'En proceso':'st-proc', 'Alerta':'st-alerta' };
         tb.innerHTML = DATA_V5.proyectos.map(function(p){
           var bg = ejCol[p.eje] || 'var(--g50)';
