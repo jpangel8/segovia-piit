@@ -11615,16 +11615,24 @@ window.PIIT = (function () {
         }).join('');
       }
 
-      // Chart priorización (scatter impacto vs factibilidad)
+      // Chart priorización (matriz impacto vs factibilidad)
+      // Antes usaba Math.random() en ambos ejes — coordenadas distintas
+      // en cada recarga, sin relación con los datos reales del proyecto.
+      // Ahora ambos ejes se derivan de forma determinística de campos
+      // reales de cada proyecto: impacto (ya categórico en los datos) y
+      // factibilidad (proxy del estado real de avance — un proyecto ya
+      // en Ejecución es, por definición, más factible que uno en Alerta).
+      var IMPACTO_Y = { 'Alto': 88, 'Medio': 62, 'Bajo': 38 };
+      var FACTIBILIDAD_X = { 'Ejecución': 95, 'En proceso': 78, 'Alerta': 58 };
       var c1 = document.getElementById('chart-priorizacion');
       if (c1) {
         charts._destroy('chart-priorizacion');
         charts._instances['chart-priorizacion'] = new Chart(c1, {
           type:'bubble',
-          data:{ datasets: DATA_V5.proyectos.slice(0,7).map(function(p, i){
-            var colores = ['#2E7D52','#D6B000','#00A0E4','#C9852A','#8A4AA3','#DC0B2C','#1A8080'];
+          data:{ datasets: DATA_V5.proyectos.map(function(p, i){
+            var colores = ['#2E7D52','#D6B000','#00A0E4','#C9852A','#8A4AA3','#DC0B2C','#1A8080','#DC0B2C','#5A7268'];
             return { label: p.proj.slice(0,20)+'…',
-              data:[{ x: 60+Math.random()*35, y: 50+Math.random()*45, r: Math.sqrt(p.inv/500) }],
+              data:[{ x: FACTIBILIDAD_X[p.estado] || 70, y: IMPACTO_Y[p.impacto] || 50, r: Math.sqrt(p.inv/500) }],
               backgroundColor: colores[i%colores.length]+'99', borderColor: colores[i%colores.length] };
           }) },
           options:{ responsive:true, maintainAspectRatio:true,
