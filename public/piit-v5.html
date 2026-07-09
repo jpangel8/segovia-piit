@@ -5758,7 +5758,7 @@ window.PIIT = (function () {
           {
             kind: 'wms',
             url: 'https://mapas2.igac.gov.co/server3/services/carto/carto2000segovia05736000/MapServer/WMSServer',
-            layers: '8,13,7,18,12,15,6,10,11',
+            layers: '1,4,6,7,8,9,11,12,13,19',
             version: '1.3.0',
             format: 'image/png',
             label: 'IGAC · Segovia 1:2.000 · WMS (2024)',
@@ -5766,7 +5766,7 @@ window.PIIT = (function () {
           {
             kind: 'export',
             url: 'https://mapas2.igac.gov.co/server3/rest/services/carto/carto2000segovia05736000/MapServer',
-            layers: 'show:8,13,7,18,12,15,6,10,11',
+            layers: 'show:1,4,6,7,8,9,11,12,13,19',
             format: 'png32',
             label: 'IGAC · Segovia 1:2.000 · REST export (respaldo)',
           },
@@ -5779,7 +5779,7 @@ window.PIIT = (function () {
           },
         ],
         url: 'https://mapas2.igac.gov.co/server3/services/carto/carto2000segovia05736000/MapServer/WMSServer',
-        layers: '8,13,7,18,12,15,6,10,11',
+        layers: '1,4,6,7,8,9,11,12,13,19',
         version: '1.3.0',
         format: 'image/png',
         transparent: true,
@@ -15729,15 +15729,28 @@ window.LayerManager = (function () {
     { id: 'gdb_indicador',     group: 'gdb', label: 'Indicador activo', meta: 'Coropletas · semáforo', color: '#8A4AA3', kind: 'gdb', toggleKey: 'indicador', defVisible: true },
     { id: 'gdb_labels',        group: 'gdb', label: 'Etiquetas barrios', meta: 'Topónimos · código oficial', color: '#8ECBA8', kind: 'gdb', toggleKey: 'labels', defVisible: true },
 
-    { id: 'cb_construccion', group: 'carto2000', label: 'Construcciones', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#DC0B2C', kind: 'sublayer', wmsLayerId: '13', defVisible: false },
-    { id: 'cb_via',          group: 'carto2000', label: 'Vías', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#C69A1A', kind: 'sublayer', wmsLayerId: '8', defVisible: false },
-    { id: 'cb_curvanivel',   group: 'carto2000', label: 'Curvas de nivel', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#8A6A10', kind: 'sublayer', wmsLayerId: '7', defVisible: false },
-    { id: 'cb_bosque',       group: 'carto2000', label: 'Bosque', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#2E7D52', kind: 'sublayer', wmsLayerId: '18', defVisible: false },
-    { id: 'cb_drenaje_l',    group: 'carto2000', label: 'Drenaje (líneas)', meta: 'Quebradas y caños', color: '#3B82F6', kind: 'sublayer', wmsLayerId: '12', defVisible: false },
-    { id: 'cb_drenaje_r',    group: 'carto2000', label: 'Drenaje (áreas)', meta: 'Cuerpos de agua', color: '#2563EB', kind: 'sublayer', wmsLayerId: '15', defVisible: false },
-    { id: 'cb_puente',       group: 'carto2000', label: 'Puentes', meta: 'Infraestructura vial', color: '#6B7280', kind: 'sublayer', wmsLayerId: '6', defVisible: false },
-    { id: 'cb_cerca',        group: 'carto2000', label: 'Cercas', meta: 'Delimitaciones prediales', color: '#A16207', kind: 'sublayer', wmsLayerId: '10', defVisible: false },
-    { id: 'cb_muro',         group: 'carto2000', label: 'Muros', meta: 'Contención y cerramiento', color: '#78716C', kind: 'sublayer', wmsLayerId: '11', defVisible: false },
+    /* IDs verificados contra el GetCapabilities REAL del servicio
+       (mapas2.igac.gov.co/server3/.../carto2000segovia05736000/MapServer
+       /WMSServer?request=GetCapabilities), jul-2026. Los IDs anteriores
+       eran una estimación nunca confirmada contra el servicio real y
+       las 9 capas estaban desalineadas (ej. 'Puentes' apuntaba al Name
+       real de 'Construccion_R' y viceversa) — reportado por el usuario
+       y confirmado comparando cada Name/Title real:
+       0 Isla · 1 Bosque · 2 Piscina · 3 Deposito_Agua_R · 4 Drenaje_R ·
+       5 Zona_Dura · 6 Construccion_R · 7 Drenaje_L · 8 Muro · 9 Cerca ·
+       10 Limite_Via · 11 Via · 12 Curva_Nivel · 13 Puente_L ·
+       14 Marco_referencia_terrestre · 15 Punto_Distribucion ·
+       16 Tapa_Servicio_Publico · 17 Nombre_Geografico_Unidad_Admin ·
+       18 Nombre_Geografico · 19 Construccion_P */
+    { id: 'cb_construccion', group: 'carto2000', label: 'Construcciones', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#DC0B2C', kind: 'sublayer', wmsLayerId: '6,19', defVisible: false },
+    { id: 'cb_via',          group: 'carto2000', label: 'Vías', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#C69A1A', kind: 'sublayer', wmsLayerId: '11', defVisible: false },
+    { id: 'cb_curvanivel',   group: 'carto2000', label: 'Curvas de nivel', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#8A6A10', kind: 'sublayer', wmsLayerId: '12', defVisible: false },
+    { id: 'cb_bosque',       group: 'carto2000', label: 'Bosque', meta: 'CartoBásica 1:2.000 · IGAC 2024', color: '#2E7D52', kind: 'sublayer', wmsLayerId: '1', defVisible: false },
+    { id: 'cb_drenaje_l',    group: 'carto2000', label: 'Drenaje (líneas)', meta: 'Quebradas y caños', color: '#3B82F6', kind: 'sublayer', wmsLayerId: '7', defVisible: false },
+    { id: 'cb_drenaje_r',    group: 'carto2000', label: 'Drenaje (áreas)', meta: 'Cuerpos de agua', color: '#2563EB', kind: 'sublayer', wmsLayerId: '4', defVisible: false },
+    { id: 'cb_puente',       group: 'carto2000', label: 'Puentes', meta: 'Infraestructura vial', color: '#6B7280', kind: 'sublayer', wmsLayerId: '13', defVisible: false },
+    { id: 'cb_cerca',        group: 'carto2000', label: 'Cercas', meta: 'Delimitaciones prediales', color: '#A16207', kind: 'sublayer', wmsLayerId: '9', defVisible: false },
+    { id: 'cb_muro',         group: 'carto2000', label: 'Muros', meta: 'Contención y cerramiento', color: '#78716C', kind: 'sublayer', wmsLayerId: '8', defVisible: false },
 
     { id: 'wms_cem_12524',  group: 'nacional', label: 'CartoBásica Nacional · IGAC', meta: 'mapas.igac.gov.co', color: '#D6B000', kind: 'wms', toggleKey: 'cem_12524', defVisible: false },
     { id: 'wms_catastro',   group: 'nacional', label: 'Catastro Territorial', meta: 'IGAC · mapas.igac.gov.co', color: '#C69A1A', kind: 'wms', toggleKey: 'igac_catastro', defVisible: false },
