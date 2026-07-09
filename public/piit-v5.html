@@ -3756,7 +3756,8 @@ body { padding-bottom: 36px !important; }
         <details class="sig-col">
           <summary>Diagnóstico de servicios WMS</summary>
           <div class="sig-col-body">
-            <div id="wms-status-list" style="font-size:9.5px;color:#8A9E96;padding:0 2px;line-height:1.7">
+            <div id="layer-manager-wms"></div>
+            <div id="wms-status-list" style="font-size:9.5px;color:#8A9E96;padding:0 2px;line-height:1.7;margin-top:8px">
               <div>Activa una capa WMS para ver el estado técnico del servicio</div>
             </div>
           </div>
@@ -15941,17 +15942,44 @@ window.LayerManager = (function () {
     return '';
   }
 
+  function rowHTML(id, draggableAllowed) {
+    var e = BY_ID[id];
+    if (!e) return '';
+    var vis = state.visible[id];
+    var op = state.opacity[id];
+    var locked = state.locked[id];
+    var draggable = draggableAllowed === false ? false : !locked;
+    return '<div class="lm-row' + (vis ? '' : ' lm-hidden') + (locked ? ' lm-locked' : '') + '" data-id="' + id + '" draggable="' + draggable + '">'
+      + '<span class="lm-handle"><i class="fa-solid fa-grip-vertical"></i></span>'
+      + '<span class="lm-swatch" style="background:' + e.color + '"></span>'
+      + '<div class="lm-body">'
+      + '<div class="lm-name">' + e.label + '</div>'
+      + '<div class="lm-meta">' + e.meta + '</div>'
+      + (vis ? '<div class="lm-opacity-row"><input type="range" class="lm-opacity-slider" min="10" max="100" value="' + Math.round(op * 100) + '" oninput="LayerManager.setOpacity(\'' + id + '\', this.value)"><span class="lm-opacity-val">' + Math.round(op * 100) + '%</span></div>' : '')
+      + '</div>'
+      + '<div class="lm-actions">'
+      + statusIcon(e)
+      + '<button class="lm-btn lm-vis' + (vis ? ' lm-btn-on' : ' lm-off') + '" title="Mostrar/ocultar" onclick="LayerManager.toggleVisible(\'' + id + '\')"><i class="fa-solid ' + (vis ? 'fa-eye' : 'fa-eye-slash') + '"></i></button>'
+      + '<button class="lm-btn lm-lock' + (locked ? ' lm-on' : '') + '" title="Bloquear posición" onclick="LayerManager.toggleLock(\'' + id + '\')"><i class="fa-solid ' + (locked ? 'fa-lock' : 'fa-lock-open') + '"></i></button>'
+      + '</div></div>';
+  }
+
   function render() {
     var el = document.getElementById('layer-manager');
     if (!el || !state) return;
+    /* El grupo 'nacional' (WMS · Entidades nacionales) vive dentro de
+       'Diagnóstico de servicios WMS', no en esta lista principal — ver
+       renderNacional(). Aquí sólo se listan los demás grupos. */
     var filtered = state.order.filter(function (id) {
+      if (BY_ID[id] && BY_ID[id].group === 'nacional') return false;
       if (activeFilter === 'todas') return true;
       return BY_ID[id] && BY_ID[id].group === activeFilter;
     });
 
+    var toolbarGroups = GROUPS.filter(function (g) { return g.id !== 'nacional'; });
     var toolbar = '<div class="lm-toolbar">'
       + '<button class="lm-filter' + (activeFilter === 'todas' ? ' act' : '') + '" onclick="LayerManager.setFilter(\'todas\')">Todas</button>'
-      + GROUPS.map(function (g) { return '<button class="lm-filter' + (activeFilter === g.id ? ' act' : '') + '" onclick="LayerManager.setFilter(\'' + g.id + '\')">' + g.label.split('·')[0].trim() + '</button>'; }).join('')
+      + toolbarGroups.map(function (g) { return '<button class="lm-filter' + (activeFilter === g.id ? ' act' : '') + '" onclick="LayerManager.setFilter(\'' + g.id + '\')">' + g.label.split('·')[0].trim() + '</button>'; }).join('')
       + '</div>';
 
     var html = toolbar;
@@ -15969,22 +15997,7 @@ window.LayerManager = (function () {
         lastGroup = e.group;
       }
       html += '<div class="lm-insert-line" data-slot="' + idx + '"></div>';
-      var vis = state.visible[id];
-      var op = state.opacity[id];
-      var locked = state.locked[id];
-      html += '<div class="lm-row' + (vis ? '' : ' lm-hidden') + (locked ? ' lm-locked' : '') + '" data-id="' + id + '" draggable="' + (!locked) + '">'
-        + '<span class="lm-handle"><i class="fa-solid fa-grip-vertical"></i></span>'
-        + '<span class="lm-swatch" style="background:' + e.color + '"></span>'
-        + '<div class="lm-body">'
-        + '<div class="lm-name">' + e.label + '</div>'
-        + '<div class="lm-meta">' + e.meta + '</div>'
-        + (vis ? '<div class="lm-opacity-row"><input type="range" class="lm-opacity-slider" min="10" max="100" value="' + Math.round(op * 100) + '" oninput="LayerManager.setOpacity(\'' + id + '\', this.value)"><span class="lm-opacity-val">' + Math.round(op * 100) + '%</span></div>' : '')
-        + '</div>'
-        + '<div class="lm-actions">'
-        + statusIcon(e)
-        + '<button class="lm-btn lm-vis' + (vis ? ' lm-btn-on' : ' lm-off') + '" title="Mostrar/ocultar" onclick="LayerManager.toggleVisible(\'' + id + '\')"><i class="fa-solid ' + (vis ? 'fa-eye' : 'fa-eye-slash') + '"></i></button>'
-        + '<button class="lm-btn lm-lock' + (locked ? ' lm-on' : '') + '" title="Bloquear posición" onclick="LayerManager.toggleLock(\'' + id + '\')"><i class="fa-solid ' + (locked ? 'fa-lock' : 'fa-lock-open') + '"></i></button>'
-        + '</div></div>';
+      html += rowHTML(id);
     });
     html += '<div class="lm-insert-line" data-slot="' + filtered.length + '"></div>';
     html += '<div class="lm-footer"><span>' + REGISTRY.filter(function(r){return state.visible[r.id];}).length + ' de ' + REGISTRY.length + ' capas activas</span>'
@@ -15992,6 +16005,22 @@ window.LayerManager = (function () {
 
     el.innerHTML = html;
     attachDnD(el);
+    renderNacional();
+  }
+
+  /* WMS · Entidades nacionales — dentro de 'Diagnóstico de servicios
+     WMS' (pedido explícito: estas 5 capas pertenecen conceptualmente
+     al diagnóstico de servicios externos, no a la lista de capas
+     locales/CartoBásica). Reordenamiento por arrastre no aplica aquí
+     (lista fija de servicios externos), sólo visibilidad/bloqueo. */
+  function renderNacional() {
+    var elWms = document.getElementById('layer-manager-wms');
+    if (!elWms) return;
+    var ids = state.order.filter(function (id) { return BY_ID[id] && BY_ID[id].group === 'nacional'; });
+    if (!ids.length) { elWms.innerHTML = ''; return; }
+    var html = '<div class="lm-group-hdr" style="padding-top:0">WMS · Entidades nacionales<span class="lm-group-count">' + ids.length + '</span></div>';
+    ids.forEach(function (id) { html += rowHTML(id, false); });
+    elWms.innerHTML = html;
   }
 
   /* ── Acciones públicas ───────────────────────────────────────── */
