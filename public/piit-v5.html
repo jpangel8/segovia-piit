@@ -3091,22 +3091,48 @@ a:not(.nav-btn):not(.nav-dd-trigger):not(.dd-item):not([class*="btn"]):hover {
 #piit-gov-footer .gov-footer-right {
   display: flex !important;
   align-items: center !important;
-  gap: 6px !important;
+  gap: 8px !important;
+  position: relative !important;
+}
+/* Pastilla institucional azul — mismo lenguaje visual que el rótulo
+   'HORA LEGAL REPÚBLICA DE COLOMBIA' del portal oficial: fondo azul
+   sólido, icono + texto en blanco, esquinas redondeadas. */
+#piit-gov-footer .gov-live-pill {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: #0B3D91 !important;
+  border-radius: 6px !important;
+  padding: 4px 12px !important;
+  height: 26px !important;
 }
 #piit-gov-footer .gov-live-dot {
-  width: 5px !important; height: 5px !important;
+  width: 6px !important; height: 6px !important;
   border-radius: 50% !important;
-  background: var(--seg-green) !important;
+  background: #5BC985 !important;
   animation: govDotPulse 2s ease-in-out infinite !important;
+  flex-shrink: 0 !important;
 }
 @keyframes govDotPulse {
   0%,100%{ opacity:1; } 50%{ opacity:0.4; }
 }
+#piit-gov-footer .gov-live-label {
+  font-family: 'Metropolis', system-ui, sans-serif !important;
+  font-size: 9.5px !important;
+  font-weight: 800 !important;
+  color: #fff !important;
+  letter-spacing: 0.1em !important;
+}
+#piit-gov-footer .gov-live-sep {
+  width: 1px !important; height: 14px !important;
+  background: rgba(255,255,255,0.25) !important;
+}
 #piit-gov-footer .gov-footer-ver {
   font-family: 'Metropolis', system-ui, sans-serif !important;
-  font-size: 9px !important;
-  color: rgba(255,255,255,0.30) !important;
-  letter-spacing: 0.06em !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  letter-spacing: 0.03em !important;
 }
 
 /* Compensar footer fijo */
@@ -3119,7 +3145,15 @@ body { padding-bottom: 36px !important; }
 
 /* ══ 23. RESPONSIVE ══ */
 @media (max-width: 768px) {
-  #piit-gov-footer .gov-footer-right { display: none !important; }
+  /* El avatar/menú de sesión vive dentro de .gov-footer-right — ya no
+     se puede ocultar todo el bloque en móvil o desaparece el acceso a
+     cerrar sesión. Se compacta la pastilla EN VIVO (sin texto ni
+     reloj, sólo el punto) y se conserva el avatar. */
+  #piit-gov-footer .gov-footer-text { display: none !important; }
+  #piit-gov-footer .gov-live-label,
+  #piit-gov-footer .gov-live-sep,
+  #piit-gov-footer .gov-footer-ver { display: none !important; }
+  #piit-gov-footer .gov-live-pill { padding: 4px 8px !important; }
   #piit-gov-footer { padding: 0 12px !important; }
   thead th { font-size: 9.5px !important; padding: 8px 10px !important; }
 }
@@ -3138,8 +3172,12 @@ body { padding-bottom: 36px !important; }
         +'<span class="gov-footer-text">Alcaldía de Segovia · Antioquia · NIT 890981391-2 · Sistema Oficial de Inteligencia Territorial</span>'
         +'</div>'
         +'<div class="gov-footer-right">'
+        +'<div class="gov-live-pill">'
         +'<div class="gov-live-dot"></div>'
+        +'<span class="gov-live-label">EN VIVO</span>'
+        +'<div class="gov-live-sep"></div>'
         +'<span class="gov-footer-ver" id="reloj">Cargando…</span>'
+        +'</div>'
         +'</div>';
       document.body.appendChild(ft);
     }
@@ -3180,7 +3218,6 @@ body { padding-bottom: 36px !important; }
   </div>
   <div class="tb-right">
     <div class="tb-version">v5.0 · 2026</div>
-    <div class="tb-live"><div class="live-dot"></div><span>EN VIVO</span></div>
   </div>
 </div>
 
@@ -11987,7 +12024,7 @@ window.addEventListener('load',function(){
 <style>
 .tb-user-trigger{width:26px;height:26px;border-radius:50%;background:var(--au500);border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--g900);flex-shrink:0;cursor:pointer;transition:box-shadow .15s;padding:0}
 .tb-user-trigger:hover,.tb-user-trigger[aria-expanded="true"]{box-shadow:0 0 0 3px rgba(252,220,0,.25)}
-.tb-user-pop{position:absolute;top:38px;right:24px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.18);min-width:170px;padding:10px;z-index:1000;display:none;animation:tbPopIn .16s ease}
+.tb-user-pop{position:absolute;bottom:34px;right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 -8px 32px rgba(0,0,0,.18);min-width:170px;padding:10px;z-index:9000;display:none;animation:tbPopIn .16s ease}
 .tb-user-pop.open{display:block}
 @keyframes tbPopIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .tb-user-pop .tb-user-name{font-size:12px;font-weight:700;color:#111;padding:2px 6px}
@@ -12002,7 +12039,7 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
     if(document.querySelector(".tb-user-trigger"))return;
     var u=window.__PIIT_USER__;if(!u)return;
     var initials=(u.name||"U").split(" ").map(function(w){return w[0]||"";}).join("").toUpperCase().slice(0,2);
-    var tbRight=document.querySelector(".tb-right");if(!tbRight)return;
+    var tbRight=document.querySelector("#piit-gov-footer .gov-footer-right");if(!tbRight)return;
     tbRight.style.position="relative";
     var btn=document.createElement("button");btn.className="tb-user-trigger";btn.type="button";
     btn.setAttribute("aria-haspopup","true");btn.setAttribute("aria-expanded","false");
@@ -12026,8 +12063,15 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
     });
     tbRight.appendChild(btn);tbRight.appendChild(pop);
   }
-  document.addEventListener("DOMContentLoaded",function(){setTimeout(doInsert,80);});
-  window.addEventListener("load",function(){setTimeout(doInsert,150);});
+  /* El botón vive dentro de #piit-gov-footer, inyectado por otro script
+     con su propio retardo — reintenta hasta que el contenedor exista
+     en vez de una espera fija que podría ganarle la carrera. */
+  function tryInsert(){
+    if(document.querySelector("#piit-gov-footer .gov-footer-right")) doInsert();
+    else setTimeout(tryInsert,100);
+  }
+  document.addEventListener("DOMContentLoaded",function(){setTimeout(tryInsert,80);});
+  window.addEventListener("load",function(){setTimeout(tryInsert,150);});
 })();
 </script>
 <script>
