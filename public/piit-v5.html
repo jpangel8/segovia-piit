@@ -6223,13 +6223,28 @@ window.PIIT = (function () {
        Fallback: búsqueda por nombre normalizado                       */
     getIndByFeature: function (props) {
       if (!props) return null;
-      // 1. PK_BARRIO: '7361001001' → últimos 3 chars = '001'
-      if (props.PK_BARRIO && props.PK_BARRIO.length >= 3) {
-        var codeFromPK = props.PK_BARRIO.slice(-3);
-        if (DATA.INDICADORES[codeFromPK]) return DATA.INDICADORES[codeFromPK];
+      // 1. PK_BARRIO completo: DATA.INDICADORES está indexado por el PK
+      //    íntegro ('7361001001', diez dígitos) — esta es la clave real,
+      //    ver la definición de DATA.INDICADORES más abajo.
+      if (props.PK_BARRIO && DATA.INDICADORES[props.PK_BARRIO]) return DATA.INDICADORES[props.PK_BARRIO];
+      // 1b. Compatibilidad: si en algún GeoJSON llegara sólo el código
+      //     corto de 3 dígitos ('001'), buscar por sufijo del PK real
+      //     (antes esto se probaba primero con el orden invertido —
+      //     comparaba el código corto contra claves que nunca lo son —
+      //     y siempre fallaba en silencio, dejando la ficha en cero).
+      if (props.PK_BARRIO && props.PK_BARRIO.length === 3) {
+        var indBySuffix = Object.values(DATA.INDICADORES).find(function (d) {
+          return d.pk && d.pk.slice(-3) === props.PK_BARRIO;
+        });
+        if (indBySuffix) return indBySuffix;
       }
-      // 2. Campo BARRIO directo: '001', '002', ...
-      if (props.BARRIO && DATA.INDICADORES[props.BARRIO]) return DATA.INDICADORES[props.BARRIO];
+      // 2. Campo BARRIO directo: '001', '002', ... → buscar por sufijo del PK
+      if (props.BARRIO) {
+        var indByBarrioCode = Object.values(DATA.INDICADORES).find(function (d) {
+          return d.pk && d.pk.slice(-3) === String(props.BARRIO).padStart(3, '0');
+        });
+        if (indByBarrioCode) return indByBarrioCode;
+      }
       // 3. Campo id legacy
       if (props.id && DATA.INDICADORES[props.id]) return DATA.INDICADORES[props.id];
       // 4. Búsqueda por nombre (case-insensitive, fallback)
