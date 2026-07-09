@@ -6234,10 +6234,26 @@ window.PIIT = (function () {
       infra:  ['#00204D', '#31446B', '#666870', '#958F78', '#FFE945'],
       // Cobertura social — viridis (morado→verde→amarillo)
       social: ['#440154', '#3B528B', '#21908C', '#5DC863', '#FDE725'],
-      // Densidad poblacional — magma (negro→púrpura→naranja→crema)
-      pop:    ['#000004', '#51127C', '#B63679', '#FB8861', '#FCFDBF'],
-      // Servicios básicos — plasma (morado→rosa→naranja→amarillo)
-      srv:    ['#0D0887', '#7E03A8', '#CC4778', '#F89441', '#F0F921'],
+      /* Densidad poblacional — ColorBrewer "Blues" (secuencial mono-matiz,
+         claro→oscuro). Antes usaba magma (negro→púrpura→naranja→crema),
+         de la MISMA familia perceptual que plasma (servicios básicos) —
+         ambas recorren el mismo arco púrpura→naranja→amarillo y eran
+         indistinguibles a primera vista, justo lo que pide evitarse en
+         cartografía temática. Blues es el estándar de facto en ArcGIS/
+         QGIS/CARTO para density mapping: fría, mono-matiz, sin cruce de
+         hue con ninguna otra capa del sistema (infra/social/srv). */
+      pop:    ['#F7FBFF', '#C6DBEF', '#6BAED6', '#2171B5', '#08306B'],
+      /* Servicios básicos — ColorBrewer "Oranges" (secuencial mono-matiz).
+         Antes usaba plasma, de la misma familia que magma (ver nota
+         arriba). Oranges es la contraparte cálida clásica de Blues:
+         máximo contraste posible frío/cálido con densidad poblacional,
+         permite leer ambas capas simultáneamente sin confusión, y el
+         par azul/naranja es uno de los más robustos frente a
+         daltonismo (protanopia/deuteranopia) al no depender del eje
+         rojo-verde. Naranja además es semánticamente coherente con
+         'nivel de cobertura/acceso' (misma familia que las alertas
+         ámbar del resto de la plataforma). */
+      srv:    ['#FFF5EB', '#FDD0A2', '#FD8D3C', '#D94801', '#7F2704'],
     },
     RAMP_LABELS: {
       infra:  ['Crítico', 'Bajo', 'Atención', 'Bueno', 'Óptimo'],
