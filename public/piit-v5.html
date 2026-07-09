@@ -3530,6 +3530,15 @@ body { padding-bottom: 36px !important; }
 #s-mapa .ml-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#5A7268;font-weight:600}
 #s-mapa .ml-dot{width:8px;height:8px;border-radius:3px}
 
+/* Leyenda de gradiente continuo (rampa científica por indicador) */
+#s-mapa .sig-legend{display:block;margin-top:10px}
+#s-mapa .sig-ramp-bar{height:10px;border-radius:5px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+#s-mapa .sig-ramp-ticks{display:flex;justify-content:space-between;margin-top:3px;font-family:var(--fm);font-size:8px;color:#8A9E96;font-variant-numeric:tabular-nums}
+#s-mapa .sig-ramp-labels{display:flex;justify-content:space-between;margin-top:1px;font-size:7.5px;font-weight:700;color:#5A7268;letter-spacing:.01em;text-align:center}
+#s-mapa .sig-ramp-labels span{flex:1}
+#s-mapa .sig-ramp-labels span:first-child{text-align:left}
+#s-mapa .sig-ramp-labels span:last-child{text-align:right}
+
 /* Ficha territorial */
 #s-mapa .mip-placeholder{text-align:center;padding:18px 8px;color:#8A9E96}
 #s-mapa .mip-placeholder i{font-size:20px;opacity:.4;margin-bottom:8px;display:block}
@@ -6206,17 +6215,75 @@ window.PIIT = (function () {
   /* ── MÓDULO MAPA ────────────────────────────────── */
   const map = {
 
-    COLOR_SCALE: function (val) {
-      if (val >= 70) return { fill:'#2E7D52', cls:'kpi-ok', label:'Bueno' };
-      if (val >= 40) return { fill:'#C69A1A', cls:'kpi-warn', label:'Atención' };
-      return { fill:'#DC0B2C', cls:'kpi-crit', label:'Crítico' };
+    /* ══════════════════════════════════════════════════════════════
+       ESCALAS CROMÁTICAS CONTINUAS POR INDICADOR
+       ───────────────────────────────────────────────────────────────
+       Una rampa perceptualmente uniforme y apta para daltonismo por
+       indicador (familia viridis/cividis/magma/plasma — estándar
+       científico de matplotlib, el mismo lenguaje visual de QGIS/
+       ArcGIS Pro para variables continuas). Se interpola en RGB entre
+       5 paradas ancladas en 0/25/50/75/100, dando transición continua
+       en el mapa y resolución de 5 unidades en histogramas/leyendas
+       (ver COLOR_RAMP_STEPS). Cada indicador es visualmente distinto
+       incluso bajo deuteranopia/protanopia porque varían tanto en
+       matiz como en luminosidad, no sólo en matiz (a diferencia del
+       semáforo rojo-verde puro que reemplaza).
+       ══════════════════════════════════════════════════════════════ */
+    RAMPS: {
+      // Infraestructura vial — cividis (azul→amarillo, safe para todo tipo de daltonismo)
+      infra:  ['#00204D', '#31446B', '#666870', '#958F78', '#FFE945'],
+      // Cobertura social — viridis (morado→verde→amarillo)
+      social: ['#440154', '#3B528B', '#21908C', '#5DC863', '#FDE725'],
+      // Densidad poblacional — magma (negro→púrpura→naranja→crema)
+      pop:    ['#000004', '#51127C', '#B63679', '#FB8861', '#FCFDBF'],
+      // Servicios básicos — plasma (morado→rosa→naranja→amarillo)
+      srv:    ['#0D0887', '#7E03A8', '#CC4778', '#F89441', '#F0F921'],
+    },
+    RAMP_LABELS: {
+      infra:  ['Crítico', 'Bajo', 'Atención', 'Bueno', 'Óptimo'],
+      social: ['Crítico', 'Bajo', 'Atención', 'Bueno', 'Óptimo'],
+      pop:    ['Muy baja', 'Baja', 'Media', 'Alta', 'Muy alta'],
+      srv:    ['Crítico', 'Bajo', 'Atención', 'Bueno', 'Óptimo'],
     },
 
-    COLOR_POP: function (val) {
-      if (val >= 70) return { fill:'#00A0E4', cls:'kpi-ok', label:'Alta' };
-      if (val >= 40) return { fill:'#8A4AA3', cls:'kpi-warn', label:'Media' };
-      return { fill:'#8ECBA8', cls:'kpi-crit', label:'Baja' };
+    /* Interpolación lineal en RGB entre las 2 paradas más cercanas —
+       color continuo exacto para cualquier valor real (mapa, popups). */
+    rampColor: function (key, val) {
+      var stops = map.RAMPS[key] || map.RAMPS.infra;
+      var v = Math.max(0, Math.min(100, +val || 0));
+      var seg = v / 25;                       // 0..4 (5 paradas → 4 segmentos)
+      var i0 = Math.max(0, Math.min(3, Math.floor(seg)));
+      var t = seg - i0;
+      var hex2rgb = function (h) { h = h.replace('#',''); return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; };
+      var c0 = hex2rgb(stops[i0]), c1 = hex2rgb(stops[i0 + 1]);
+      var rgb = [0, 1, 2].map(function (i) { return Math.round(c0[i] + (c1[i] - c0[i]) * t); });
+      return '#' + rgb.map(function (n) { return n.toString(16).padStart(2, '0'); }).join('');
     },
+
+    /* Color cuantizado a resolución de 5 unidades — usado en
+       histogramas/leyendas para que cada franja de 5% tenga un tono
+       consistente y perfectamente alineado con su etiqueta numérica. */
+    rampColorStep: function (key, val) {
+      var stepped = Math.round((+val || 0) / 5) * 5;
+      return map.rampColor(key, stepped);
+    },
+
+    /* Reemplaza al semáforo de 3 categorías: fill continuo real +
+       etiqueta/clase de accesibilidad en 5 niveles (tercios finos). */
+    COLOR_RAMP: function (key, val) {
+      key = map.RAMPS[key] ? key : 'infra';
+      var v = +val || 0;
+      var labels = map.RAMP_LABELS[key];
+      var idx = v >= 80 ? 4 : v >= 60 ? 3 : v >= 40 ? 2 : v >= 20 ? 1 : 0;
+      var cls = idx >= 3 ? 'kpi-ok' : idx >= 2 ? 'kpi-warn' : 'kpi-crit';
+      return { fill: map.rampColor(key, v), cls: cls, label: labels[idx] };
+    },
+
+    /* Compatibilidad: código existente que llama COLOR_SCALE/COLOR_POP
+       directamente sigue funcionando, ahora respaldado por la rampa
+       continua real en vez del semáforo de 3 colores planos. */
+    COLOR_SCALE: function (val) { return map.COLOR_RAMP('infra', val); },
+    COLOR_POP:   function (val) { return map.COLOR_RAMP('pop', val); },
 
     /* Buscar indicador desde propiedades del feature GDB o legacy
        Estrategia: PK_BARRIO → últimos 3 dígitos = id → INDICADORES[id]
@@ -6267,7 +6334,7 @@ window.PIIT = (function () {
       if (!ind) return '#5BAF84';
       var key = STATE.map.currentIndicator;
       var val = ind[key] || 0;
-      var fn  = (key === 'pop') ? map.COLOR_POP : map.COLOR_SCALE;
+      var fn  = function (v) { return map.COLOR_RAMP(key, v); };
       return fn(val).fill;
     },
 
@@ -6310,7 +6377,7 @@ window.PIIT = (function () {
           var ind   = map.getIndByFeature(props) || {};
           var key   = STATE.map.currentIndicator;
           var val   = ind[key] || 0;
-          var scale = (key === 'pop') ? map.COLOR_POP(val) : map.COLOR_SCALE(val);
+          var scale = map.COLOR_RAMP(key, val);
 
           // Calcular centroide desde el bbox de la capa Leaflet
           var bounds = e.target.getBounds();
@@ -6415,8 +6482,9 @@ window.PIIT = (function () {
       // Build barrio list in right panel
       map.buildBarrioList();
 
-      // Histograma de distribución (panel derecho)
+      // Histograma de distribución (panel derecho) + leyenda de gradiente
       map.renderHist();
+      map.renderLegend(STATE.map.currentIndicator || 'infra');
 
       // Botón re-centrar estilo Demoland: aparece al alejarse del centro
       m.on('moveend zoomend', function () {
@@ -6516,13 +6584,33 @@ window.PIIT = (function () {
       if (btn) btn.classList.add('act');
     },
 
+    /* Leyenda de gradiente continuo — reemplaza los 3 puntos planos
+       (Bueno/Atención/Crítico) por una rampa real de la misma paleta
+       usada en el mapa y el histograma, con marcas cada 25 unidades
+       (resolución visual de 5 en las franjas del histograma contiguo)
+       y las 5 etiquetas cualitativas de RAMP_LABELS alineadas debajo. */
+    renderLegend: function (key) {
+      var el = document.getElementById('legend-dynamic');
+      if (!el) return;
+      var stops = map.RAMPS[key] || map.RAMPS.infra;
+      var labels = map.RAMP_LABELS[key] || map.RAMP_LABELS.infra;
+      var gradient = 'linear-gradient(90deg,' + stops.join(',') + ')';
+      el.innerHTML =
+        '<div class="sig-ramp-bar" style="background:' + gradient + '"></div>' +
+        '<div class="sig-ramp-ticks">' +
+          [0, 25, 50, 75, 100].map(function (t) { return '<span>' + t + '</span>'; }).join('') +
+        '</div>' +
+        '<div class="sig-ramp-labels">' +
+          labels.map(function (l) { return '<span>' + l + '</span>'; }).join('') +
+        '</div>';
+    },
+
     setIndicator: function (key, btn) {
       STATE.map.currentIndicator = key;
       var nameEl = document.getElementById('map-indicator-name');
       if (nameEl) nameEl.textContent = DATA.INDICADOR_META[key];
-      // Actualizar label en leyenda dinámica
-      var legLabel = document.getElementById('legend-indicator-label');
-      if (legLabel) legLabel.textContent = (DATA.INDICADOR_META[key]||key).toUpperCase();
+      // Rampa continua de la leyenda, propia de este indicador
+      map.renderLegend(key);
       // Refresh choropleth
       if (STATE.map.geojsonLayer) {
         STATE.map.geojsonLayer.setStyle(map.styleBarrio);
@@ -6544,7 +6632,7 @@ window.PIIT = (function () {
              });
         if (ind) {
           var val   = ind[key] || 0;
-          var scale = (key === 'pop') ? map.COLOR_POP(val) : map.COLOR_SCALE(val);
+          var scale = map.COLOR_RAMP(key, val);
           // Calcular centroide desde geometría GDB (sin depender de propiedad 'centroid')
           var f = DATA.BARRIOS_GEOJSON.features.find(function (x) {
             return x.properties.PK_BARRIO === STATE.map.selectedBarrio
@@ -7112,7 +7200,7 @@ window.PIIT = (function () {
 
     /* ── Histograma de distribución — estilo Demoland ─────────── */
     _hist: null,
-    _histBins: 10,
+    _histBins: 20,
     renderHist: function (focusPk) {
       var cv = document.getElementById('sig-hist');
       if (!cv || !window.Chart) return;
@@ -7128,7 +7216,7 @@ window.PIIT = (function () {
         binOf[d.pk || d.id] = b;
       });
       var mean  = vals.reduce(function (s, d) { return s + (+d[key] || 0); }, 0) / vals.length;
-      var colFn = (key === 'pop') ? map.COLOR_POP : map.COLOR_SCALE;
+      var colFn = function (v) { return map.COLOR_RAMP(key, v); };
       var focusBin = (focusPk != null && binOf[focusPk] != null) ? binOf[focusPk] : null;
       var bg = bins.map(function (_, i) {
         var mid = (i + 0.5) * (100 / NB);
@@ -7150,7 +7238,7 @@ window.PIIT = (function () {
       map._hist = new Chart(cv, {
         type: 'bar',
         data: {
-          labels: bins.map(function (_, i) { return (i * 10) + '–' + ((i + 1) * 10); }),
+          labels: bins.map(function (_, i) { return (i * (100 / map._histBins)) + '–' + ((i + 1) * (100 / map._histBins)); }),
           datasets: [{ data: bins, backgroundColor: bg, borderRadius: 4, borderSkipped: false, barPercentage: 0.92, categoryPercentage: 0.92 }],
         },
         options: {
@@ -7329,7 +7417,7 @@ window.PIIT = (function () {
       var gridHTML = '<div class="mip-grid4">';
       INDS.forEach(function(it) {
         var v  = +(ind[it.k] || 0);
-        var sc = (it.k === 'pop') ? map.COLOR_POP(v) : map.COLOR_SCALE(v);
+        var sc = map.COLOR_RAMP(it.k, v);
         gridHTML += '<div class="mip-kpi">'
           + '<div class="mip-kpi-row">'
           + '<div class="mip-kpi-l">' + it.label + '</div>'
@@ -7428,7 +7516,7 @@ window.PIIT = (function () {
         var cod = p.BARRIO || p.id || '—';
         var ind = map.getIndByFeature(p) || {};
         var val = ind[key] || 0;
-        var fn  = (key === 'pop') ? map.COLOR_POP : map.COLOR_SCALE;
+        var fn  = function (v) { return map.COLOR_RAMP(key, v); };
         var color = fn(val).fill;
         return '<div class="barrio-item" data-id="' + pk + '" onclick="PIIT.map.zoomToBarrio(\'' + pk + '\')">'
           + '<span class="bi-id">' + cod + '</span>'
@@ -7473,7 +7561,7 @@ window.PIIT = (function () {
             var ind   = map.getIndByFeature(lp) || {};
             var key   = STATE.map.currentIndicator;
             var val   = ind[key] || 0;
-            var scale = (key === 'pop') ? map.COLOR_POP(val) : map.COLOR_SCALE(val);
+            var scale = map.COLOR_RAMP(key, val);
             var nom   = lp.NOM_BARRIO || lp.nombre || pk;
             var cod   = lp.BARRIO || lp.id || '—';
             var bounds = layer.getBounds();
