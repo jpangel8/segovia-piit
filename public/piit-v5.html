@@ -11216,20 +11216,26 @@ window.PIIT = (function () {
       { proj:'Muros y Revestimiento de Taludes',          eje:'Sostenibilidad',  inv:500,   ods:'ODS 13', impacto:'Alto',   estado:'Ejecución',   fuente:'SGR' },
     ],
 
-    icvBarrios: [
-      { nom:'CENTRO',         icv:82, color:'#2E7D52' },
-      { nom:'BOLÍVAR',        icv:78, color:'#48B72C' },
-      { nom:'MARQUETALIA',    icv:75, color:'#48B72C' },
-      { nom:'GALÁN',          icv:72, color:'#C9852A' },
-      { nom:'20 DE JULIO',    icv:70, color:'#C9852A' },
-      { nom:'SANTA MARTA',    icv:68, color:'#C9852A' },
-      { nom:'LA MADRE',       icv:66, color:'#C9852A' },
-      { nom:'BUENOS AIRES',   icv:64, color:'#DC0B2C' },
-      { nom:'CAMPO ALEGRE',   icv:58, color:'#DC0B2C' },
-      { nom:'MARMAJITO',      icv:55, color:'#DC0B2C' },
-      { nom:'FRAGUAS',        icv:52, color:'#DC0B2C' },
-      { nom:'LA PAZ',         icv:50, color:'#DC0B2C' },
-    ],
+    /* ICV por barrio — derivado en vivo de DATA.INDICADORES (21 barrios
+       reales, GDB oficial IGAC), NUNCA hardcodeado, para que sea
+       imposible que este listado se desincronice del resto de la
+       plataforma (ficha territorial del mapa, comparador de barrios,
+       módulo Análisis) que ya usan exactamente esta misma fórmula.
+       Antes este arreglo era una lista fija de sólo 12 de los 21
+       barrios (faltaban SAN BARTOLO, BRICEÑO, SAN JOAQUÍN, LIBORIO
+       BATALLER, CÓRDOBA, LA REINA, SAN MATEO, 7 DE AGOSTO y EL
+       CHISPERO) con valores inventados que no correspondían a ningún
+       cálculo real — ej. MARQUETALIA aparecía con ICV 75 (2º-3º mejor
+       barrio) cuando sus indicadores reales (infra 35, social 41,
+       srv 41, pob 31, SISBEN A+B 62%) dan un ICV real de 37
+       ('crítico'); GALÁN aparecía con ICV 72 cuando su ICV real es 35.
+       Fórmula (idéntica a map.js ficha territorial):
+       ICV = infra×0.30 + social×0.25 + srv×0.25 + pob×0.20 */
+    icvBarrios: Object.values(DATA.INDICADORES).map(function (d) {
+      var icv = Math.round((d.infra || 0) * 0.30 + (d.social || 0) * 0.25 + (d.srv || 0) * 0.25 + (d.pop || 0) * 0.20);
+      var color = icv >= 70 ? '#2E7D52' : icv >= 40 ? '#C9852A' : '#DC0B2C';
+      return { nom: d.nombre, icv: icv, color: color, poblacion: d.poblacion || 0 };
+    }).sort(function (a, b) { return b.icv - a.icv; }),
 
     alertasInteligentes: [
       { tipo:'crit', icono:'🚨', titulo:'Zona crítica: alta pobreza + baja conectividad',
@@ -11424,7 +11430,11 @@ window.PIIT = (function () {
       var c2 = document.getElementById('chart-vulnerabilidad');
       if (c2) {
         charts._destroy('chart-vulnerabilidad');
-        var bTop = DATA_V5.icvBarrios.slice(0,8);
+        /* Los 8 barrios MÁS vulnerables (ICV más bajo) — icvBarrios
+           está ordenado de mejor a peor, así que se toman los últimos
+           8 y se invierten para mostrarlos de mayor a menor
+           vulnerabilidad (antes tomaba erróneamente los 8 mejores). */
+        var bTop = DATA_V5.icvBarrios.slice(-8).reverse();
         charts._instances['chart-vulnerabilidad'] = new Chart(c2, {
           type:'bar',
           data:{
