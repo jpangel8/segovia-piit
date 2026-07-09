@@ -15791,8 +15791,6 @@ window.LayerManager = (function () {
         + statusIcon(e)
         + '<button class="lm-btn lm-vis' + (vis ? ' lm-btn-on' : ' lm-off') + '" title="Mostrar/ocultar" onclick="LayerManager.toggleVisible(\'' + id + '\')"><i class="fa-solid ' + (vis ? 'fa-eye' : 'fa-eye-slash') + '"></i></button>'
         + '<button class="lm-btn lm-lock' + (locked ? ' lm-on' : '') + '" title="Bloquear posición" onclick="LayerManager.toggleLock(\'' + id + '\')"><i class="fa-solid ' + (locked ? 'fa-lock' : 'fa-lock-open') + '"></i></button>'
-        + '<button class="lm-btn" title="Traer al frente" onclick="LayerManager.moveTo(\'' + id + '\',\'top\')"><i class="fa-solid fa-angles-up"></i></button>'
-        + '<button class="lm-btn" title="Enviar al fondo" onclick="LayerManager.moveTo(\'' + id + '\',\'bottom\')"><i class="fa-solid fa-angles-down"></i></button>'
         + '</div></div>';
     });
     html += '<div class="lm-insert-line" data-slot="' + filtered.length + '"></div>';
