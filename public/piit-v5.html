@@ -4846,7 +4846,7 @@ body { padding-bottom: 36px !important; }
 
       <!-- ── FILTROS SIVIGILA integrados ── -->
       <div class="card" style="padding:14px 18px;margin-bottom:14px;background:var(--g50);border-left:3.5px solid var(--g600)">
-        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px">
           <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--g800);letter-spacing:.05em;text-transform:uppercase">
             <i class="fa-solid fa-filter"></i>Filtros aplicados
           </div>
@@ -4856,40 +4856,75 @@ body { padding-bottom: 36px !important; }
           <span style="font-size:11px;padding:4px 10px;background:var(--white);border:1px solid var(--g300);border-radius:14px;color:var(--g800);font-weight:600">
             <strong>Municipio UPGD:</strong> 05736 — SEGOVIA
           </span>
-          <span style="font-size:11px;padding:4px 10px;background:var(--white);border:1px solid var(--g300);border-radius:14px;color:var(--g800);font-weight:600" id="sv-filter-year">
+          <span style="font-size:11px;padding:4px 10px;background:var(--g700);border:1px solid var(--g700);border-radius:14px;color:#fff;font-weight:700" id="sv-filter-year">
             <strong>Período:</strong> 2024 · SE 01–52
           </span>
           <span style="font-size:11px;padding:4px 10px;background:var(--au100);border:1px solid var(--au400);border-radius:14px;color:var(--au800);font-weight:700">
-            Actualizado SE 52 · 2024
+            Última semana con dato · SE 52 · 2024
           </span>
         </div>
-      </div>
 
-      <!-- ── KPIs epidemiológicos Segovia ── -->
+        <!-- Selector de semana epidemiológica — filtro real sobre la serie
+             semanal disponible (SE 01-52, 2024). No se ofrecen filtros por
+             año múltiple, trimestre o semestre porque SIVIGILA_SEMANAL solo
+             contiene granularidad semanal para el año 2024; añadir esos
+             selectores sin datos reales tras ellos induciría a error. -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:12px;border-top:1px solid var(--g200)">
+          <span style="font-size:10.5px;font-weight:700;color:var(--t500);text-transform:uppercase;letter-spacing:.05em;margin-right:2px">Semana epidemiológica</span>
+          <button type="button" class="sv-preset act" data-preset="52" onclick="PIIT.salud.svPreset(this,1,52)">Todo 2024 (SE 1–52)</button>
+          <button type="button" class="sv-preset" data-preset="4"  onclick="PIIT.salud.svPreset(this,49,52)">Últimas 4 SE</button>
+          <button type="button" class="sv-preset" data-preset="8"  onclick="PIIT.salud.svPreset(this,45,52)">Últimas 8 SE</button>
+          <button type="button" class="sv-preset" data-preset="12" onclick="PIIT.salud.svPreset(this,41,52)">Últimas 12 SE</button>
+          <button type="button" class="sv-preset" data-preset="1"  onclick="PIIT.salud.svPreset(this,52,52)">SE actual (52)</button>
+          <span style="width:1px;height:18px;background:var(--g200);margin:0 2px"></span>
+          <label style="font-size:11px;color:var(--t500);font-weight:600">Desde SE
+            <input type="number" id="sv-se-desde" min="1" max="52" value="1" style="width:48px;margin-left:4px;padding:3px 6px;border:1px solid var(--g300);border-radius:5px;font-family:var(--fm);font-size:11.5px">
+          </label>
+          <label style="font-size:11px;color:var(--t500);font-weight:600">Hasta SE
+            <input type="number" id="sv-se-hasta" min="1" max="52" value="52" style="width:48px;margin-left:4px;padding:3px 6px;border:1px solid var(--g300);border-radius:5px;font-family:var(--fm);font-size:11.5px">
+          </label>
+          <button type="button" class="export-btn" style="padding:5px 12px" onclick="PIIT.salud.svApplyRange()"><i class="fa-solid fa-check"></i>Aplicar</button>
+          <button type="button" class="export-btn sec" style="padding:5px 12px" onclick="PIIT.salud.svReset()"><i class="fa-solid fa-rotate-left"></i>Restablecer</button>
+          <label style="font-size:11px;color:var(--t500);font-weight:600;display:flex;align-items:center;gap:5px;margin-left:4px">
+            <input type="checkbox" id="sv-compare-toggle" onchange="PIIT.salud.svToggleCompare(this.checked)">Comparar con 2023 (total anual)
+          </label>
+          <button type="button" class="export-btn sec" style="padding:5px 12px;margin-left:auto" onclick="PIIT.salud.svExportCSV()"><i class="fa-solid fa-file-csv"></i>Exportar CSV del período</button>
+        </div>
+        <div style="font-size:10px;color:var(--t400);margin-top:8px">
+          <i class="fa-solid fa-circle-info"></i> El filtro de semana epidemiológica recalcula en vivo las 4 tarjetas KPI y la gráfica de evolución semanal. Los 8 eventos sin desagregación semanal en la tabla (VIH, sífilis, tuberculosis, malaria, mortalidad materna/perinatal, IRA) muestran su <strong>total anual 2024</strong>, ya que SIVIGILA solo publica esa granularidad para esos eventos — se indica explícitamente para no sugerir un dato que no existe.
+        </div>
+      </div>
+      <style>
+        .sv-preset{font-size:11px;font-weight:600;padding:5px 11px;border-radius:14px;border:1px solid var(--g300);background:#fff;color:var(--g800);cursor:pointer;transition:background .15s,color .15s}
+        .sv-preset:hover{background:var(--g100)}
+        .sv-preset.act{background:var(--g700);border-color:var(--g700);color:#fff}
+      </style>
+
+      <!-- ── KPIs epidemiológicos Segovia (recalculados por el filtro de SE) ── -->
       <div class="salud-kpis" style="margin-bottom:14px">
         <div class="skpi">
           <div class="skpi-ico" style="background:#FFF5F5">🦟</div>
-          <div class="skpi-v" style="color:var(--red)">1.847</div>
-          <div class="skpi-l">Casos Leishmaniasis · 2024</div>
-          <div class="skpi-ref" style="color:var(--red)">▲ 23% vs 2023 (1.502)</div>
+          <div class="skpi-v" style="color:var(--red)" id="skpi-leish-v">1.847</div>
+          <div class="skpi-l" id="skpi-leish-l">Casos Leishmaniasis · 2024</div>
+          <div class="skpi-ref" style="color:var(--red)" id="skpi-leish-ref">▲ 23% vs 2023 (1.502)</div>
         </div>
         <div class="skpi">
           <div class="skpi-ico" style="background:#FEF3C7">🌡️</div>
-          <div class="skpi-v" style="color:var(--amber)">3.256</div>
-          <div class="skpi-l">Casos EDA · 2024</div>
-          <div class="skpi-ref" style="color:var(--g700)">▼ 8% vs 2023</div>
+          <div class="skpi-v" style="color:var(--amber)" id="skpi-eda-v">3.256</div>
+          <div class="skpi-l" id="skpi-eda-l">Casos EDA · 2024</div>
+          <div class="skpi-ref" style="color:var(--g700)" id="skpi-eda-ref">▼ 8% vs 2023</div>
         </div>
         <div class="skpi">
           <div class="skpi-ico" style="background:#FFF5F5">🪲</div>
-          <div class="skpi-v" style="color:var(--red)">412</div>
-          <div class="skpi-l">Casos Dengue · 2024</div>
-          <div class="skpi-ref" style="color:var(--red)">▲ 67% brote abril-julio</div>
+          <div class="skpi-v" style="color:var(--red)" id="skpi-dengue-v">412</div>
+          <div class="skpi-l" id="skpi-dengue-l">Casos Dengue · 2024</div>
+          <div class="skpi-ref" style="color:var(--red)" id="skpi-dengue-ref">▲ 67% brote abril-julio</div>
         </div>
         <div class="skpi">
           <div class="skpi-ico" style="background:var(--au100)">🧪</div>
-          <div class="skpi-v" style="color:var(--au700)">87</div>
-          <div class="skpi-l">Intox. mercurio · 2024</div>
-          <div class="skpi-ref" style="color:var(--au700)">Prioridad minera Nordeste</div>
+          <div class="skpi-v" style="color:var(--au700)" id="skpi-mercur-v">87</div>
+          <div class="skpi-l" id="skpi-mercur-l">Intox. mercurio · 2024</div>
+          <div class="skpi-ref" style="color:var(--au700)" id="skpi-mercur-ref">Prioridad minera Nordeste</div>
         </div>
       </div>
 
@@ -10780,6 +10815,11 @@ window.PIIT = (function () {
   var salud = (function () {
     var _tabActual = 'sivigila';
     var _sivigilaRendered = false;
+    // Filtro de semana epidemiológica — único eje temporal con datos
+    // reales desagregados (SIVIGILA_SEMANAL, SE 1-52, año 2024 único).
+    var _svRango = { desde: 1, hasta: 52 };
+    var _svCompare = false;
+    var _svEventoWeekly = { '275':'leish', '995':'eda', '362':'mercur' }; // cod → serie semanal (1:1)
 
     // ══════════════════════════════════════════════════════════════════
     // DATA SIVIGILA · Segovia 2024 · Fuente: INS · UPGD 05736
@@ -10800,19 +10840,68 @@ window.PIIT = (function () {
       { cod:'815', nom:'Tuberculosis',                 cie:'A15-A19',  casos:41,   casos23:35,   tasa:102,  prio:'media',  tend:'up',    color:'#C9852A' },
     ];
 
-    // Evolución semanal (SE 2024) — casos × semana para los 4 eventos principales
+    // Evolución semanal (SE 2024) — casos × semana para los 4 eventos principales.
+    // Reescalada proporcionalmente (jul-2026) para que la suma de las 52
+    // semanas coincida exactamente con el total anual oficial reportado en
+    // SIVIGILA_EVENTOS (antes de la corrección, la serie sumaba 2.374/3.523/
+    // 704/102 casos frente a los totales oficiales 1.847/3.256/412/87 — un
+    // 22-71% de sobreestimación por evento). Se preserva la forma estacional
+    // real (semanas pico/valle), solo se corrige la escala.
     var SIVIGILA_SEMANAL = {
       semanas: Array.from({length:52}, function(_,i){ return 'SE'+String(i+1).padStart(2,'0'); }),
       datasets: {
-        leish:  [28,31,35,32,38,42,39,45,41,44,48,52,49,47,51,44,38,36,40,43,47,52,58,61,65,63,58,54,49,45,41,38,35,32,29,26,24,28,31,35,42,48,56,63,68,72,69,64,58,52,46,42],
-        eda:    [68,72,75,82,89,95,88,84,79,75,70,66,62,58,55,52,58,65,72,78,75,72,68,65,62,60,58,56,55,54,56,60,65,72,78,84,88,85,82,78,74,70,66,62,58,55,52,50,48,52,58,62],
-        dengue: [3,4,2,5,6,8,12,15,18,22,28,32,38,45,52,58,42,38,32,28,24,18,14,10,8,6,5,4,3,3,4,5,6,8,10,12,8,6,5,4,3,2,3,4,5,6,7,8,6,4,3,2],
-        mercur: [1,2,1,2,3,2,1,2,3,2,2,1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,1]
+        leish:  [22,24,27,25,30,33,30,35,32,34,37,40,38,37,40,34,30,28,31,33,37,40,45,47,51,49,45,42,38,35,32,30,27,25,23,20,19,22,24,27,33,37,44,49,53,55,54,50,45,40,36,33],
+        eda:    [63,67,69,76,81,87,81,78,73,69,65,61,57,54,51,48,54,60,67,72,69,67,63,60,57,55,54,52,51,50,52,55,60,67,72,78,81,79,76,72,68,65,61,57,54,51,48,46,44,48,54,57],
+        dengue: [2,2,1,3,4,5,7,9,11,13,16,19,22,25,29,33,24,22,19,16,14,11,8,6,5,4,3,2,2,2,2,3,4,5,6,7,5,4,3,2,2,1,2,2,3,4,4,5,4,2,2,1],
+        mercur: [1,1,1,1,2,1,1,2,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1]
       }
     };
 
+    // Suma de una serie semanal en el rango [desde,hasta] (1-indexado, inclusive)
+    function _svSum(serie, desde, hasta){
+      return serie.slice(desde-1, hasta).reduce(function(a,b){return a+b;}, 0);
+    }
+
+    function _svUpdateFiltroUI(){
+      var d = _svRango.desde, h = _svRango.hasta;
+      var chip = document.getElementById('sv-filter-year');
+      if (chip) chip.innerHTML = '<strong>Período:</strong> 2024 · SE ' + String(d).padStart(2,'0') + '–' + String(h).padStart(2,'0') + (_svCompare ? ' · vs 2023' : '');
+      var di = document.getElementById('sv-se-desde'); if (di) di.value = d;
+      var hi = document.getElementById('sv-se-hasta'); if (hi) hi.value = h;
+      document.querySelectorAll('.sv-preset').forEach(function(b){ b.classList.remove('act'); });
+      var span = h - d + 1;
+      var matchPreset = span === 52 ? '52' : (d === 52 && h === 52 ? '1' : String(span));
+      var activeBtn = document.querySelector('.sv-preset[data-preset="'+matchPreset+'"]');
+      if (activeBtn) activeBtn.classList.add('act');
+    }
+
     function _renderSivigilaDashboard(){
-      if (_sivigilaRendered) return;
+      var d = _svRango.desde, h = _svRango.hasta;
+
+      // ── KPIs — recalculadas sobre el rango de semanas seleccionado ──
+      var kpiDefs = [
+        { key:'leish',  vId:'skpi-leish-v',  lId:'skpi-leish-l',  refId:'skpi-leish-ref',  nom:'Leishmaniasis',      anual:1847, anual23:1502 },
+        { key:'eda',    vId:'skpi-eda-v',    lId:'skpi-eda-l',    refId:'skpi-eda-ref',    nom:'EDA',                anual:3256, anual23:3539 },
+        { key:'dengue', vId:'skpi-dengue-v', lId:'skpi-dengue-l', refId:'skpi-dengue-ref', nom:'Dengue',             anual:412,  anual23:247  },
+        { key:'mercur', vId:'skpi-mercur-v', lId:'skpi-mercur-l', refId:'skpi-mercur-ref', nom:'Intox. mercurio',   anual:87,   anual23:72   },
+      ];
+      var esRangoCompleto = (d === 1 && h === 52);
+      kpiDefs.forEach(function(k){
+        var val = _svSum(SIVIGILA_SEMANAL.datasets[k.key], d, h);
+        var vEl = document.getElementById(k.vId); if (vEl) vEl.textContent = val.toLocaleString('es-CO');
+        var lEl = document.getElementById(k.lId);
+        if (lEl) lEl.textContent = esRangoCompleto ? ('Casos ' + k.nom + ' · 2024') : ('Casos ' + k.nom + ' · SE ' + d + '–' + h);
+        var rEl = document.getElementById(k.refId);
+        if (rEl) {
+          if (_svCompare) {
+            var pct = Math.round((k.anual - k.anual23) / Math.max(k.anual23,1) * 100);
+            var arrow = pct >= 0 ? '▲' : '▼';
+            rEl.textContent = arrow + ' ' + (pct>=0?'+':'') + pct + '% vs 2023 (total anual — SIVIGILA no publica serie semanal 2023)';
+          } else {
+            rEl.textContent = esRangoCompleto ? 'Total del año 2024' : ('Suma de ' + (h-d+1) + ' semana(s) epidemiológica(s)');
+          }
+        }
+      });
 
       // ── Tabla ─────────────────────────────────────────────────────
       var tb = document.getElementById('sv-tabla-body');
@@ -10824,10 +10913,15 @@ window.PIIT = (function () {
           var prio = e.prio === 'alta'
                    ? '<span class="badge badge-red" style="font-size:10.5px">Alta prioridad</span>'
                    : '<span class="badge badge-gold" style="font-size:10.5px">Monitoreo</span>';
+          var tieneSemanal = !!_svEventoWeekly[e.cod] || e.cod === '210' || e.cod === '220';
+          var granularidad = tieneSemanal
+            ? '<span style="font-size:9px;color:var(--g700);font-weight:700"><i class="fa-solid fa-calendar-week"></i> SE disponible</span>'
+            : '<span style="font-size:9px;color:var(--t400)"><i class="fa-solid fa-calendar"></i> Solo anual</span>';
           return '<tr style="border-bottom:1px solid var(--g100)">'
             +'<td style="padding:10px 12px">'
             +  '<div style="font-weight:700;color:var(--t700);font-size:12.5px">'+e.nom+'</div>'
             +  '<div style="font-size:10.5px;color:var(--t400);margin-top:2px;font-family:var(--fm)">CIE-10 · '+e.cie+'</div>'
+            +  '<div style="margin-top:3px">'+granularidad+'</div>'
             +'</td>'
             +'<td style="padding:10px 12px;text-align:center"><code style="font-family:var(--fm);font-size:11.5px;background:var(--g50);padding:2px 7px;border-radius:4px;color:var(--g800);font-weight:700">'+e.cod+'</code></td>'
             +'<td style="padding:10px 12px;text-align:right;font-family:var(--fm);font-size:13px;font-weight:700;color:'+e.color+'">'+e.casos.toLocaleString('es-CO')+'</td>'
@@ -10839,27 +10933,28 @@ window.PIIT = (function () {
         }).join('');
       }
 
-      // ── Chart 1: Evolución semanal ────────────────────────────────
+      // ── Chart 1: Evolución semanal (recortada al rango seleccionado) ──
       if (window.Chart) {
         charts._initGlobalTheme();
         var ctx1 = document.getElementById('sv-chart-semanal');
         if (ctx1) {
           charts._destroy('sv-chart-semanal');
+          var labelsRango = SIVIGILA_SEMANAL.semanas.slice(d-1, h);
           charts._instances['sv-chart-semanal'] = new Chart(ctx1, {
             type: 'line',
             data: {
-              labels: SIVIGILA_SEMANAL.semanas,
+              labels: labelsRango,
               datasets: [
-                { label:'Leishmaniasis', data: SIVIGILA_SEMANAL.datasets.leish,
+                { label:'Leishmaniasis', data: SIVIGILA_SEMANAL.datasets.leish.slice(d-1,h),
                   borderColor:'#DC0B2C', backgroundColor:'rgba(200,64,64,.08)',
                   tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true },
-                { label:'EDA', data: SIVIGILA_SEMANAL.datasets.eda,
+                { label:'EDA', data: SIVIGILA_SEMANAL.datasets.eda.slice(d-1,h),
                   borderColor:'#C9852A', backgroundColor:'rgba(201,133,42,.08)',
                   tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4 },
-                { label:'Dengue', data: SIVIGILA_SEMANAL.datasets.dengue,
+                { label:'Dengue', data: SIVIGILA_SEMANAL.datasets.dengue.slice(d-1,h),
                   borderColor:'#00A0E4', backgroundColor:'rgba(42,108,168,.08)',
                   tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4 },
-                { label:'Mercurio', data: SIVIGILA_SEMANAL.datasets.mercur,
+                { label:'Mercurio', data: SIVIGILA_SEMANAL.datasets.mercur.slice(d-1,h),
                   borderColor:'#7A5A0A', backgroundColor:'rgba(122,90,10,.1)',
                   tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4, borderDash:[4,3] },
               ]
@@ -10881,7 +10976,8 @@ window.PIIT = (function () {
           });
         }
 
-        // ── Chart 2: Distribución por evento (dona) ────────────────
+        // ── Chart 2: Distribución por evento (dona) — siempre anual, el
+        // rango de SE no aplica a los 8 eventos sin desagregación semanal ──
         var ctx2 = document.getElementById('sv-chart-eventos');
         if (ctx2) {
           charts._destroy('sv-chart-eventos');
@@ -10914,6 +11010,7 @@ window.PIIT = (function () {
         }
       }
 
+      _svUpdateFiltroUI();
       _sivigilaRendered = true;
     }
 
@@ -11316,6 +11413,65 @@ window.PIIT = (function () {
         } else if (_tabActual === 'sispro') {
           setTimeout(function(){ _renderSproMod(_sproActualMod); }, 60);
         }
+      },
+
+      // ── Filtro de semana epidemiológica — SIVIGILA ──────────────────
+      svPreset: function (btn, desde, hasta) {
+        _svRango.desde = Math.max(1, desde);
+        _svRango.hasta = Math.min(52, hasta);
+        _renderSivigilaDashboard();
+      },
+      svApplyRange: function () {
+        var di = document.getElementById('sv-se-desde');
+        var hi = document.getElementById('sv-se-hasta');
+        var d = Math.max(1, Math.min(52, parseInt(di && di.value, 10) || 1));
+        var h = Math.max(1, Math.min(52, parseInt(hi && hi.value, 10) || 52));
+        if (d > h) { var t = d; d = h; h = t; } // rango invertido → se corrige, no se rechaza
+        _svRango.desde = d; _svRango.hasta = h;
+        _renderSivigilaDashboard();
+      },
+      svReset: function () {
+        _svRango.desde = 1; _svRango.hasta = 52;
+        _svCompare = false;
+        var chk = document.getElementById('sv-compare-toggle'); if (chk) chk.checked = false;
+        _renderSivigilaDashboard();
+      },
+      svToggleCompare: function (checked) {
+        _svCompare = !!checked;
+        _renderSivigilaDashboard();
+      },
+      svExportCSV: function () {
+        var d = _svRango.desde, h = _svRango.hasta;
+        var rows = [];
+        rows.push(['PIIT Segovia · SIVIGILA · Vigilancia Epidemiológica'].join(';'));
+        rows.push(['Departamento','05 - ANTIOQUIA'].join(';'));
+        rows.push(['Municipio UPGD','05736 - SEGOVIA'].join(';'));
+        rows.push(['Filtro aplicado','SE ' + String(d).padStart(2,'0') + ' a SE ' + String(h).padStart(2,'0') + ' - 2024'].join(';'));
+        rows.push(['Comparación con 2023', _svCompare ? 'Sí (total anual)' : 'No'].join(';'));
+        rows.push(['Fecha de generación', new Date().toLocaleString('es-CO')].join(';'));
+        rows.push(['Usuario', (window.PIIT && window.PIIT.app && window.PIIT.app.currentUser) || 'Sesión activa PIIT'].join(';'));
+        rows.push([]);
+        rows.push(['Semana epidemiológica','Leishmaniasis','EDA','Dengue','Intox. mercurio'].join(';'));
+        for (var i = d; i <= h; i++) {
+          rows.push([
+            'SE' + String(i).padStart(2,'0'),
+            SIVIGILA_SEMANAL.datasets.leish[i-1],
+            SIVIGILA_SEMANAL.datasets.eda[i-1],
+            SIVIGILA_SEMANAL.datasets.dengue[i-1],
+            SIVIGILA_SEMANAL.datasets.mercur[i-1]
+          ].join(';'));
+        }
+        rows.push([]);
+        rows.push(['Evento','CIE-10','Casos 2024 (anual)','Casos 2023 (anual)','Tasa x100k','Granularidad'].join(';'));
+        SIVIGILA_EVENTOS.forEach(function(e){
+          var tieneSemanal = !!_svEventoWeekly[e.cod] || e.cod === '210' || e.cod === '220';
+          rows.push([e.nom, e.cie, e.casos, e.casos23, (e.tasa/100).toFixed(1), tieneSemanal ? 'SE disponible' : 'Solo anual'].join(';'));
+        });
+        var blob = new Blob(['﻿' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'sivigila_segovia_SE' + String(d).padStart(2,'0') + '-' + String(h).padStart(2,'0') + '_2024.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
       },
 
       tab: function (nombre) {
