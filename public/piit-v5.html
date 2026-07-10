@@ -7248,7 +7248,26 @@ window.PIIT = (function () {
     },
 
     centerMap: function () {
-      if (STATE.map.instance) STATE.map.instance.flyTo([7.0820, -74.7083], 14, { duration: 0.85, easeLinearity: 0.22 });
+      var m = STATE.map.instance;
+      if (!m) return;
+      var target = L.latLng(7.0820, -74.7083);
+      var zoom = 14;
+      // Los paneles flotantes de .sig-float son asimétricos (izquierdo
+      // 262px, derecho 296px, padding 16px + gap 16px), por lo que el
+      // centro geométrico del contenedor completo NO coincide con el
+      // centro del área realmente visible del mapa entre ambos paneles.
+      // Se calcula el desplazamiento en píxeles y se compensa el punto
+      // central antes de animar, para que la cabecera municipal quede
+      // centrada en la franja visible, no bajo los paneles.
+      var size = m.getSize();
+      var leftEdge  = 16 + 262 + 16;             // padding + panel izq + gap
+      var rightEdge = size.x - (16 + 296);        // borde del panel derecho
+      var visibleCenterX = (leftEdge + rightEdge) / 2;
+      var containerCenterX = size.x / 2;
+      var dx = containerCenterX - visibleCenterX;
+      var targetPoint = m.project(target, zoom).add([dx, 0]);
+      var newCenter = m.unproject(targetPoint, zoom);
+      m.flyTo(newCenter, zoom, { duration: 0.85, easeLinearity: 0.22 });
     },
 
     /* ── Histograma de distribución — estilo Demoland ─────────── */
