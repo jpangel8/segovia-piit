@@ -12181,23 +12181,46 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
     if(!el)return;
     // Retry si Leaflet aún no ha cargado (CDN async)
     if(typeof L==='undefined'){setTimeout(initMap,300);return;}
+    // Centro real del casco urbano de Segovia (mismo punto que el mapa SIG
+    // principal, DATA.BARRIOS_GEOJSON). El centro anterior [7.083,-74.678]
+    // estaba ~3 km al oriente del municipio real, por lo que las zonas de
+    // amenaza flotaban sin relación con el territorio.
+    var CENTRO=[7.0828,-74.7077];
     _satMap=L.map(el,{zoomControl:false,scrollWheelZoom:false,attributionControl:false});
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:16}).addTo(_satMap);
-    _satMap.setView([7.083,-74.678],12);
+    _satMap.setView(CENTRO,13);
     L.control.zoom({position:'bottomright'}).addTo(_satMap);
-    L.control.attribution({position:'bottomleft',prefix:false}).addTo(_satMap).addAttribution('&copy; CARTO · SGC · IDEAM');
-    L.circle([7.075,-74.675],{radius:900,color:'#00A0E4',fillColor:'#00A0E4',fillOpacity:0.25,weight:2})
-      .bindPopup('<b style="color:#1D4ED8">⚠ Inundación</b><br>Q. El Bagre · Riesgo Moderado<br><small style="color:#666">SIMMA · IDEAM</small>').addTo(_satMap);
-    L.polygon([[7.095,-74.690],[7.100,-74.680],[7.092,-74.675],[7.088,-74.685]],
+    L.control.attribution({position:'bottomleft',prefix:false}).addTo(_satMap).addAttribution('&copy; CARTO · SGC · IDEAM · IGAC');
+
+    // Capas locales · GDB oficial — límites reales de los 21 barrios,
+    // la misma geometría oficial IGAC que usa el mapa SIG · Territorio,
+    // para que las zonas de amenaza queden ancladas al casco urbano real.
+    var _d = window.PIIT && window.PIIT.data;
+    if(_d && _d.BARRIOS_GEOJSON){
+      L.geoJSON(_d.BARRIOS_GEOJSON,{
+        style:{color:'#5BAF84',weight:1,fillColor:'#5BAF84',fillOpacity:0.04,dashArray:'2,3'},
+        onEachFeature:function(f,layer){
+          var nom=f.properties.NOM_BARRIO||f.properties.nombre||'';
+          if(nom) layer.bindTooltip(nom,{sticky:true,className:'sat-barrio-tt'});
+        }
+      }).addTo(_satMap);
+    }
+    if(_d && _d.DIV_POLITICA_GEOJSON){
+      L.geoJSON(_d.DIV_POLITICA_GEOJSON,{style:{color:'#7A9E8C',weight:1,dashArray:'4,3',fillOpacity:0}}).addTo(_satMap);
+    }
+
+    L.circle([CENTRO[0]-0.008,CENTRO[1]+0.003],{radius:900,color:'#00A0E4',fillColor:'#00A0E4',fillOpacity:0.25,weight:2})
+      .bindPopup('<b style="color:#1D4ED8">⚠ Inundación</b><br>Q. El Bagre · Barrio La Madre · Riesgo Moderado<br><small style="color:#666">SIMMA · IDEAM</small>').addTo(_satMap);
+    L.polygon([[CENTRO[0]-0.011,CENTRO[1]-0.006],[CENTRO[0]-0.006,CENTRO[1]-0.001],[CENTRO[0]-0.013,CENTRO[1]+0.002],[CENTRO[0]-0.017,CENTRO[1]-0.003]],
       {color:'#C9852A',fillColor:'#C9852A',fillOpacity:0.25,weight:2})
-      .bindPopup('<b style="color:#92400E">⚠ Movimiento en masa</b><br>Vda. La Cruzada · Riesgo Alto<br><small style="color:#666">SIMMA · SGC</small>').addTo(_satMap);
-    L.polygon([[7.110,-74.660],[7.115,-74.650],[7.107,-74.645],[7.103,-74.655]],
+      .bindPopup('<b style="color:#92400E">⚠ Movimiento en masa</b><br>Vda. La Cruzada · Cerros Galán · Riesgo Alto<br><small style="color:#666">SIMMA · SGC</small>').addTo(_satMap);
+    L.polygon([[CENTRO[0]+0.014,CENTRO[1]+0.010],[CENTRO[0]+0.019,CENTRO[1]+0.016],[CENTRO[0]+0.011,CENTRO[1]+0.020],[CENTRO[0]+0.007,CENTRO[1]+0.014]],
       {color:'#DC0B2C',fillColor:'#DC0B2C',fillOpacity:0.20,weight:2})
-      .bindPopup('<b style="color:#991B1B">⚠ Incendio forestal</b><br>Zona rural norte · Riesgo Moderado<br><small style="color:#666">IDEAM · SINIF</small>').addTo(_satMap);
-    L.polygon([[7.068,-74.665],[7.072,-74.658],[7.065,-74.653],[7.061,-74.661]],
+      .bindPopup('<b style="color:#991B1B">⚠ Incendio forestal</b><br>Zona rural norte · Corredor veredal · Riesgo Moderado<br><small style="color:#666">IDEAM · SINIF</small>').addTo(_satMap);
+    L.polygon([[CENTRO[0]-0.002,CENTRO[1]+0.011],[CENTRO[0]+0.002,CENTRO[1]+0.015],[CENTRO[0]-0.004,CENTRO[1]+0.019],[CENTRO[0]-0.008,CENTRO[1]+0.015]],
       {color:'#00A0E4',fillColor:'#00A0E4',fillOpacity:0.20,weight:2})
-      .bindPopup('<b style="color:#1D4ED8">⚠ Avenida torrencial</b><br>Q. La Cianuración · Riesgo Moderado').addTo(_satMap);
-    L.circle([7.083,-74.678],{radius:1400,color:'#16A34A',fillColor:'#16A34A',fillOpacity:0.05,weight:1.5,dashArray:'6,4'})
+      .bindPopup('<b style="color:#1D4ED8">⚠ Avenida torrencial</b><br>Q. La Cianuración · Barrio Briceño · Riesgo Moderado</small>').addTo(_satMap);
+    L.circle(CENTRO,{radius:1600,color:'#16A34A',fillColor:'#16A34A',fillOpacity:0.05,weight:1.5,dashArray:'6,4'})
       .bindPopup('<b style="color:#15803D">Perímetro urbano Segovia</b><br>Área de monitoreo SAT').addTo(_satMap);
     setTimeout(function(){if(_satMap)_satMap.invalidateSize();},250);
   }
