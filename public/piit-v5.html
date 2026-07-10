@@ -5045,7 +5045,18 @@ body { padding-bottom: 36px !important; }
         </div>
       </div>
 
+      <!-- ── Selector de año SISPRO ── -->
+      <div class="card" style="padding:12px 18px;margin:4px 0 14px;background:var(--g50);border-left:3.5px solid var(--g600)">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <span style="font-size:10.5px;font-weight:700;color:var(--t500);text-transform:uppercase;letter-spacing:.05em;margin-right:2px">Año</span>
+          <div id="spro-year-selector" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+        </div>
+        <div style="font-size:10px;color:var(--t400);margin-top:8px" id="spro-year-note"></div>
+      </div>
+      <div id="spro-empty-state" style="display:none;margin-bottom:14px"></div>
+
       <!-- ── Selector de módulo SISPRO ── -->
+      <div id="spro-modulos-wrap">
       <div class="pt" style="margin-top:4px">Módulos disponibles · Segovia 2024</div>
       <div class="sispro-modulos" id="sispro-modulos">
         <div class="smod act" data-mod="pai" onclick="PIIT.salud.sproMod(this,'pai')">
@@ -5336,6 +5347,7 @@ body { padding-bottom: 36px !important; }
           </div>
         </div>
       </div>
+      </div><!-- /spro-modulos-wrap -->
     </div>
 
     <!-- ── PANEL GUÍA ── -->
@@ -11282,6 +11294,64 @@ window.PIIT = (function () {
     var _sproActualMod = 'pai';
     var _sproRendered = { pai:false, rips:false, afil:false, eevv:false };
 
+    // Años SISPRO: solo 2024 tiene datos reales (PAI, RIPS, BDUA, EEVV).
+    // A diferencia de SIVIGILA, se verificó (jul-2026) que no existe un
+    // tablero público equivalente sin login para PAIweb2/RIPS/EEVV:
+    //  - web.sispro.gov.co → solo "Datos Abiertos" genéricos (tablas de
+    //    referencia), sin consulta por municipio.
+    //  - paiweb2.paiweb.gov.co → error de certificado / requiere sesión.
+    //  - minsalud.gov.co/.../Vacunacion-covid-19.aspx → tablero histórico
+    //    de COVID-19 únicamente, no de esquema PAI general ni vigente.
+    // Por eso 2025/2026 quedan en estado vacío explicado, sin inventar
+    // coberturas ni cifras de aseguramiento/estadísticas vitales.
+    var SPRO_ANIOS_TODOS = [2024, 2025, 2026];
+    var _sproRango = { anio: 2024 };
+
+    function _renderSproYearUI(){
+      var anio = _sproRango.anio;
+      var bar = document.getElementById('spro-year-selector');
+      if (bar) {
+        bar.innerHTML = SPRO_ANIOS_TODOS.map(function(y){
+          var disponible = (y === 2024);
+          var act = y === anio ? ' act' : '';
+          var cls = disponible ? '' : ' sv-year-empty';
+          var title = disponible ? '' : ' title="Sin fuente pública verificada — ver nota"';
+          var icon = disponible ? '' : ' <i class="fa-solid fa-circle-exclamation"></i>';
+          return '<button type="button" class="sv-year-btn'+act+cls+'"'+title+' onclick="PIIT.salud.sproSetAnio('+y+')">'+y+icon+'</button>';
+        }).join('');
+      }
+      var note = document.getElementById('spro-year-note');
+      if (note) note.innerHTML = anio === 2024
+        ? '<i class="fa-solid fa-circle-info"></i> Datos reales 2024 · PAIweb2 · RIPS · BDUA · EEVV DANE.'
+        : '<i class="fa-solid fa-circle-info"></i> Verificado jul-2026: a diferencia de SIVIGILA, PAIweb2/RIPS/EEVV no tienen un tablero público sin sesión institucional equivalente. Ver detalle en el panel.';
+
+      var wrap = document.getElementById('spro-modulos-wrap');
+      var empty = document.getElementById('spro-empty-state');
+      if (anio === 2024) {
+        if (wrap) wrap.style.display = '';
+        if (empty) empty.style.display = 'none';
+      } else {
+        if (wrap) wrap.style.display = 'none';
+        if (empty) {
+          empty.style.display = 'block';
+          empty.innerHTML =
+            '<div class="card" style="padding:32px 24px;text-align:center;background:var(--g50)">'
+            +'<i class="fa-solid fa-database" style="font-size:26px;color:var(--t400);margin-bottom:12px;display:block"></i>'
+            +'<div style="font-weight:700;color:var(--t700);font-size:14px;margin-bottom:6px">Sin datos verificados para '+anio+'</div>'
+            +'<div style="font-size:12.5px;color:var(--t500);max-width:560px;margin:0 auto;line-height:1.7;text-align:left">'
+            +'Se intentó localizar un tablero público equivalente al de SIVIGILA para PAIweb2/RIPS/BDUA/EEVV. Resultado de la verificación (julio 2026):'
+            +'<ul style="margin:8px 0 0;padding-left:18px">'
+            +'<li><code>web.sispro.gov.co</code> — sección "Datos Abiertos" solo expone tablas de referencia genéricas, sin consulta por municipio.</li>'
+            +'<li><code>paiweb2.paiweb.gov.co</code> — requiere sesión institucional.</li>'
+            +'<li>Tablero público de vacunación de MinSalud — histórico, específico de COVID-19, no de esquema PAI general ni vigente para '+anio+'.</li>'
+            +'</ul>'
+            +'<div style="margin-top:8px">Cuando se disponga de un export oficial (PAIweb2, RIPS o EEVV-DANE) para Segovia '+anio+', se incorporará aquí.</div>'
+            +'</div>'
+            +'</div>';
+        }
+      }
+    }
+
     function _renderSproMod(mod) {
       if (_sproRendered[mod]) return;
       if (!window.Chart) { setTimeout(function(){_renderSproMod(mod);}, 200); return; }
@@ -11592,7 +11662,7 @@ window.PIIT = (function () {
         if (_tabActual === 'sivigila') {
           setTimeout(_renderSivigilaDashboard, 60);
         } else if (_tabActual === 'sispro') {
-          setTimeout(function(){ _renderSproMod(_sproActualMod); }, 60);
+          setTimeout(function(){ _renderSproYearUI(); _renderSproMod(_sproActualMod); }, 60);
         }
       },
 
@@ -11717,8 +11787,13 @@ window.PIIT = (function () {
         if (nombre === 'sivigila') {
           setTimeout(_renderSivigilaDashboard, 60);
         } else if (nombre === 'sispro') {
-          setTimeout(function(){ _renderSproMod(_sproActualMod); }, 60);
+          setTimeout(function(){ _renderSproYearUI(); _renderSproMod(_sproActualMod); }, 60);
         }
+      },
+
+      sproSetAnio: function (anio) {
+        _sproRango.anio = anio;
+        _renderSproYearUI();
       },
 
       // Cambio de módulo dentro de SISPRO (PAI / RIPS / BDUA / EEVV)
