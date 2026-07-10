@@ -4899,7 +4899,7 @@ body { padding-bottom: 36px !important; }
           <button type="button" class="export-btn sec" style="padding:5px 12px;margin-left:auto" onclick="PIIT.salud.svExportCSV()"><i class="fa-solid fa-file-csv"></i>Exportar CSV del período</button>
         </div>
         <div style="font-size:10px;color:var(--t400);margin-top:8px">
-          <i class="fa-solid fa-circle-info"></i> El filtro de semana epidemiológica recalcula en vivo las 4 tarjetas KPI y la gráfica de evolución semanal. Los 8 eventos sin desagregación semanal en la tabla (VIH, sífilis, tuberculosis, malaria, mortalidad materna/perinatal, IRA) muestran su <strong>total anual</strong>, ya que SIVIGILA solo publica esa granularidad para esos eventos — se indica explícitamente para no sugerir un dato que no existe. 2025 y 2026 se muestran deshabilitados: el portal SIVIGILA Web 4.0 exige sesión institucional y no publica datos municipales abiertos — ver <a href="https://portalsivigila.ins.gov.co/Paginas/inicio.aspx" target="_blank" rel="noopener noreferrer">portal oficial</a>.
+          <i class="fa-solid fa-circle-info"></i> El filtro de semana epidemiológica recalcula en vivo las 4 tarjetas KPI y la gráfica de evolución semanal. Los 8 eventos sin desagregación semanal en la tabla (VIH, sífilis, tuberculosis, malaria, mortalidad materna/perinatal, IRA) muestran su <strong>total anual</strong>, ya que SIVIGILA solo publica esa granularidad para esos eventos. <strong>2025 y 2026</strong> (año en verde = desglose completo por evento; año en ámbar = solo total agregado) muestran el <strong>total real verificado</strong> desde el tablero público de SIVIGILA 4.0, sin desagregar por evento — ese detalle exige sesión institucional en el portal Web 4.0, no disponible públicamente. Ver <a href="https://portalsivigila.ins.gov.co/Paginas/inicio.aspx" target="_blank" rel="noopener noreferrer">portal oficial</a>.
         </div>
       </div>
       <style>
@@ -4912,6 +4912,9 @@ body { padding-bottom: 36px !important; }
         .sv-year-btn.act{background:var(--g700);border-color:var(--g700);color:#fff}
         .sv-year-btn.sv-year-empty{color:var(--t400);border-style:dashed}
         .sv-year-btn.sv-year-empty i{font-size:9px;color:var(--au600)}
+        .sv-year-btn.sv-year-partial{color:var(--au800,#946800);border-color:var(--au400,#D6A00A);border-style:dashed}
+        .sv-year-btn.sv-year-partial.act{background:var(--au500,#D6A00A);border-color:var(--au500,#D6A00A);color:#fff}
+        .sv-year-btn.sv-year-partial i{font-size:9px}
         .sv-year-btn:disabled{cursor:not-allowed}
       </style>
 
@@ -10849,10 +10852,17 @@ window.PIIT = (function () {
     // departamental, no desagregados por municipio/UPGD. No existe una
     // fuente pública verificable con la que construir cifras de Segovia
     // para 2025-2026: se dejan en `null` en vez de inventar datos.
-    // Cuando se disponga del export oficial (CSV/Excel del portal Web
-    // 4.0 de SIVIGILA con sesión institucional), reemplazar el `null`
-    // correspondiente por un objeto { eventos, semanal } con la misma
-    // forma que el bloque de 2024.
+    // 2025 y 2026: el desglose por evento (equivalente a `eventos`/
+    // `semanal` de 2024) NO está disponible — sigue exigiendo el export
+    // institucional del portal Web 4.0. Lo que SÍ se verificó y se
+    // incorporó (jul-2026) es el AGREGADO real de Segovia, leído en vivo
+    // del tablero público Power BI de SIVIGILA 4.0 (sin login, filtrado
+    // Departamento=Antioquia, Municipio=Segovia):
+    // https://app.powerbi.com/view?r=eyJrIjoiOGE3MDkzN2EtZDRlMS00MWZkLTkwMWItZTdhMGExOGY0ZGU2IiwidCI6ImE2MmQ2YzdiLTlmNTktNDQ2OS05MzU5LTM1MzcxNDc1OTRiYiIsImMiOjR9
+    // Fecha de lectura: 10-jul-2026. Datos "sin depurar" según el propio
+    // tablero (nota oficial: "Datos sin depurar", sujetos a depuración).
+    // Cuando se disponga del export con desglose por evento, reemplazar
+    // `eventos`/`semanal` (hoy `null`) por la misma forma que 2024.
     // ══════════════════════════════════════════════════════════════════
     var SIVIGILA_DATA_BY_YEAR = {
       2024: {
@@ -10885,16 +10895,48 @@ window.PIIT = (function () {
           }
         }
       },
-      2025: null, // sin fuente pública verificable con desagregación por municipio — ver nota arriba
-      2026: null  // ídem
+      2025: {
+        eventos: null, semanal: null, // pendiente export institucional — ver nota arriba
+        agregado: {
+          fuente: 'Tablero público Power BI SIVIGILA 4.0 · leído 10-jul-2026 · año completo',
+          total: 1207, mujeres: 483, hombres: 723,
+          menores5: 88, mayores65: 28,
+          regimen: { subsidiado: 891, contributivo: 262, noAsegurado: 44 },
+          area: { ruralDisperso: 587, cabeceraMunicipal: 549, centroPoblado: 70 },
+          topAdministradoras: [
+            { nom:'COOSALUD ESS EPS-S', n:349 }, { nom:'SAVIA SALUD', n:258 }, { nom:'NUEVA EPS', n:154 },
+            { nom:'NUEVA EPS SA SUBSID.', n:97 }, { nom:'NUEVA EPSS', n:65 }, { nom:'SURA EPS', n:50 },
+          ],
+        }
+      },
+      2026: {
+        eventos: null, semanal: null, // pendiente export institucional — ver nota arriba
+        agregado: {
+          fuente: 'Tablero público Power BI SIVIGILA 4.0 · leído 10-jul-2026 · año en curso (parcial, corte 8-jul-2026)',
+          total: 335, mujeres: 149, hombres: 186,
+          menores5: 20, mayores65: 4,
+          regimen: { subsidiado: 246, contributivo: 75, noAsegurado: 11 },
+          area: { cabeceraMunicipal: 181, ruralDisperso: 103, centroPoblado: 51 },
+          topAdministradoras: [
+            { nom:'COOSALUD ESS EPS-S', n:113 }, { nom:'SAVIA SALUD', n:61 }, { nom:'NUEVA EPS', n:47 },
+            { nom:'NUEVA EPS SA SUBSID.', n:29 }, { nom:'NUEVA EPSS', n:28 }, { nom:'SURA EPS', n:10 },
+          ],
+        }
+      }
     };
 
-    // Años que la plataforma sabe listar (incluye años sin datos aún, para
-    // que el selector los muestre deshabilitados en vez de simplemente no
-    // existir — comunica que la plataforma ya está lista para recibirlos).
+    // Años que la plataforma sabe listar (incluye años sin ningún dato,
+    // para que el selector los muestre deshabilitados en vez de
+    // simplemente no existir — comunica que la plataforma ya está lista
+    // para recibirlos).
     var SV_ANIOS_TODOS = Object.keys(SIVIGILA_DATA_BY_YEAR).map(Number).sort();
     function _svAniosConDatos(){ return SV_ANIOS_TODOS.filter(function(y){ return !!SIVIGILA_DATA_BY_YEAR[y]; }); }
-    function _svUltimoAnioConDatos(){ var a = _svAniosConDatos(); return a.length ? a[a.length-1] : SV_ANIOS_TODOS[0]; }
+    // "Con desglose por evento" = tiene la tabla completa (hoy solo 2024).
+    // Los años con únicamente `agregado` no cuentan como año "completo"
+    // para el reset de svReset()/preset por defecto, pero sí son
+    // seleccionables y muestran datos reales.
+    function _svAniosConEventos(){ return SV_ANIOS_TODOS.filter(function(y){ return SIVIGILA_DATA_BY_YEAR[y] && SIVIGILA_DATA_BY_YEAR[y].eventos; }); }
+    function _svUltimoAnioConDatos(){ var a = _svAniosConEventos(); return a.length ? a[a.length-1] : SV_ANIOS_TODOS[0]; }
 
     // Filtro de semana epidemiológica + año — únicos ejes temporales con
     // datos reales desagregados por ahora (ver SIVIGILA_DATA_BY_YEAR).
@@ -10908,32 +10950,69 @@ window.PIIT = (function () {
 
     function _svUpdateFiltroUI(){
       var anio = _svRango.anio, d = _svRango.desde, h = _svRango.hasta;
-      var tieneDatos = !!SIVIGILA_DATA_BY_YEAR[anio];
+      var yd = SIVIGILA_DATA_BY_YEAR[anio];
+      var tieneEventos = !!(yd && yd.eventos);
       var chip = document.getElementById('sv-filter-year');
-      if (chip) chip.innerHTML = tieneDatos
+      if (chip) chip.innerHTML = tieneEventos
         ? ('<strong>Período:</strong> ' + anio + ' · SE ' + String(d).padStart(2,'0') + '–' + String(h).padStart(2,'0') + (_svCompare ? ' · vs ' + (anio-1) : ''))
-        : ('<strong>Período:</strong> ' + anio + ' · sin datos publicados');
-      var di = document.getElementById('sv-se-desde'); if (di) { di.value = d; di.disabled = !tieneDatos; }
-      var hi = document.getElementById('sv-se-hasta'); if (hi) { hi.value = h; hi.disabled = !tieneDatos; }
-      document.querySelectorAll('.sv-preset').forEach(function(b){ b.classList.remove('act'); b.disabled = !tieneDatos; });
-      if (tieneDatos) {
+        : (yd && yd.agregado ? ('<strong>Período:</strong> ' + anio + ' · agregado sin desagregar por evento') : ('<strong>Período:</strong> ' + anio + ' · sin datos publicados'));
+      var di = document.getElementById('sv-se-desde'); if (di) { di.value = d; di.disabled = !tieneEventos; }
+      var hi = document.getElementById('sv-se-hasta'); if (hi) { hi.value = h; hi.disabled = !tieneEventos; }
+      document.querySelectorAll('.sv-preset').forEach(function(b){ b.classList.remove('act'); b.disabled = !tieneEventos; });
+      if (tieneEventos) {
         var span = h - d + 1;
         var matchPreset = span === 52 ? '52' : (d === 52 && h === 52 ? '1' : String(span));
         var activeBtn = document.querySelector('.sv-preset[data-preset="'+matchPreset+'"]');
         if (activeBtn) activeBtn.classList.add('act');
       }
-      // Selector de año — reconstruido según SV_ANIOS_TODOS, marca como
-      // deshabilitados los años sin fuente de datos verificada.
+      // Selector de año — reconstruido según SV_ANIOS_TODOS. Tres estados:
+      // verde=eventos completos, ámbar=solo agregado real, gris=sin dato.
       var yearBar = document.getElementById('sv-year-selector');
       if (yearBar) {
         yearBar.innerHTML = SV_ANIOS_TODOS.map(function(y){
-          var disponible = !!SIVIGILA_DATA_BY_YEAR[y];
+          var yData = SIVIGILA_DATA_BY_YEAR[y];
+          var estado = (yData && yData.eventos) ? 'full' : (yData && yData.agregado) ? 'agregado' : 'vacio';
           var act = y === anio ? ' act' : '';
-          var dis = disponible ? '' : ' disabled';
-          var title = disponible ? '' : ' title="Sin datos publicados por fuente oficial verificable"';
-          return '<button type="button" class="sv-year-btn'+act+(disponible?'':' sv-year-empty')+'"'+dis+title+' onclick="PIIT.salud.svSetAnio('+y+')">'+y+(disponible?'':' <i class=\'fa-solid fa-circle-exclamation\'></i>')+'</button>';
+          var cls = estado === 'vacio' ? ' sv-year-empty' : estado === 'agregado' ? ' sv-year-partial' : '';
+          var title = estado === 'vacio' ? ' title="Sin datos publicados por fuente oficial verificable"'
+                    : estado === 'agregado' ? ' title="Solo total agregado verificado — sin desglose por evento"' : '';
+          var icon = estado === 'vacio' ? ' <i class="fa-solid fa-circle-exclamation"></i>' : estado === 'agregado' ? ' <i class="fa-solid fa-chart-simple"></i>' : '';
+          return '<button type="button" class="sv-year-btn'+act+cls+'"'+title+' onclick="PIIT.salud.svSetAnio('+y+')">'+y+icon+'</button>';
         }).join('');
       }
+    }
+
+    function _renderSivigilaAgregado(agregado, anio){
+      var pct = function(n,t){ return t ? (n/t*100).toFixed(1) : '0.0'; };
+      var top = agregado.topAdministradoras.map(function(a){
+        return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--g100)"><span style="color:var(--t600)">'+a.nom+'</span><span style="font-family:var(--fm);font-weight:700;color:var(--t700)">'+a.n.toLocaleString('es-CO')+'</span></div>';
+      }).join('');
+      return '<div class="card" style="padding:18px 20px;background:var(--au50,#FFFBEB);border-left:3.5px solid var(--au500,#D6A00A)">'
+        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+        +'<i class="fa-solid fa-chart-simple" style="color:var(--au700,#946800)"></i>'
+        +'<span style="font-weight:700;font-size:13px;color:var(--t700)">Total agregado real · '+anio+' · Segovia</span>'
+        +'</div>'
+        +'<div style="font-size:11px;color:var(--t500);margin-bottom:14px">Fuente: '+agregado.fuente+' — sin desagregar por evento (ese detalle exige el export institucional del portal Web 4.0, no disponible aún). Nota oficial del tablero: "Datos sin depurar", sujetos a depuración.</div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:16px">'
+        +  '<div><div style="font-size:22px;font-weight:700;color:var(--t800)">'+agregado.total.toLocaleString('es-CO')+'</div><div style="font-size:10.5px;color:var(--t500)">Notificaciones totales</div></div>'
+        +  '<div><div style="font-size:22px;font-weight:700;color:var(--t800)">'+agregado.mujeres.toLocaleString('es-CO')+'</div><div style="font-size:10.5px;color:var(--t500)">Mujeres ('+pct(agregado.mujeres,agregado.total)+'%)</div></div>'
+        +  '<div><div style="font-size:22px;font-weight:700;color:var(--t800)">'+agregado.hombres.toLocaleString('es-CO')+'</div><div style="font-size:10.5px;color:var(--t500)">Hombres ('+pct(agregado.hombres,agregado.total)+'%)</div></div>'
+        +  '<div><div style="font-size:22px;font-weight:700;color:var(--t800)">'+agregado.menores5.toLocaleString('es-CO')+'</div><div style="font-size:10.5px;color:var(--t500)">Menores de 5 años ('+pct(agregado.menores5,agregado.total)+'%)</div></div>'
+        +  '<div><div style="font-size:22px;font-weight:700;color:var(--t800)">'+agregado.mayores65.toLocaleString('es-CO')+'</div><div style="font-size:10.5px;color:var(--t500)">Mayores de 65 años ('+pct(agregado.mayores65,agregado.total)+'%)</div></div>'
+        +'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">'
+        +  '<div><div style="font-size:10.5px;font-weight:700;color:var(--t500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Régimen en salud</div>'
+        +    '<div style="font-size:12px;line-height:1.9">Subsidiado: <b>'+agregado.regimen.subsidiado.toLocaleString('es-CO')+'</b> ('+pct(agregado.regimen.subsidiado,agregado.total)+'%)<br>'
+        +    'Contributivo: <b>'+agregado.regimen.contributivo.toLocaleString('es-CO')+'</b> ('+pct(agregado.regimen.contributivo,agregado.total)+'%)<br>'
+        +    'No asegurado: <b>'+agregado.regimen.noAsegurado.toLocaleString('es-CO')+'</b> ('+pct(agregado.regimen.noAsegurado,agregado.total)+'%)</div>'
+        +    '<div style="font-size:10.5px;font-weight:700;color:var(--t500);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px">Área de ocurrencia</div>'
+        +    '<div style="font-size:12px;line-height:1.9">Cabecera municipal: <b>'+agregado.area.cabeceraMunicipal.toLocaleString('es-CO')+'</b> ('+pct(agregado.area.cabeceraMunicipal,agregado.total)+'%)<br>'
+        +    'Rural disperso: <b>'+agregado.area.ruralDisperso.toLocaleString('es-CO')+'</b> ('+pct(agregado.area.ruralDisperso,agregado.total)+'%)<br>'
+        +    'Centro poblado: <b>'+agregado.area.centroPoblado.toLocaleString('es-CO')+'</b> ('+pct(agregado.area.centroPoblado,agregado.total)+'%)</div>'
+        +  '</div>'
+        +  '<div><div style="font-size:10.5px;font-weight:700;color:var(--t500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Top EPS/Administradoras</div>'+top+'</div>'
+        +'</div>'
+        +'</div>';
     }
 
     function _renderSivigilaDashboard(){
@@ -10942,20 +11021,25 @@ window.PIIT = (function () {
       var wrap = document.getElementById('sv-dashboard-wrap');
       var emptyState = document.getElementById('sv-empty-state');
 
-      if (!yearData) {
-        // ── Estado vacío honesto — en vez de mostrar ceros o datos
-        // inventados, se explica por qué el año no tiene información. ──
+      if (!yearData || !yearData.eventos) {
+        // ── Sin desglose por evento para este año: si existe un total
+        // agregado real verificado, se muestra tal cual (honesto, no
+        // inventa eventos); si no existe ni eso, estado vacío explicado. ──
         if (wrap) wrap.style.display = 'none';
         if (emptyState) {
           emptyState.style.display = 'block';
-          emptyState.innerHTML =
-            '<div class="card" style="padding:32px 24px;text-align:center;background:var(--g50)">'
-            +'<i class="fa-solid fa-database" style="font-size:26px;color:var(--t400);margin-bottom:12px;display:block"></i>'
-            +'<div style="font-weight:700;color:var(--t700);font-size:14px;margin-bottom:6px">Sin datos publicados para '+anio+'</div>'
-            +'<div style="font-size:12.5px;color:var(--t500);max-width:520px;margin:0 auto;line-height:1.6">'
-            +'El portal SIVIGILA Web 4.0 (donde se publican los casos desagregados por municipio/UPGD) exige sesión institucional y no es accesible públicamente. '
-            +'Cuando se disponga del export oficial de '+anio+' para Segovia (UPGD 05736), se incorporará aquí — la plataforma ya está preparada para recibirlo sin cambios de código.</div>'
-            +'</div>';
+          if (yearData && yearData.agregado) {
+            emptyState.innerHTML = _renderSivigilaAgregado(yearData.agregado, anio);
+          } else {
+            emptyState.innerHTML =
+              '<div class="card" style="padding:32px 24px;text-align:center;background:var(--g50)">'
+              +'<i class="fa-solid fa-database" style="font-size:26px;color:var(--t400);margin-bottom:12px;display:block"></i>'
+              +'<div style="font-weight:700;color:var(--t700);font-size:14px;margin-bottom:6px">Sin datos publicados para '+anio+'</div>'
+              +'<div style="font-size:12.5px;color:var(--t500);max-width:520px;margin:0 auto;line-height:1.6">'
+              +'El portal SIVIGILA Web 4.0 (donde se publican los casos desagregados por municipio/UPGD) exige sesión institucional y no es accesible públicamente. '
+              +'Cuando se disponga del export oficial de '+anio+' para Segovia (UPGD 05736), se incorporará aquí — la plataforma ya está preparada para recibirlo sin cambios de código.</div>'
+              +'</div>';
+          }
         }
         _svUpdateFiltroUI();
         return;
@@ -11520,13 +11604,15 @@ window.PIIT = (function () {
         _renderSivigilaDashboard();
       },
       svPreset: function (btn, desde, hasta) {
-        if (!SIVIGILA_DATA_BY_YEAR[_svRango.anio]) return;
+        var yd = SIVIGILA_DATA_BY_YEAR[_svRango.anio];
+        if (!yd || !yd.eventos) return;
         _svRango.desde = Math.max(1, desde);
         _svRango.hasta = Math.min(52, hasta);
         _renderSivigilaDashboard();
       },
       svApplyRange: function () {
-        if (!SIVIGILA_DATA_BY_YEAR[_svRango.anio]) return;
+        var ydr = SIVIGILA_DATA_BY_YEAR[_svRango.anio];
+        if (!ydr || !ydr.eventos) return;
         var di = document.getElementById('sv-se-desde');
         var hi = document.getElementById('sv-se-hasta');
         var d = Math.max(1, Math.min(52, parseInt(di && di.value, 10) || 1));
@@ -11550,6 +11636,41 @@ window.PIIT = (function () {
         var anio = _svRango.anio;
         var yearData = SIVIGILA_DATA_BY_YEAR[anio];
         if (!yearData) { if (window.PIIT && PIIT.map && PIIT.map.toast) PIIT.map.toast(anio + ' no tiene datos publicados para exportar.', 'err'); return; }
+        if (!yearData.eventos) {
+          // Año con solo agregado real (2025/2026): exporta ese agregado,
+          // sin fabricar un desglose semanal/por evento que no existe.
+          var ag = yearData.agregado;
+          var rowsAg = [];
+          rowsAg.push(['PIIT Segovia · SIVIGILA · Total agregado (sin desagregar por evento)'].join(';'));
+          rowsAg.push(['Departamento','05 - ANTIOQUIA'].join(';'));
+          rowsAg.push(['Municipio UPGD','05736 - SEGOVIA'].join(';'));
+          rowsAg.push(['Año', anio].join(';'));
+          rowsAg.push(['Fuente', ag.fuente].join(';'));
+          rowsAg.push(['Fecha de generación', new Date().toLocaleString('es-CO')].join(';'));
+          rowsAg.push(['Usuario', (window.PIIT && window.PIIT.app && window.PIIT.app.currentUser) || 'Sesión activa PIIT'].join(';'));
+          rowsAg.push([]);
+          rowsAg.push(['Indicador','Valor'].join(';'));
+          rowsAg.push(['Total notificaciones', ag.total].join(';'));
+          rowsAg.push(['Mujeres', ag.mujeres].join(';'));
+          rowsAg.push(['Hombres', ag.hombres].join(';'));
+          rowsAg.push(['Menores de 5 años', ag.menores5].join(';'));
+          rowsAg.push(['Mayores de 65 años', ag.mayores65].join(';'));
+          rowsAg.push(['Régimen subsidiado', ag.regimen.subsidiado].join(';'));
+          rowsAg.push(['Régimen contributivo', ag.regimen.contributivo].join(';'));
+          rowsAg.push(['No asegurado', ag.regimen.noAsegurado].join(';'));
+          rowsAg.push(['Área cabecera municipal', ag.area.cabeceraMunicipal].join(';'));
+          rowsAg.push(['Área rural disperso', ag.area.ruralDisperso].join(';'));
+          rowsAg.push(['Área centro poblado', ag.area.centroPoblado].join(';'));
+          rowsAg.push([]);
+          rowsAg.push(['Administradora (top)','Registros'].join(';'));
+          ag.topAdministradoras.forEach(function(a){ rowsAg.push([a.nom, a.n].join(';')); });
+          var blobAg = new Blob(['﻿' + rowsAg.join('\n')], { type: 'text/csv;charset=utf-8;' });
+          var aAg = document.createElement('a');
+          aAg.href = URL.createObjectURL(blobAg);
+          aAg.download = 'sivigila_segovia_' + anio + '_agregado.csv';
+          document.body.appendChild(aAg); aAg.click(); document.body.removeChild(aAg);
+          return;
+        }
         var d = _svRango.desde, h = _svRango.hasta;
         var rows = [];
         rows.push(['PIIT Segovia · SIVIGILA · Vigilancia Epidemiológica'].join(';'));
