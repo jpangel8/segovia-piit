@@ -3226,11 +3226,28 @@ body::before{
 }
 .tb-escudo{box-shadow:0 0 0 3px rgba(255,255,255,.35) !important}
 
-/* Navegación: subrayado rojo en pestaña activa (verde ya es el fondo) */
+/* Navegación principal: estilo pestaña limpia, como la referencia del
+   usuario (Portal web / Agenda / Participación) — texto simple, verde
+   con subrayado fino en la activa, gris en las inactivas, sin fondo
+   de píldora ni negrilla excesiva. */
+.navbar{border-bottom:1px solid #E6E6E6 !important;box-shadow:none !important}
+.nav-btn{
+  background:transparent !important;
+  font-weight:500 !important;
+  color:#5D5D5D !important;
+  border-radius:0 !important;
+  border-bottom:2px solid transparent !important;
+  padding:10px 14px !important;
+}
+.nav-btn:hover{
+  background:transparent !important;
+  color:#237938 !important;
+}
 .nav-btn.act{
-  border-bottom-color:#DC0B2C !important;
-  background:var(--g100) !important;
-  font-weight:800 !important;
+  border-bottom-color:#237938 !important;
+  background:transparent !important;
+  color:#237938 !important;
+  font-weight:600 !important;
 }
 
 /* Titulares más presentes: mayor peso y tamaño, siguiendo la escala
