@@ -3201,6 +3201,90 @@ body { padding-bottom: 36px !important; }
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="format-detection" content="telephone=no">
+<style id="alt-theme-institucional-bold">
+/* ════════════════════════════════════════════════════════════════════
+   Identidad Segovia — tratamiento "Institucional Bold"
+   Misma paleta y tipografía del manual (ningún token base cambia),
+   con mayor presencia visual que el tratamiento sutil anterior: franja
+   tricolor superior, topbar sólida en verde institucional, CTA rojos
+   en píldora, tarjetas con acento superior de color rotando por
+   categoría, títulos de sección con subrayado de color.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Franja tricolor institucional fija arriba de todo, como firma visual */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;height:4px;z-index:9999;
+  background:linear-gradient(90deg,#237938 0 33.33%,#FCDC00 33.33% 66.66%,#DC0B2C 66.66% 100%);
+}
+.topbar{margin-top:4px}
+
+/* Topbar sólida verde institucional en vez de vidrio oscuro neutro */
+.topbar{
+  background:linear-gradient(135deg,#155224,#237938) !important;
+  border-bottom:2px solid #FCDC00 !important;
+  backdrop-filter:none !important;
+}
+.tb-escudo{box-shadow:0 0 0 3px rgba(255,255,255,.35) !important}
+
+/* Navegación: subrayado rojo en pestaña activa (verde ya es el fondo) */
+.nav-btn.act{
+  border-bottom-color:#DC0B2C !important;
+  background:var(--g100) !important;
+  font-weight:800 !important;
+}
+
+/* Titulares más presentes: mayor peso y tamaño, siguiendo la escala
+   del manual (56-64px H1 desktop) adaptada a densidad de dashboard */
+h1,.hero-h{font-weight:800 !important;letter-spacing:-.03em !important}
+h2,.sec-title{font-weight:800 !important;letter-spacing:-.03em !important}
+h3,.sec-det-t,.plat-titulo{font-weight:800 !important}
+
+/* Subrayado de color en títulos de sección (.pt) — firma editorial */
+.pt{
+  position:relative;display:inline-block;padding-bottom:6px;margin-bottom:14px !important;
+  font-weight:800 !important;
+}
+.pt::after{
+  content:'';position:absolute;left:0;bottom:0;width:36px;height:3px;
+  background:#237938;border-radius:2px;
+}
+
+/* Tarjetas KPI: acento superior de color rotando por posición, en vez
+   de borde uniforme — categoriza visualmente sin tocar el contenido */
+.kc{border-top:3px solid #237938 !important}
+.kc:nth-of-type(4n+2){border-top-color:#FCDC00 !important}
+.kc:nth-of-type(4n+3){border-top-color:#DC0B2C !important}
+.kc:nth-of-type(4n+4){border-top-color:#00A0E4 !important}
+.skpi{border-top:3px solid #237938 !important}
+.skpi:nth-of-type(4n+2){border-top-color:#FCDC00 !important}
+.skpi:nth-of-type(4n+3){border-top-color:#DC0B2C !important}
+.skpi:nth-of-type(4n+4){border-top-color:#00A0E4 !important}
+
+/* CTA / botones primarios: rojo institucional en píldora, tal como
+   pide el manual ("sustituye el CTA negro por rojo institucional") */
+.export-btn:not(.sec),
+.plat-btn-ext.prim,
+.sbf-map-btn,
+.app-btn,
+.cta-primary{
+  background:#DC0B2C !important;
+  border-color:#DC0B2C !important;
+  color:#fff !important;
+  border-radius:999px !important;
+  font-weight:700 !important;
+}
+.export-btn:not(.sec):hover,
+.plat-btn-ext.prim:hover,
+.sbf-map-btn:hover{
+  background:#b00823 !important;
+}
+
+/* Botones secundarios: siguen siendo neutros/verdes, no compiten con el CTA */
+.export-btn.sec,.plat-btn-ext.sec{border-radius:999px !important}
+
+/* EN VIVO / franja institucional inferior más presente */
+.gov-live-pill{background:#DC0B2C !important}
+</style>
 </head>
 <body>
 <script>
