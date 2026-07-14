@@ -57,9 +57,14 @@
   /* Movimiento — curvas naturales tipo macOS */
   --ease:cubic-bezier(.4,0,.2,1); --ease-spring:cubic-bezier(.16,1,.3,1);
   --dur-fast:.15s; --dur-med:.25s; --dur-slow:.4s;
-  /* Tipografía */
-  --fh:'Manrope','Inter',system-ui,sans-serif;
-  --fb:'Inter',system-ui,sans-serif;
+  /* Tipografía — Manual de Identidad: Gilroy (titulares/cifras/CTA) +
+     Metropolis (UI/cuerpo). Gilroy es de licencia comercial y no se
+     embebe sin ella; se declara primero para que resuelva si el
+     sistema operativo o una hoja de estilos institucional ya la tiene
+     instalada, con Metropolis/Manrope/Inter como cascada de respaldo
+     visualmente cercana. */
+  --fh:'Gilroy','Metropolis','Manrope','Inter',system-ui,sans-serif;
+  --fb:'Metropolis','Inter',system-ui,sans-serif;
   --fm:'JetBrains Mono',monospace;
   /* Mapa panel */
   --panel-w:280px;
@@ -2683,16 +2688,22 @@ a:hover { opacity: 0.8 !important; }
   --font-brand: 'Metropolis', 'Inter', -apple-system, system-ui, sans-serif;
 }
 
-/* ══ 2. TIPOGRAFÍA GLOBAL: METROPOLIS ══ */
+/* ══ 2. TIPOGRAFÍA GLOBAL: METROPOLIS (UI/cuerpo) + GILROY (titulares) ══
+   El manual reserva Gilroy para H1-H3, CTA y cifras destacadas; el resto
+   de la interfaz (navegación, tablas, formularios, cuerpo de texto) usa
+   Metropolis. Antes esta regla forzaba Metropolis también en h1-h6,
+   anulando la jerarquía de dos fuentes del manual. */
 body,
-h1, h2, h3, h4, h5, h6,
 p, span:not([class*="fa"]):not([class*="ion"]):not([class*="bi"]):not([class*="lni"]),
 button:not([class*="fa"]):not([class*="ion"]),
 input, select, textarea, label,
-.sec-title, .hero-h, .kc-val, .kc-lbl,
+.kc-val, .kc-lbl,
 .nav-btn, .nav-dd-trigger, .nav-logo-t, .pt,
 td, th, li, a {
   font-family: 'Metropolis', 'Inter', -apple-system, system-ui, sans-serif !important;
+}
+h1, h2, h3, h4, h5, h6, .sec-title, .hero-h {
+  font-family: 'Gilroy', 'Metropolis', -apple-system, system-ui, sans-serif !important;
 }
 
 /* ══ 3. TOPBAR — Réplica exacta portal gov.co ══ */
