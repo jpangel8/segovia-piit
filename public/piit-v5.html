@@ -3332,9 +3332,21 @@ h3,.sec-det-t,.plat-titulo{font-weight:800 !important}
 .hkpi-v{color:#0D0D0D !important}
 .hkpi-l{color:#5D5D5D !important}
 .hkpi-x.ok{color:#237938 !important}
+.hkpi-x.up{color:#B08F00 !important}
+.hkpi-x.dn{color:#DC0B2C !important}
 
 .card,.kc,.skpi{background:#FFFFFF !important}
 body{color:#0D0D0D}
+
+/* ── Legibilidad de colores fuertes sobre fondo blanco ────────────────
+   El azul institucional del manual (#00A0E4) tiene un contraste de
+   ~2,7:1 sobre blanco -- no cumple WCAG AA (mínimo 4,5:1 para texto) y
+   se usa mayormente como color de TEXTO (valores KPI, badges, enlaces
+   de SISPRO). Se redefine --blue a un azul más oscuro de la misma
+   familia (~4,6:1 de contraste): perceptiblemente "el mismo azul"
+   pero legible, tanto en texto como en el único uso decorativo de
+   fondo que tenía (borde superior de tarjeta). */
+:root{--blue:#0075A3}
 
 /* ── Sobriedad profesional: recuadros planos, sin sombra, con franja
    superior de color fina como único acento — igual que la referencia
@@ -12763,13 +12775,13 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
         +'<td style="padding:8px 12px;font-size:11px;text-align:right;font-weight:700">$'+valorM.toLocaleString('es-CO')+'</td>'
         +'<td style="padding:8px 12px;font-size:11px;text-align:center">'+_esc(provShort)+'</td>'
         +'<td style="padding:8px 12px;text-align:center"><span class="st '+_stClass(estado)+'">'+_esc(estado)+'</span></td>'
-        +'<td style="padding:8px 12px;text-align:center"><a href="'+url+'" target="_blank" rel="noopener noreferrer" style="font-size:10px;color:var(--au500)">Ver &#8599;</a></td></tr>';
+        +'<td style="padding:8px 12px;text-align:center"><a href="'+url+'" target="_blank" rel="noopener noreferrer" style="font-size:10px;color:var(--g700);font-weight:600">Ver &#8599;</a></td></tr>';
     }).join('');
   }
   function fetchDerivados(){
     if(_loaded)return;
     var url=SECOP_URL+'?nit_entidad=901989964&$limit=50&$order=fecha_de_inicio_del_contrato%20DESC';
-    var EMPTY_MSG='<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--t300);font-size:12px">EDURSEG E.I.C.E. (NIT 901.989.964-8) a\u00fan no tiene contratos publicados como entidad contratante en SECOP II. <a href="https://community.secop.gov.co/Public/Tendering/ContractNoticeManagement/Index" target="_blank" rel="noopener noreferrer" style="color:var(--au500)">Consultar directamente &#8599;</a></td></tr>';
+    var EMPTY_MSG='<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--t300);font-size:12px">EDURSEG E.I.C.E. (NIT 901.989.964-8) a\u00fan no tiene contratos publicados como entidad contratante en SECOP II. <a href="https://community.secop.gov.co/Public/Tendering/ContractNoticeManagement/Index" target="_blank" rel="noopener noreferrer" style="color:var(--g700);font-weight:600">Consultar directamente &#8599;</a></td></tr>';
     fetch(url).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
       .then(function(data){_loaded=true;if(data&&data.length>0){buildDerivados(data);}else{var tb=document.getElementById('derivados-tbody');if(tb)tb.innerHTML=EMPTY_MSG;}})
       .catch(function(){var tb=document.getElementById('derivados-tbody');if(tb)tb.innerHTML=EMPTY_MSG;});
