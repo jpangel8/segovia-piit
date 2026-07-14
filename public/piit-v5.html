@@ -3357,21 +3357,29 @@ body{color:#0D0D0D}
    fondo que tenía (borde superior de tarjeta). */
 :root{--blue:#0075A3}
 
-/* ── Sobriedad profesional: recuadros planos, sin sombra, con franja
-   superior de color fina como único acento — igual que la referencia
-   aportada por el usuario (tarjetas limpias, mucho aire, tipografía
-   contenida). El manual lo pide textualmente: "Tarjetas y módulos:
-   preferiblemente sin sombra; borde tenue o una franja superior de
-   color." Antes las tarjetas combinaban sombra + borde + franja,
-   viéndose más cargadas que la referencia. ── */
+/* ── Vidrio esmerilado (glassmorphism) en todas las tarjetas de la
+   plataforma, a pedido del usuario — reutiliza los tokens --glass-*
+   que ya existían en el sistema de diseño (línea ~47) pero no se
+   aplicaban a .card/.kc/.skpi. Fondo blanco translúcido + blur +
+   sombra suave + borde de cristal; conserva la franja superior de
+   color como acento institucional. ── */
 .card,.kc,.skpi{
-  box-shadow:none !important;
-  border:1px solid #EDEDED !important;
+  background:var(--glass-bg-strong) !important;
+  -webkit-backdrop-filter:var(--glass-blur) !important;
+  backdrop-filter:var(--glass-blur) !important;
+  box-shadow:var(--sh-glass) !important;
+}
+/* Bordes izq/der/inf en cristal; el superior NO se toca aquí para no
+   pisar la franja de color rotada (verde/amarillo/rojo/azul) de .kc/.skpi */
+.card{border:1px solid var(--glass-border) !important}
+.kc,.skpi{
+  border-left:1px solid var(--glass-border) !important;
+  border-right:1px solid var(--glass-border) !important;
+  border-bottom:1px solid var(--glass-border) !important;
 }
 .card:hover,.kc:hover,.skpi:hover{
-  box-shadow:none !important;
-  transform:none !important;
-  border-color:#DADADA !important;
+  box-shadow:0 14px 38px rgba(13,32,23,.16),0 2px 4px rgba(13,32,23,.06) !important;
+  transform:translateY(-2px) !important;
 }
 .kc{border-top-width:2px !important;padding:18px !important}
 .skpi{border-top-width:2px !important;padding:18px !important}
