@@ -3318,6 +3318,33 @@ h3,.sec-det-t,.plat-titulo{font-weight:800 !important}
 
 .card,.kc,.skpi{background:#FFFFFF !important}
 body{color:#0D0D0D}
+
+/* ── Sobriedad profesional: recuadros planos, sin sombra, con franja
+   superior de color fina como único acento — igual que la referencia
+   aportada por el usuario (tarjetas limpias, mucho aire, tipografía
+   contenida). El manual lo pide textualmente: "Tarjetas y módulos:
+   preferiblemente sin sombra; borde tenue o una franja superior de
+   color." Antes las tarjetas combinaban sombra + borde + franja,
+   viéndose más cargadas que la referencia. ── */
+.card,.kc,.skpi{
+  box-shadow:none !important;
+  border:1px solid #EDEDED !important;
+}
+.card:hover,.kc:hover,.skpi:hover{
+  box-shadow:none !important;
+  transform:none !important;
+  border-color:#DADADA !important;
+}
+.kc{border-top-width:2px !important;padding:18px !important}
+.skpi{border-top-width:2px !important;padding:18px !important}
+
+/* Tipografía sobria: valores en negro con peso contenido (no 800 en
+   cifras pequeñas, reservamos el peso fuerte para H1-H3) */
+.kc-val,.skpi-v{color:#0D0D0D !important;font-weight:700 !important}
+.kc-lbl,.skpi-l{color:#5D5D5D !important;font-weight:600 !important}
+
+/* Divisores finos y constantes, como pide el manual (#E6E6E6) */
+.grid2,.grid3,.grid4{gap:16px !important}
 </style>
 </head>
 <body>
