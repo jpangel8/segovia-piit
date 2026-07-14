@@ -3284,6 +3284,40 @@ h3,.sec-det-t,.plat-titulo{font-weight:800 !important}
 
 /* EN VIVO / franja institucional inferior más presente */
 .gov-live-pill{background:#DC0B2C !important}
+
+/* ── Ajuste: fondo blanco / texto negro / recuadros blancos ──────────
+   El hero y la topbar venían con fondo verde oscuro de una versión
+   anterior; se cambian a blanco con texto negro para cumplir la regla
+   del propio manual ("Cabecera: fondo blanco") y la instrucción del
+   usuario. Las tarjetas (.card/.kc/.skpi) ya usaban fondo blanco por
+   diseño — no requerían cambio, solo se refuerza aquí para blindarlo. */
+.topbar{
+  background:#FFFFFF !important;
+  border-bottom:1px solid #E6E6E6 !important;
+}
+.tb-name{color:#0D0D0D !important}
+.tb-dep{color:#5D5D5D !important}
+.tb-escudo{box-shadow:0 0 0 3px rgba(35,121,56,.18) !important}
+.tb-time,.tb-live span{color:#5D5D5D !important}
+
+.hero{
+  background:#FFFFFF !important;
+  border-bottom:1px solid #E6E6E6;
+}
+.hero::before,.hero::after{display:none !important}
+.hero-tag{background:rgba(35,121,56,.08) !important;border-color:rgba(35,121,56,.25) !important}
+.hero-tag span{color:#237938 !important}
+.hero-h{color:#0D0D0D !important}
+.hero-h em{color:#DC0B2C !important}
+.hero-sub{color:#5D5D5D !important}
+.hkpi{background:#FFFFFF !important;border:1px solid #E6E6E6 !important}
+.hkpi:hover{background:#FAFAFA !important}
+.hkpi-v{color:#0D0D0D !important}
+.hkpi-l{color:#5D5D5D !important}
+.hkpi-x.ok{color:#237938 !important}
+
+.card,.kc,.skpi{background:#FFFFFF !important}
+body{color:#0D0D0D}
 </style>
 </head>
 <body>
