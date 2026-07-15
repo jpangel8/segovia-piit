@@ -5967,6 +5967,19 @@ window.PIIT = (function () {
   var _escMap = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
   function _esc(s) { return s == null ? '' : String(s).replace(/[&<>"']/g, function(c){ return _escMap[c]; }); }
 
+  /* ── Insignia (monograma) por entidad — "Fuentes de datos oficiales" ──
+     No son los logotipos oficiales reales (no hay forma segura de
+     descargar artwork de marca desde este entorno); son insignias
+     distintivas por fuente, con las iniciales de la entidad sobre un
+     color institucional reconocible, para que cada tarjeta se
+     identifique de un vistazo en vez de un ícono genérico compartido. */
+  function _srcBadge(sigla, bg) {
+    return '<svg width="34" height="34" viewBox="0 0 34 34" role="img" aria-label="' + sigla + '">'
+      + '<rect width="34" height="34" rx="9" fill="' + bg + '"/>'
+      + '<text x="17" y="21" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="' + (sigla.length > 3 ? 9.5 : 12) + '" fill="#fff">' + sigla + '</text>'
+      + '</svg>';
+  }
+
   /* ── DATOS MAESTROS ─────────────────────────────── */
   const DATA = {
 
@@ -6304,25 +6317,25 @@ window.PIIT = (function () {
     ],
 
     FUENTES: [
-      { nom:'IGAC — CartoBásica Nacional (500k / 25k) · Ref. CeM 12524', sub:'CartoBásica · Vías · Hidrografía · Límites · Relieve', ico:'🗺️',
+      { nom:'IGAC — CartoBásica Nacional (500k / 25k) · Ref. CeM 12524', sub:'CartoBásica · Vías · Hidrografía · Límites · Relieve', ico:_srcBadge('IGAC','#0B5FA8'),
         frq:'Continua · con respaldo automático', ftc:'--blue',
         desc:'Cartografía básica vectorial de cobertura nacional (incluye Segovia). Servicios REST verificados: carto500000colombia2016 y carto25000colombia2017, ambos en mapas.igac.gov.co/server/rest/services/carto/. Se consumen vía endpoint "/export" (no exponen WMSServer) y están protegidos por el motor de resiliencia geoespacial de la plataforma: si una fuente falla o responde lento, conmuta automáticamente a la otra sin interrumpir el servicio.' },
-      { nom:'IGAC — CartoBásica Digital 1:2.000 · Segovia (2024)', sub:'Cabecera municipal · DIVIPOLA 05736000 · Servicio IGAC 14241', ico:'📍',
+      { nom:'IGAC — CartoBásica Digital 1:2.000 · Segovia (2024)', sub:'Cabecera municipal · DIVIPOLA 05736000 · Servicio IGAC 14241', ico:_srcBadge('IGAC','#0B5FA8'),
         frq:'Producto 2024 · con respaldo automático', ftc:'--blue',
         desc:'Cartografía básica digital a escala 1:2.000 de la cabecera municipal de Segovia, elaborada en 2024 por el IGAC a partir de fotografías aéreas CityMapper (~446,54 ha). Servicio real verificado en mapas2.igac.gov.co/server3/services/carto/carto2000segovia05736000/MapServer/WMSServer (WMS 1.3.0) — nótese que este producto vive en un servidor distinto ("server3") al resto del catálogo IGAC. 20 capas: vías, construcciones, curvas de nivel, drenajes, bosque, cercas, muros. Protegido por el motor de resiliencia: WMS primario, respaldo REST "/export" sobre el mismo servicio, y el mosaico nacional 1:25.000 como último respaldo de cobertura amplia.' },
-      { nom:'IGAC — Catastro · Direcciones Territoriales', sub:'Predios · Direcciones Territoriales IGAC · 22 sedes', ico:'📋',
+      { nom:'IGAC — Catastro · Direcciones Territoriales', sub:'Predios · Direcciones Territoriales IGAC · 22 sedes', ico:_srcBadge('IGAC','#0B5FA8'),
         frq:'Mensual · con respaldo automático', ftc:'--blue',
         desc:'Datos catastrales del servicio catastro/direccionesterritorialesigac (mapas.igac.gov.co/server/rest/services/). El servicio existe pero no expone extensión WMS; se consume vía REST "/export", verificado y protegido por el motor de resiliencia. Información predial georreferenciada, cobertura nacional.' },
-      { nom:'DANE — Marco Geoestadístico Nacional (MGN 2018)', sub:'Departamento · Municipio · Secciones · Manzanas · Censo 2018', ico:'📊',
+      { nom:'DANE — Marco Geoestadístico Nacional (MGN 2018)', sub:'Departamento · Municipio · Secciones · Manzanas · Censo 2018', ico:_srcBadge('DANE','#D9631E'),
         frq:'Censo 2018 + proyecciones · con respaldo automático', ftc:'--blue',
         desc:'Marco geográfico oficial del Censo Nacional de Población y Vivienda 2018, servicio MGN2018/Serv_CapasMGN_2018. El WMS real se sirve desde portalgis.dane.gov.co (no geoportal.dane.gov.co, que sólo aloja el directorio REST) — verificado como WMS 1.3.0 válido. Protegido por el motor de resiliencia con respaldo REST "/export" sobre el mismo servicio.' },
-      { nom:'INVIAS — Red Vial Nacional', sub:'Red primaria · Secundaria · Estado · Categoría', ico:'🛣️',
+      { nom:'INVIAS — Red Vial Nacional', sub:'Red primaria · Secundaria · Estado · Categoría', ico:_srcBadge('INVIAS','#2D6E3E'),
         frq:'Trimestral', ftc:'--red',
         desc:'Red vial del territorio nacional, servicio vigente Mapa_Carreteras/RedVial (hermes.invias.gov.co/arcgis/rest/services/). El folder anterior "portal_geovisor" fue retirado del servidor; el servicio actual no expone WMS y se consume vía REST "/export". Incluye vías que conectan Segovia con el Nordeste Antioqueño.' },
-      { nom:'SECOP II — Contratación Pública · Colombia Compra Eficiente', sub:'Contratos · Procesos · Contratistas · NIT 890981391-2 · Municipio de Segovia', ico:'📄',
+      { nom:'SECOP II — Contratación Pública · Colombia Compra Eficiente', sub:'Contratos · Procesos · Contratistas · NIT 890981391-2 · Municipio de Segovia', ico:_srcBadge('SECOP','#0E7C86'),
         frq:'Tiempo real · Auto-sync cada 2 min', ftc:'--green',
         desc:'Sistema Electrónico de Contratación Pública — SECOP II. Fuente: API Socrata de datos abiertos (datos.gov.co). Datasets: jbjy-vk9h (contratos ejecutados con fecha inicio, fin, valor, contratista, estado) y p6dx-8zbt (procesos de contratación). Filtro: NIT entidad 890981391 (Municipio de Segovia). Integración en tiempo real: la plataforma PIIT consulta automáticamente cada 2 minutos si hay nuevos contratos publicados y actualiza la sección de Contratos sin recargar la página. Incluye semáforo de cierre contractual (verde/amarillo/rojo) calculado desde fecha_de_fin_del_contrato. Cobertura: años 2024, 2025, 2026 y 2027. Licencia: Datos abiertos Colombia · CC BY 4.0.' },
-      { nom:'SECOP II — EDURSEG E.I.C.E. · Contratos Derivados', sub:'Subcontratos · Obras · Interventorías · NIT 901.989.964-8', ico:'🏗️',
+      { nom:'SECOP II — EDURSEG E.I.C.E. · Contratos Derivados', sub:'Subcontratos · Obras · Interventorías · NIT 901.989.964-8', ico:_srcBadge('EDU','#8A4AA3'),
         frq:'Tiempo real · Sincronización automática', ftc:'--gold',
         desc:'Contratos derivados de la Empresa de Desarrollo Urbano y Rural de Segovia (EDURSEG E.I.C.E.), NIT 901.989.964-8. Fuente: API Socrata datos.gov.co, dataset p6dx-8zbt. EDURSEG actúa como entidad contratante de régimen especial para ejecutar los contratos interadministrativos del Municipio de Segovia. La plataforma filtra exclusivamente contratos ejecutados en Segovia (nombre_entidad LIKE SEGOVIA), excluyendo contratos de EDURSEG en otros municipios (Caramanta, Santa Bárbara, San Roque). 109 procesos registrados por $167.310M COP. Incluye subcontratistas: SOTARCO SAS, GUINCO SAS, CONINCAL SAS, INSOL SAS, entre otros. Modalidad: contratación régimen especial.' },
     ],
