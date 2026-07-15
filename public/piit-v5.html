@@ -124,6 +124,11 @@ html{scroll-behavior:smooth}
 .bc-home-btn{background:none;border:none;padding:2px;cursor:pointer;display:inline-flex;align-items:center;border-radius:4px;transition:background .15s}
 .bc-home-btn:hover{background:var(--g100)}
 .bc-home-btn:hover i{color:var(--g700)}
+
+/* Selector de año — Tendencia histórica ICV (Dashboard) */
+.yr-btn{font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid #E0E0E0;background:#fff;color:#5D5D5D;cursor:pointer;transition:background .15s,color .15s,border-color .15s;font-family:var(--fm)}
+.yr-btn:hover{border-color:#237938;color:#237938}
+.yr-btn.act{background:#237938;border-color:#237938;color:#fff}
 .breadcrumb-bar .bc-sep{color:var(--t200)}
 .breadcrumb-bar .bc-current{color:var(--g700);font-weight:700}
 
@@ -3691,11 +3696,19 @@ body{color:#0D0D0D}
       </div>
     </div>
   </div>
-  <!-- Fila 4: Tendencia histórica ICV -->
+  <!-- Fila 4: Tendencia histórica ICV — año como eje central, sincronizado -->
   <div id="dash-t-tendencias" class="dash-anchor"></div>
   <div style="margin-top:4px">
-    <div class="pt">Evolución histórica · Índice de Calidad de Vida (ICV) municipal · 2019–2026</div>
+    <div class="pt">Evolución histórica · Índice de Calidad de Vida (ICV) municipal · 2019–2025</div>
     <div class="card" style="padding:16px 18px">
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div id="yr-kpi-readout" style="display:flex;align-items:baseline;gap:10px">
+          <span id="yr-kpi-val" style="font-family:var(--fm);font-size:32px;font-weight:700;color:#0D0D0D">62</span>
+          <span style="font-size:12px;color:#5D5D5D">ICV · <span id="yr-kpi-year">2025</span></span>
+          <span id="yr-kpi-delta" style="font-size:11.5px;font-weight:700;color:#237938">▲ +3 vs 2024</span>
+        </div>
+        <div id="yr-selector" style="display:flex;gap:6px;flex-wrap:wrap" role="tablist" aria-label="Seleccionar año"></div>
+      </div>
       <canvas id="chart-timeline" height="70"></canvas>
     </div>
   </div>
@@ -9445,21 +9458,95 @@ window.PIIT = (function () {
       charts.buildTimeline();
     },
 
+    _TIMELINE: {
+      labels: ['2019','2020','2021','2022','2023','2024','2025'],
+      icv:    [48,46,49,52,55,59,62],
+      infra:  [51,49,52,55,58,62,66],
+      social: [44,43,47,50,53,57,60],
+      selectedIdx: 6, // 2025 por defecto
+    },
+
+    // Animación count-up del KPI (300-450ms, ease-out) al cambiar de año —
+    // el año es el eje que sincroniza el KPI y el punto resaltado del gráfico.
+    _countUp: function (el, from, to, ms) {
+      var start = performance.now();
+      function ease(t) { return 1 - Math.pow(1 - t, 3); } // cubic ease-out
+      function step(now) {
+        var p = Math.min(1, (now - start) / ms);
+        var v = Math.round(from + (to - from) * ease(p));
+        el.textContent = v;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    },
+
+    setTimelineYear: function (idx) {
+      var T = charts._TIMELINE;
+      var prevVal = +document.getElementById('yr-kpi-val').textContent || T.icv[idx];
+      T.selectedIdx = idx;
+
+      // KPI con count-up
+      charts._countUp(document.getElementById('yr-kpi-val'), prevVal, T.icv[idx], 380);
+      document.getElementById('yr-kpi-year').textContent = T.labels[idx];
+      var delta = idx > 0 ? T.icv[idx] - T.icv[idx-1] : 0;
+      var deltaEl = document.getElementById('yr-kpi-delta');
+      if (idx === 0) {
+        deltaEl.textContent = 'Primer año de la serie';
+        deltaEl.style.color = '#5D5D5D';
+      } else {
+        deltaEl.textContent = (delta >= 0 ? '▲ +' : '▼ ') + delta + ' vs ' + T.labels[idx-1];
+        deltaEl.style.color = delta >= 0 ? '#237938' : '#DC0B2C';
+      }
+
+      // Botones de año
+      document.querySelectorAll('.yr-btn').forEach(function (b, i) {
+        b.classList.toggle('act', i === idx);
+        b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+      });
+
+      // Resalta el punto seleccionado en el gráfico (radio y color mayores)
+      var ch = charts._instances['chart-timeline'];
+      if (ch) {
+        var n = T.labels.length;
+        ch.data.datasets[0].pointRadius = T.labels.map(function (_, i) { return i === idx ? 7 : 4; });
+        ch.data.datasets[0].pointBackgroundColor = T.labels.map(function (_, i) { return i === idx ? '#DC0B2C' : '#48B72C'; });
+        ch.update('active'); // usa la animación de transición configurada (350ms ease-out)
+      }
+    },
+
     buildTimeline: function () {
       charts._destroy('chart-timeline');
       var ctx = document.getElementById('chart-timeline');
       if (!ctx) return;
+      var T = charts._TIMELINE;
+
+      // Selector de año — pastillas, mismo patrón visual que el resto de
+      // filtros de año ya implementados (SIVIGILA/SISPRO)
+      var sel = document.getElementById('yr-selector');
+      if (sel) {
+        sel.innerHTML = T.labels.map(function (y, i) {
+          return '<button type="button" class="yr-btn' + (i === T.selectedIdx ? ' act' : '') + '" role="tab" aria-selected="' + (i === T.selectedIdx) + '" onclick="PIIT.charts.setTimelineYear(' + i + ')">' + y + '</button>';
+        }).join('');
+      }
+
       charts._instances['chart-timeline'] = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['2019','2020','2021','2022','2023','2024','2025'],
+          labels: T.labels,
           datasets: [
-            {label:'ICV Municipal promedio', data:[48,46,49,52,55,59,62], borderColor:'#48B72C', backgroundColor:'rgba(61,148,103,.1)', tension:0.4, fill:true, pointRadius:4, borderWidth:2.5},
-            {label:'Infraestructura', data:[51,49,52,55,58,62,66], borderColor:'#D6B000', backgroundColor:'transparent', tension:0.4, borderDash:[5,3], pointRadius:3, borderWidth:1.5},
-            {label:'Cobertura social', data:[44,43,47,50,53,57,60], borderColor:'#00A0E4', backgroundColor:'transparent', tension:0.4, borderDash:[3,3], pointRadius:3, borderWidth:1.5},
+            {label:'ICV Municipal promedio', data:T.icv, borderColor:'#48B72C', backgroundColor:'rgba(61,148,103,.1)', tension:0.4, fill:true,
+             pointRadius: T.labels.map(function(_,i){return i===T.selectedIdx?7:4;}),
+             pointBackgroundColor: T.labels.map(function(_,i){return i===T.selectedIdx?'#DC0B2C':'#48B72C';}),
+             borderWidth:2.5},
+            {label:'Infraestructura', data:T.infra, borderColor:'#D6B000', backgroundColor:'transparent', tension:0.4, borderDash:[5,3], pointRadius:3, borderWidth:1.5},
+            {label:'Cobertura social', data:T.social, borderColor:'#00A0E4', backgroundColor:'transparent', tension:0.4, borderDash:[3,3], pointRadius:3, borderWidth:1.5},
           ],
         },
         options: Object.assign(charts._defaults(), {
+          animation: { duration: 350, easing: 'easeOutCubic' },
+          onClick: function (evt, elements) {
+            if (elements && elements.length) charts.setTimelineYear(elements[0].index);
+          },
           plugins: { legend: { position:'bottom', labels:{ font:{size:12}, boxWidth:10 }}},
           scales: {
             x: { ticks:{color:'#8A9E96',font:{size:12}}, grid:{color:'rgba(0,0,0,.08)'} },
@@ -9467,6 +9554,12 @@ window.PIIT = (function () {
           },
         }),
       });
+
+      // Estado inicial del KPI (sin animación, es la primera carga)
+      document.getElementById('yr-kpi-val').textContent = T.icv[T.selectedIdx];
+      document.getElementById('yr-kpi-year').textContent = T.labels[T.selectedIdx];
+      var d0 = T.icv[T.selectedIdx] - T.icv[T.selectedIdx-1];
+      document.getElementById('yr-kpi-delta').textContent = (d0 >= 0 ? '▲ +' : '▼ ') + d0 + ' vs ' + T.labels[T.selectedIdx-1];
     },
 
     buildRadar: function () {
