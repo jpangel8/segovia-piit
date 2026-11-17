@@ -17812,9 +17812,29 @@ window.PIITSpatial=(function(){
       var cnt=0;
       for(p=0;p<NPERM;p++){var s=0;for(var c=0;c<k;c++){s+=others[Math.floor(r2()*others.length)];}var Ip2=z[i]*(s/k)/m2;if(Math.abs(Ip2)>=Math.abs(Ii))cnt++;}
       var pv=(cnt+1)/(NPERM+1),quad=z[i]>=0?(lag>=0?'HH':'HL'):(lag>=0?'LH':'LL');
-      lisa.push({g:idx[i],r:byPk[T.pk[idx[i]]],val:x[i],z:z[i]/sd,lag:lag/sd,Ii:Ii,p:pv,q:quad,cls:pv<0.05?quad:'ns',k:k});}
+      lisa.push({g:idx[i],r:byPk[T.pk[idx[i]]],val:x[i],z:z[i]/sd,lag:lag/sd,Ii:Ii,p:pv,q:quad,cls:pv<0.05?quad:'ns',k:k,nbs:W[i].map(function(e){return byPk[T.pk[idx[e.j]]].nombre;})});}
     return {n:n,I:I,EI:EI,p:pG,zI:zI,perm:perm,lisa:lisa,islands:islands,x:x,mu:mu,sd:sd,idx:idx};}
   function kill(){st.charts.forEach(function(c){try{c.destroy();}catch(e){}});st.charts=[];}
+  var ADV={sisben_ab:1,reportes:1};
+  function f1(v){return v.toFixed(1).replace('.',',');}
+  function f2(v){return v.toFixed(2).replace('.',',').replace('-','−');}
+  function pTxt(p){return p<0.001?'p < 0,001':'p = '+p.toFixed(3).replace('.',',');}
+  function notaLisa(l,vname,vk,n){
+    var nm=l.r.nombre,vec=l.nbs.length>6?l.nbs.slice(0,6).join(', ')+' y otros':l.nbs.join(', ');
+    var rel=function(z){return z>=0?'por encima':'por debajo';};
+    var s=nm+' ('+vname+' = '+f1(l.val)+'): valor '+rel(l.z)+' del promedio municipal (z = '+f2(l.z)+') con '+l.k+' vecinos ('+vec+') cuyo promedio está '+rel(l.lag)+' (z = '+f2(l.lag)+'). ';
+    var imp={HH:'Forma un clúster Alto-Alto: el barrio y su entorno concentran valores altos.',LL:'Forma un clúster Bajo-Bajo: el barrio y su entorno concentran valores bajos.',
+      HL:'Es un valor atípico Alto-Bajo: destaca por encima de un entorno de valores bajos.',LH:'Es un valor atípico Bajo-Alto: contrasta con un entorno de valores altos, lo que sugiere que su situación no sigue la del sector.'}[l.q];
+    s+=(l.cls==='ns'?'Queda en el cuadrante '+QN[l.q]+', sin patrón espacial confirmado. ':imp)+' ';
+    if(ADV[vk]){ if(l.q==='HH')s+='Como valores altos significan mayor carga o vulnerabilidad, es un foco prioritario. '; else if(l.q==='LL')s+='Como valores bajos significan menor carga, es una zona de menor presión. '; }
+    s+=l.cls==='ns'?'No es estadísticamente significativo ('+pTxt(l.p)+'); no se distingue del azar.'
+      :'Es estadísticamente significativo ('+pTxt(l.p)+', Ii = '+f2(l.Ii)+'), aunque es un resultado exploratorio: '+n+' barrios y sin corrección por pruebas múltiples.';
+    return s;}
+  function notaResumen(R,vname,vk){
+    var sig=R.lisa.filter(function(l){return l.cls!=='ns';}).sort(function(a,b){return a.p-b.p;});
+    var g=R.p<0.05?'La autocorrelación espacial global es significativa (I = '+f2(R.I)+', '+pTxt(R.p)+').':'La autocorrelación espacial global no es significativa (I = '+f2(R.I)+', '+pTxt(R.p)+'): en conjunto, los barrios vecinos no se parecen más de lo esperable por azar.';
+    var h=sig.length?'A nivel local, '+sig.length+' de '+R.n+' barrios presentan un patrón significativo (p < 0,05): '+sig.map(function(l){return l.r.nombre+' ('+QN[l.cls]+')';}).join(', ')+'.':'A nivel local, ningún barrio presenta un patrón significativo (p < 0,05) en «'+vname+'».';
+    return g+' '+h+(R.islands.length?' Quedan fuera del cálculo por no tener vecinos: '+R.islands.join(', ')+'.':'');}
   function mkChart(id,cfg){var el=document.getElementById(id);if(el)st.charts.push(new Chart(el,cfg));}
   function mapSvg(R){
     var T=topo(),F=T.F,minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9,i;
@@ -17839,6 +17859,10 @@ window.PIITSpatial=(function(){
       :'Hay autocorrelación espacial negativa: los barrios vecinos tienden a tener valores contrastantes en «'+vname+'».';
     var rowsT=R.lisa.slice().sort(function(a,b){return a.p-b.p;}).map(function(l){
       return '<tr><td>'+esc(l.r.nombre)+'</td><td>'+l.val.toFixed(1)+'</td><td>'+l.k+'</td><td>'+l.z.toFixed(2)+'</td><td>'+l.lag.toFixed(2)+'</td><td>'+l.Ii.toFixed(2)+'</td><td>'+l.p.toFixed(3)+'</td><td><span class="km-dot" style="background:'+QC[l.cls]+'"></span>'+QN[l.cls]+'</td></tr>';}).join('');
+    var ordL=R.lisa.slice().sort(function(a,b){return a.p-b.p;}),sigL=ordL.filter(function(l){return l.cls!=='ns';});
+    var notasHtml='<div class="km-h" style="margin-top:14px">Nota automática de resultados</div><div class="sp-nota"><p>'+esc(notaResumen(R,vname,vk))+'</p>'+
+      (sigL.length?'<ul>'+sigL.map(function(l){return '<li>'+esc(notaLisa(l,vname,vk,R.n))+'</li>';}).join('')+'</ul>':'')+
+      '<details class="km-d"><summary>Notas de los demás barrios ('+(R.lisa.length-sigL.length)+')</summary><ul>'+ordL.filter(function(l){return l.cls==='ns';}).map(function(l){return '<li>'+esc(notaLisa(l,vname,vk,R.n))+'</li>';}).join('')+'</ul></details></div>';
     host.innerHTML=
       '<div class="km-bar"><label>Variable <select id="sp-v">'+opts+'</select></label><label>Vecindad <select id="sp-w"><option value="knn"'+(st.w==='knn'?' selected':'')+'>4 vecinos más cercanos (incluye los 21 barrios)</option><option value="reina"'+(st.w==='reina'?' selected':'')+'>Reina (comparten borde o vértice)</option></select></label><span class="km-chip">Pesos por fila</span><span class="km-chip">'+NPERM+' permutaciones</span></div>'+
       '<div class="km-kpis"><div><b>'+R.I.toFixed(3)+'</b><span>I de Moran global (esperado '+R.EI.toFixed(3)+')</span></div><div><b>'+(R.p<0.001?'&lt; 0,001':R.p.toFixed(3))+'</b><span>Pseudo-valor p</span></div><div><b>'+R.zI.toFixed(2)+'</b><span>Puntaje z (permutación)</span></div><div><b>'+(cnt.HH+cnt.LL+cnt.HL+cnt.LH)+' / '+R.n+'</b><span>Barrios con LISA significativo (p &lt; 0,05)</span></div></div>'+
@@ -17850,7 +17874,7 @@ window.PIITSpatial=(function(){
       '<div class="sp-leg">'+['HH','LL','HL','LH','ns'].map(function(q){return '<span><i style="background:'+QC[q]+'"></i>'+QN[q]+' ('+cnt[q]+')</span>';}).join('')+'</div></div>'+
       '<div class="km-box"><div class="km-h">Qué significa cada tipo</div><ul class="sp-ul"><li><b>Alto-Alto:</b> punto crítico; el barrio y sus vecinos tienen valores altos.</li><li><b>Bajo-Bajo:</b> zona homogénea de valores bajos.</li><li><b>Alto-Bajo / Bajo-Alto:</b> valor atípico espacial: contrasta con su entorno.</li><li><b>No significativo:</b> sin patrón distinguible del azar (p ≥ 0,05).</li></ul><p class="km-n">Interpretación: «alto» es relativo al promedio municipal de la variable, no «bueno» o «malo». Con 18 a 21 barrios y sin corrección por pruebas múltiples, los clústeres LISA son exploratorios.</p></div>'+
       '</div>'+
-      '<div class="km-h" style="margin-top:14px">LISA por barrio (ordenado por significancia)</div><div class="km-sc"><table class="km-t"><thead><tr><th>Barrio</th><th>Valor</th><th>Vecinos</th><th>z</th><th>z vecinos</th><th>Ii</th><th>p</th><th>Tipo</th></tr></thead><tbody>'+rowsT+'</tbody></table></div>'+
+      notasHtml+'<div class="km-h" style="margin-top:14px">LISA por barrio (ordenado por significancia)</div><div class="km-sc"><table class="km-t"><thead><tr><th>Barrio</th><th>Valor</th><th>Vecinos</th><th>z</th><th>z vecinos</th><th>Ii</th><th>p</th><th>Tipo</th></tr></thead><tbody>'+rowsT+'</tbody></table></div>'+
       '<details class="km-d"><summary>Cómo se calcula</summary><p>Vecindad reina: barrios que comparten al menos un vértice o borde en el polígono oficial (deja 3 barrios sin vecinos). Vecindad de 4 vecinos más cercanos: los 4 barrios con centroide más próximo (todos los barrios tienen vecinos; la relación no es simétrica). Pesos estandarizados por fila (cada vecino pesa 1/número de vecinos). I de Moran = Σᵢ Σⱼ wᵢⱼ zᵢ zⱼ / Σ zᵢ². LISA: Iᵢ = zᵢ · Σⱼ wᵢⱼ zⱼ / m₂. Significancia por permutación aleatoria ('+NPERM+', semilla fija): global con el estadístico completo y local con permutación condicional (se fija el barrio y se muestrean sus vecinos del resto). El valor p es pseudo-p = (extremos + 1) / ('+NPERM+' + 1), bilateral.</p></details>';
     document.getElementById('sp-v').onchange=function(){st.v=this.value;render(rows);};
     document.getElementById('sp-w').onchange=function(){st.w=this.value;render(rows);};
@@ -17878,6 +17902,7 @@ window.PIITSpatial=(function(){
 <style id="piit-spatial-css">
 .sp-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:#434343;margin-top:8px}
 .sp-leg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.sp-nota{background:#F6F8F9;border-radius:3px;padding:10px 14px;font-size:12.5px;color:#434343;line-height:1.55}.sp-nota p{margin:0 0 8px}.sp-nota ul{margin:6px 0 0;padding-left:18px}.sp-nota li{margin:5px 0}
 .sp-ul{margin:0;padding-left:18px;font-size:12.5px;color:#434343;line-height:1.55}
 </style>
 </body>
