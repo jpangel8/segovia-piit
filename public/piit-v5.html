@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
@@ -3361,6 +3361,126 @@ h3,.sec-det-t,.plat-titulo{font-weight:800 !important}
 .salud-tab:hover{color:#237938 !important;background:transparent !important}
 body{color:#0D0D0D}
 
+/* ═══════════════════════════════════════════════════════════════════
+   RÉPLICA VISUAL DEL PORTAL OFICIAL — segovia-antioquia.gov.co
+   Valores leídos del DOM real del portal (jul/nov-2026), estándar GOV.CO:
+   menú #F6F8F9, pestaña activa #488704 (blanco), chips #E6EFFD/#004884
+   píldora 25px, texto #434343, cuerpo #5C5C5C, títulos Nunito Sans 600,
+   logo oficial de la Alcaldía. Esta capa va al final: sustituye el
+   tratamiento anterior (vidrio, franja tricolor, bordes de colores).
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --gov-green:#488704; --gov-green-d:#3A6E03; --gov-blue:#004884; --gov-chip:#E6EFFD;
+  --gov-ink:#434343; --gov-body:#5C5C5C; --gov-menu:#F6F8F9; --gov-line:#E1E5E8;
+  --gov-top:#3366CC;
+}
+/* 1 · Sin franja tricolor flotante (no existe en el portal oficial) */
+body::before{display:none !important}
+
+/* 2 · Barra superior: blanca, línea azul fina arriba, logo oficial */
+.topbar{
+  height:64px !important; margin-top:0 !important;
+  background:#FFFFFF !important; backdrop-filter:none !important;
+  border-top:3px solid var(--gov-top) !important;
+  border-bottom:0 !important; box-shadow:none !important;
+  padding:0 24px !important;
+}
+.tb-logo{height:48px;width:auto;display:block}
+.tb-version{background:#fff !important;border:1px solid var(--gov-line) !important;color:var(--gov-body) !important;border-radius:25px !important}
+
+/* 3 · Menú: gris claro, borde inferior verde, pestaña activa verde sólida */
+.navbar{
+  top:64px !important; height:52px !important;
+  background:var(--gov-menu) !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  border-bottom:3px solid var(--gov-green) !important; box-shadow:none !important;
+}
+.navbar:has(.nav-btn.act){background:var(--gov-menu) !important}
+.nav-logo{border-right:0 !important}
+.nav-logo-t{font-family:'Nunito Sans',Verdana,sans-serif !important;color:var(--gov-ink) !important;font-weight:700 !important}
+.nav-btn{
+  height:100% !important; padding:0 16px !important; border-radius:0 !important;
+  border-bottom:0 !important; background:transparent !important;
+  color:var(--gov-ink) !important; font-weight:400 !important; font-size:13.5px !important;
+}
+.nav-btn i{color:var(--gov-ink) !important}
+.nav-btn:hover{background:#EAEFF2 !important;color:var(--gov-ink) !important}
+.nav-btn.act{background:var(--gov-green) !important;color:#fff !important;font-weight:400 !important;border-bottom:0 !important}
+.nav-btn.act i{color:#fff !important}
+.nav-search-trigger{background:var(--gov-green) !important;color:#fff !important;border:0 !important}
+.breadcrumb-bar{top:116px !important;background:#fff !important;border-bottom:1px solid var(--gov-line) !important}
+.breadcrumb-bar .bc-current{color:var(--gov-blue) !important;font-weight:700 !important}
+#s-mapa .sig-shell{height:calc(100vh - 190px) !important}
+
+/* 4 · Tipografía del portal: títulos Nunito Sans, cuerpo Verdana */
+body,p,span,li,td,th,a,label,input,select,textarea{font-family:Verdana,Geneva,'Nunito Sans',sans-serif !important}
+h1,h2,h3,h4,.sec-title,.hero-h,.plat-titulo,.pt,.kc-val,.skpi-v,.hkpi-v{font-family:'Nunito Sans',Verdana,sans-serif !important}
+h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
+.hero-h,.hero-h em,.hero-sub,.hero-tag span{text-shadow:none !important}
+.hero-h em{color:var(--gov-blue) !important}
+.hero-sub,.sec-sub,p{color:var(--gov-body) !important}
+.pt::after{background:var(--gov-green) !important}
+
+/* 5 · Tarjetas/tablas: planas, blancas, borde gris fino, sin sombra ni acentos de color */
+.card,.kc,.skpi,.hkpi,.src-card,.prest-card,.smod,.spro-panel .card{
+  background:#fff !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  border:1px solid var(--gov-line) !important; border-radius:8px !important; box-shadow:none !important;
+}
+.kc,.skpi{border-top:1px solid var(--gov-line) !important;padding:16px !important}
+.card:hover,.kc:hover,.skpi:hover,.hkpi:hover,.src-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08) !important;transform:none !important}
+.card-accent{border-left:1px solid var(--gov-line) !important}
+.hero{background:#fff !important;border-bottom:1px solid var(--gov-line) !important}
+.hkpi-v,.kc-val,.skpi-v{color:var(--gov-ink) !important}
+
+/* 6 · Íconos: sin cajas de color ni emojis genéricos — monocromo sobrio */
+.kc-ico,.skpi-ico,.cat-ico,.src-ico{background:transparent !important;border:0 !important}
+.kc-ico i,.skpi-ico i{color:var(--gov-green) !important}
+.skpi-ico,.cat-ico{filter:grayscale(1) opacity(.65)}
+
+/* 7 · Chips / etiquetas: píldora 25px, fondo #E6EFFD y texto #004884 (como las categorías del portal) */
+.hero-tag,.badge,.badge-blue,.badge-green,.badge-gold,.badge-red,.kc-trend,.prest-badge,.src-frq,.smod-badge{
+  background:var(--gov-chip) !important; color:var(--gov-blue) !important;
+  border:0 !important; border-radius:25px !important; font-weight:600 !important;
+}
+.hero-tag span{color:var(--gov-blue) !important}
+.kc-trend.up,.kc-trend.ok{background:var(--gov-chip) !important;color:var(--gov-blue) !important}
+.sv-year-btn.act,.yr-btn.act,.sv-preset.act{background:var(--gov-blue) !important;border-color:var(--gov-blue) !important;color:#fff !important}
+.sv-year-btn,.yr-btn,.sv-preset{border-radius:25px !important}
+
+/* 8 · Pestañas del dashboard y de Salud: verde del portal */
+.dash-topic.act,.salud-tab.act{color:var(--gov-green) !important;border-bottom-color:var(--gov-green) !important}
+.dash-topic:hover,.salud-tab:hover{color:var(--gov-green) !important}
+
+/* 9 · Botones: acción primaria verde del portal (el rojo se reserva a alertas) */
+.export-btn:not(.sec),.plat-btn-ext.prim,.sbf-map-btn,.app-btn,.cta-primary{
+  background:var(--gov-green) !important;border-color:var(--gov-green) !important;color:#fff !important;border-radius:25px !important;
+}
+.export-btn:not(.sec):hover,.plat-btn-ext.prim:hover,.sbf-map-btn:hover{background:var(--gov-green-d) !important}
+.export-btn.sec,.plat-btn-ext.sec{background:#fff !important;color:var(--gov-ink) !important;border:1px solid var(--gov-line) !important;border-radius:25px !important}
+.gov-live-pill{background:var(--gov-blue) !important}
+
+/* 10 · Bloques "banner" oscuros de color fuerte → superficie blanca con borde fino
+   (encabezados de plataforma Salud/SISPRO/SIVIGILA, tarjeta ICV, barra auto-sync, etc.) */
+.plat-header,
+[style*="linear-gradient(135deg,var(--g900)"],
+[style*="background:var(--g900);border:1.5px"]{
+  background:#fff !important; border:1px solid var(--gov-line) !important; border-radius:8px !important; box-shadow:none !important;
+}
+.plat-header *,
+[style*="linear-gradient(135deg,var(--g900)"] *,
+[style*="background:var(--g900);border:1.5px"] *{
+  color:var(--gov-ink) !important; text-shadow:none !important;
+}
+.plat-header .plat-sub,
+[style*="linear-gradient(135deg,var(--g900)"] [style*="rgba(255,255,255"]{color:var(--gov-body) !important}
+.plat-logo{background:var(--gov-chip) !important}
+.plat-header .plat-btn-ext,.plat-header .plat-acciones span{background:#fff !important;border:1px solid var(--gov-line) !important;color:var(--gov-ink) !important;border-radius:25px !important}
+.hkpi-x.up,.hkpi-x.ok{color:#3A6E03 !important}
+
+/* 11 · Sin franjas de color rotando en tarjetas (el portal oficial no las usa) */
+.kc:nth-of-type(n),.skpi:nth-of-type(n),.kc,.skpi{border-top:1px solid var(--gov-line) !important}
+.skpi-ref,.skpi-l,.kc-lbl{color:var(--gov-body) !important}
+.skpi-v,.kc-val{color:var(--gov-ink) !important}
+
 /* ── Legibilidad de colores fuertes sobre fondo blanco ────────────────
    El azul institucional del manual (#00A0E4) tiene un contraste de
    ~2,7:1 sobre blanco -- no cumple WCAG AA (mínimo 4,5:1 para texto) y
@@ -3424,10 +3544,12 @@ body{color:#0D0D0D}
 <!-- ═══ TOPBAR ══════════════════════════════════════ -->
 <div class="topbar">
   <div class="tb-brand">
-    <div class="tb-escudo" title="Escudo institucional · herencia minera de Segovia">
-      <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L17 6v6c0 4-7 7-7 7S3 16 3 12V6l7-4z" fill="#155224"/><g stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".95"><line x1="6" y1="7" x2="14" y2="13"/><line x1="14" y1="7" x2="6" y2="13"/></g><circle cx="10" cy="10" r="1.2" fill="#fff"/></svg>
-    </div>
-    <div>
+    <!-- Logo oficial de la Alcaldía (alojado en su portal institucional). Si no carga,
+         se muestra el texto de respaldo. -->
+    <img class="tb-logo" alt="Alcaldía de Segovia" height="48"
+         src="https://www.segovia-antioquia.gov.co/sites/segoviaantioquia/content/files/000947/47349_logo300x100_200x200.png"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div class="tb-logo-fallback" style="display:none">
       <div class="tb-name">Alcaldía de Segovia</div>
       <div class="tb-dep">Antioquia · Colombia · Nordeste</div>
     </div>
