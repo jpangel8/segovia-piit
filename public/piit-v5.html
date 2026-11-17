@@ -16949,9 +16949,34 @@ document.addEventListener('DOMContentLoaded', function(){
         d.rows.map(function(r){return '<tr>'+r.map(function(c){return '<td style="padding:5px 8px;border-bottom:1px solid var(--gov-line)">'+esc(c)+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';
     }
     function setTab(showTable){
-      if(showTable) render();
+      if(showTable){ render(); if(typeof facetOn!=='undefined'&&facetOn){facetOn=false;showF();} }
       tbl.style.display=showTable?'block':'none'; wrap.style.display=showTable?'none':'';
       var s=card.querySelector('.gr-series-lite'); if(s) s.style.display=showTable?'none':'flex';
+    }
+    if(multi){
+      var fac=document.createElement('div'); fac.style.cssText='display:none;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;padding:8px 16px';
+      card.insertBefore(fac,tbl); var minis=[], facetOn=false, align=true;
+      var mk=function(txt,act,ic){var b=document.createElement('button');b.type='button';b.className='pchart-menu-item';b.setAttribute('data-act',act);b.innerHTML='<i class="fa-solid '+ic+'"></i> '+txt;menu.appendChild(b);return b;};
+      var bF=mk('Separar series','facet','fa-table-cells-large'), bA=mk('Alinear escalas de ejes: sí','align','fa-arrows-up-down');
+      bA.style.display='none';
+      var drawF=function(){
+        minis.forEach(function(c){c.destroy();}); minis=[]; fac.innerHTML='';
+        var gmax=0; chart.data.datasets.forEach(function(s){(s.data||[]).forEach(function(v){v=typeof v==='object'&&v?v.y:v;if(+v>gmax)gmax=+v;});});
+        chart.data.datasets.forEach(function(s,i){
+          var box=document.createElement('div'); box.style.cssText='position:relative;height:170px'; var c=document.createElement('canvas'); c.setAttribute('data-nogr','1'); box.appendChild(c); fac.appendChild(box);
+          var y={beginAtZero:true}; if(align){y.min=0;y.max=Math.ceil(gmax*1.08);}
+          minis.push(new Chart(c,{type:chart.config.type,data:{labels:chart.data.labels,datasets:[Object.assign({},s,{hidden:false})]},
+            options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:s.label||('Serie '+(i+1)),align:'start'}},scales:{y:y}}}));
+        });
+      };
+      var showF=function(){
+        fac.style.display=facetOn?'grid':'none'; wrap.style.display=facetOn?'none':''; bA.style.display=facetOn?'':'none';
+        bF.lastChild.textContent=facetOn?' Serie combinada':' Separar series';
+        var s=card.querySelector('.gr-series-lite'); if(s) s.style.display=facetOn?'none':'flex';
+        if(facetOn) drawF(); else {minis.forEach(function(c){c.destroy();});minis=[];}
+      };
+      bF.addEventListener('click',function(){facetOn=!facetOn;isT=false;tbl.style.display='none';showF();closeAllMenus();});
+      bA.addEventListener('click',function(){align=!align;bA.lastChild.textContent=' Alinear escalas de ejes: '+(align?'sí':'no');if(facetOn)drawF();closeAllMenus();});
     }
     var isT=false;
     menu.querySelector('[data-act="tabla"]').addEventListener('click',function(){isT=!isT;setTab(isT);closeAllMenus();});
