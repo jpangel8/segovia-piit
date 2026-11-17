@@ -3434,7 +3434,12 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 /* 6 · Íconos: sin cajas de color ni emojis genéricos — monocromo sobrio */
 .kc-ico,.skpi-ico,.cat-ico,.src-ico{background:transparent !important;border:0 !important}
 .kc-ico i,.skpi-ico i{color:var(--gov-green) !important}
-.skpi-ico,.cat-ico{filter:grayscale(1) opacity(.65)}
+/* Íconos Font Awesome en contenedores (sustituyen a los emojis): monocromo institucional */
+.smod-ico i,.cat-ico i,.plat-logo i,.prest-ico i,.rep-form-hdr-ico i,.sp-logo i,.pdc-ico i,
+.sat-contacto-ico i,.rb-ico i,.bh-ico i,.igac-hdr-ico i,.mob-desc-tipo-ico i,.igac-cult-chip i,
+.skpi-ico i,.kc-ico i,.tipo-t i,.sbf-insight i{color:var(--gov-green)}
+.smod-ico,.cat-ico,.skpi-ico,.prest-ico,.rep-form-hdr-ico,.pdc-ico,.sat-contacto-ico{font-size:16px}
+.alert-t i,.skpi-ref i,.badge i,.prest-nom i{margin-right:4px}
 
 /* 7 · Chips / etiquetas: píldora 25px, fondo #E6EFFD y texto #004884 (como las categorías del portal) */
 .hero-tag,.badge,.badge-blue,.badge-green,.badge-gold,.badge-red,.kc-trend,.prest-badge,.src-frq,.smod-badge{
@@ -3558,7 +3563,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 })();
 </script>
 <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
-<div id="asset-warning" role="alert">⚠ Sin conexión a internet: el mapa (Leaflet) y las gráficas (Chart.js) se cargan desde CDN. Verifique su conexión y recargue la página.</div>
+<div id="asset-warning" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Sin conexión a internet: el mapa (Leaflet) y las gráficas (Chart.js) se cargan desde CDN. Verifique su conexión y recargue la página.</div>
 
 <!-- ═══ TOPBAR ══════════════════════════════════════ -->
 <div class="topbar">
@@ -3850,8 +3855,8 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         </div>
         <div id="yr-selector" style="display:flex;gap:6px;flex-wrap:wrap" role="tablist" aria-label="Seleccionar año"></div>
       </div>
-      <canvas id="chart-timeline" height="70"></canvas>
     </div>
+    <div id="icv-grapher" style="margin-top:12px"></div>
   </div>
 
   <!-- Acerca de estos datos: fuentes y metodología -->
@@ -4245,7 +4250,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <div style="position:absolute;inset:0;background:rgba(234,245,239,.88);border-radius:inherit;pointer-events:none"></div>
       <!-- Contenido por encima del velo -->
       <div style="position:relative;z-index:1">
-        <div class="prest-ico" style="background:rgba(255,255,255,.75);backdrop-filter:blur(4px)">🗑️</div>
+        <div class="prest-ico" style="background:rgba(255,255,255,.75);backdrop-filter:blur(4px)"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></div>
         <div class="prest-nom">Segovia Aseo S.A. E.S.P.</div>
         <div class="prest-esp">Recolección · Barrido · Disposición final · Reciclaje</div>
         <span class="prest-badge" style="background:var(--g100);color:var(--g800)">SERVICIO DE ASEO</span>
@@ -4254,7 +4259,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div class="prest-card alumbrado" id="pcard-alumbrado" onclick="PIIT.reportes.selectPrestador('alumbrado')">
       <div style="position:absolute;inset:0;background:rgba(251,244,216,.88);border-radius:inherit;pointer-events:none"></div>
       <div style="position:relative;z-index:1">
-        <div class="prest-ico" style="background:rgba(255,255,255,.75);backdrop-filter:blur(4px)">💡</div>
+        <div class="prest-ico" style="background:rgba(255,255,255,.75);backdrop-filter:blur(4px)"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></div>
         <div class="prest-nom">Segovia S.A.</div>
         <div class="prest-esp">Alumbrado público · Luminarias · Redes eléctricas · Postes</div>
         <span class="prest-badge" style="background:var(--au100);color:var(--au800)">ALUMBRADO PÚBLICO</span>
@@ -4263,7 +4268,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div class="prest-card agua" id="pcard-agua" onclick="PIIT.reportes.selectPrestador('agua')">
       <div style="position:absolute;inset:0;background:rgba(230,241,251,.88);border-radius:inherit;pointer-events:none"></div>
       <div style="position:relative;z-index:1">
-        <div class="prest-ico" style="background:rgba(255,255,255,.75);backdrop-filter:blur(4px)">💧</div>
+        <div class="prest-ico" style="background:rgba(255,255,255,.75);backdrop-filter:blur(4px)"><i class="fa-solid fa-droplet" aria-hidden="true"></i></div>
         <div class="prest-nom">Aguas del Pocuné</div>
         <div class="prest-esp">Acueducto · Alcantarillado · Calidad del agua · Redes</div>
         <span class="prest-badge" style="background:#E6F1FB;color:var(--blue)">ACUEDUCTO · ALC.</span>
@@ -4354,7 +4359,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 
             <!-- Tipo seleccionado (resumen contextual) -->
             <div id="mob-desc-tipo-banner" style="display:flex;align-items:center;gap:7px;padding:8px 12px;background:linear-gradient(90deg,var(--g900),#0A3018);border-bottom:1px solid rgba(255,255,255,.07)">
-              <div id="mob-desc-tipo-ico" style="font-size:14px">🔧</div>
+              <div id="mob-desc-tipo-ico" style="font-size:14px"><i class="fa-solid fa-wrench" aria-hidden="true"></i></div>
               <div>
                 <div id="mob-desc-tipo-nom" style="font-size:10px;font-weight:700;color:var(--white)">Tipo de reporte seleccionado</div>
                 <div style="font-size:9px;color:rgba(255,255,255,.5)">Paso 4 de 7 · Completa los detalles</div>
@@ -4382,9 +4387,9 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
               <!-- Tips de descripción -->
               <div id="mob-desc-tips" style="margin:5px 0 10px">
                 <div style="font-size:8.5px;color:var(--t400);display:flex;flex-wrap:wrap;gap:4px">
-                  <span style="display:inline-flex;align-items:center;gap:3px;background:var(--g50);border:1px solid var(--g100);border-radius:10px;padding:2px 7px;cursor:pointer" onclick="PIIT.reportes.mobTip(this)">📍 Menciona el lugar exacto</span>
-                  <span style="display:inline-flex;align-items:center;gap:3px;background:var(--g50);border:1px solid var(--g100);border-radius:10px;padding:2px 7px;cursor:pointer" onclick="PIIT.reportes.mobTip(this)">🕐 ¿Cuándo empezó?</span>
-                  <span style="display:inline-flex;align-items:center;gap:3px;background:var(--g50);border:1px solid var(--g100);border-radius:10px;padding:2px 7px;cursor:pointer" onclick="PIIT.reportes.mobTip(this)">👥 ¿Afecta a otros?</span>
+                  <span style="display:inline-flex;align-items:center;gap:3px;background:var(--g50);border:1px solid var(--g100);border-radius:10px;padding:2px 7px;cursor:pointer" onclick="PIIT.reportes.mobTip(this)"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Menciona el lugar exacto</span>
+                  <span style="display:inline-flex;align-items:center;gap:3px;background:var(--g50);border:1px solid var(--g100);border-radius:10px;padding:2px 7px;cursor:pointer" onclick="PIIT.reportes.mobTip(this)"><i class="fa-solid fa-clock" aria-hidden="true"></i> ¿Cuándo empezó?</span>
+                  <span style="display:inline-flex;align-items:center;gap:3px;background:var(--g50);border:1px solid var(--g100);border-radius:10px;padding:2px 7px;cursor:pointer" onclick="PIIT.reportes.mobTip(this)"><i class="fa-solid fa-users" aria-hidden="true"></i> ¿Afecta a otros?</span>
                 </div>
               </div>
 
@@ -4414,21 +4419,21 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
                 <!-- Leve -->
                 <button class="mob-sev-btn" id="mob-sev-leve" onclick="PIIT.reportes.mobSev(this,'Leve')"
                   style="padding:8px 4px;border:1.5px solid var(--g100);border-radius:8px;font-size:9.5px;font-weight:700;background:var(--white);cursor:pointer;font-family:var(--fb);transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:4px">
-                  <span style="font-size:16px">🟢</span>
+                  <span style="font-size:16px"><i class="fa-solid fa-circle" style="color:#488704" aria-hidden="true"></i></span>
                   <span>Leve</span>
                   <span style="font-size:8px;font-weight:400;color:var(--t400);line-height:1.2">No urgente</span>
                 </button>
                 <!-- Moderada -->
                 <button class="mob-sev-btn" id="mob-sev-mod" onclick="PIIT.reportes.mobSev(this,'Moderada')"
                   style="padding:8px 4px;border:1.5px solid var(--g100);border-radius:8px;font-size:9.5px;font-weight:700;background:var(--white);cursor:pointer;font-family:var(--fb);transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:4px">
-                  <span style="font-size:16px">🟡</span>
+                  <span style="font-size:16px"><i class="fa-solid fa-circle" style="color:#FCDC00" aria-hidden="true"></i></span>
                   <span>Moderada</span>
                   <span style="font-size:8px;font-weight:400;color:var(--t400);line-height:1.2">Esta semana</span>
                 </button>
                 <!-- Urgente -->
                 <button class="mob-sev-btn" id="mob-sev-urg" onclick="PIIT.reportes.mobSev(this,'Urgente')"
                   style="padding:8px 4px;border:1.5px solid var(--g100);border-radius:8px;font-size:9.5px;font-weight:700;background:var(--white);cursor:pointer;font-family:var(--fb);transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:4px">
-                  <span style="font-size:16px">🔴</span>
+                  <span style="font-size:16px"><i class="fa-solid fa-circle" style="color:#DC0B2C" aria-hidden="true"></i></span>
                   <span>Urgente</span>
                   <span style="font-size:8px;font-weight:400;color:var(--t400);line-height:1.2">Inmediato</span>
                 </button>
@@ -4507,7 +4512,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 
               <!-- Aviso campos requeridos -->
               <div id="mob-dat-req" style="display:none;font-size:8px;color:var(--red);margin-bottom:6px;font-weight:700">
-                ⚠ Completa nombre y teléfono (mín. 7 dígitos) para continuar
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Completa nombre y teléfono (mín. 7 dígitos) para continuar
               </div>
 
               <!-- Botón continuar → GPS -->
@@ -4626,15 +4631,15 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
               <div style="text-align:left;margin-bottom:8px">
                 <div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid var(--g50)">
                   <div style="width:7px;height:7px;border-radius:50%;background:var(--g500);flex-shrink:0;margin-top:2px"></div>
-                  <div><div style="font-size:9px;font-weight:700;color:var(--t700)">✅ Reporte recibido</div><div style="font-size:8px;color:var(--t400)" id="mob-confirm-hora">PIIT Segovia · Ahora</div></div>
+                  <div><div style="font-size:9px;font-weight:700;color:var(--t700)"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Reporte recibido</div><div style="font-size:8px;color:var(--t400)" id="mob-confirm-hora">PIIT Segovia · Ahora</div></div>
                 </div>
                 <div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid var(--g50)">
                   <div style="width:7px;height:7px;border-radius:50%;background:var(--g200);flex-shrink:0;margin-top:2px"></div>
-                  <div><div style="font-size:9px;font-weight:700;color:var(--t700)">⏳ Asignación técnica</div><div style="font-size:8px;color:var(--t400)" id="mob-confirm-sla">Pendiente</div></div>
+                  <div><div style="font-size:9px;font-weight:700;color:var(--t700)"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Asignación técnica</div><div style="font-size:8px;color:var(--t400)" id="mob-confirm-sla">Pendiente</div></div>
                 </div>
                 <div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0">
                   <div style="width:7px;height:7px;border-radius:50%;background:var(--g200);flex-shrink:0;margin-top:2px"></div>
-                  <div><div style="font-size:9px;font-weight:700;color:var(--t700)">🔔 Notificación al cierre</div><div style="font-size:8px;color:var(--t400)" id="mob-confirm-tel-notif">Te avisamos por teléfono</div></div>
+                  <div><div style="font-size:9px;font-weight:700;color:var(--t700)"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notificación al cierre</div><div style="font-size:8px;color:var(--t400)" id="mob-confirm-tel-notif">Te avisamos por teléfono</div></div>
                 </div>
               </div>
               <button class="app-btn-sec" style="font-size:9px;padding:5px" onclick="PIIT.reportes.mobNext(0)">
@@ -4861,7 +4866,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div class="card card-accent" style="padding:16px 18px">
       <div class="pt" style="margin-bottom:6px">Gastos generales / ICLD</div>
       <div style="font-family:var(--fm);font-size:28px;font-weight:500;color:var(--au700)">24%</div>
-      <div style="font-size:11px;color:var(--t400);margin-top:4px">Límite Ley 617: 15% · <span style="color:var(--amber);font-weight:700">Revisar ⚠</span></div>
+      <div style="font-size:11px;color:var(--t400);margin-top:4px">Límite Ley 617: 15% · <span style="color:var(--amber);font-weight:700">Revisar <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span></div>
       <div class="prog" style="margin-top:8px"><div class="prog-f" style="width:24%;background:var(--amber)"></div></div>
     </div>
     <div class="card card-accent" style="padding:16px 18px">
@@ -5136,25 +5141,25 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <!-- KPIs de referencia -->
     <div class="salud-kpis">
       <div class="skpi">
-        <div class="skpi-ico" style="background:#FEF3C7">🦠</div>
+        <div class="skpi-ico" style="background:#FEF3C7"><i class="fa-solid fa-virus" aria-hidden="true"></i></div>
         <div class="skpi-v">SIVIGILA</div>
         <div class="skpi-l">Sistema Nac. Vigilancia</div>
         <div class="skpi-ref" style="color:var(--g700)">INS · Semana epidemiológica</div>
       </div>
       <div class="skpi">
-        <div class="skpi-ico" style="background:var(--g100)">💉</div>
+        <div class="skpi-ico" style="background:var(--g100)"><i class="fa-solid fa-syringe" aria-hidden="true"></i></div>
         <div class="skpi-v">PAIweb2</div>
         <div class="skpi-l">Prog. Ampliado Inmunización</div>
         <div class="skpi-ref" style="color:var(--blue)">SISPRO · Coberturas vacunales</div>
       </div>
       <div class="skpi">
-        <div class="skpi-ico" style="background:#E6F1FB">📊</div>
+        <div class="skpi-ico" style="background:#E6F1FB"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></div>
         <div class="skpi-v">05736</div>
         <div class="skpi-l">Código DIVIPOLA Segovia</div>
         <div class="skpi-ref" style="color:var(--t400)">Filtro municipal estándar</div>
       </div>
       <div class="skpi">
-        <div class="skpi-ico" style="background:#FFF5F5">🏥</div>
+        <div class="skpi-ico" style="background:#FFF5F5"><i class="fa-solid fa-hospital" aria-hidden="true"></i></div>
         <div class="skpi-v">ESE</div>
         <div class="skpi-l">Empresa Social del Estado</div>
         <div class="skpi-ref" style="color:var(--red)">Hospital local Segovia</div>
@@ -5193,7 +5198,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div class="salud-tab-panel act" id="panel-sivigila">
       <div class="plat-header">
         <div class="plat-header-left">
-          <div class="plat-logo" style="background:rgba(46,125,82,.3)">🦠</div>
+          <div class="plat-logo" style="background:rgba(46,125,82,.3)"><i class="fa-solid fa-virus" aria-hidden="true"></i></div>
           <div>
             <div class="plat-titulo">SIVIGILA · Vigilancia Epidemiológica — Segovia</div>
             <div class="plat-sub">Sistema Nacional de Vigilancia en Salud Pública · INS · Casos notificados UPGD <strong>05736</strong> — ANTIOQUIA</div>
@@ -5289,25 +5294,25 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <!-- ── KPIs epidemiológicos Segovia (recalculados por el filtro de SE) ── -->
       <div class="salud-kpis" style="margin-bottom:14px">
         <div class="skpi">
-          <div class="skpi-ico" style="background:#FFF5F5">🦟</div>
+          <div class="skpi-ico" style="background:#FFF5F5"><i class="fa-solid fa-bug" aria-hidden="true"></i></div>
           <div class="skpi-v" style="color:var(--red)" id="skpi-leish-v">1.847</div>
           <div class="skpi-l" id="skpi-leish-l">Casos Leishmaniasis · 2024</div>
           <div class="skpi-ref" style="color:var(--red)" id="skpi-leish-ref">▲ 23% vs 2023 (1.502)</div>
         </div>
         <div class="skpi">
-          <div class="skpi-ico" style="background:#FEF3C7">🌡️</div>
+          <div class="skpi-ico" style="background:#FEF3C7"><i class="fa-solid fa-temperature-half" aria-hidden="true"></i></div>
           <div class="skpi-v" style="color:var(--amber)" id="skpi-eda-v">3.256</div>
           <div class="skpi-l" id="skpi-eda-l">Casos EDA · 2024</div>
           <div class="skpi-ref" style="color:var(--g700)" id="skpi-eda-ref">▼ 8% vs 2023</div>
         </div>
         <div class="skpi">
-          <div class="skpi-ico" style="background:#FFF5F5">🪲</div>
+          <div class="skpi-ico" style="background:#FFF5F5"><i class="fa-solid fa-bug" aria-hidden="true"></i></div>
           <div class="skpi-v" style="color:var(--red)" id="skpi-dengue-v">412</div>
           <div class="skpi-l" id="skpi-dengue-l">Casos Dengue · 2024</div>
           <div class="skpi-ref" style="color:var(--red)" id="skpi-dengue-ref">▲ 67% brote abril-julio</div>
         </div>
         <div class="skpi">
-          <div class="skpi-ico" style="background:var(--au100)">🧪</div>
+          <div class="skpi-ico" style="background:var(--au100)"><i class="fa-solid fa-flask" aria-hidden="true"></i></div>
           <div class="skpi-v" style="color:var(--au700)" id="skpi-mercur-v">87</div>
           <div class="skpi-l" id="skpi-mercur-l">Intox. mercurio · 2024</div>
           <div class="skpi-ref" style="color:var(--au700)" id="skpi-mercur-ref">Prioridad minera Nordeste</div>
@@ -5316,11 +5321,8 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 
       <!-- ── Gráficas + tabla ── -->
       <div class="grid2" style="margin-bottom:14px">
-        <div>
-          <div class="pt">Evolución semanal de casos · SE 2024 (principales eventos)</div>
-          <div class="card" style="padding:14px 16px">
-            <canvas id="sv-chart-semanal" height="200"></canvas>
-          </div>
+        <div style="grid-column:1/-1">
+          <div id="sv-grapher"></div>
         </div>
         <div>
           <div class="pt">Distribución por evento · 2024</div>
@@ -5394,7 +5396,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div class="salud-tab-panel" id="panel-sispro">
       <div class="plat-header" style="background:linear-gradient(135deg,#0A2A50,#0E3870)">
         <div class="plat-header-left">
-          <div class="plat-logo" style="background:rgba(42,108,168,.35)">💉</div>
+          <div class="plat-logo" style="background:rgba(42,108,168,.35)"><i class="fa-solid fa-syringe" aria-hidden="true"></i></div>
           <div>
             <div class="plat-titulo">SISPRO · Protección Social — Segovia</div>
             <div class="plat-sub">Sistema Integral de Información de la Protección Social · MinSalud · Coberturas PAI · RIPS · Aseguramiento</div>
@@ -5425,25 +5427,25 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <div class="pt" style="margin-top:4px">Módulos disponibles · Segovia 2024</div>
       <div class="sispro-modulos" id="sispro-modulos">
         <div class="smod act" data-mod="pai" onclick="PIIT.salud.sproMod(this,'pai')">
-          <div class="smod-ico">💉</div>
+          <div class="smod-ico"><i class="fa-solid fa-syringe" aria-hidden="true"></i></div>
           <div class="smod-nom">PAIweb2</div>
           <div class="smod-desc">Coberturas PAI por biológico y grupo etario</div>
           <span class="smod-badge" style="background:var(--g100);color:var(--g800)">Activo</span>
         </div>
         <div class="smod" data-mod="rips" onclick="PIIT.salud.sproMod(this,'rips')">
-          <div class="smod-ico">🏥</div>
+          <div class="smod-ico"><i class="fa-solid fa-hospital" aria-hidden="true"></i></div>
           <div class="smod-nom">RIPS</div>
           <div class="smod-desc">Servicios de salud prestados · consultas y hospitalizaciones</div>
           <span class="smod-badge" style="background:var(--au100);color:var(--au800)">Disponible</span>
         </div>
         <div class="smod" data-mod="afil" onclick="PIIT.salud.sproMod(this,'afil')">
-          <div class="smod-ico">🪪</div>
+          <div class="smod-ico"><i class="fa-solid fa-id-card" aria-hidden="true"></i></div>
           <div class="smod-nom">Aseguramiento BDUA</div>
           <div class="smod-desc">Afiliados SGSSS por régimen y EPS</div>
           <span class="smod-badge" style="background:var(--au100);color:var(--au800)">Disponible</span>
         </div>
         <div class="smod" data-mod="eevv" onclick="PIIT.salud.sproMod(this,'eevv')">
-          <div class="smod-ico">📈</div>
+          <div class="smod-ico"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></div>
           <div class="smod-nom">EEVV · DANE</div>
           <div class="smod-desc">Estadísticas vitales · nacimientos y defunciones</div>
           <span class="smod-badge" style="background:var(--au100);color:var(--au800)">Disponible</span>
@@ -5455,25 +5457,25 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         <!-- KPIs PAI -->
         <div class="salud-kpis" style="margin-bottom:14px">
           <div class="skpi">
-            <div class="skpi-ico" style="background:var(--g100)">🍼</div>
+            <div class="skpi-ico" style="background:var(--g100)"><i class="fa-solid fa-baby" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--g700)">96,4<span style="font-size:15px">%</span></div>
             <div class="skpi-l">BCG · Recién nacido</div>
             <div class="skpi-ref" style="color:var(--g700)">✓ Meta 95% cumplida</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#E6F1FB">💉</div>
+            <div class="skpi-ico" style="background:#E6F1FB"><i class="fa-solid fa-syringe" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--amber)">89,2<span style="font-size:15px">%</span></div>
             <div class="skpi-l">Pentavalente · 3ª dosis</div>
-            <div class="skpi-ref" style="color:var(--amber)">⚠ Meta 95% no alcanzada</div>
+            <div class="skpi-ref" style="color:var(--amber)"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Meta 95% no alcanzada</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:var(--au100)">🌀</div>
+            <div class="skpi-ico" style="background:var(--au100)"><i class="fa-solid fa-shield-virus" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--amber)">87,5<span style="font-size:15px">%</span></div>
             <div class="skpi-l">SRP · Triple viral 1 año</div>
-            <div class="skpi-ref" style="color:var(--amber)">⚠ Meta 95% no alcanzada</div>
+            <div class="skpi-ref" style="color:var(--amber)"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Meta 95% no alcanzada</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#FFF5F5">🛡️</div>
+            <div class="skpi-ico" style="background:#FFF5F5"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--red)">62,8<span style="font-size:15px">%</span></div>
             <div class="skpi-l">VPH · Niñas 9-17 años</div>
             <div class="skpi-ref" style="color:var(--red)">✗ Brecha 17% vs meta 80%</div>
@@ -5527,25 +5529,25 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         <!-- KPIs RIPS -->
         <div class="salud-kpis" style="margin-bottom:14px">
           <div class="skpi">
-            <div class="skpi-ico" style="background:var(--g100)">🩺</div>
+            <div class="skpi-ico" style="background:var(--g100)"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--g700)">52.840</div>
             <div class="skpi-l">Consultas externas · 2024</div>
             <div class="skpi-ref" style="color:var(--g700)">1.313 × 1.000 hab.</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#E6F1FB">🛏️</div>
+            <div class="skpi-ico" style="background:#E6F1FB"><i class="fa-solid fa-bed" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--blue)">1.948</div>
             <div class="skpi-l">Egresos hospitalarios</div>
             <div class="skpi-ref" style="color:var(--t500)">Estancia media: 4,2 días</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:var(--au100)">🚨</div>
+            <div class="skpi-ico" style="background:var(--au100)"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--au700)">14.206</div>
             <div class="skpi-l">Urgencias atendidas</div>
             <div class="skpi-ref" style="color:var(--au700)">▲ 12% vs 2023</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#FFF5F5">💊</div>
+            <div class="skpi-ico" style="background:#FFF5F5"><i class="fa-solid fa-pills" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--red)">38.975</div>
             <div class="skpi-l">Procedimientos 2024</div>
             <div class="skpi-ref" style="color:var(--t500)">Lab, imágenes, rehab.</div>
@@ -5592,25 +5594,25 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <div class="spro-panel" id="spro-panel-afil" style="display:none">
         <div class="salud-kpis" style="margin-bottom:14px">
           <div class="skpi">
-            <div class="skpi-ico" style="background:var(--g100)">👥</div>
+            <div class="skpi-ico" style="background:var(--g100)"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--g700)">40.247</div>
             <div class="skpi-l">Población total proyectada</div>
             <div class="skpi-ref" style="color:var(--t500)">DANE 2024</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#E6F1FB">🪪</div>
+            <div class="skpi-ico" style="background:#E6F1FB"><i class="fa-solid fa-id-card" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--blue)">37.185</div>
             <div class="skpi-l">Afiliados SGSSS activos</div>
             <div class="skpi-ref" style="color:var(--blue)">92,4% cobertura</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:var(--au100)">💼</div>
+            <div class="skpi-ico" style="background:var(--au100)"><i class="fa-solid fa-briefcase" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--au700)">8.215</div>
             <div class="skpi-l">Régimen contributivo</div>
             <div class="skpi-ref" style="color:var(--au700)">22,1% de afiliados</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#FFF5F5">🏛️</div>
+            <div class="skpi-ico" style="background:#FFF5F5"><i class="fa-solid fa-landmark" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--red)">28.970</div>
             <div class="skpi-l">Régimen subsidiado</div>
             <div class="skpi-ref" style="color:var(--red)">77,9% de afiliados</div>
@@ -5657,25 +5659,25 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <div class="spro-panel" id="spro-panel-eevv" style="display:none">
         <div class="salud-kpis" style="margin-bottom:14px">
           <div class="skpi">
-            <div class="skpi-ico" style="background:var(--g100)">👶</div>
+            <div class="skpi-ico" style="background:var(--g100)"><i class="fa-solid fa-baby" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--g700)">712</div>
             <div class="skpi-l">Nacimientos 2024</div>
             <div class="skpi-ref" style="color:var(--g700)">17,7 × 1.000 hab.</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#FFF5F5">⚰️</div>
+            <div class="skpi-ico" style="background:#FFF5F5"><i class="fa-solid fa-heart-crack" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--red)">238</div>
             <div class="skpi-l">Defunciones totales</div>
             <div class="skpi-ref" style="color:var(--red)">5,9 × 1.000 hab.</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:var(--au100)">👼</div>
+            <div class="skpi-ico" style="background:var(--au100)"><i class="fa-solid fa-child" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--au700)">9,8</div>
             <div class="skpi-l">Mort. infantil × 1.000 nv</div>
             <div class="skpi-ref" style="color:var(--au700)">▼ vs 11,2 en 2023</div>
           </div>
           <div class="skpi">
-            <div class="skpi-ico" style="background:#E6F1FB">📉</div>
+            <div class="skpi-ico" style="background:#E6F1FB"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></div>
             <div class="skpi-v" style="color:var(--blue)">474</div>
             <div class="skpi-l">Crec. vegetativo 2024</div>
             <div class="skpi-ref" style="color:var(--blue)">Saldo positivo</div>
@@ -5840,7 +5842,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
             <th style="padding:10px 12px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-align:center">FLUJO PRINCIPAL</th>
           </tr></thead>
           <tbody>
-            <tr style="border-bottom:1px solid var(--g100);background:rgba(46,125,82,.06)"><td style="padding:10px 12px;font-weight:700;color:var(--g800)">⭐ Segovia <span style="font-size:10px;font-weight:400;color:var(--t400)">(nodo)</span></td><td style="padding:10px 12px;text-align:right;font-family:var(--fm);font-weight:700">41.222</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-green" style="font-size:10.5px">Nodo primario</span></td><td style="padding:10px 12px;text-align:center;font-size:12px;color:var(--t500)">Minería · Salud · Comercio</td></tr>
+            <tr style="border-bottom:1px solid var(--g100);background:rgba(46,125,82,.06)"><td style="padding:10px 12px;font-weight:700;color:var(--g800)"><i class="fa-solid fa-star" aria-hidden="true"></i> Segovia <span style="font-size:10px;font-weight:400;color:var(--t400)">(nodo)</span></td><td style="padding:10px 12px;text-align:right;font-family:var(--fm);font-weight:700">41.222</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-green" style="font-size:10.5px">Nodo primario</span></td><td style="padding:10px 12px;text-align:center;font-size:12px;color:var(--t500)">Minería · Salud · Comercio</td></tr>
             <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600">Remedios</td><td style="padding:10px 12px;text-align:right;font-family:var(--fm)">32.840</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-gold" style="font-size:10.5px">Alta — 78%</span></td><td style="padding:10px 12px;text-align:center;font-size:12px;color:var(--t500)">Salud · Educación superior</td></tr>
             <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600">Vegachí</td><td style="padding:10px 12px;text-align:right;font-family:var(--fm)">11.520</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-gold" style="font-size:10.5px">Media — 55%</span></td><td style="padding:10px 12px;text-align:center;font-size:12px;color:var(--t500)">Comercio · Mercado</td></tr>
             <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600">Zaragoza</td><td style="padding:10px 12px;text-align:right;font-family:var(--fm)">27.890</td><td style="padding:10px 12px;text-align:center"><span class="badge" style="background:#E6F1FB;color:#1A4E80;font-size:10.5px">Baja — 32%</span></td><td style="padding:10px 12px;text-align:center;font-size:12px;color:var(--t500)">Minería · Transporte</td></tr>
@@ -5856,7 +5858,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       </div>
       <div class="pt" style="margin-top:14px">Posición en el sistema nacional de ciudades · DNP 2024</div>
       <div class="card" style="padding:12px 14px;border-left:3px solid var(--g600)">
-        <div style="font-size:13px;font-weight:700;color:var(--g800);margin-bottom:6px">🏙️ Nivel 3 — Ciudad intermedia · Nodo regional PDET</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g800);margin-bottom:6px"><i class="fa-solid fa-city" aria-hidden="true"></i> Nivel 3 — Ciudad intermedia · Nodo regional PDET</div>
         <p style="font-size:12.5px;color:var(--t500);line-height:1.65;margin-bottom:0">Segovia es nodo regional del Nordeste con influencia sobre 5 municipios. Su condición de municipio PDET le da acceso prioritario a cooperación internacional tipo BID, USAID o UE. La barrera principal identificada es el tiempo de conexión a Medellín (3,2 horas por vía terrestre).</p>
       </div>
     </div>
@@ -5934,11 +5936,11 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         <th style="padding:10px 12px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-align:center">ESTADO</th>
       </tr></thead>
       <tbody>
-        <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600">🏥 Hospital / ESE</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--g700);font-weight:700">8 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--amber);font-weight:700">47 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≤ 30 min</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-green" style="font-size:10.5px">Urbano ✓</span></td></tr>
-        <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600">🏫 Institución educativa</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--g700);font-weight:700">12 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--amber);font-weight:700">52 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≤ 30 min</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-gold" style="font-size:10.5px">Rural ⚠</span></td></tr>
-        <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600">🏦 Servicios financieros</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--g700);font-weight:700">5 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--red);font-weight:700">3,2 h</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≤ 60 min</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-red" style="font-size:10.5px">Rural ✗</span></td></tr>
-        <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600">📦 Mercado / abastecimiento</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--g700);font-weight:700">8 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--amber);font-weight:700">38 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≤ 30 min</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-gold" style="font-size:10.5px">Rural ⚠</span></td></tr>
-        <tr><td style="padding:10px 12px;font-weight:600">🌐 Internet de calidad</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--amber);font-weight:700">78%</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--red);font-weight:700">30%</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≥ 85%</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-red" style="font-size:10.5px">Brecha ✗</span></td></tr>
+        <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600"><i class="fa-solid fa-hospital" aria-hidden="true"></i> Hospital / ESE</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--g700);font-weight:700">8 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--amber);font-weight:700">47 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≤ 30 min</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-green" style="font-size:10.5px">Urbano ✓</span></td></tr>
+        <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600"><i class="fa-solid fa-school" aria-hidden="true"></i> Institución educativa</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--g700);font-weight:700">12 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--amber);font-weight:700">52 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≤ 30 min</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-gold" style="font-size:10.5px">Rural <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span></td></tr>
+        <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600"><i class="fa-solid fa-building-columns" aria-hidden="true"></i> Servicios financieros</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--g700);font-weight:700">5 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--red);font-weight:700">3,2 h</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≤ 60 min</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-red" style="font-size:10.5px">Rural ✗</span></td></tr>
+        <tr style="border-bottom:1px solid var(--g100)"><td style="padding:10px 12px;font-weight:600"><i class="fa-solid fa-box" aria-hidden="true"></i> Mercado / abastecimiento</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--g700);font-weight:700">8 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--amber);font-weight:700">38 min</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≤ 30 min</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-gold" style="font-size:10.5px">Rural <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span></td></tr>
+        <tr><td style="padding:10px 12px;font-weight:600"><i class="fa-solid fa-globe" aria-hidden="true"></i> Internet de calidad</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--amber);font-weight:700">78%</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--red);font-weight:700">30%</td><td style="padding:10px 12px;text-align:center;font-family:var(--fm);color:var(--t400)">≥ 85%</td><td style="padding:10px 12px;text-align:center"><span class="badge badge-red" style="font-size:10.5px">Brecha ✗</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -5965,10 +5967,10 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <div style="font-size:12.5px;color:rgba(255,255,255,.6)">Antioquia: 78 · Nacional: 74 · Meta PDM 2027: 79 · Brecha Antioquia: 6 puntos</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:280px">
-      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">74</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">💊 Salud 30%</div></div>
-      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">70</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">📚 Educación 30%</div></div>
-      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">68</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">🏠 Vivienda 20%</div></div>
-      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">76</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">🛡️ Seguridad 20%</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">74</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-pills" aria-hidden="true"></i> Salud 30%</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">70</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-book" aria-hidden="true"></i> Educación 30%</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">68</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-house" aria-hidden="true"></i> Vivienda 20%</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">76</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Seguridad 20%</div></div>
     </div>
   </div>
 
@@ -6021,11 +6023,11 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
   <div class="pt">Panel de decisión estratégica · Priorización BID-DNP</div>
   <div class="grid2">
     <div class="card" style="padding:14px 16px">
-      <div style="font-size:13px;font-weight:700;color:var(--t700);margin-bottom:12px">📊 Priorización de inversión · impacto vs factibilidad</div>
+      <div style="font-size:13px;font-weight:700;color:var(--t700);margin-bottom:12px"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> Priorización de inversión · impacto vs factibilidad</div>
       <canvas id="chart-priorizacion" height="200"></canvas>
     </div>
     <div class="card" style="padding:14px 16px">
-      <div style="font-size:13px;font-weight:700;color:var(--t700);margin-bottom:12px">🎯 Fuentes de financiamiento 2024-2027</div>
+      <div style="font-size:13px;font-weight:700;color:var(--t700);margin-bottom:12px"><i class="fa-solid fa-bullseye" aria-hidden="true"></i> Fuentes de financiamiento 2024-2027</div>
       <canvas id="chart-financiamiento" height="200"></canvas>
     </div>
   </div>
@@ -6043,9 +6045,9 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
   <div class="card" style="padding:14px 18px;margin-bottom:18px;background:var(--g50)">
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <span style="font-size:11.5px;font-weight:700;color:var(--g800)"><i class="fa-solid fa-sliders" style="margin-right:6px"></i>Escenario de simulación:</span>
-      <button class="esc-btn act" onclick="PIIT.escenarios.setScenario(this,'base')" style="padding:6px 14px;border-radius:14px;border:1.5px solid var(--g400);background:var(--g800);color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb)">📊 Base (tendencial)</button>
-      <button class="esc-btn" onclick="PIIT.escenarios.setScenario(this,'optimista')" style="padding:6px 14px;border-radius:14px;border:1.5px solid var(--g200);background:white;color:var(--t500);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb)">🚀 Optimista (BID+SGR)</button>
-      <button class="esc-btn" onclick="PIIT.escenarios.setScenario(this,'pesimista')" style="padding:6px 14px;border-radius:14px;border:1.5px solid var(--g200);background:white;color:var(--t500);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb)">⚠ Restrictivo (caída minería)</button>
+      <button class="esc-btn act" onclick="PIIT.escenarios.setScenario(this,'base')" style="padding:6px 14px;border-radius:14px;border:1.5px solid var(--g400);background:var(--g800);color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb)"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> Base (tendencial)</button>
+      <button class="esc-btn" onclick="PIIT.escenarios.setScenario(this,'optimista')" style="padding:6px 14px;border-radius:14px;border:1.5px solid var(--g200);background:white;color:var(--t500);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb)"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Optimista (BID+SGR)</button>
+      <button class="esc-btn" onclick="PIIT.escenarios.setScenario(this,'pesimista')" style="padding:6px 14px;border-radius:14px;border:1.5px solid var(--g200);background:white;color:var(--t500);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb)"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Restrictivo (caída minería)</button>
       <span style="font-family:var(--fm);font-size:10.5px;color:var(--t400);margin-left:auto">P(t) = P₀ · e^(r·t) · Año base: 2024</span>
     </div>
   </div>
@@ -6093,6 +6095,337 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 <!-- ═══ SCRIPTS ══════════════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous" onerror="document.getElementById('asset-warning').style.display='block'"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha384-DhxhYObIMeMNGyAG7iK11OHzBIKyEIeRL0ad1iFPAOwZB8iirUlTT0O/WJJUk8+o" crossorigin="anonymous" onerror="document.getElementById('asset-warning').style.display='block'"></script>
+<style id="piit-grapher-css">
+/* PIITGrapher — estructura inspirada en Grapher de Our World in Data:
+   pestañas arriba a la izquierda, controles por vista arriba a la derecha,
+   descarga / compartir / pantalla completa abajo a la derecha, fuente visible. */
+.gr{background:#fff;border:1px solid #E1E5E8;border-radius:6px;position:relative;font-family:Verdana,Geneva,sans-serif;color:#434343}
+.gr:fullscreen{padding:18px;overflow:auto;display:flex;flex-direction:column}
+.gr-head{padding:16px 20px 4px}
+.gr-title{font-family:'Nunito Sans',Verdana,sans-serif;font-size:19px;line-height:1.25;font-weight:700;color:#2F2F2F;margin:0}
+.gr-sub{font-size:12.5px;color:#5C5C5C;margin:4px 0 0}
+.gr-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 20px 8px;border-bottom:1px solid #EEF0F2}
+.gr-tabs{display:flex;gap:4px}
+.gr-tab,.gr-btn{font:600 12px Verdana,Geneva,sans-serif;border:1px solid #D5DADF;background:#fff;color:#434343;padding:6px 12px;border-radius:4px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s}
+.gr-tab:hover,.gr-btn:hover{background:#F6F8F9}
+.gr-tab[aria-selected=true]{background:#004884;border-color:#004884;color:#fff}
+.gr-btn[aria-expanded=true]{background:#E6EFFD;border-color:#9DB9E4;color:#004884}
+.gr-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;position:relative}
+.gr-pop{position:absolute;z-index:30;top:calc(100% + 6px);right:0;min-width:240px;max-width:300px;background:#fff;border:1px solid #D5DADF;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.14);padding:12px 14px;font-size:12.5px}
+.gr-pop[hidden]{display:none}
+.gr-pop h4{margin:0 0 8px;font:700 11px Verdana,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#5C5C5C}
+.gr-pop label{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer}
+.gr-pop .gr-sw{width:12px;height:12px;border-radius:2px;flex:none}
+.gr-pop .gr-mini{display:flex;gap:8px;margin:0 0 8px}
+.gr-pop .gr-mini button{font:600 11px Verdana,sans-serif;border:0;background:none;color:#004884;cursor:pointer;padding:0;text-decoration:underline}
+.gr-switch{display:flex;align-items:flex-start;gap:10px;padding:7px 0}
+.gr-switch input{margin-top:2px}
+.gr-switch small{display:block;color:#7A7A7A;font-size:11px;line-height:1.4;margin-top:1px}
+.gr-switch.is-off{opacity:.45}
+.gr-legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 20px 0}
+.gr-leg{display:inline-flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;padding:2px 4px;border-radius:3px;border:0;background:none;color:#434343}
+.gr-leg:hover,.gr-leg:focus-visible{background:#F0F3F5;outline:none}
+.gr-leg i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.gr-leg.off{opacity:.4;text-decoration:line-through}
+.gr-body{padding:8px 20px 6px;position:relative}
+.gr-canvas-wrap{position:relative;height:300px}
+.gr:fullscreen .gr-canvas-wrap{height:62vh}
+.gr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;padding:6px 0}
+.gr-cell{border:1px solid #EEF0F2;border-radius:4px;padding:8px 10px}
+.gr-cell h5{margin:0 0 4px;font:700 12px 'Nunito Sans',Verdana,sans-serif;color:#2F2F2F;display:flex;align-items:center;gap:6px}
+.gr-cell h5 i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.gr-cell .gr-cw{position:relative;height:130px}
+.gr-range{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:4px 0 2px;font-size:11.5px;color:#5C5C5C}
+.gr-range input[type=range]{flex:1;min-width:110px;accent-color:#004884}
+.gr-tablewrap{overflow:auto;max-height:340px;border:1px solid #EEF0F2;border-radius:4px}
+.gr-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.gr-table th{position:sticky;top:0;background:#F6F8F9;text-align:right;padding:8px 10px;border-bottom:1px solid #D5DADF;cursor:pointer;white-space:nowrap;font-weight:700}
+.gr-table th:first-child,.gr-table td:first-child{text-align:left}
+.gr-table th:hover{background:#EAEFF2}
+.gr-table th .gr-sort{font-size:9px;margin-left:4px;color:#004884}
+.gr-table td{padding:6px 10px;text-align:right;border-bottom:1px solid #F0F2F4;font-variant-numeric:tabular-nums}
+.gr-table tbody tr:nth-child(even){background:#FAFBFC}
+.gr-table tfoot td{font-weight:700;background:#F6F8F9;border-top:1px solid #D5DADF}
+.gr-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding:8px 20px 14px;flex-wrap:wrap}
+.gr-src{font-size:11.5px;color:#5C5C5C;max-width:70%;line-height:1.5}
+.gr-src b{color:#2F2F2F}
+.gr-act{display:flex;gap:6px;position:relative}
+.gr-ic{width:34px;height:34px;padding:0;justify-content:center}
+.gr-toast{position:absolute;right:20px;bottom:56px;background:#2F2F2F;color:#fff;padding:7px 12px;border-radius:4px;font-size:12px;opacity:0;transition:opacity .2s;pointer-events:none}
+.gr-toast.show{opacity:1}
+.gr-empty{padding:40px 10px;text-align:center;color:#7A7A7A;font-size:13px}
+@media (max-width:640px){.gr-head,.gr-bar,.gr-body,.gr-foot,.gr-legend{padding-left:12px;padding-right:12px}.gr-src{max-width:100%}.gr-canvas-wrap{height:240px}}
+@media (prefers-reduced-motion:reduce){.gr *{transition:none !important}}
+</style>
+<script id="piit-grapher-js">
+/* PIITGrapher — gráfico interactivo con vistas Gráfico/Tabla, selector de series,
+   rango de tiempo, gráficos pequeños con "Alinear escalas de ejes", descarga (PNG/CSV),
+   compartir con el estado en el enlace y pantalla completa. Requiere Chart.js. */
+(function(){
+  var registry = {};
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function fmt(v){return v==null||isNaN(v)?'—':Number(v).toLocaleString('es-CO',{maximumFractionDigits:1});}
+  function fileSafe(s){return String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
+  function alpha(hex,a){var h=hex.replace('#','');var n=parseInt(h,16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
+
+  function readState(id){
+    try{var p=new URLSearchParams(location.search).get('g_'+id);if(!p)return {};var o={};p.split(';').forEach(function(kv){var i=kv.indexOf(':');o[kv.slice(0,i)]=kv.slice(i+1);});return o;}catch(e){return {};}
+  }
+
+  function mount(el, cfg){
+    if(typeof el==='string') el=document.querySelector(el);
+    if(!el||!window.Chart) return null;
+    if(registry[cfg.id]) registry[cfg.id].destroy();
+    var st0 = readState(cfg.id);
+    var n = cfg.labels.length;
+    var S = {
+      cfg:cfg, el:el, charts:[], pops:{},
+      view: st0.tab==='tabla'?'tabla':'grafico',
+      sel: st0.series ? st0.series.split(',').filter(function(k){return cfg.series.some(function(s){return s.key===k;});}) : cfg.series.map(function(s){return s.key;}),
+      from: Math.max(0,Math.min(n-1,parseInt(st0.from!=null?st0.from:0,10)||0)),
+      to: Math.max(0,Math.min(n-1,parseInt(st0.to!=null?st0.to:n-1,10)||n-1)),
+      facet: st0.facet==='1',
+      align: st0.align==null ? true : st0.align==='1',
+      hl: null, sortCol:0, sortDir:1, onlySel:true
+    };
+    if(!S.sel.length) S.sel=cfg.series.map(function(s){return s.key;});
+    if(S.from>S.to){var t=S.from;S.from=S.to;S.to=t;}
+    registry[cfg.id]=S;
+    S.destroy=function(){S.charts.forEach(function(c){c.destroy();});S.charts=[];document.removeEventListener('click',S._doc);document.removeEventListener('keydown',S._key);el.innerHTML='';};
+
+    function selSeries(){return cfg.series.filter(function(s){return S.sel.indexOf(s.key)>-1;});}
+    function slice(a){return a.slice(S.from,S.to+1);}
+    function stateString(){
+      var o=['series:'+S.sel.join(','),'from:'+S.from,'to:'+S.to,'tab:'+S.view,'facet:'+(S.facet?1:0),'align:'+(S.align?1:0)];
+      return o.join(';');
+    }
+    function syncUrl(){try{var u=new URL(location.href);u.searchParams.set('g_'+cfg.id,stateString());history.replaceState(null,'',u);}catch(e){}}
+
+    el.innerHTML =
+      '<div class="gr" id="gr-'+esc(cfg.id)+'" role="region" aria-label="'+esc(cfg.title)+'">'+
+        '<div class="gr-head"><h3 class="gr-title">'+esc(cfg.title)+'</h3>'+(cfg.subtitle?'<p class="gr-sub">'+esc(cfg.subtitle)+'</p>':'')+'</div>'+
+        '<div class="gr-bar">'+
+          '<div class="gr-tabs" role="tablist" aria-label="Vista">'+
+            '<button class="gr-tab" role="tab" data-v="grafico"><i class="fa-solid fa-chart-line" aria-hidden="true"></i>Gráfico</button>'+
+            '<button class="gr-tab" role="tab" data-v="tabla"><i class="fa-solid fa-table" aria-hidden="true"></i>Tabla</button>'+
+          '</div>'+
+          '<div class="gr-tools">'+
+            '<button class="gr-btn" data-pop="ent" aria-expanded="false" aria-haspopup="true"><i class="fa-solid fa-list-check" aria-hidden="true"></i>'+esc(cfg.entityLabel||'Editar series')+'</button>'+
+            '<button class="gr-btn" data-pop="set" aria-expanded="false" aria-haspopup="true"><i class="fa-solid fa-sliders" aria-hidden="true"></i>Configuración</button>'+
+            '<div class="gr-pop" data-p="ent" hidden></div><div class="gr-pop" data-p="set" hidden></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="gr-legend" role="group" aria-label="Series"></div>'+
+        '<div class="gr-body"></div>'+
+        '<div class="gr-foot">'+
+          '<div class="gr-src">'+(cfg.source?'<b>Fuente:</b> '+esc(cfg.source):'')+(cfg.note?'<br>'+esc(cfg.note):'')+'</div>'+
+          '<div class="gr-act">'+
+            '<button class="gr-btn gr-ic" data-pop="dl" aria-expanded="false" aria-haspopup="true" aria-label="Descargar" title="Descargar"><i class="fa-solid fa-download" aria-hidden="true"></i></button>'+
+            '<button class="gr-btn gr-ic" data-act="share" aria-label="Compartir enlace" title="Compartir enlace"><i class="fa-solid fa-share-nodes" aria-hidden="true"></i></button>'+
+            '<button class="gr-btn gr-ic" data-act="full" aria-label="Pantalla completa" title="Pantalla completa"><i class="fa-solid fa-expand" aria-hidden="true"></i></button>'+
+            '<div class="gr-pop" data-p="dl" hidden style="top:auto;bottom:calc(100% + 6px);min-width:200px"></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="gr-toast" role="status" aria-live="polite"></div>'+
+      '</div>';
+
+    var root=el.querySelector('.gr'), body=root.querySelector('.gr-body'), legend=root.querySelector('.gr-legend'),
+        toast=root.querySelector('.gr-toast');
+    function say(m){toast.textContent=m;toast.classList.add('show');setTimeout(function(){toast.classList.remove('show');},1800);}
+
+    // ── menús
+    function pop(name){return root.querySelector('.gr-pop[data-p="'+name+'"]');}
+    function closePops(except){root.querySelectorAll('.gr-pop').forEach(function(p){if(p.dataset.p!==except){p.hidden=true;}});root.querySelectorAll('[data-pop]').forEach(function(b){if(b.dataset.pop!==except)b.setAttribute('aria-expanded','false');});}
+    function renderPops(){
+      pop('ent').innerHTML='<h4>'+esc(cfg.entityLabel||'Series')+'</h4><div class="gr-mini"><button data-all="1">Todas</button><button data-all="0">Ninguna</button></div>'+
+        cfg.series.map(function(s){return '<label><input type="checkbox" data-k="'+esc(s.key)+'"'+(S.sel.indexOf(s.key)>-1?' checked':'')+'><span class="gr-sw" style="background:'+s.color+'"></span>'+esc(s.name)+'</label>';}).join('');
+      var multi=selSeries().length>1;
+      pop('set').innerHTML='<h4>Configuración</h4>'+
+        '<label class="gr-switch"><input type="checkbox" data-s="facet"'+(S.facet?' checked':'')+(cfg.series.length<2?' disabled':'')+'><span>Dividir en gráficos pequeños<small>Un gráfico por serie, para ver cada una por separado.</small></span></label>'+
+        '<label class="gr-switch'+(S.facet?'':' is-off')+'"><input type="checkbox" data-s="align"'+(S.align?' checked':'')+(S.facet?'':' disabled')+'><span>Alinear escalas de ejes<small>Activado: todos los ejes Y usan la misma escala para comparar. Desactivado: cada gráfico se ajusta a su propio rango.</small></span></label>';
+      pop('dl').innerHTML='<h4>Descargar</h4>'+
+        '<label style="cursor:pointer" data-dl="png"><i class="fa-regular fa-image" aria-hidden="true"></i>Imagen del gráfico (PNG)</label>'+
+        '<label style="cursor:pointer" data-dl="csv"><i class="fa-solid fa-file-csv" aria-hidden="true"></i>Datos en tabla (CSV)</label>';
+      pop('dl').querySelectorAll('i').forEach(function(i){i.style.width='16px';i.style.color='#004884';});
+      pop('set').querySelector('[data-s=facet]').disabled = cfg.series.length<2 || !multi && false;
+    }
+
+    // ── leyenda
+    function renderLegend(){
+      legend.innerHTML=cfg.series.map(function(s){
+        var on=S.sel.indexOf(s.key)>-1;
+        return '<button class="gr-leg'+(on?'':' off')+'" data-k="'+esc(s.key)+'" aria-pressed="'+on+'"><i style="background:'+s.color+'"></i>'+esc(s.name)+'</button>';
+      }).join('');
+    }
+
+    // ── gráfico principal
+    function baseOpts(extra){
+      return Object.assign({responsive:true,maintainAspectRatio:false,animation:{duration:420,easing:'easeOutCubic'},
+        interaction:{mode:'index',intersect:false}},extra||{});
+    }
+    function dsFor(s,dim){
+      var c=dim?alpha(s.color,.18):s.color;
+      return {label:s.name,data:slice(s.data),borderColor:c,backgroundColor:c,borderWidth:dim?1.5:2.4,pointRadius:0,pointHoverRadius:4,tension:.28,fill:false,
+        pointBackgroundColor:c,_key:s.key};
+    }
+    function drawChart(){
+      body.innerHTML='<div class="gr-canvas-wrap"><canvas role="img" aria-label="'+esc(cfg.title)+'"></canvas></div>'+rangeHtml();
+      var cv=body.querySelector('canvas');
+      var labs=slice(cfg.labels);
+      var ds=selSeries().map(function(s){return dsFor(s,S.hl&&S.hl!==s.key);});
+      if(cfg.highlightIndex!=null && ds[0]){var hi=cfg.highlightIndex()-S.from; if(hi>=0){ds[0].pointRadius=labs.map(function(_,i){return i===hi?6:0;});ds[0].pointBackgroundColor=labs.map(function(_,i){return i===hi?'#DC0B2C':ds[0].borderColor;});}}
+      var ch=new Chart(cv,{type:'line',data:{labels:labs,datasets:ds},options:baseOpts({
+        scales:{x:{grid:{display:false},ticks:{maxTicksLimit:12,color:'#5C5C5C',font:{size:11}}},
+                y:{beginAtZero:cfg.beginAtZero!==false,title:{display:!!cfg.yTitle,text:cfg.yTitle||'',color:'#5C5C5C',font:{size:11}},grid:{color:'rgba(0,0,0,.07)'},ticks:{color:'#5C5C5C',font:{size:11}}}},
+        plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#2F2F2F',bodyColor:'#434343',borderColor:'#D5DADF',borderWidth:1,padding:10,
+          callbacks:{label:function(c){return ' '+c.dataset.label+': '+fmt(c.parsed.y)+(cfg.unit?' '+cfg.unit:'');}}}},
+        onHover:function(e,els){var k=els&&els.length?ch.data.datasets[els[0].datasetIndex]._key:null;if(k!==S.hl){S.hl=k;paintDim(ch);}},
+        onClick:function(e,els){if(cfg.onPointClick&&els&&els.length){cfg.onPointClick(S.from+els[0].index,els[0].datasetIndex);}}
+      })});
+      S.charts.push(ch);
+      bindRange();
+    }
+    function paintDim(ch){
+      ch.data.datasets.forEach(function(d){var s=cfg.series.filter(function(x){return x.key===d._key;})[0];var dim=S.hl&&S.hl!==d._key;
+        d.borderColor=dim?alpha(s.color,.18):s.color;d.borderWidth=dim?1.5:(S.hl===d._key?3.4:2.4);});
+      ch.update('none');
+    }
+    // ── gráficos pequeños (small multiples) con escalas alineadas / independientes
+    function drawFacets(){
+      var sel=selSeries(), labs=slice(cfg.labels);
+      var gmax=0;sel.forEach(function(s){slice(s.data).forEach(function(v){if(v>gmax)gmax=v;});});
+      body.innerHTML='<div class="gr-grid">'+sel.map(function(s){return '<div class="gr-cell"><h5><i style="background:'+s.color+'"></i>'+esc(s.name)+'</h5><div class="gr-cw"><canvas role="img" aria-label="'+esc(s.name)+'"></canvas></div></div>';}).join('')+'</div>'+rangeHtml();
+      body.querySelectorAll('canvas').forEach(function(cv,i){
+        var s=sel[i];
+        var yopt={beginAtZero:true,ticks:{color:'#5C5C5C',font:{size:10},maxTicksLimit:5},grid:{color:'rgba(0,0,0,.07)'}};
+        if(S.align){yopt.min=0;yopt.max=Math.ceil(gmax*1.08);}
+        var ch=new Chart(cv,{type:'line',data:{labels:labs,datasets:[dsFor(s,false)]},options:baseOpts({
+          scales:{x:{grid:{display:false},ticks:{maxTicksLimit:5,color:'#5C5C5C',font:{size:10}}},y:yopt},
+          plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#2F2F2F',bodyColor:'#434343',borderColor:'#D5DADF',borderWidth:1,padding:8,
+            callbacks:{label:function(c){return ' '+fmt(c.parsed.y)+(cfg.unit?' '+cfg.unit:'');}}}}
+        })});
+        ch.data.datasets[0].fill=true;ch.data.datasets[0].backgroundColor=alpha(s.color,.1);ch.update('none');
+        S.charts.push(ch);
+      });
+      bindRange();
+    }
+    function rangeHtml(){
+      if(n<3) return '';
+      return '<div class="gr-range"><span>'+esc(cfg.labels[S.from])+'</span><input type="range" min="0" max="'+(n-1)+'" value="'+S.from+'" data-r="from" aria-label="Inicio del rango"><input type="range" min="0" max="'+(n-1)+'" value="'+S.to+'" data-r="to" aria-label="Fin del rango"><span>'+esc(cfg.labels[S.to])+'</span></div>';
+    }
+    function bindRange(){
+      body.querySelectorAll('input[data-r]').forEach(function(inp){
+        inp.addEventListener('input',function(){
+          var v=parseInt(inp.value,10);
+          if(inp.dataset.r==='from'){S.from=Math.min(v,S.to);}else{S.to=Math.max(v,S.from);}
+          render(true);
+        });
+      });
+    }
+    // ── tabla ordenable
+    function drawTable(){
+      var cols=S.onlySel?selSeries():cfg.series;
+      var rows=slice(cfg.labels).map(function(l,i){return {label:l,vals:cols.map(function(s){return slice(s.data)[i];}),i:i};});
+      var c=S.sortCol;
+      rows.sort(function(a,b){var x=c===0?a.i:a.vals[c-1],y=c===0?b.i:b.vals[c-1];return (x>y?1:x<y?-1:0)*S.sortDir;});
+      var sum=cols.map(function(s,j){var a=rows.map(function(r){return r.vals[j];}).filter(function(v){return v!=null;});var t=a.reduce(function(p,q){return p+q;},0);return {t:t,avg:a.length?t/a.length:null,max:a.length?Math.max.apply(null,a):null};});
+      var arrow=function(k){return S.sortCol===k?'<span class="gr-sort">'+(S.sortDir>0?'▲':'▼')+'</span>':'';};
+      body.innerHTML='<label class="gr-switch" style="padding:2px 0 8px"><input type="checkbox" data-t="only"'+(S.onlySel?' checked':'')+'><span>Mostrar solo las series seleccionadas</span></label>'+
+        '<div class="gr-tablewrap"><table class="gr-table"><thead><tr><th data-c="0" scope="col">'+esc(cfg.xLabel||'Período')+arrow(0)+'</th>'+cols.map(function(s,j){return '<th data-c="'+(j+1)+'" scope="col">'+esc(s.name)+arrow(j+1)+'</th>';}).join('')+'</tr></thead><tbody>'+
+        rows.map(function(r){return '<tr><td>'+esc(r.label)+'</td>'+r.vals.map(function(v){return '<td>'+fmt(v)+'</td>';}).join('')+'</tr>';}).join('')+'</tbody>'+
+        '<tfoot><tr><td>Total del rango</td>'+sum.map(function(x){return '<td>'+fmt(x.t)+'</td>';}).join('')+'</tr><tr><td>Promedio</td>'+sum.map(function(x){return '<td>'+fmt(x.avg)+'</td>';}).join('')+'</tr><tr><td>Máximo</td>'+sum.map(function(x){return '<td>'+fmt(x.max)+'</td>';}).join('')+'</tr></tfoot></table></div>'+rangeHtml();
+      body.querySelectorAll('th[data-c]').forEach(function(th){th.addEventListener('click',function(){var k=parseInt(th.dataset.c,10);if(S.sortCol===k){S.sortDir*=-1;}else{S.sortCol=k;S.sortDir=k===0?1:-1;}drawTable();});});
+      body.querySelector('[data-t=only]').addEventListener('change',function(e){S.onlySel=e.target.checked;drawTable();});
+      bindRange();
+    }
+
+    function render(keepPops){
+      S.charts.forEach(function(c){c.destroy();});S.charts=[];
+      root.querySelectorAll('.gr-tab').forEach(function(b){b.setAttribute('aria-selected',b.dataset.v===S.view?'true':'false');});
+      renderLegend();
+      if(S.view==='tabla') drawTable();
+      else if(S.facet) drawFacets();
+      else drawChart();
+      if(!keepPops){renderPops();}
+      syncUrl();
+    }
+
+    // ── descargas
+    function csv(){
+      var cols=selSeries();var rows=[[cfg.xLabel||'Período'].concat(cols.map(function(s){return s.name;}))];
+      slice(cfg.labels).forEach(function(l,i){rows.push([l].concat(cols.map(function(s){return slice(s.data)[i];})));});
+      var txt='﻿'+rows.map(function(r){return r.map(function(v){v=String(v==null?'':v);return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(';');}).join('\n')+'\n# Fuente: '+(cfg.source||'')+'\n# Generado: '+new Date().toLocaleString('es-CO');
+      save(new Blob([txt],{type:'text/csv;charset=utf-8'}),fileSafe(cfg.title)+'.csv');
+    }
+    function save(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(a.href);},2000);}
+    function png(){
+      var first=S.charts[0];
+      if(!first){say('Cambia a la vista de gráfico para descargar la imagen');return;}
+      var W=1200,H=S.facet?900:720, c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d');
+      x.fillStyle='#fff';x.fillRect(0,0,W,H);
+      x.fillStyle='#2F2F2F';x.font='700 30px "Nunito Sans",Verdana,sans-serif';x.fillText(cfg.title,36,52);
+      x.fillStyle='#5C5C5C';x.font='16px Verdana,sans-serif';if(cfg.subtitle)x.fillText(cfg.subtitle,36,82);
+      var top=108;
+      if(!S.facet){
+        x.drawImage(first.canvas,36,top,W-72,H-top-90);
+      }else{
+        var cols=2,cw=(W-72-20)/cols,ch=(H-top-90-20)/Math.ceil(S.charts.length/cols);
+        S.charts.forEach(function(c2,i){var cx=36+(i%cols)*(cw+20),cy=top+Math.floor(i/cols)*(ch+20);x.drawImage(c2.canvas,cx,cy,cw,ch);});
+      }
+      x.fillStyle='#5C5C5C';x.font='14px Verdana,sans-serif';x.fillText('Fuente: '+(cfg.source||''),36,H-44);x.fillText('PIIT · Alcaldía de Segovia · '+new Date().toLocaleDateString('es-CO'),36,H-20);
+      c.toBlob(function(b){save(b,fileSafe(cfg.title)+'.png');},'image/png');
+    }
+    function share(){
+      syncUrl();var url=location.href;
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(function(){say('Enlace copiado con la vista actual');},function(){say('No se pudo copiar el enlace');});}
+      else{var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');say('Enlace copiado con la vista actual');}catch(e){say('No se pudo copiar el enlace');}document.body.removeChild(ta);}
+    }
+    function full(){
+      if(document.fullscreenElement){document.exitFullscreen();}
+      else if(root.requestFullscreen){root.requestFullscreen().then(function(){setTimeout(function(){S.charts.forEach(function(c){c.resize();});},120);}).catch(function(){say('Pantalla completa no disponible');});}
+      else say('Pantalla completa no disponible');
+    }
+    document.addEventListener('fullscreenchange',function(){setTimeout(function(){S.charts.forEach(function(c){c.resize();});},120);});
+
+    // ── eventos
+    root.addEventListener('click',function(e){
+      var t=e.target.closest('button,label[data-dl],input'); if(!t||!root.contains(t))return;
+      if(t.classList.contains('gr-tab')){S.view=t.dataset.v;closePops();render(true);return;}
+      if(t.dataset&&t.dataset.pop){var p=pop(t.dataset.pop),open=p.hidden;closePops(open?t.dataset.pop:null);p.hidden=!open;t.setAttribute('aria-expanded',String(open));return;}
+      if(t.dataset&&t.dataset.act==='share'){share();return;}
+      if(t.dataset&&t.dataset.act==='full'){full();return;}
+      if(t.dataset&&t.dataset.dl){closePops();if(t.dataset.dl==='csv')csv();else png();return;}
+      if(t.dataset&&t.dataset.all!=null){S.sel=t.dataset.all==='1'?cfg.series.map(function(s){return s.key;}):[cfg.series[0].key];render();return;}
+      if(t.classList.contains('gr-leg')){toggle(t.dataset.k);return;}
+    });
+    root.addEventListener('change',function(e){
+      var t=e.target;
+      if(t.dataset.k&&t.type==='checkbox'&&t.closest('.gr-pop')){toggle(t.dataset.k,t.checked);return;}
+      if(t.dataset.s==='facet'){S.facet=t.checked;render();return;}
+      if(t.dataset.s==='align'){S.align=t.checked;render();return;}
+    });
+    root.addEventListener('mouseover',function(e){var b=e.target.closest('.gr-leg');if(!b||S.view!=='grafico'||S.facet)return;S.hl=b.dataset.k;if(S.charts[0])paintDim(S.charts[0]);});
+    root.addEventListener('mouseout',function(e){var b=e.target.closest('.gr-leg');if(!b)return;S.hl=null;if(S.charts[0]&&S.view==='grafico'&&!S.facet)paintDim(S.charts[0]);});
+    function toggle(k,force){
+      var on=S.sel.indexOf(k)>-1,want=force==null?!on:force;
+      if(want&&!on)S.sel.push(k);
+      if(!want&&on){if(S.sel.length<2){say('Debe quedar al menos una serie seleccionada');renderPops();return;}S.sel=S.sel.filter(function(x){return x!==k;});}
+      S.sel=cfg.series.map(function(s){return s.key;}).filter(function(x){return S.sel.indexOf(x)>-1;});
+      render();
+    }
+    S._doc=function(e){if(!root.contains(e.target))closePops();};
+    S._key=function(e){if(e.key==='Escape')closePops();};
+    document.addEventListener('click',S._doc);document.addEventListener('keydown',S._key);
+
+    render();
+    S.update=function(newCfg){Object.assign(cfg,newCfg);if(S.to>cfg.labels.length-1)S.to=cfg.labels.length-1;render();};
+    S.setHighlight=function(){if(S.view==='grafico'&&!S.facet)render(true);};
+    return S;
+  }
+  window.PIITGrapher={mount:mount,get:function(id){return registry[id];}};
+})();
+</script>
+
 <script>
 /* ═══ Lógica PIIT · incrustada (single-file) ═══ */
 /* ═══════════════════════════════════════════════════════════════
@@ -6189,7 +6522,7 @@ window.PIIT = (function () {
         entidad: 'IGAC',
         escala: '1:500.000 / 1:25.000',
         epsg: 'EPSG:3857',
-        icon: '🗺️',
+        icon: '<i class="fa-solid fa-map" aria-hidden="true"></i>',
         opacity: 0.75,
         attribution: '© IGAC — Cartografía Básica Nacional',
         sources: [
@@ -6236,7 +6569,7 @@ window.PIIT = (function () {
         entidad: 'IGAC',
         escala: '1:2.000',
         epsg: 'EPSG:9377 / MAGNA-SIRGAS',
-        icon: '📍',
+        icon: '<i class="fa-solid fa-location-dot" aria-hidden="true"></i>',
         opacity: 0.80,
         attribution: '© IGAC — CartoBásica Digital 1:2.000 Segovia (2024) · Servicio 14241',
         cem_url: 'https://mapas2.igac.gov.co/server3/rest/services/carto/carto2000segovia05736000/MapServer',
@@ -6292,7 +6625,7 @@ window.PIIT = (function () {
         entidad: 'IGAC',
         escala: 'Nacional',
         epsg: 'EPSG:3857',
-        icon: '📋',
+        icon: '<i class="fa-solid fa-clipboard-list" aria-hidden="true"></i>',
         opacity: 0.65,
         attribution: '© IGAC — Catastro',
         sources: [
@@ -6346,7 +6679,7 @@ window.PIIT = (function () {
         entidad: 'DANE',
         escala: 'Nacional',
         epsg: 'EPSG:3857',
-        icon: '📊',
+        icon: '<i class="fa-solid fa-chart-column" aria-hidden="true"></i>',
         opacity: 0.60,
         attribution: '© DANE — Marco Geoestadístico Nacional 2018',
         sources: [
@@ -6396,7 +6729,7 @@ window.PIIT = (function () {
         entidad: 'INVIAS',
         escala: 'Nacional',
         epsg: 'EPSG:3857',
-        icon: '🛣️',
+        icon: '<i class="fa-solid fa-road" aria-hidden="true"></i>',
         useArcgisExport: true,
       },
 
@@ -6417,7 +6750,7 @@ window.PIIT = (function () {
         entidad: 'PNN',
         escala: 'Nacional',
         epsg: 'EPSG:4686',
-        icon: '🌿',
+        icon: '<i class="fa-solid fa-leaf" aria-hidden="true"></i>',
         opacity: 0.55,
         attribution: '© Parques Nacionales Naturales de Colombia',
         sources: [
@@ -6471,7 +6804,7 @@ window.PIIT = (function () {
         desc:'Marco geográfico oficial del Censo Nacional de Población y Vivienda 2018, servicio MGN2018/Serv_CapasMGN_2018. El WMS real se sirve desde portalgis.dane.gov.co (no geoportal.dane.gov.co, que sólo aloja el directorio REST) — verificado como WMS 1.3.0 válido. Protegido por el motor de resiliencia con respaldo REST "/export" sobre el mismo servicio.' },
       { nom:'INVIAS — Red Vial Nacional', sub:'Red primaria · Secundaria · Estado · Categoría', ico:_srcBadge('INVIAS','#2D6E3E'),
         frq:'Servicio no disponible (host retirado)', ftc:'--red',
-        desc:'Red vial del territorio nacional (Mapa_Carreteras/RedVial). ⚠ Auditoría de enlaces nov-2026: el host hermes.invias.gov.co ya no resuelve en DNS y no se encontró un reemplazo oficial verificado (hermes2.invias.gov.co es solo un sitio web, sin ArcGIS REST). La capa se reporta como no disponible en el diagnóstico de servicios WMS hasta que INVIAS publique un nuevo endpoint. Incluye vías que conectan Segovia con el Nordeste Antioqueño.' },
+        desc:'Red vial del territorio nacional (Mapa_Carreteras/RedVial). Auditoría de enlaces nov-2026: el host hermes.invias.gov.co ya no resuelve en DNS y no se encontró un reemplazo oficial verificado (hermes2.invias.gov.co es solo un sitio web, sin ArcGIS REST). La capa se reporta como no disponible en el diagnóstico de servicios WMS hasta que INVIAS publique un nuevo endpoint. Incluye vías que conectan Segovia con el Nordeste Antioqueño.' },
       { nom:'SECOP II — Contratación Pública · Colombia Compra Eficiente', sub:'Contratos · Procesos · Contratistas · NIT 890981391-2 · Municipio de Segovia', ico:_srcBadge('SECOP','#0E7C86'),
         frq:'Tiempo real · Auto-sync cada 2 min', ftc:'--green',
         desc:'Sistema Electrónico de Contratación Pública — SECOP II. Fuente: API Socrata de datos abiertos (datos.gov.co). Datasets: jbjy-vk9h (contratos ejecutados con fecha inicio, fin, valor, contratista, estado) y p6dx-8zbt (procesos de contratación). Filtro: NIT entidad 890981391 (Municipio de Segovia). Integración en tiempo real: la plataforma PIIT consulta automáticamente cada 2 minutos si hay nuevos contratos publicados y actualiza la sección de Contratos sin recargar la página. Incluye semáforo de cierre contractual (verde/amarillo/rojo) calculado desde fecha_de_fin_del_contrato. Cobertura: años 2024, 2025, 2026 y 2027. Licencia: Datos abiertos Colombia · CC BY 4.0.' },
@@ -6664,9 +6997,9 @@ window.PIIT = (function () {
     ],
 
     CATS_REPORTE: [
-      { ico:'🕳️', lbl:'Vías y huecos' }, { ico:'💧', lbl:'Acueducto' },
-      { ico:'💡', lbl:'Alumbrado' }, { ico:'🌿', lbl:'Espacio público' },
-      { ico:'🗑️', lbl:'Basuras' }, { ico:'🏗️', lbl:'Obras' },
+      { ico:'<i class="fa-solid fa-circle-dot" aria-hidden="true"></i>', lbl:'Vías y huecos' }, { ico:'<i class="fa-solid fa-droplet" aria-hidden="true"></i>', lbl:'Acueducto' },
+      { ico:'<i class="fa-solid fa-lightbulb" aria-hidden="true"></i>', lbl:'Alumbrado' }, { ico:'<i class="fa-solid fa-leaf" aria-hidden="true"></i>', lbl:'Espacio público' },
+      { ico:'<i class="fa-solid fa-trash-can" aria-hidden="true"></i>', lbl:'Basuras' }, { ico:'<i class="fa-solid fa-helmet-safety" aria-hidden="true"></i>', lbl:'Obras' },
     ],
 
     INDICADOR_META: { infra:'Infraestructura vial', social:'Cobertura social', pop:'Densidad poblacional', srv:'Servicios básicos' },
@@ -7501,14 +7834,14 @@ window.PIIT = (function () {
 
     /* Traduce el resultado del diagnóstico al vocabulario de updateWmsStatus */
     WMS_ERROR_LABELS: {
-      http404:    { icon: '❌', color: '#DC0B2C', msg: 'Error HTTP 404 · recurso no encontrado' },
-      http500:    { icon: '❌', color: '#DC0B2C', msg: 'Error HTTP 500 · error del servidor' },
-      http_error: { icon: '❌', color: '#DC0B2C', msg: 'Error HTTP · respuesta no exitosa' },
-      timeout:    { icon: '❌', color: '#C69A1A', msg: 'Tiempo de espera agotado' },
-      network:    { icon: '❌', color: '#DC0B2C', msg: 'Error de red · host inalcanzable' },
-      cors:       { icon: '❌', color: '#C69A1A', msg: 'Restricción CORS detectada' },
-      invalid_url:{ icon: '❌', color: '#DC0B2C', msg: 'URL del servicio inválida' },
-      auth:       { icon: '❌', color: '#DC0B2C', msg: 'Error de autenticación' },
+      http404:    { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#DC0B2C', msg: 'Error HTTP 404 · recurso no encontrado' },
+      http500:    { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#DC0B2C', msg: 'Error HTTP 500 · error del servidor' },
+      http_error: { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#DC0B2C', msg: 'Error HTTP · respuesta no exitosa' },
+      timeout:    { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#C69A1A', msg: 'Tiempo de espera agotado' },
+      network:    { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#DC0B2C', msg: 'Error de red · host inalcanzable' },
+      cors:       { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#C69A1A', msg: 'Restricción CORS detectada' },
+      invalid_url:{ icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#DC0B2C', msg: 'URL del servicio inválida' },
+      auth:       { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#DC0B2C', msg: 'Error de autenticación' },
     },
 
     toggleWMS: function (key) {
@@ -7632,15 +7965,15 @@ window.PIIT = (function () {
       if (!el) return;
       const svcDef = svc || DATA.WMS_SERVICES[key] || {};
       const base = {
-        loading:     { icon: '⏳', color: '#8A9E96', msg: 'Conectando…' },
-        ok:          { icon: '✅', color: '#2E7D52', msg: 'Servicio disponible' },
+        loading:     { icon: '<i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>', color: '#8A9E96', msg: 'Conectando…' },
+        ok:          { icon: '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>', color: '#2E7D52', msg: 'Servicio disponible' },
         off:         { icon: '—',  color: '#B8C8C0', msg: 'Inactivo' },
         /* Servicios con motor de resiliencia (sources[]): nunca se
            expone el detalle técnico si todas las fuentes fallan —
            mensaje amigable, consistente con el resto de la UI. */
-        unavailable: { icon: '🔄', color: '#C69A1A', msg: map.GEO_FRIENDLY_MSG.unavailable },
+        unavailable: { icon: '<i class="fa-solid fa-rotate" aria-hidden="true"></i>', color: '#C69A1A', msg: map.GEO_FRIENDLY_MSG.unavailable },
       };
-      const cfg = base[status] || map.WMS_ERROR_LABELS[status] || { icon: '❌', color: '#DC0B2C', msg: 'Error desconocido' };
+      const cfg = base[status] || map.WMS_ERROR_LABELS[status] || { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', color: '#DC0B2C', msg: 'Error desconocido' };
 
       /* Update or create row for this key */
       // Fix 7: Limpiar texto inicial si es la primera entrada real
@@ -7677,7 +8010,7 @@ window.PIIT = (function () {
       placeholder.innerHTML = `
         <i class="fa-solid fa-layer-group" style="font-size:28px;color:rgba(252,220,0,.4);display:block;margin-bottom:8px"></i>
         <p style="color:var(--au300);font-weight:700;font-size:12px;margin-bottom:4px">Capa CeM 12524 activa</p>
-        <p style="color:rgba(255,255,255,.3);font-size:10px;line-height:1.6">${svc.icon||'🗺️'} ${svc.name}<br>Escala ${svc.escala||''} · ${svc.año||''}<br>${svc.epsg||''}<br><br>Haz clic en un barrio para ver la ficha territorial.</p>
+        <p style="color:rgba(255,255,255,.3);font-size:10px;line-height:1.6">${svc.icon||'<i class="fa-solid fa-map" aria-hidden="true"></i>'} ${svc.name}<br>Escala ${svc.escala||''} · ${svc.año||''}<br>${svc.epsg||''}<br><br>Haz clic en un barrio para ver la ficha territorial.</p>
         <a href="${svc.cem_url||'#'}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:8px;padding:5px 10px;background:rgba(252,220,0,.15);border:1px solid rgba(252,220,0,.3);border-radius:5px;color:var(--au400);font-size:10px;font-weight:700;text-decoration:none">Ver en Colombia en Mapas ↗</a>`;
     },
 
@@ -7802,7 +8135,7 @@ window.PIIT = (function () {
       var bgBadge  = icv >= 70 ? '#EAF5EF'  : icv >= 40 ? '#FEF3C7' : '#FFF5F5';
       var fecha    = new Date().toLocaleDateString('es-CO');
 
-      var semaforo = function(v) { return v>=70 ? '✅ Bueno' : v>=40 ? '⚠ Atención' : '❌ Crítico'; };
+      var semaforo = function(v) { return v>=70 ? 'Bueno' : v>=40 ? 'Atención' : 'Crítico'; };
       var num      = function(n) { return (n||0).toLocaleString('es-CO'); };
 
       var css = [
@@ -7829,7 +8162,7 @@ window.PIIT = (function () {
         ['Densidad poblacional',  (ind.pop||0)+'%',      semaforo(ind.pop||0)],
         ['Cobertura acueducto',   (ind.cobertura_acueducto||0)+'%', semaforo(ind.cobertura_acueducto||0)],
         ['Cobertura energía',     (ind.cobertura_energia||0)+'%',   semaforo(ind.cobertura_energia||0)],
-        ['Hogares SISBEN A+B',    (ind.sisben_ab||0)+'%', (ind.sisben_ab||0)>40?'⚠ Alto':'✅ Normal'],
+        ['Hogares SISBEN A+B',    (ind.sisben_ab||0)+'%', (ind.sisben_ab||0)>40?'Alto':'Normal'],
         ['Puntaje SISBEN prom.',  Math.round(ind.puntaje||0)+'',    'Escala 0–100'],
         ['Población total',       num(ind.poblacion),    'Habitantes'],
         ['Hogares registrados',   num(ind.hogares),      'Unidades'],
@@ -8229,10 +8562,10 @@ window.PIIT = (function () {
     qualityBadge: function () {
       const a = sisben._auditCache || sisben.audit();
       const map = {
-        ok:    { icon: '✅', label: 'Íntegro · sin inconsistencias', color: '#2E7D52' },
-        info:  { icon: 'ℹ️', label: 'Íntegro · observaciones menores', color: '#2E7D52' },
-        warn:  { icon: '⚠️', label: 'Revisar — inconsistencias leves', color: '#C69A1A' },
-        error: { icon: '❌', label: 'Requiere corrección', color: '#DC0B2C' },
+        ok:    { icon: '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>', label: 'Íntegro · sin inconsistencias', color: '#2E7D52' },
+        info:  { icon: '<i class="fa-solid fa-circle-info" aria-hidden="true"></i>', label: 'Íntegro · observaciones menores', color: '#2E7D52' },
+        warn:  { icon: '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>', label: 'Revisar — inconsistencias leves', color: '#C69A1A' },
+        error: { icon: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>', label: 'Requiere corrección', color: '#DC0B2C' },
       };
       return Object.assign({ at: a.at, n: a.findings.length }, map[a.status] || map.info);
     },
@@ -8622,7 +8955,7 @@ window.PIIT = (function () {
         return `<span style="color:${color};font-weight:700;font-size:9.5px">${arrow} ${Math.abs(d)} pp vs. municipio</span>`;
       };
       const insights = sisben.insights(p);
-      const insightIco = { ok: '✅', info: 'ℹ️', warn: '⚠️', crit: '❌' };
+      const insightIco = { ok: '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>', info: '<i class="fa-solid fa-circle-info" aria-hidden="true"></i>', warn: '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>', crit: '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>' };
       const q = sisben.qualityBadge();
 
       el.innerHTML = `
@@ -8713,7 +9046,7 @@ window.PIIT = (function () {
         </details>
 
         <div class="sbf-footer">
-          <span>📅 Fuente: ${sisben.META.fuente} · ${sisben.META.version} · actualizado ${sisben.META.actualizado}</span>
+          <span><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Fuente: ${sisben.META.fuente} · ${sisben.META.version} · actualizado ${sisben.META.actualizado}</span>
           <span style="color:${q.color}">${q.icon} ${q.label}</span>
         </div>`;
 
@@ -8872,31 +9205,31 @@ window.PIIT = (function () {
       'C02 · Fraguas',              // PK 7361002001 — Corregimiento 002
     ];
     const PRESTADORES = {
-      aseo:{nom:'Segovia Aseo S.A. E.S.P.',ico:'🗑️',color:'var(--g600)',bg:'#EAF5EF',
-        tipos:[{ico:'🗑️',t:'Recolección no realizada',s:'Ruta no pasó en el día programado',dot:'var(--red)'},
-               {ico:'💨',t:'Punto crítico de basuras',s:'Acumulación en vía pública o espacio comunal',dot:'var(--amber)'},
-               {ico:'♻️',t:'Reciclaje y separación',s:'Problema con punto limpio o material reciclable',dot:'var(--blue)'},
-               {ico:'🧹',t:'Barrido de vías',s:'Calle sin barrer o acumulación de residuos',dot:'var(--g500)'},
-               {ico:'🚛',t:'Vehículo recolector',s:'Avería, derrame o problema con camión',dot:'var(--amber)'},
-               {ico:'⚠️',t:'Otro problema de aseo',s:'Situación no clasificada anteriormente',dot:'var(--t300)'}],
+      aseo:{nom:'Segovia Aseo S.A. E.S.P.',ico:'<i class="fa-solid fa-trash-can" aria-hidden="true"></i>',color:'var(--g600)',bg:'#EAF5EF',
+        tipos:[{ico:'<i class="fa-solid fa-trash-can" aria-hidden="true"></i>',t:'Recolección no realizada',s:'Ruta no pasó en el día programado',dot:'var(--red)'},
+               {ico:'<i class="fa-solid fa-wind" aria-hidden="true"></i>',t:'Punto crítico de basuras',s:'Acumulación en vía pública o espacio comunal',dot:'var(--amber)'},
+               {ico:'<i class="fa-solid fa-recycle" aria-hidden="true"></i>',t:'Reciclaje y separación',s:'Problema con punto limpio o material reciclable',dot:'var(--blue)'},
+               {ico:'<i class="fa-solid fa-broom" aria-hidden="true"></i>',t:'Barrido de vías',s:'Calle sin barrer o acumulación de residuos',dot:'var(--g500)'},
+               {ico:'<i class="fa-solid fa-truck" aria-hidden="true"></i>',t:'Vehículo recolector',s:'Avería, derrame o problema con camión',dot:'var(--amber)'},
+               {ico:'<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>',t:'Otro problema de aseo',s:'Situación no clasificada anteriormente',dot:'var(--t300)'}],
         contacto:'Línea de atención: 604-XXX-XXXX · Segovia Aseo S.A. E.S.P.',
         sla:'48 horas hábiles',total:312,resueltos:231,dias:3.8,color_fill:'#2E7D52'},
-      alumbrado:{nom:'Segovia S.A.',ico:'💡',color:'var(--au600)',bg:'var(--au100)',
-        tipos:[{ico:'🌑',t:'Luminaria apagada',s:'Poste sin luz en horario nocturno confirmado',dot:'var(--red)'},
-               {ico:'💥',t:'Luminaria dañada o rota',s:'Vidrio roto, poste caído o vandalismo',dot:'var(--red)'},
-               {ico:'⚡',t:'Parpadeo o falla intermitente',s:'Luz que titila o se apaga y enciende',dot:'var(--amber)'},
-               {ico:'🔌',t:'Red eléctrica visible',s:'Cable expuesto, empalme inseguro o riesgo eléctrico',dot:'var(--red)'},
-               {ico:'📍',t:'Zona sin alumbrado',s:'Sector completo sin cobertura de iluminación',dot:'var(--amber)'},
-               {ico:'⚠️',t:'Otro problema eléctrico',s:'Situación no clasificada anteriormente',dot:'var(--t300)'}],
+      alumbrado:{nom:'Segovia S.A.',ico:'<i class="fa-solid fa-lightbulb" aria-hidden="true"></i>',color:'var(--au600)',bg:'var(--au100)',
+        tipos:[{ico:'<i class="fa-solid fa-power-off" aria-hidden="true"></i>',t:'Luminaria apagada',s:'Poste sin luz en horario nocturno confirmado',dot:'var(--red)'},
+               {ico:'<i class="fa-solid fa-burst" aria-hidden="true"></i>',t:'Luminaria dañada o rota',s:'Vidrio roto, poste caído o vandalismo',dot:'var(--red)'},
+               {ico:'<i class="fa-solid fa-bolt" aria-hidden="true"></i>',t:'Parpadeo o falla intermitente',s:'Luz que titila o se apaga y enciende',dot:'var(--amber)'},
+               {ico:'<i class="fa-solid fa-plug" aria-hidden="true"></i>',t:'Red eléctrica visible',s:'Cable expuesto, empalme inseguro o riesgo eléctrico',dot:'var(--red)'},
+               {ico:'<i class="fa-solid fa-location-dot" aria-hidden="true"></i>',t:'Zona sin alumbrado',s:'Sector completo sin cobertura de iluminación',dot:'var(--amber)'},
+               {ico:'<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>',t:'Otro problema eléctrico',s:'Situación no clasificada anteriormente',dot:'var(--t300)'}],
         contacto:'Emergencias 24h: 604-XXX-XXXX · Segovia S.A. Alumbrado Público',
         sla:'24h urgencias · 72h mantenimiento',total:178,resueltos:145,dias:2.1,color_fill:'#C69A1A'},
-      agua:{nom:'Aguas del Pocuné',ico:'💧',color:'var(--blue)',bg:'#E6F1FB',
-        tipos:[{ico:'🚿',t:'Falta de agua / corte',s:'Sin servicio de acueducto sin aviso previo',dot:'var(--red)'},
-               {ico:'💧',t:'Baja presión',s:'Agua llega con presión insuficiente',dot:'var(--amber)'},
-               {ico:'🟤',t:'Calidad del agua',s:'Agua turbia, con olor, color o sabor extraño',dot:'var(--red)'},
-               {ico:'🌊',t:'Rotura de tubería',s:'Fuga visible en vía pública o red domiciliaria',dot:'var(--red)'},
-               {ico:'🕳️',t:'Alcantarillado obstruido',s:'Desbordamiento, taponamiento o malos olores',dot:'var(--amber)'},
-               {ico:'💰',t:'Problema de facturación',s:'Error en cobro o lectura del medidor',dot:'var(--blue)'}],
+      agua:{nom:'Aguas del Pocuné',ico:'<i class="fa-solid fa-droplet" aria-hidden="true"></i>',color:'var(--blue)',bg:'#E6F1FB',
+        tipos:[{ico:'<i class="fa-solid fa-shower" aria-hidden="true"></i>',t:'Falta de agua / corte',s:'Sin servicio de acueducto sin aviso previo',dot:'var(--red)'},
+               {ico:'<i class="fa-solid fa-droplet" aria-hidden="true"></i>',t:'Baja presión',s:'Agua llega con presión insuficiente',dot:'var(--amber)'},
+               {ico:'<i class="fa-solid fa-circle" style="color:#8D6E63" aria-hidden="true"></i>',t:'Calidad del agua',s:'Agua turbia, con olor, color o sabor extraño',dot:'var(--red)'},
+               {ico:'<i class="fa-solid fa-water" aria-hidden="true"></i>',t:'Rotura de tubería',s:'Fuga visible en vía pública o red domiciliaria',dot:'var(--red)'},
+               {ico:'<i class="fa-solid fa-circle-dot" aria-hidden="true"></i>',t:'Alcantarillado obstruido',s:'Desbordamiento, taponamiento o malos olores',dot:'var(--amber)'},
+               {ico:'<i class="fa-solid fa-coins" aria-hidden="true"></i>',t:'Problema de facturación',s:'Error en cobro o lectura del medidor',dot:'var(--blue)'}],
         contacto:'PQR: aguaspocune@segovia.gov.co · Tel: 604-XXX-XXXX',
         sla:'72h hábiles · Urgencias: 4 horas',total:357,resueltos:268,dias:4.9,color_fill:'#00A0E4'},
     };
@@ -8936,7 +9269,7 @@ window.PIIT = (function () {
           <div class="tipo-grid">${p.tipos.map((t,i)=>`
             <div class="tipo-item" id="tipo-${i}" onclick="PIIT.reportes._selTipo(${i})">
               <div class="tipo-dot" style="background:${t.dot}"></div>
-              <div><div class="tipo-t">${_esc(t.ico)} ${_esc(t.t)}</div><div class="tipo-s">${_esc(t.s)}</div></div>
+              <div><div class="tipo-t">${t.ico} ${_esc(t.t)}</div><div class="tipo-s">${_esc(t.s)}</div></div>
             </div>`).join('')}</div>
           <div class="pt" style="margin-bottom:6px">Barrio</div>
           <select class="fl" id="rep-barrio"><option value="">— Selecciona tu barrio —</option>${BARRIOS_SEL.map(b=>`<option>${_esc(b)}</option>`).join('')}</select>
@@ -8989,7 +9322,7 @@ window.PIIT = (function () {
           <div class="track-line"><div class="t-dot" style="background:var(--g200)"></div><div class="t-txt"><strong>Visita / intervención en campo</strong><span>Pendiente de programación</span></div></div>
           <div class="track-line"><div class="t-dot" style="background:var(--g200)"></div><div class="t-txt"><strong>Cierre y notificación al ciudadano</strong><span>Pendiente</span></div></div>
         </div>
-        <div style="font-size:10px;color:var(--t400);margin-bottom:12px">Tipo: <strong style="color:var(--t700)">${_esc(tipo.ico)} ${_esc(tipo.t)}</strong> · Barrio: <strong style="color:var(--t700)">${_esc(barrio)}</strong> · Gravedad: <strong style="color:var(--t700)">${_esc(sevSel)}</strong></div>
+        <div style="font-size:10px;color:var(--t400);margin-bottom:12px">Tipo: <strong style="color:var(--t700)">${tipo.ico} ${_esc(tipo.t)}</strong> · Barrio: <strong style="color:var(--t700)">${_esc(barrio)}</strong> · Gravedad: <strong style="color:var(--t700)">${_esc(sevSel)}</strong></div>
         <button class="rep-submit-btn" onclick="PIIT.reportes._nuevo()" style="background:transparent;color:var(--g700);border:1px solid var(--g400)">
           <i class="fa-solid fa-plus"></i> Nuevo reporte
         </button></div>`;
@@ -9102,7 +9435,7 @@ window.PIIT = (function () {
         if (nomEl && tipoSel !== null) {
           var p = PRESTADORES[prestActual];
           var t = p && p.tipos ? p.tipos[tipoSel] : null;
-          if (t) { nomEl.textContent = t.t; if(icoEl) icoEl.textContent = t.ico||'🔧'; }
+          if (t) { nomEl.textContent = t.t; if(icoEl) icoEl.innerHTML = t.ico||'<i class="fa-solid fa-wrench" aria-hidden="true"></i>'; }
         }
         // Reset contador
         var cc = document.getElementById('mob-char-count');
@@ -9263,9 +9596,9 @@ window.PIIT = (function () {
       const el = document.getElementById('mob-prest-list');
       if (!el) return;
       const config = [
-        {key:'aseo',    ico:'🗑️', nom:'Segovia Aseo S.A. E.S.P.', bg:'#EAF5EF', desc:'Recolección · Barrido · Reciclaje'},
-        {key:'alumbrado',ico:'💡',nom:'Segovia S.A.',              bg:'var(--au100)', desc:'Alumbrado · Luminarias · Red eléctrica'},
-        {key:'agua',    ico:'💧', nom:'Aguas del Pocuné',          bg:'#E6F1FB', desc:'Acueducto · Alcantarillado'},
+        {key:'aseo',    ico:'<i class="fa-solid fa-trash-can" aria-hidden="true"></i>', nom:'Segovia Aseo S.A. E.S.P.', bg:'#EAF5EF', desc:'Recolección · Barrido · Reciclaje'},
+        {key:'alumbrado',ico:'<i class="fa-solid fa-lightbulb" aria-hidden="true"></i>',nom:'Segovia S.A.',              bg:'var(--au100)', desc:'Alumbrado · Luminarias · Red eléctrica'},
+        {key:'agua',    ico:'<i class="fa-solid fa-droplet" aria-hidden="true"></i>', nom:'Aguas del Pocuné',          bg:'#E6F1FB', desc:'Acueducto · Alcantarillado'},
       ];
       el.innerHTML = config.map(c =>
         '<div onclick="PIIT.reportes.selectPrestador(\''+c.key+'\');PIIT.reportes.mobNext(2)"'
@@ -9283,7 +9616,7 @@ window.PIIT = (function () {
       const titulo = document.getElementById('mob-p2-title');
       if (!el) return;
       const p = PRESTADORES[prestActual];
-      if (titulo) titulo.textContent = p.ico + ' ' + p.nom.split(' ')[0];
+      if (titulo) titulo.textContent = p.nom.split(' ')[0];
       const btn = document.getElementById('mob-btn-tipo');
       if (btn) { btn.style.opacity='.4'; btn.style.pointerEvents='none'; }
       el.innerHTML = p.tipos.map((t,i) =>
@@ -9356,9 +9689,9 @@ window.PIIT = (function () {
       if (!txt || !el) return;
       var tip = el.textContent.trim();
       var prompts = {
-        '📍 Menciona el lugar exacto': ' (frente al parque, carrera 5 con calle 8…)',
-        '🕐 ¿Cuándo empezó?':          ' Lleva aproximadamente ',
-        '👥 ¿Afecta a otros?':          ' Afecta a varios vecinos del sector.'
+        'Menciona el lugar exacto': ' (frente al parque, carrera 5 con calle 8…)',
+        '¿Cuándo empezó?':          ' Lleva aproximadamente ',
+        '¿Afecta a otros?':          ' Afecta a varios vecinos del sector.'
       };
       var add = prompts[tip] || '';
       txt.value = (txt.value + add).trimStart();
@@ -9657,20 +9990,15 @@ window.PIIT = (function () {
         b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
       });
 
-      // Resalta el punto seleccionado en el gráfico (radio y color mayores)
-      var ch = charts._instances['chart-timeline'];
-      if (ch) {
-        var n = T.labels.length;
-        ch.data.datasets[0].pointRadius = T.labels.map(function (_, i) { return i === idx ? 7 : 4; });
-        ch.data.datasets[0].pointBackgroundColor = T.labels.map(function (_, i) { return i === idx ? '#DC0B2C' : '#48B72C'; });
-        ch.update('active'); // usa la animación de transición configurada (350ms ease-out)
-      }
+      // El punto del año seleccionado se resalta dentro del Grapher
+      var gr = window.PIITGrapher && PIITGrapher.get('icv');
+      if (gr) gr.setHighlight();
     },
 
     buildTimeline: function () {
       charts._destroy('chart-timeline');
-      var ctx = document.getElementById('chart-timeline');
-      if (!ctx) return;
+      var ctx = document.getElementById('icv-grapher');
+      if (!ctx || !window.PIITGrapher) return;
       var T = charts._TIMELINE;
 
       // Selector de año — pastillas, mismo patrón visual que el resto de
@@ -9682,30 +10010,21 @@ window.PIIT = (function () {
         }).join('');
       }
 
-      charts._instances['chart-timeline'] = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: T.labels,
-          datasets: [
-            {label:'ICV Municipal promedio', data:T.icv, borderColor:'#48B72C', backgroundColor:'rgba(61,148,103,.1)', tension:0.4, fill:true,
-             pointRadius: T.labels.map(function(_,i){return i===T.selectedIdx?7:4;}),
-             pointBackgroundColor: T.labels.map(function(_,i){return i===T.selectedIdx?'#DC0B2C':'#48B72C';}),
-             borderWidth:2.5},
-            {label:'Infraestructura', data:T.infra, borderColor:'#D6B000', backgroundColor:'transparent', tension:0.4, borderDash:[5,3], pointRadius:3, borderWidth:1.5},
-            {label:'Cobertura social', data:T.social, borderColor:'#00A0E4', backgroundColor:'transparent', tension:0.4, borderDash:[3,3], pointRadius:3, borderWidth:1.5},
-          ],
-        },
-        options: Object.assign(charts._defaults(), {
-          animation: { duration: 350, easing: 'easeOutCubic' },
-          onClick: function (evt, elements) {
-            if (elements && elements.length) charts.setTimelineYear(elements[0].index);
-          },
-          plugins: { legend: { position:'bottom', labels:{ font:{size:12}, boxWidth:10 }}},
-          scales: {
-            x: { ticks:{color:'#8A9E96',font:{size:12}}, grid:{color:'rgba(0,0,0,.08)'} },
-            y: { min:30, max:100, ticks:{color:'#8A9E96',font:{size:12},callback:function(v){return v;}}, grid:{color:'rgba(0,0,0,.08)'} },
-          },
-        }),
+      PIITGrapher.mount(ctx, {
+        id: 'icv',
+        title: 'Índice de Calidad de Vida (ICV) municipal y sus componentes',
+        subtitle: 'Segovia · 2019–2025 · escala de 0 a 100',
+        source: 'PIIT · Sistema de Inteligencia Territorial, a partir de DANE, IGAC, SSPD/SUI y módulos propios.',
+        note: 'Haga clic en un punto o en un botón de año para ver su valor y su variación respecto al año anterior.',
+        xLabel: 'Año', yTitle: 'Índice (0–100)', unit: 'pts', beginAtZero: false, entityLabel: 'Editar componentes',
+        labels: T.labels,
+        series: [
+          { key: 'icv',    name: 'ICV municipal',    color: '#488704', data: T.icv },
+          { key: 'infra',  name: 'Infraestructura',  color: '#B8731A', data: T.infra },
+          { key: 'social', name: 'Cobertura social', color: '#0075A3', data: T.social },
+        ],
+        highlightIndex: function () { return T.selectedIdx; },
+        onPointClick: function (idx) { charts.setTimelineYear(idx); },
       });
 
       // Estado inicial del KPI (sin animación, es la primera carga)
@@ -10393,12 +10712,12 @@ window.PIIT = (function () {
     // Etiqueta de sector con color
     function sectorBadge(s){
       var cfg = {
-        'Agua y Saneamiento': {bg:'#E6F1FB', col:'#00A0E4', icon:'💧'},
-        'Vias':               {bg:'#FEF3C7', col:'#78350F', icon:'🛣️'},
-        'Social':             {bg:'#EAF5EF', col:'#1A5C3A', icon:'🏘️'},
-        'Infraestructura':    {bg:'#FFF5F5', col:'#DC0B2C', icon:'🏗️'},
-        'Estudios y Disenos': {bg:'#FBF4D8', col:'#7A5A0A', icon:'📐'},
-      }[s] || {bg:'#F4FAF6', col:'#43594E', icon:'📋'};
+        'Agua y Saneamiento': {bg:'#E6F1FB', col:'#00A0E4', icon:'<i class="fa-solid fa-droplet" aria-hidden="true"></i>'},
+        'Vias':               {bg:'#FEF3C7', col:'#78350F', icon:'<i class="fa-solid fa-road" aria-hidden="true"></i>'},
+        'Social':             {bg:'#EAF5EF', col:'#1A5C3A', icon:'<i class="fa-solid fa-house-chimney" aria-hidden="true"></i>'},
+        'Infraestructura':    {bg:'#FFF5F5', col:'#DC0B2C', icon:''},
+        'Estudios y Disenos': {bg:'#FBF4D8', col:'#7A5A0A', icon:'<i class="fa-solid fa-ruler-combined" aria-hidden="true"></i>'},
+      }[s] || {bg:'#F4FAF6', col:'#43594E', icon:'<i class="fa-solid fa-clipboard-list" aria-hidden="true"></i>'};
       return '<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;white-space:nowrap;background:'+cfg.bg+';color:'+cfg.col+'">'+cfg.icon+' '+s+'</span>';
     }
 
@@ -10718,11 +11037,11 @@ window.PIIT = (function () {
     }
 
     /* ── Semáforo de cierre contractual ─────────────────────────
-       🟢 Verde   = faltan > 30 días para vencer
-       🟡 Amarillo = faltan 15–30 días
-       🟠 Naranja  = faltan 7–14 días
-       🔴 Rojo     = faltan < 7 días o ya venció
-       ⚫ Gris     = terminado/liquidado/cancelado (sin alerta)
+       Verde   = faltan > 30 días para vencer
+       Amarillo = faltan 15–30 días
+       Naranja  = faltan 7–14 días
+       Rojo     = faltan < 7 días o ya venció
+       Gris     = terminado/liquidado/cancelado (sin alerta)
     ───────────────────────────────────────────────────────────── */
     function _semaforo(fechaFin, estado) {
       // Estados cerrados — sin alerta de vencimiento
@@ -10872,9 +11191,9 @@ window.PIIT = (function () {
       safe('ct-kpi-ejec', alertas > 0 ? alertas : '0');
       // Cambiar label del 4to KPI
       var lbl4 = document.querySelector('#s-contratos .grid4 .kc:nth-child(4) .kc-lbl');
-      if (lbl4) lbl4.textContent = 'Alertas cierre (🔴+🟠)';
+      if (lbl4) lbl4.textContent = 'Alertas cierre (+)';
       var trend4 = document.querySelector('#s-contratos .grid4 .kc:nth-child(4) .kc-trend');
-      if (trend4) { trend4.textContent = alertas > 0 ? '⚠ Alerta' : '✓ OK'; trend4.className = 'kc-trend ' + (alertas > 0 ? 'dn' : 'up'); }
+      if (trend4) { trend4.textContent = alertas > 0 ? 'Alerta' : '✓ OK'; trend4.className = 'kc-trend ' + (alertas > 0 ? 'dn' : 'up'); }
     }
 
     function buildTabla(data) {
@@ -11068,7 +11387,7 @@ window.PIIT = (function () {
       ].join(';');
       notif.innerHTML = '<div style="width:40px;height:40px;border-radius:10px;background:rgba(252,220,0,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">'
         + '<i class="fa-solid fa-file-circle-plus" style="font-size:18px;color:var(--au400)"></i></div>'
-        + '<div><div style="font-weight:700;margin-bottom:2px">🆕 ' + count + ' nuevo' + (count>1?'s':'') + ' contrato' + (count>1?'s':'') + '</div>'
+        + '<div><div style="font-weight:700;margin-bottom:2px"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> ' + count + ' nuevo' + (count>1?'s':'') + ' contrato' + (count>1?'s':'') + '</div>'
         + '<div style="font-size:11px;color:var(--g300)">SECOP II · NIT ' + NIT + ' · Actualizado automáticamente</div></div>'
         + '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--g300);cursor:pointer;font-size:16px;padding:4px;flex-shrink:0">&times;</button>';
       document.body.appendChild(notif);
@@ -11220,7 +11539,7 @@ window.PIIT = (function () {
               DATA_CT = [];
 
               _renderSyncBadge('updating');
-              map.toast('🆕 ' + diff + ' nuevo(s) contrato(s) detectado(s) en SECOP II · Actualizando…', 'ok');
+              map.toast('' + diff + ' nuevo(s) contrato(s) detectado(s) en SECOP II · Actualizando…', 'ok');
 
               _fetchData(function() {
                 contratos.filtrar();
@@ -11586,43 +11905,24 @@ window.PIIT = (function () {
       // ── Chart 1: Evolución semanal (recortada al rango seleccionado) ──
       if (window.Chart) {
         charts._initGlobalTheme();
-        var ctx1 = document.getElementById('sv-chart-semanal');
-        if (ctx1) {
+        var gHost = document.getElementById('sv-grapher');
+        if (gHost && window.PIITGrapher) {
           charts._destroy('sv-chart-semanal');
-          var labelsRango = SIVIGILA_SEMANAL.semanas.slice(d-1, h);
-          charts._instances['sv-chart-semanal'] = new Chart(ctx1, {
-            type: 'line',
-            data: {
-              labels: labelsRango,
-              datasets: [
-                { label:'Leishmaniasis', data: SIVIGILA_SEMANAL.datasets.leish.slice(d-1,h),
-                  borderColor:'#DC0B2C', backgroundColor:'rgba(200,64,64,.08)',
-                  tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4, fill:true },
-                { label:'EDA', data: SIVIGILA_SEMANAL.datasets.eda.slice(d-1,h),
-                  borderColor:'#C9852A', backgroundColor:'rgba(201,133,42,.08)',
-                  tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4 },
-                { label:'Dengue', data: SIVIGILA_SEMANAL.datasets.dengue.slice(d-1,h),
-                  borderColor:'#00A0E4', backgroundColor:'rgba(42,108,168,.08)',
-                  tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4 },
-                { label:'Mercurio', data: SIVIGILA_SEMANAL.datasets.mercur.slice(d-1,h),
-                  borderColor:'#7A5A0A', backgroundColor:'rgba(122,90,10,.1)',
-                  tension:.3, borderWidth:2, pointRadius:0, pointHoverRadius:4, borderDash:[4,3] },
-              ]
-            },
-            options: {
-              responsive:true, maintainAspectRatio:true,
-              interaction:{ mode:'index', intersect:false },
-              plugins:{
-                legend:{ position:'bottom', labels:{ font:{size:12}, boxWidth:10, padding:10 } },
-                tooltip:{ callbacks:{ title: function(items){ return items[0].label+' · '+anio; } } }
-              },
-              scales:{
-                x:{ ticks:{ font:{size:11}, maxRotation:0, autoSkip:true, maxTicksLimit:13 },
-                    grid:{ display:false } },
-                y:{ beginAtZero:true, ticks:{ font:{size:11.5} }, grid:{ color:'rgba(0,0,0,.05)' },
-                    title:{ display:true, text:'Casos notificados', font:{size:12} } }
-              }
-            }
+          var sl = function (k) { return SIVIGILA_SEMANAL.datasets[k].slice(d-1, h); };
+          PIITGrapher.mount(gHost, {
+            id: 'sv',
+            title: 'Casos notificados por semana epidemiológica',
+            subtitle: 'Leishmaniasis, EDA, dengue e intoxicación por mercurio · Segovia (05736) · ' + anio,
+            source: 'INS · SIVIGILA, municipio de Segovia (UPGD 05736). Serie semanal ajustada al total anual oficial.',
+            note: 'Semanas epidemiológicas SE ' + d + ' a SE ' + h + '. Las series tienen magnitudes muy distintas: use Configuración para dividir en gráficos pequeños y alinear (o no) las escalas de los ejes.',
+            xLabel: 'Semana epidemiológica', yTitle: 'Casos notificados', unit: 'casos', entityLabel: 'Editar eventos',
+            labels: SIVIGILA_SEMANAL.semanas.slice(d-1, h),
+            series: [
+              { key: 'leish',  name: 'Leishmaniasis',   color: '#DC0B2C', data: sl('leish') },
+              { key: 'eda',    name: 'EDA',             color: '#B8731A', data: sl('eda') },
+              { key: 'dengue', name: 'Dengue',          color: '#0075A3', data: sl('dengue') },
+              { key: 'mercur', name: 'Intox. mercurio', color: '#6B4E0A', data: sl('mercur') },
+            ],
           });
         }
 
@@ -11832,7 +12132,7 @@ window.PIIT = (function () {
             ? '<span class="badge badge-green" style="font-size:10.5px">✓ Cumple</span>'
             : brecha > 10
               ? '<span class="badge badge-red" style="font-size:10.5px">✗ Brecha '+brecha+'%</span>'
-              : '<span class="badge badge-gold" style="font-size:10.5px">⚠ Brecha '+brecha+'%</span>';
+              : '<span class="badge badge-gold" style="font-size:10.5px"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Brecha '+brecha+'%</span>';
           var pctColor = cumple ? '#2E7D52' : r.cob >= r.meta-5 ? '#C9852A' : '#DC0B2C';
           return '<tr style="border-bottom:1px solid var(--g100)">'
             + '<td style="padding:10px 12px;font-weight:700;color:var(--t700)">'+r.bio+'</td>'
@@ -11983,7 +12283,7 @@ window.PIIT = (function () {
                        : '#7A5A0A';
           var estBadge = r.estado === 'Activo'
             ? '<span class="badge badge-green" style="font-size:10.5px">● Activo</span>'
-            : '<span class="badge badge-gold" style="font-size:10.5px">⚠ '+r.estado+'</span>';
+            : '<span class="badge badge-gold" style="font-size:10.5px"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> '+r.estado+'</span>';
           return '<tr style="border-bottom:1px solid var(--g100)">'
             + '<td style="padding:10px 12px;font-weight:700;color:var(--t700)">'+r.eps+'</td>'
             + '<td style="padding:10px 12px;text-align:center"><code style="font-family:var(--fm);font-size:11px;background:var(--g50);padding:2px 6px;border-radius:4px;color:var(--g800)">'+r.cod+'</code></td>'
@@ -12341,18 +12641,18 @@ window.PIIT = (function () {
     }).sort(function (a, b) { return b.icv - a.icv; }),
 
     alertasInteligentes: [
-      { tipo:'crit', icono:'🚨', titulo:'Zona crítica: alta pobreza + baja conectividad',
+      { tipo:'crit', icono:'<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>', titulo:'Zona crítica: alta pobreza + baja conectividad',
         desc:'Barrios CAMPO ALEGRE, FRAGUAS y LA PAZ: IPM &gt;38% AND conectividad &lt;35%. Activar programa de intervención integral prioritaria PDM 2026.',
         indicadores: 'IPM 38-44% · Internet rural 28-32% · ICV 50-58/100' },
-      { tipo:'warn', icono:'⚠', titulo:'Brecha digital urbano-rural supera umbral crítico',
+      { tipo:'warn', icono:'<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>', titulo:'Brecha digital urbano-rural supera umbral crítico',
         desc:'Diferencia urbano (78%) vs rural (30%) = 48pp. La Misión Ciudades establece umbral de alerta en brechas &gt;30pp. Requiere plan de conectividad con MinTIC PDET.',
         indicadores: 'Cobertura urbana 78% · Rural 30% · Brecha: 48pp' },
-      { tipo:'warn', icono:'⚠', titulo:'Dependencia minera supera umbral de vulnerabilidad',
+      { tipo:'warn', icono:'<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>', titulo:'Dependencia minera supera umbral de vulnerabilidad',
         desc:'71% del empleo formal en minería. Misión Ciudades alerta cuando especialización &gt;60%. Riesgo ante caída del precio del oro o normativa ambiental restrictiva.',
         indicadores: 'Especializ. minera 71% · Informalidad 68% · Diversificación: Crítica' },
-      { tipo:'info', icono:'✅', titulo:'Cobertura salud urbana dentro de meta nacional',
+      { tipo:'info', icono:'<i class="fa-solid fa-circle-check" aria-hidden="true"></i>', titulo:'Cobertura salud urbana dentro de meta nacional',
         desc:'Tiempo de acceso ESE en cabecera: 8 minutos. Meta DNP ≤30min cumplida en zona urbana. Brecha persiste en zona rural (47 min). Ampliar unidades móviles.',
-        indicadores: 'Acceso ESE urbano 8min ✓ · Rural 47min ⚠ · Cobertura SGSSS 92,4%' },
+        indicadores: 'Acceso ESE urbano 8min ✓ · Rural 47min <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> · Cobertura SGSSS 92,4%' },
     ],
   };
 
@@ -13107,12 +13407,12 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
   ];
 
   var CONTACTOS=[
-    {nombre:'Bomberos Segovia',tel:'116 · (604) 834-XXXX',ico:'🚒',bg:'#FFF1F2'},
-    {nombre:'Cruz Roja Antioquia',tel:'132 · (604) 513-XXXX',ico:'🏥',bg:'#FFF1F2'},
-    {nombre:'Defensa Civil',tel:'144 · (604) 834-XXXX',ico:'⛑',bg:'#FFFBEB'},
-    {nombre:'CDGRD Municipal',tel:'(604) 834-XXXX · Dir. Prevención',ico:'🛡',bg:'#F0FDF4'},
-    {nombre:'Línea nacional emergencias',tel:'123 · UNGRD',ico:'📞',bg:'#EFF6FF'},
-    {nombre:'SIATA · Hidrometeorol.',tel:'(604) 444-XXXX · 24/7',ico:'📡',bg:'#EFF6FF'},
+    {nombre:'Bomberos Segovia',tel:'116 · (604) 834-XXXX',ico:'<i class="fa-solid fa-fire-extinguisher" aria-hidden="true"></i>',bg:'#FFF1F2'},
+    {nombre:'Cruz Roja Antioquia',tel:'132 · (604) 513-XXXX',ico:'<i class="fa-solid fa-hospital" aria-hidden="true"></i>',bg:'#FFF1F2'},
+    {nombre:'Defensa Civil',tel:'144 · (604) 834-XXXX',ico:'<i class="fa-solid fa-helmet-safety" aria-hidden="true"></i>',bg:'#FFFBEB'},
+    {nombre:'CDGRD Municipal',tel:'(604) 834-XXXX · Dir. Prevención',ico:'<i class="fa-solid fa-shield-halved" aria-hidden="true"></i>',bg:'#F0FDF4'},
+    {nombre:'Línea nacional emergencias',tel:'123 · UNGRD',ico:'<i class="fa-solid fa-phone" aria-hidden="true"></i>',bg:'#EFF6FF'},
+    {nombre:'SIATA · Hidrometeorol.',tel:'(604) 444-XXXX · 24/7',ico:'<i class="fa-solid fa-satellite-dish" aria-hidden="true"></i>',bg:'#EFF6FF'},
   ];
 
   var NIVELES={
@@ -13157,16 +13457,16 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
     }
 
     L.circle([CENTRO[0]-0.008,CENTRO[1]+0.003],{radius:900,color:'#00A0E4',fillColor:'#00A0E4',fillOpacity:0.25,weight:2})
-      .bindPopup('<b style="color:#1D4ED8">⚠ Inundación</b><br>Q. El Bagre · Barrio La Madre · Riesgo Moderado<br><small style="color:#666">SIMMA · IDEAM</small>').addTo(_satMap);
+      .bindPopup('<b style="color:#1D4ED8"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Inundación</b><br>Q. El Bagre · Barrio La Madre · Riesgo Moderado<br><small style="color:#666">SIMMA · IDEAM</small>').addTo(_satMap);
     L.polygon([[CENTRO[0]-0.011,CENTRO[1]-0.006],[CENTRO[0]-0.006,CENTRO[1]-0.001],[CENTRO[0]-0.013,CENTRO[1]+0.002],[CENTRO[0]-0.017,CENTRO[1]-0.003]],
       {color:'#C9852A',fillColor:'#C9852A',fillOpacity:0.25,weight:2})
-      .bindPopup('<b style="color:#92400E">⚠ Movimiento en masa</b><br>Vda. La Cruzada · Cerros Galán · Riesgo Alto<br><small style="color:#666">SIMMA · SGC</small>').addTo(_satMap);
+      .bindPopup('<b style="color:#92400E"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Movimiento en masa</b><br>Vda. La Cruzada · Cerros Galán · Riesgo Alto<br><small style="color:#666">SIMMA · SGC</small>').addTo(_satMap);
     L.polygon([[CENTRO[0]+0.014,CENTRO[1]+0.010],[CENTRO[0]+0.019,CENTRO[1]+0.016],[CENTRO[0]+0.011,CENTRO[1]+0.020],[CENTRO[0]+0.007,CENTRO[1]+0.014]],
       {color:'#DC0B2C',fillColor:'#DC0B2C',fillOpacity:0.20,weight:2})
-      .bindPopup('<b style="color:#991B1B">⚠ Incendio forestal</b><br>Zona rural norte · Corredor veredal · Riesgo Moderado<br><small style="color:#666">IDEAM · SINIF</small>').addTo(_satMap);
+      .bindPopup('<b style="color:#991B1B"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Incendio forestal</b><br>Zona rural norte · Corredor veredal · Riesgo Moderado<br><small style="color:#666">IDEAM · SINIF</small>').addTo(_satMap);
     L.polygon([[CENTRO[0]-0.002,CENTRO[1]+0.011],[CENTRO[0]+0.002,CENTRO[1]+0.015],[CENTRO[0]-0.004,CENTRO[1]+0.019],[CENTRO[0]-0.008,CENTRO[1]+0.015]],
       {color:'#00A0E4',fillColor:'#00A0E4',fillOpacity:0.20,weight:2})
-      .bindPopup('<b style="color:#1D4ED8">⚠ Avenida torrencial</b><br>Q. La Cianuración · Barrio Briceño · Riesgo Moderado</small>').addTo(_satMap);
+      .bindPopup('<b style="color:#1D4ED8"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Avenida torrencial</b><br>Q. La Cianuración · Barrio Briceño · Riesgo Moderado</small>').addTo(_satMap);
     L.circle(CENTRO,{radius:1600,color:'#16A34A',fillColor:'#16A34A',fillOpacity:0.05,weight:1.5,dashArray:'6,4'})
       .bindPopup('<b style="color:#15803D">Perímetro urbano Segovia</b><br>Área de monitoreo SAT').addTo(_satMap);
     setTimeout(function(){if(_satMap)_satMap.invalidateSize();},250);
@@ -13350,7 +13650,7 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
   margin-top:8px;font-size:8.5px;color:var(--t300);
   display:flex;align-items:center;gap:4px;
 }
-.pdc-source::before{content:'📋';font-size:8px;}
+.pdc-source::before{content:'';font-size:8px;}
 /* Botón PQR EDURSEG */
 .pdc-pqr-btn{
   display:flex;align-items:center;justify-content:center;gap:6px;
@@ -13381,7 +13681,7 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
 var PRESTADORES_REAL = {
   aseo: {
     nom: 'Segovia Aseo S.A. E.S.P.',
-    ico: '🗑️', bg: 'var(--g50)',
+    ico: '<i class="fa-solid fa-trash-can" aria-hidden="true"></i>', bg: 'var(--g50)',
     filas: [
       {l:'NIT',            v:'811.035.897-6',      cls:''},
       {l:'Naturaleza',     v:'S.A. E.S.P.',        cls:''},
@@ -13397,7 +13697,7 @@ var PRESTADORES_REAL = {
   },
   alumbrado: {
     nom: 'Segovia S.A.',
-    ico: '💡', bg: 'var(--au50)',
+    ico: '<i class="fa-solid fa-lightbulb" aria-hidden="true"></i>', bg: 'var(--au50)',
     filas: [
       {l:'Tipo de contrato',v:'Concesión alumbrado público',cls:''},
       {l:'Entidad contratante',v:'Alcaldía de Segovia',cls:''},
@@ -13412,7 +13712,7 @@ var PRESTADORES_REAL = {
   },
   agua: {
     nom: 'Aguas del Pocuné',
-    ico: '💧', bg: '#E6F1FB',
+    ico: '<i class="fa-solid fa-droplet" aria-hidden="true"></i>', bg: '#E6F1FB',
     filas: [
       {l:'Tipo de empresa', v:'E.S.P. pública',    cls:''},
       {l:'Registro SUI',    v:'Activo · SSPD',     cls:'ok'},
@@ -13428,7 +13728,7 @@ var PRESTADORES_REAL = {
   },
   edurseg: {
     nom: 'EDURSEG E.I.C.E.',
-    ico: '🏗️', bg: '#EAF0FF',
+    ico: '<i class="fa-solid fa-helmet-safety" aria-hidden="true"></i>', bg: '#EAF0FF',
     filas: [
       {l:'Razón social',    v:'Emp. Desarrollo Urbano y Rural de Segovia',cls:''},
       {l:'NIT',             v:'901.989.964-8',     cls:''},
@@ -13490,7 +13790,7 @@ function buildFichas(){
   if(!selectorDiv) return;
   var banner = document.createElement('div');
   banner.id = 'rep-real-banner';
-  banner.innerHTML = '<span class="rb-ico">📊</span>'
+  banner.innerHTML = '<span class="rb-ico"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></span>'
     +'<div class="rb-txt"><strong>Datos oficiales de prestadores · Segovia, Antioquia</strong><br>'
     +'Prestadores registrados: Segovia Aseo, Segovia S.A. (alumbrado), Aguas del Pocuné y '
     +'<strong>EDURSEG E.I.C.E.</strong> (Empresa de Desarrollo Urbano y Rural). '
@@ -13512,7 +13812,7 @@ function buildFichas(){
     var tipo = key==='edurseg' ? 'Empresa municipal · Desarrollo Urbano y Rural' : 'Prestador de servicio público';
     var pqrBtn = p.pqr
       ? '<a href="'+p.pqr+'" target="_blank" rel="noopener noreferrer" class="pdc-pqr-btn">'
-        +'<span>📨</span> Radicar PQR en línea <span style="font-size:9px">↗</span></a>'
+        +'<span><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></span> Radicar PQR en línea <span style="font-size:9px">↗</span></a>'
       : '';
     card.innerHTML = '<div class="pdc-header">'
       +'<div class="pdc-ico" style="background:'+p.bg+'">'+p.ico+'</div>'
@@ -13741,7 +14041,7 @@ function buildFooter(wrap){
   var now = new Date();
   var ts = now.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})
            +' '+now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-  ftr.innerHTML = '📋 Fuentes: '
+  ftr.innerHTML = '<i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> Fuentes: '
     +'<a href="https://www.dane.gov.co" target="_blank" rel="noopener noreferrer">DANE · CNPV 2018</a> · '
     +'<a href="https://terridata.dnp.gov.co" target="_blank" rel="noopener noreferrer">DNP Terridata</a> · '
     +'<a href="https://www.ins.gov.co" target="_blank" rel="noopener noreferrer">INS · SIVICAP</a> · '
@@ -13763,7 +14063,7 @@ function buildBuque(){
   /* Header */
   var hdr = document.createElement('div');
   hdr.id = 'dane-buque-hdr';
-  hdr.innerHTML = '<span class="bh-ico">📊</span>'
+  hdr.innerHTML = '<span class="bh-ico"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></span>'
     +'<div><div class="bh-title">DANE · Observatorio Municipal · Segovia, Antioquia</div>'
     +'<div class="bh-sub">DIVIPOLA 05736 · Nordeste Antioqueño · 28 indicadores actualizados de fuentes oficiales</div></div>'
     +'<span class="bh-live">EN VIVO</span>';
@@ -13931,7 +14231,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     var ftr = document.getElementById('sisben-buque-ftr');
     if (ftr) {
-      ftr.innerHTML = '🛰️ Auto-verificación cada 3 min · Motor: PIIT SisbenAudit · Fuente: Cruce SISBEN IV · Alcaldía de Segovia'
+      ftr.innerHTML = '<i class="fa-solid fa-satellite" aria-hidden="true"></i> Auto-verificación cada 3 min · Motor: PIIT SisbenAudit · Fuente: Cruce SISBEN IV · Alcaldía de Segovia'
         + ' · <span class="sq-link" onclick="PIIT.ui.reAuditSisben ? PIIT.ui.reAuditSisben() : null; if(window.__sisbenBuqueRefresh)window.__sisbenBuqueRefresh();">Verificar ahora</span>'
         + '<span id="sisben-buque-ts">Última verificación: ' + fmtTs(new Date()) + '</span>';
     }
@@ -13950,7 +14250,7 @@ document.addEventListener('DOMContentLoaded', function(){
     buque.id = 'sisben-buque';
     buque.innerHTML =
       '<div id="sisben-buque-hdr">'
-      + '<span class="bh-ico">🛰️</span>'
+      + '<span class="bh-ico"><i class="fa-solid fa-satellite" aria-hidden="true"></i></span>'
       + '<div><div class="bh-title">SISBEN IV · Motor de Auto-Verificación</div>'
       + '<div class="bh-sub">Auditoría continua de integridad geoespacial y alfanumérica · 21 barrios · Segovia, Antioquia</div></div>'
       + '<span class="bh-live" id="sb-buque-live">VERIFICANDO…</span>'
@@ -14174,14 +14474,14 @@ var IGAC_AGR = {
     }
   ],
   cultivos: [
-    {nom:'Cedro', n:133, ico:'🌲'},
-    {nom:'Chingalé', n:122, ico:'🌿'},
-    {nom:'Maíz', n:51, ico:'🌽'},
-    {nom:'Plátano', n:50, ico:'🍌'},
-    {nom:'Cacao', n:100, ico:'🍫'},
-    {nom:'Yuca', n:66, ico:'🌱'},
-    {nom:'Caña', n:52, ico:'🎋'},
-    {nom:'Caucho', n:119, ico:'🌳'},
+    {nom:'Cedro', n:133, ico:'<i class="fa-solid fa-tree" aria-hidden="true"></i>'},
+    {nom:'Chingalé', n:122, ico:'<i class="fa-solid fa-leaf" aria-hidden="true"></i>'},
+    {nom:'Maíz', n:51, ico:'<i class="fa-solid fa-wheat-awn" aria-hidden="true"></i>'},
+    {nom:'Plátano', n:50, ico:'<i class="fa-solid fa-leaf" aria-hidden="true"></i>'},
+    {nom:'Cacao', n:100, ico:'<i class="fa-solid fa-seedling" aria-hidden="true"></i>'},
+    {nom:'Yuca', n:66, ico:'<i class="fa-solid fa-seedling" aria-hidden="true"></i>'},
+    {nom:'Caña', n:52, ico:'<i class="fa-solid fa-wheat-awn" aria-hidden="true"></i>'},
+    {nom:'Caucho', n:119, ico:'<i class="fa-solid fa-tree" aria-hidden="true"></i>'},
   ],
   clases_tierra: [
     'Clase 08 · Clima cálido muy húmedo · VP 44/50 · Alta aptitud agrícola',
@@ -14250,7 +14550,7 @@ function buildPanel(){
   /* Header */
   var hdr = document.createElement('div');
   hdr.id = 'igac-panel-hdr';
-  hdr.innerHTML = '<div class="igac-hdr-ico">🗺️</div>'
+  hdr.innerHTML = '<div class="igac-hdr-ico"><i class="fa-solid fa-map" aria-hidden="true"></i></div>'
     + '<div>'
     +   '<div class="igac-hdr-title">IGAC · Análisis Territorial Oficial · Segovia, Antioquia</div>'
     +   '<div class="igac-hdr-sub">Estudio Agrológico 1:25.000 · DIVIPOLA 05736 · '+ IGAC_AGR.total_unidades +' unidades · 6 capas WMS en vivo</div>'
@@ -14322,7 +14622,7 @@ function buildPanel(){
   /* Cultivos potenciales */
   var cult = document.createElement('div');
   cult.id = 'igac-cultivos';
-  cult.innerHTML = '<div class="igac-cult-title">🌱 Cultivos potenciales</div>';
+  cult.innerHTML = '<div class="igac-cult-title"><i class="fa-solid fa-seedling" aria-hidden="true"></i> Cultivos potenciales</div>';
   IGAC_AGR.cultivos.slice(0,6).forEach(function(c){
     cult.innerHTML += '<span class="igac-cult-chip">'+c.ico+' '+c.nom
       +'<span class="igac-cult-n">'+c.n+' menciones</span></span>';
@@ -14332,14 +14632,14 @@ function buildPanel(){
   /* WMS capas en vivo */
   var wms = document.createElement('div');
   wms.id = 'igac-wms';
-  wms.innerHTML = '<div class="igac-wms-title">📡 Capas geoespaciales IGAC · Conectar en el SIG</div>'
+  wms.innerHTML = '<div class="igac-wms-title"><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i> Capas geoespaciales IGAC · Conectar en el SIG</div>'
     +'<div class="igac-wms-grid" id="igac-wms-grid"></div>';
   panel.appendChild(wms);
 
   /* Footer */
   var ftr = document.createElement('div');
   ftr.id = 'igac-footer';
-  ftr.innerHTML = '<span class="ft-src">📋 Fuente: <a href="https://mapas.igac.gov.co" target="_blank" rel="noopener noreferrer">IGAC · Subdirección de Agrología</a> · '
+  ftr.innerHTML = '<span class="ft-src"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> Fuente: <a href="https://mapas.igac.gov.co" target="_blank" rel="noopener noreferrer">IGAC · Subdirección de Agrología</a> · '
     +'Estudio de Suelos y Potencial de Usos Municipio Segovia · Escala 1:25.000 · '
     +'<a href="https://geoportal.igac.gov.co" target="_blank" rel="noopener noreferrer">GeoPortal IGAC</a> · DIVIPOLA 05736</span>'
     +'<span class="ft-date">Consulta REST API · '+new Date().toLocaleDateString('es-CO',{month:'long',year:'numeric'})+'</span>';
@@ -14863,7 +15163,7 @@ function initMinimap(){
     +'<span class="mm-btn-icon">◎</span><span id="mm-geo-txt">Mi Ubicación GPS</span>'
     +'</button>'
     +'<button id="mm-geo-manual-btn" title="Ingresar coordenadas manualmente">'
-    +'<span class="mm-btn-icon">⌨</span>Manual'
+    +'<span class="mm-btn-icon"><i class="fa-solid fa-keyboard" aria-hidden="true"></i></span>Manual'
     +'</button>'
     +'</div>'
     +'<div id="mm-geo-manual">'
@@ -14980,7 +15280,7 @@ function initMinimap(){
         2:'Señal GPS no disponible',
         3:'Tiempo de espera agotado'
       };
-      setStatus('⚠ '+(msgs[err.code]||'Error de posicionamiento'),'#8a4a4a');
+      setStatus(''+(msgs[err.code]||'Error de posicionamiento'),'#8a4a4a');
       /* err.code 1 = PERMISSION_DENIED: es un estado del navegador/SO
          (el usuario negó el permiso o el sitio no está en la lista de
          ubicaciones permitidas), no un fallo de la plataforma — no hay
@@ -14991,7 +15291,7 @@ function initMinimap(){
         manualDiv.style.display='flex';
         if(btnManual) btnManual.classList.add('active');
         setTimeout(function(){
-          setStatus('⚠ GPS denegado — ingresa tus coordenadas manualmente abajo','#8a4a4a');
+          setStatus('GPS denegado — ingresa tus coordenadas manualmente abajo','#8a4a4a');
         }, 1400);
       }
     }
@@ -15037,7 +15337,7 @@ function initMinimap(){
             setStatus('⊙ Buscando señal GPS…','#5a7a9a');
             setTimeout(function(){
               if(_watchId!==null&&_bestAccuracy===Infinity) stopWatch(null);
-              if(_bestAccuracy===Infinity) setStatus('⚠ Sin señal GPS disponible','#8a4a4a');
+              if(_bestAccuracy===Infinity) setStatus('Sin señal GPS disponible','#8a4a4a');
             }, 30000);
           } else {
             onError(err);
@@ -15926,7 +16226,7 @@ else setTimeout(init,400);
 
       /* ── Popup con datos en tiempo real ───────────────────── */
       var inside = (lon>=-74.9161 && lon<=-74.338 && lat>=7.0764 && lat<=7.4788);
-      var zona   = inside ? '📍 Municipio de Segovia' : '⚠️ Fuera del municipio';
+      var zona   = inside ? 'Municipio de Segovia' : 'Fuera del municipio';
       var accLabel = acc<=1 ?'<span style="color:#237938;font-weight:700">Alta precisión</span>'
                    : acc<=5 ?'<span style="color:#4a9e72">Buena señal</span>'
                    : acc<=15?'<span style="color:#C69A1A">Señal media</span>'
@@ -15937,7 +16237,7 @@ else setTimeout(init,400);
 
       var popupHtml =
         '<div style="font-family:Metropolis,Inter,system-ui;line-height:1.65;min-width:155px">'
-        +'<div style="font-size:11px;font-weight:700;color:#237938;margin-bottom:4px">📍 Tu ubicación GPS</div>'
+        +'<div style="font-size:11px;font-weight:700;color:#237938;margin-bottom:4px"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Tu ubicación GPS</div>'
         +'<div style="font-size:10.5px;color:#222;font-weight:600;letter-spacing:0.01em">'
           +lat.toFixed(6)+'°N</div>'
         +'<div style="font-size:10.5px;color:#222;font-weight:600;letter-spacing:0.01em">'
