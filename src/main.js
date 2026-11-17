@@ -108,7 +108,7 @@ function renderAppShell(activePath) {
 
 Router.guard((path) => {
   if (AuthService.isAuthenticated()) {
-    window.location.replace("/piit-v5.html")
+    window.location.replace("/piit-v6.html")
     return path
   }
   if (!PUBLIC_ROUTES.includes(path)) return "/login"

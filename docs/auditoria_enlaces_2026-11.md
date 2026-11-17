@@ -93,3 +93,33 @@ Mientras PIIT sea una aplicación estática, el inicio de sesión **no es una ba
 **No se pudo actualizar (sin fuente oficial accesible):**
 - Sisbén: `sisben.gov.co` no resolvió (DNS) y datos.gov.co no tiene un conjunto de Segovia. Las cifras por barrio siguen siendo estimaciones internas; hay un conflicto interno sin resolver (Sisbén A+B de GALÁN: 71 % en Análisis frente a 51 % en la tarjeta Sisbén). Se requiere el reporte de la Oficina del Sisbén de la Alcaldía.
 - Valores por barrio de población, índices, coberturas y reportes: el DANE no los publica a ese nivel. Los 21 barrios suman 32.090, coherente con la cabecera oficial (32.366).
+
+---
+
+# PIIT Segovia V6 - 2026: verificación de 18 parámetros (17-nov-2026)
+
+| # | Parámetro | Estado | Detalle |
+|---|---|---|---|
+| 1 | Política de privacidad | Cumple | `public/politica-privacidad.html` v1.1: ahora describe cookies necesarias y analítica opcional con consentimiento. Borrador pendiente de revisión jurídica |
+| 2 | Términos y condiciones | Cumple | `public/terminos-condiciones.html`, enlazado en pie y login |
+| 3 | API y secretos | Cumple | Sin claves ni tokens en archivos versionados; `.env*` solo con valores públicos; `.gitignore` bloquea `.env.*.local`, `.pem`, `.key`; el build de producción no contiene credenciales demo. La sesión es solo del navegador (limitación documentada) |
+| 4 | Forzar HTTPS | Parcial | Redirección a https en las 4 páginas HTML (salvo localhost) y cabecera HSTS en `public/_headers`. **La redirección del servidor y HSTS dependen del hosting**: confirmar que lo aplica |
+| 5 | Aviso de cookies | Cumple | Aviso con «Solo necesarias» y «Aceptar analítica» (mismo peso), se puede reabrir desde «Configurar cookies» en el pie; la decisión se guarda en el navegador |
+| 6 | Metadescripciones | Cumple | Descripción única en plataforma, acceso, legales y 404 |
+| 7 | Vista previa al compartir | Cumple | Open Graph + Twitter Card con `assets/og-piit.jpg` (800×419). Para que las redes la lean, la URL de la imagen debe ser absoluta en producción: definir el dominio |
+| 8 | Favicon | Cumple | `favicon.svg`, `favicon.ico` (16/32/48), `apple-touch-icon` 180 px, íconos 192/512 en el manifest |
+| 9 | sitemap y robots.txt | Cumple | Generados por `scripts/gen-sitemap.mjs` antes de cada build. **Dominio por defecto supuesto (`jpangel8.github.io/segovia-piit`)**: ejecutar con `SITE_URL=https://su-dominio` |
+| 10 | ALT en imágenes | Cumple | 0 imágenes sin `alt`; 0 botones sin nombre; 0 campos sin etiqueta (etiquetas automáticas añadidas) |
+| 11 | Velocidad de carga | Aceptable | HTML de 1,05 MB (270 KB gzip, 205 KB brotli). En local: primer contenido 92 ms, carga total 166 ms. Se eliminó una carga duplicada de la fuente Inter. Pendiente (no se hizo, riesgo visual): dividir el archivo único y reducir familias tipográficas |
+| 12 | Contraste de color | Mejorado | Texto bajo 4,5:1: de 22,6 % a ~8 % de los textos medidos (los restantes están sobre fondos con imagen o mapa, que la medición automática no resuelve). Ajustados grises, ámbar, verde y amarillo de texto |
+| 13 | Web en móvil | Cumple | 375 px sin desbordes en las 17 secciones; CTA a ancho completo |
+| 14 | Página 404 | Cumple | `public/404.html` con salida a la plataforma y al portal. En desarrollo, Vite devuelve la app para rutas desconocidas; la 404 real la sirve el hosting |
+| 15 | Enlaces rotos | Cumple con 2 excepciones | 30 de 33 URLs externas responden; `terridata.dnp.gov.co` y `portal.gestiondelriesgo.gov.co` no conectan desde esta red; 0 anclas rotas y 0 secciones inexistentes |
+| 16 | Validación de formularios | Cumple | Reporte: celular de 10 dígitos que empieza por 3, nombre ≥ 3 letras, correo con formato, descripción ≥ 10 caracteres; mensajes en línea (sin `alert`) con `role="alert"`; aviso de que el reporte no se transmite a la Alcaldía |
+| 17 | Analytics GA4 | Listo, sin ID | Se carga solo con consentimiento y con un ID válido (`<meta name="piit-ga4" content="G-XXXXXXXXXX">`). **Falta el ID de medición de la Alcaldía**; sin él no se carga nada |
+| 18 | (no indicado) | n/a | La lista recibida salta del 17 al 19 |
+| 19 | CTA claro | Cumple | Dos botones en el encabezado: «Explorar el mapa territorial» y «Reportar un problema» |
+
+Cambio de nombre: la plataforma pasa a **PIIT Segovia V6 - 2026** (título, insignia, pie, exportaciones, manifest). El archivo ahora es `public/piit-v6.html`; `piit-v5.html` queda como redirección.
+
+Nota: `scripts/inject-auth.mjs` es un generador antiguo que escribe `public/piit-v5.html`; no debe ejecutarse (sobrescribiría la redirección con una versión obsoleta).

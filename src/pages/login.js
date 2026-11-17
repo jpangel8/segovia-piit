@@ -137,7 +137,7 @@ export function renderLogin(container) {
 
       if (result.ok) {
         btn.textContent = "✓ Acceso concedido"
-        setTimeout(() => { window.location.href = "/piit-v5.html" }, 350)
+        setTimeout(() => { window.location.href = "/piit-v6.html" }, 350)
       } else {
         errorEl.textContent = result.error
         errorEl.classList.add("visible")

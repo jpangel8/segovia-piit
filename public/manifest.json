@@ -1,19 +1,36 @@
 {
-  "name": "PIIT - Plataforma Integral de Inteligencia Territorial",
-  "short_name": "PIIT",
-  "description": "Análisis, indicadores y visualización de datos territoriales",
-  "start_url": "/",
+  "name": "PIIT Segovia V6 - 2026",
+  "short_name": "PIIT Segovia",
+  "description": "Plataforma Integral de Inteligencia Territorial de Segovia, Antioquia: mapa, indicadores, obras, contratos y salud.",
+  "lang": "es-CO",
+  "start_url": "/piit-v6.html",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0f0f0f",
-  "theme_color": "#7c3aed",
+  "background_color": "#ffffff",
+  "theme_color": "#488704",
   "orientation": "any",
-  "categories": ["government", "utilities"],
+  "categories": [
+    "government",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

@@ -8,7 +8,8 @@
     "build": "vite build",
     "build:staging": "vite build --mode staging",
     "build:analyze": "vite build --mode production && npx vite-bundle-visualizer",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prebuild": "node scripts/gen-sitemap.mjs"
   },
   "devDependencies": {
     "vite": "^6.3.3"
