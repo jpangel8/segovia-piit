@@ -16,8 +16,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous"/>
 <style>
 /* ═══ Estilos PIIT · incrustados (single-file) ═══ */
 /* ═══════════════════════════════════════════════════
@@ -3563,10 +3563,10 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 <!-- ═══ TOPBAR ══════════════════════════════════════ -->
 <div class="topbar">
   <div class="tb-brand">
-    <!-- Logo oficial de la Alcaldía (alojado en su portal institucional). Si no carga,
-         se muestra el texto de respaldo. -->
-    <img class="tb-logo" alt="Alcaldía de Segovia" height="48"
-         src="https://www.segovia-antioquia.gov.co/sites/segoviaantioquia/content/files/000947/47349_logo300x100_200x200.png"
+    <!-- Logo oficial de la Alcaldía, copia local (public/assets) para no depender del
+         portal externo. Si no carga, se muestra el texto de respaldo. -->
+    <img class="tb-logo" alt="Alcaldía de Segovia" height="48" width="144"
+         src="assets/logo-alcaldia-segovia.png"
          onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
     <div class="tb-logo-fallback" style="display:none">
       <div class="tb-name">Alcaldía de Segovia</div>
@@ -4240,8 +4240,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
   <!-- ── SELECTOR DE PRESTADOR ── -->
   <div class="pt" style="margin-bottom:10px">Selecciona el servicio que deseas reportar</div>
   <div class="prest-selector">
-    <div class="prest-card aseo sel" id="pcard-aseo" onclick="PIIT.reportes.selectPrestador('aseo')"
-         style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOwxLn9M6hTr1qn-PefZhFViRMERReRdVNYg&s');background-size:cover;background-position:center;background-repeat:no-repeat">
+    <div class="prest-card aseo sel" id="pcard-aseo" onclick="PIIT.reportes.selectPrestador('aseo')">
       <!-- Velo semitransparente sobre la imagen -->
       <div style="position:absolute;inset:0;background:rgba(234,245,239,.88);border-radius:inherit;pointer-events:none"></div>
       <!-- Contenido por encima del velo -->
@@ -4252,8 +4251,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         <span class="prest-badge" style="background:var(--g100);color:var(--g800)">SERVICIO DE ASEO</span>
       </div>
     </div>
-    <div class="prest-card alumbrado" id="pcard-alumbrado" onclick="PIIT.reportes.selectPrestador('alumbrado')"
-         style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn3ljmW0KyJr2o_Hench2GRy_Yazh3T6JDiA&s');background-size:cover;background-position:center;background-repeat:no-repeat">
+    <div class="prest-card alumbrado" id="pcard-alumbrado" onclick="PIIT.reportes.selectPrestador('alumbrado')">
       <div style="position:absolute;inset:0;background:rgba(251,244,216,.88);border-radius:inherit;pointer-events:none"></div>
       <div style="position:relative;z-index:1">
         <div class="prest-ico" style="background:rgba(255,255,255,.75);backdrop-filter:blur(4px)">💡</div>
@@ -4262,8 +4260,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         <span class="prest-badge" style="background:var(--au100);color:var(--au800)">ALUMBRADO PÚBLICO</span>
       </div>
     </div>
-    <div class="prest-card agua" id="pcard-agua" onclick="PIIT.reportes.selectPrestador('agua')"
-         style="background-image:url('https://app.redecom.co/459-large_default/factura-aassa.jpg');background-size:cover;background-position:center;background-repeat:no-repeat">
+    <div class="prest-card agua" id="pcard-agua" onclick="PIIT.reportes.selectPrestador('agua')">
       <div style="position:absolute;inset:0;background:rgba(230,241,251,.88);border-radius:inherit;pointer-events:none"></div>
       <div style="position:relative;z-index:1">
         <div class="prest-ico" style="background:rgba(255,255,255,.75);backdrop-filter:blur(4px)">💧</div>
@@ -6088,12 +6085,14 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 <footer>
   <div style="max-width:1140px;margin:0 auto">
     <strong>PIIT</strong> Plataforma Integral de Inteligencia Territorial
+    &nbsp;·&nbsp; <a href="politica-privacidad.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Política de privacidad</a>
+    &nbsp;·&nbsp; <a href="terminos-condiciones.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Términos y condiciones</a>
   </div>
 </footer>
 
 <!-- ═══ SCRIPTS ══════════════════════════════════════ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" onerror="document.getElementById('asset-warning').style.display='block'"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" onerror="document.getElementById('asset-warning').style.display='block'"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous" onerror="document.getElementById('asset-warning').style.display='block'"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha384-DhxhYObIMeMNGyAG7iK11OHzBIKyEIeRL0ad1iFPAOwZB8iirUlTT0O/WJJUk8+o" crossorigin="anonymous" onerror="document.getElementById('asset-warning').style.display='block'"></script>
 <script>
 /* ═══ Lógica PIIT · incrustada (single-file) ═══ */
 /* ═══════════════════════════════════════════════════════════════

@@ -21,7 +21,7 @@ export function renderRegister(container) {
           </div>
           <div class="form-group">
             <label for="reg-password">Contraseña</label>
-            <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" />
+            <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres" required minlength="8" autocomplete="new-password" />
           </div>
           <div class="form-group">
             <label for="reg-confirm">Confirmar contraseña</label>
@@ -38,7 +38,7 @@ export function renderRegister(container) {
   const form = container.querySelector("#register-form")
   const errorEl = container.querySelector("#register-error")
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault()
     errorEl.classList.remove("visible")
 
@@ -53,7 +53,7 @@ export function renderRegister(container) {
       return
     }
 
-    const result = AuthService.register({ name, email, password })
+    const result = await AuthService.register({ name, email, password })
 
     if (result.ok) {
       Router.navigate("/")

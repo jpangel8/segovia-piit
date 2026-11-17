@@ -7,3 +7,10 @@ Thumbs.db
 .claude/
 .mcp.json
 .env.local
+
+# Secretos y credenciales (nunca versionar)
+.env.*.local
+.env.secret
+*.pem
+*.key
+*.p12

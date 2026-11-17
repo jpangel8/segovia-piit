@@ -91,11 +91,12 @@ export function renderLogin(container) {
             </button>
           </form>
 
-          <div class="auth-divider">acceso demo</div>
+          ${import.meta.env.DEV ? `
+          <div class="auth-divider">acceso demo (solo desarrollo local)</div>
 
           <div class="auth-info">
             <strong>admin@piit.dev</strong> &nbsp;/&nbsp; <strong>admin123</strong>
-          </div>
+          </div>` : ""}
 
           <div class="auth-switch">
             ¿Sin cuenta? <a href="#/register">Solicitar acceso</a>
@@ -103,7 +104,9 @@ export function renderLogin(container) {
 
         </div>
 
-        <p class="auth-footer">Alcaldía de Segovia · Sistema Oficial de Inteligencia Territorial · 2026</p>
+        <p class="auth-footer">Alcaldía de Segovia · Sistema Oficial de Inteligencia Territorial · 2026<br>
+          <a href="/politica-privacidad.html" target="_blank" rel="noopener">Política de privacidad</a> ·
+          <a href="/terminos-condiciones.html" target="_blank" rel="noopener">Términos y condiciones</a></p>
       </div>
 
     </div>`
@@ -121,8 +124,8 @@ export function renderLogin(container) {
     const email    = container.querySelector("#login-email").value.trim()
     const password = container.querySelector("#login-password").value
 
-    setTimeout(() => {
-      const result = AuthService.login({ email, password })
+    setTimeout(async () => {
+      const result = await AuthService.login({ email, password })
 
       if (result.ok) {
         btn.textContent = "✓ Acceso concedido"

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de privacidad y tratamiento de datos personales · PIIT Segovia</title>
+<meta name="description" content="Política de privacidad y tratamiento de datos personales de la Plataforma Integral de Inteligencia Territorial (PIIT) de la Alcaldía de Segovia, Antioquia.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+:root{--green:#488704;--green-d:#3A6E03;--blue:#004884;--chip:#E6EFFD;--ink:#434343;--body:#5C5C5C;--line:#E1E5E8;--menu:#F6F8F9}
+*{box-sizing:border-box}
+body{margin:0;font-family:Verdana,Geneva,sans-serif;font-size:15px;line-height:1.7;color:var(--body);background:#fff}
+.top{border-top:3px solid #3366CC;background:#fff;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.top img{height:48px;width:auto;display:block}
+.bar{background:var(--menu);border-bottom:3px solid var(--green);padding:0 24px;display:flex;gap:4px;flex-wrap:wrap}
+.bar a{padding:15px 16px;color:var(--ink);text-decoration:none;font-size:14px}
+.bar a:hover{background:#EAEFF2}.bar a.act{background:var(--green);color:#fff}
+main{max-width:880px;margin:0 auto;padding:32px 24px 64px}
+h1{font-family:'Nunito Sans',Verdana,sans-serif;color:#3F6B1F;font-size:30px;line-height:1.25;margin:0 0 6px}
+h2{font-family:'Nunito Sans',Verdana,sans-serif;color:var(--ink);font-size:20px;margin:34px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+p,li{margin:8px 0}ul{padding-left:22px}
+.meta{font-size:13px;color:var(--body)}
+.aviso{background:var(--chip);border-radius:8px;padding:14px 18px;color:var(--blue);font-size:13.5px;margin:20px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0}
+th,td{text-align:left;padding:9px 10px;border:1px solid var(--line);vertical-align:top}
+th{background:var(--menu);color:var(--ink)}
+a{color:var(--blue)}
+footer{border-top:1px solid var(--line);background:var(--menu);padding:18px 24px;font-size:13px;text-align:center}
+@media (max-width:640px){h1{font-size:24px}.bar a{padding:12px}}
+</style>
+</head>
+<body>
+<div class="top">
+  <img src="assets/logo-alcaldia-segovia.png" alt="Alcaldía de Segovia" width="144" height="48">
+  <span class="meta">Plataforma Integral de Inteligencia Territorial · PIIT</span>
+</div>
+<nav class="bar" aria-label="Documentos legales">
+  <a href="piit-v5.html">Volver a la plataforma</a>
+  <a class="act" href="politica-privacidad.html" aria-current="page">Política de privacidad</a>
+  <a href="terminos-condiciones.html">Términos y condiciones</a>
+</nav>
+
+<main>
+  <h1>Política de privacidad y tratamiento de datos personales</h1>
+  <p class="meta">Versión 1.0 · 16 de noviembre de 2026 · Aplica a la Plataforma Integral de Inteligencia Territorial (PIIT)</p>
+
+  <div class="aviso">
+    <strong>Documento en revisión.</strong> Este texto fue elaborado a partir del funcionamiento técnico real de la plataforma y del marco legal colombiano. Antes de su publicación oficial debe ser revisado y aprobado por la Oficina Jurídica y por el responsable de protección de datos de la Alcaldía Municipal de Segovia.
+  </div>
+
+  <h2>1. Responsable del tratamiento</h2>
+  <p><strong>Municipio de Segovia, Antioquia — Alcaldía Municipal</strong> (NIT 890.981.391-2). Canales oficiales de atención, peticiones, quejas y reclamos: portal institucional <a href="https://www.segovia-antioquia.gov.co" target="_blank" rel="noopener noreferrer">www.segovia-antioquia.gov.co</a> (secciones «Mecanismos de contacto» y «PQRDS Recepción de Solicitudes»).</p>
+
+  <h2>2. Marco normativo</h2>
+  <ul>
+    <li>Constitución Política de Colombia, artículo 15 (derecho a la intimidad y al <em>habeas data</em>).</li>
+    <li>Ley Estatutaria 1581 de 2012 (régimen general de protección de datos personales) y su reglamentación, Decreto 1377 de 2013, compilado en el Decreto Único 1074 de 2015.</li>
+    <li>Ley 1712 de 2014 (transparencia y acceso a la información pública).</li>
+    <li>Autoridad de control: Superintendencia de Industria y Comercio (SIC).</li>
+  </ul>
+
+  <h2>3. Qué datos trata la plataforma</h2>
+  <table>
+    <thead><tr><th>Categoría</th><th>Datos</th><th>Dónde se guardan</th></tr></thead>
+    <tbody>
+      <tr><td>Cuenta de usuario</td><td>Nombre, correo electrónico, rol (usuario/administrador) y contraseña protegida con PBKDF2-SHA256 y sal (nunca en texto claro)</td><td>Almacenamiento local de su navegador (<code>localStorage</code>)</td></tr>
+      <tr><td>Sesión</td><td>Token de sesión con identificador, correo, nombre, rol y vencimiento (24 horas)</td><td>Almacenamiento local de su navegador</td></tr>
+      <tr><td>Control de acceso</td><td>Contador de intentos fallidos de ingreso</td><td>Almacenamiento local de su navegador</td></tr>
+      <tr><td>Reporte ciudadano</td><td>Los datos que usted escriba en el formulario: nombre, teléfono, correo (opcional), descripción y ubicación del problema</td><td>Almacenamiento local de su navegador. <strong>En esta versión el reporte no se envía a un servidor</strong>; para una solicitud formal use los canales oficiales del numeral 1</td></tr>
+      <tr><td>Preferencias de la interfaz</td><td>Opciones de visualización</td><td>Almacenamiento local de su navegador</td></tr>
+    </tbody>
+  </table>
+  <p>La plataforma <strong>no solicita datos sensibles</strong> (origen étnico, salud individual, biometría, orientación política, etc.) ni datos de niños, niñas y adolescentes. Los indicadores de salud, vulnerabilidad y demás módulos se presentan de forma <strong>agregada</strong> (por municipio o barrio) a partir de fuentes públicas oficiales; no identifican personas.</p>
+
+  <h2>4. Finalidades</h2>
+  <ul>
+    <li>Permitir el acceso y la personalización de la plataforma (cuenta y sesión).</li>
+    <li>Proteger el acceso frente a intentos repetidos no autorizados.</li>
+    <li>Preparar reportes ciudadanos que el usuario decida presentar por los canales oficiales.</li>
+  </ul>
+  <p>Los datos no se usan para perfilamiento comercial, publicidad ni se venden o ceden a terceros.</p>
+
+  <h2>5. Dónde se almacena la información</h2>
+  <p>PIIT es una aplicación sin servidor propio ni base de datos: los datos de cuenta, sesión y reportes permanecen <strong>únicamente en el navegador del dispositivo</strong> que usted usa. Por eso:</p>
+  <ul>
+    <li>La Alcaldía no recibe automáticamente esos datos mediante la plataforma.</li>
+    <li>Usted puede eliminarlos en cualquier momento borrando los datos del sitio desde la configuración de su navegador, o cerrando sesión.</li>
+    <li>Quien tenga acceso físico o remoto a su navegador podría ver esos datos; no use la plataforma con cuentas reales en equipos compartidos.</li>
+  </ul>
+
+  <h2>6. Servicios de terceros y transmisión técnica de la dirección IP</h2>
+  <p>Para funcionar, su navegador se conecta directamente a servicios externos, que reciben su dirección IP y datos técnicos (navegador, idioma, página de origen) conforme a sus propias políticas:</p>
+  <ul>
+    <li><strong>Tipografías e íconos:</strong> Google Fonts, CDNFonts, cdnjs (Cloudflare) y unpkg.</li>
+    <li><strong>Mapas base:</strong> OpenStreetMap, CARTO, Esri y OpenTopoMap.</li>
+    <li><strong>Información geográfica y estadística oficial:</strong> IGAC, DANE, Servicio Geológico Colombiano, Parques Nacionales Naturales y datos abiertos de Colombia (datos.gov.co / SECOP II).</li>
+    <li><strong>Enlaces externos</strong> (INS-SIVIGILA, MinSalud-SISPRO, IDEAM, SIATA, UNGRD, Power BI público, entre otros): al abrirlos usted sale de PIIT y aplica la política de cada sitio. Los enlaces usan <code>rel="noopener noreferrer"</code> para no enviar la dirección de origen.</li>
+  </ul>
+
+  <h2>7. Cookies y tecnologías similares</h2>
+  <p>PIIT no instala cookies propias ni de seguimiento. Usa el almacenamiento local del navegador (numeral 3) y una memoria caché técnica (<em>service worker</em>) para cargar más rápido. Los servicios de terceros del numeral 6 pueden aplicar sus propias tecnologías.</p>
+
+  <h2>8. Derechos del titular</h2>
+  <p>Conforme al artículo 8 de la Ley 1581 de 2012, usted tiene derecho a:</p>
+  <ul>
+    <li>Conocer, actualizar y rectificar sus datos personales.</li>
+    <li>Solicitar prueba de la autorización otorgada, salvo las excepciones legales.</li>
+    <li>Ser informado sobre el uso que se ha dado a sus datos.</li>
+    <li>Presentar quejas ante la Superintendencia de Industria y Comercio por infracciones a la ley.</li>
+    <li>Revocar la autorización y/o solicitar la supresión de sus datos cuando no se respeten los principios, derechos y garantías legales.</li>
+    <li>Acceder de forma gratuita a sus datos personales.</li>
+  </ul>
+  <p>Para ejercerlos, use los canales oficiales de la Alcaldía indicados en el numeral 1. Respecto de los datos guardados solo en su navegador, puede ejercer el control directamente (corregir, borrar o cerrar sesión).</p>
+
+  <h2>9. Seguridad</h2>
+  <ul>
+    <li>Las contraseñas se almacenan con PBKDF2-SHA256 con sal aleatoria; la plataforma no contiene credenciales por defecto en producción.</li>
+    <li>Los recursos externos críticos se cargan con verificación de integridad (SRI) y los enlaces salientes protegen la información de origen.</li>
+    <li><strong>Limitación:</strong> al ser una aplicación sin servidor, el control de acceso se realiza en el navegador y no equivale a una autenticación de servidor. Por ello la plataforma no debe usarse para publicar información reservada o clasificada.</li>
+  </ul>
+
+  <h2>10. Conservación</h2>
+  <p>La sesión vence a las 24 horas. Los demás datos locales permanecen hasta que usted los elimine. La plataforma no conserva copias de ellos.</p>
+
+  <h2>11. Cambios a esta política</h2>
+  <p>La Alcaldía podrá actualizar esta política por cambios normativos o técnicos. La versión vigente estará siempre disponible en esta dirección, con su fecha de actualización.</p>
+
+  <p class="meta">Consulte también los <a href="terminos-condiciones.html">Términos y condiciones de uso</a>.</p>
+</main>
+
+<footer>Alcaldía de Segovia · Antioquia · Plataforma Integral de Inteligencia Territorial ·
+  <a href="politica-privacidad.html">Política de privacidad</a> · <a href="terminos-condiciones.html">Términos y condiciones</a></footer>
+</body>
+</html>
