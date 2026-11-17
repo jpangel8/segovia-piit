@@ -123,3 +123,25 @@ Mientras PIIT sea una aplicación estática, el inicio de sesión **no es una ba
 Cambio de nombre: la plataforma pasa a **PIIT Segovia V6 - 2026** (título, insignia, pie, exportaciones, manifest). El archivo ahora es `public/piit-v6.html`; `piit-v5.html` queda como redirección.
 
 Nota: `scripts/inject-auth.mjs` es un generador antiguo que escribe `public/piit-v5.html`; no debe ejecutarse (sobrescribiría la redirección con una versión obsoleta).
+
+---
+
+# Alineación con owid-grapher (17-nov-2026)
+
+Referencia: `github.com/owid/owid-grapher`, paquete `@ourworldindata/grapher/src` (valores leídos del código fuente).
+
+| Elemento | owid-grapher | PIIT V6 | Estado |
+|---|---|---|---|
+| Tipografía del gráfico | Lato (`SVG_FONT_FAMILY`) | Lato en ejes, leyendas, tooltips y tablas | Alineado |
+| Títulos | Playfair Display 600 | Playfair Display 600 en títulos de gráficas | Alineado |
+| Texto de ejes | `#5b5b5b` (`GRAPHER_DARK_TEXT`) | `#5b5b5b` | Alineado |
+| Rejilla horizontal | `#ddd`, guiones `4,4` | `#ddd`, guiones `4,4` en 15 de 15 gráficas con ejes | Alineado |
+| Eje X | línea `#ccc`, marcas `#999` de 5 px | igual | Alineado |
+| Grosor de línea / puntos | 1,5 / radio 1,8 | 1,5 / radio 1,8, sin suavizado | Alineado |
+| Tooltip | blanco, borde `#e7e7e7`, radio 4, título 14 px negrita | igual | Alineado, excepto la sombra (Chart.js no la admite sin tooltip externo) |
+| Paleta de series | OWID Distinct (`#4c6a9c`, `#b13507`, `#996d39`, `#2c8465`, `#6d3e91`…) | aplicada en ICV, SIVIGILA y K-Means | Parcial: las demás gráficas conservan colores institucionales/semánticos (semáforos, fuentes) para no cambiar su significado |
+| Tabla | cabecera `#f7f7f7` negrita, celdas `8px 16px`, números a la derecha, filas pares `#f7f7f7`, hover `#f0f0f0` | igual | Alineado |
+| Pie de gráfico | Fuente, nota, licencia CC BY, acciones | Fuente, nota y acciones | Parcial: no se declara CC BY porque las fuentes tienen licencias distintas |
+| Pestañas Gráfico/Tabla/Mapa | Chart / Table / Map | Gráfico / Tabla (sin pestaña Mapa en las gráficas) | Parcial |
+
+No verificado en el repositorio (no se pudo leer): tamaño exacto de los ticks, opacidad de barras no resaltadas, etiquetas de botones de acción y SCSS global de variables.
