@@ -6139,20 +6139,47 @@ window.piitOwidTheme=function(){ if(!window.Chart) return; var D=Chart.defaults;
   T.titleColor='#2d2e2d'; T.bodyColor='#4e4e4e'; T.footerColor='#787878'; T.titleFont={family:FF,size:14,weight:'700'}; T.bodyFont={family:FF,size:14,weight:'400'}; T.footerFont={family:FF,size:12,weight:'400'};
   T.usePointStyle=true; T.boxPadding=4; T.displayColors=true;
   D.elements.line.borderWidth=1.5; D.elements.line.tension=0; D.elements.point.radius=1.8; D.elements.point.hoverRadius=4; D.elements.point.hitRadius=8; D.elements.bar.borderRadius=0;
+  /* Paleta OWID Distinct para series categóricas (owid-grapher CustomSchemes: OwidDistinctLines y Paleta A).
+     Las gráficas con significado semántico (semáforos de cobertura, estado vial, ejecución, vulnerabilidad,
+     grupos Sisbén) conservan sus colores. */
+  var OWID_L=['#4c6a9c','#b13507','#2c8465','#6d3e91','#996d39','#883039','#00847e','#cf0a66','#578145','#a2559c','#286bbb','#9a5129'];
+  var OWID_A=['#4c6a9c','#883039','#578145','#b13507','#b16214','#970046','#d73c50','#00295b','#00847e','#bc8e5a','#a2559c','#18470f'];
+  var CATEG={'chart-radar':1,'chart-reportes':1,'chart-icv-radar':1,'chart-ingresos':1,'chart-obras-avance':1,'chart-obras-barrio':1,'chart-cont-tipo':1,'chart-cont-sec':1,'chart-flujos':1,'chart-sectores':1,'chart-ipm':1,'chart-conectividad':1,'chart-financiamiento':1,'chart-pob-proyeccion':1,'chart-score-territorial':1,'chart-priorizacion':1,'chart-rep-tipos':1,'sv-chart-eventos':1,'sp-chart-rips':1,'sp-chart-afil':1,'sp-chart-mort':1,'sp-chart-trianual':1,'sp-chart-eevv':1,'sp-chart-rips-dx':1,'sp-chart-eps':1};
+  function hex2rgba(h,a){var n=parseInt(h.slice(1),16);return 'rgba('+(n>>16)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
   if(!Chart.registry.plugins.get('owidAxes')) Chart.register({id:'owidAxes',beforeInit:function(c){
+    var type=c.config.type,ds=c.data&&c.data.datasets||[],cid=c.canvas&&c.canvas.id;
+    /* 1 · series: grosor 1,5, sin suavizado, marcadores pequeños (valores de LineChartConstants) */
+    if(type==='line'||(type==='radar')){ds.forEach(function(d){
+      if(typeof d.borderWidth!=='number'||d.borderWidth>1.5)d.borderWidth=1.5;
+      if(type==='line')d.tension=0;
+      if(typeof d.pointRadius==='number'&&d.pointRadius>2)d.pointRadius=1.8;
+      if(typeof d.pointHoverRadius==='number')d.pointHoverRadius=Math.min(d.pointHoverRadius,4);});}
+    if(type==='bar'){ds.forEach(function(d){d.borderRadius=0;});}
+    /* 2 · paleta OWID en gráficas categóricas */
+    if(CATEG[cid]){
+      if(type==='doughnut'||type==='pie'){ds.forEach(function(d){var n=(d.data||[]).length;d.backgroundColor=d.data.map(function(_,i){return OWID_A[i%OWID_A.length];});d.borderColor='#fff';d.borderWidth=1.5;});}
+      else if(type==='bar'&&ds.length===1){var d0=ds[0],n0=(d0.data||[]).length;d0.backgroundColor=d0.data.map(function(_,i){return OWID_A[i%OWID_A.length];});}
+      else{ds.forEach(function(d,i){var col=OWID_L[i%OWID_L.length];
+        if(type==='line'||type==='radar'){d.borderColor=col;d.pointBackgroundColor=col;d.pointBorderColor=col;d.backgroundColor=d.fill?hex2rgba(col,.12):col;}
+        else{d.backgroundColor=col;d.borderColor=col;}});}
+    }
+    /* 3 · ejes: eje de valores con rejilla #ddd (guiones 4,4); eje de categorías sin rejilla, con línea #ccc y marcas #999 */
     var s=c.options.scales; if(!s) return;
-    Object.keys(s).forEach(function(k){ var sc=s[k]; if(!sc||sc.type==='radialLinear') return;
-      var horiz=(sc.axis==='x')||k==='x'||sc.position==='bottom'||sc.position==='top';
+    Object.keys(s).forEach(function(k){ var sc=s[k]; if(!sc) return;
+      if(sc.type==='radialLinear'){
+        sc.grid=Object.assign({},sc.grid||{},{color:'#ddd'}); sc.angleLines=Object.assign({},sc.angleLines||{},{color:'#ddd'});
+        sc.pointLabels=Object.assign({},sc.pointLabels||{},{color:'#5b5b5b'}); sc.ticks=Object.assign({},sc.ticks||{},{color:'#767676',backdropColor:'transparent'}); return; }
+      var isCat=sc.type==='category'||sc.type==='time'||sc.type==='timeseries';
+      var horizAxis=(sc.axis==='x')||k==='x'||sc.position==='bottom'||sc.position==='top';
       sc.grid=Object.assign({},sc.grid||{});
-      if(horiz){ // eje X: sin rejilla vertical; línea de dominio #ccc y marcas #999 de 5 px
-        if(sc.grid.display===undefined) sc.grid.display=false;
-        sc.border=Object.assign({},sc.border||{},{display:true,color:'#ccc',width:1});
-        sc.grid.tickColor='#999'; sc.grid.tickLength=5; sc.grid.drawTicks=true;
-      } else { // eje Y: rejilla horizontal #ddd con guiones 4,4 y sin línea de eje
-        sc.grid.color='#ddd'; sc.grid.lineWidth=1; sc.border=Object.assign({},sc.border||{},{display:false,dash:[4,4]});
-        sc.grid.tickLength=0;
+      if(isCat){
+        sc.grid.display=false; sc.border=Object.assign({},sc.border||{},{display:true,color:'#ccc',width:1});
+        if(horizAxis){sc.grid.drawTicks=true;sc.grid.tickColor='#999';sc.grid.tickLength=5;} else {sc.grid.drawTicks=false;sc.grid.tickLength=0;}
+      } else {
+        sc.grid.display=true; sc.grid.color='#ddd'; sc.grid.lineWidth=1; sc.grid.drawTicks=false; sc.grid.tickLength=0;
+        sc.border=Object.assign({},sc.border||{},{display:false,dash:[4,4]});
       }
-      sc.ticks=Object.assign({padding:6,color:'#5b5b5b'},sc.ticks||{});
+      sc.ticks=Object.assign({padding:6},sc.ticks||{},{color:'#5b5b5b'});
     });
   }});
 };
@@ -6364,7 +6391,7 @@ window.piitOwidTheme=function(){ if(!window.Chart) return; var D=Chart.defaults;
     }
     function paintDim(ch){
       ch.data.datasets.forEach(function(d){var s=cfg.series.filter(function(x){return x.key===d._key;})[0];var dim=S.hl&&S.hl!==d._key;
-        d.borderColor=dim?alpha(s.color,.18):s.color;d.borderWidth=dim?1.5:(S.hl===d._key?3.4:2.4);});
+        d.borderColor=dim?alpha(s.color,.5):s.color;d.borderWidth=dim?1:(S.hl===d._key?2:1.5);/* LINE_STYLE de owid-grapher: elevada x1,33, atenuada x0,66 con opacidad 0,5 */});
       ch.update('none');
     }
     // ── gráficos pequeños (small multiples) con escalas alineadas / independientes

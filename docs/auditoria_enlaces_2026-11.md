@@ -145,3 +145,11 @@ Referencia: `github.com/owid/owid-grapher`, paquete `@ourworldindata/grapher/src
 | Pestañas Gráfico/Tabla/Mapa | Chart / Table / Map | Gráfico / Tabla (sin pestaña Mapa en las gráficas) | Parcial |
 
 No verificado en el repositorio (no se pudo leer): tamaño exacto de los ticks, opacidad de barras no resaltadas, etiquetas de botones de acción y SCSS global de variables.
+
+## Revisión gráfica por gráfica (17-nov-2026)
+
+Se inventariaron 32 gráficas Chart.js (más las diferidas de Salud/SISPRO) y se comprobó en cada una: rejilla del eje de valores `#ddd` con guiones `4,4`, eje de categorías sin rejilla con línea `#ccc`, ticks `#5b5b5b`, líneas de 1,5 px sin suavizado, barras sin radio y paleta.
+
+Desviaciones encontradas y corregidas: rejilla vertical residual en ejes de categoría (varias gráficas), barras horizontales sin rejilla guionada en el eje de valores, colores de ticks propios (`#8A9E96`, `#43594E`, `#5A7268`), líneas de 2 a 3,4 px, marcadores de 3 a 4 px, radar con rejilla distinta y resalte de la gráfica ICV (3,4 px; ahora 2 px, con series atenuadas a 1 px y opacidad 0,5 como `LINE_STYLE` de owid-grapher).
+
+Paleta OWID Distinct aplicada a 25 gráficas categóricas. Conservan colores semánticos: Sisbén (grupos), ejecución presupuestal, cobertura (semáforo), estado vial, vulnerabilidad, comparativo de barrios, histórico SIG y la serie de permutaciones de Moran.
