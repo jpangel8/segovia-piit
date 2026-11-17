@@ -3532,9 +3532,19 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 (function(){
   var SESSION_KEY='piit-session';
   function decodeToken(t){try{var p=JSON.parse(atob(t));return p.exp<Date.now()?null:p;}catch(e){return null;}}
-  var token=localStorage.getItem(SESSION_KEY);
+  var token=null;
+  try{token=localStorage.getItem(SESSION_KEY);}catch(e){token=null;} // almacenamiento bloqueado (iframe/sandbox)
   var user=token?decodeToken(token):null;
-  if(!user){window.location.replace('/');throw new Error('no-auth');}
+  if(!user){
+    // La redirección al login solo tiene sentido cuando el archivo se sirve por
+    // http(s) (servidor de desarrollo o producción), donde "/" es la pantalla de
+    // acceso. En una vista previa de archivo (file:, blob:, srcdoc, panel del IDE)
+    // no existe esa pantalla: antes se lanzaba el error "no-auth" y la página
+    // quedaba en blanco. Ahora se abre en modo invitado (solo lectura).
+    var servidoPorHttp=/^https?:$/.test(window.location.protocol);
+    if(servidoPorHttp){window.location.replace('/');throw new Error('no-auth');}
+    user={name:'Invitado',role:'Vista previa',guest:true};
+  }
   window.__PIIT_USER__=user;
 })();
 </script>
