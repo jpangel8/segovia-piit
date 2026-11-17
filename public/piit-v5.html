@@ -4792,6 +4792,12 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div class="pt" style="margin-bottom:12px">Comparativo multidimensional · todos los barrios · indicador seleccionado</div>
     <canvas id="chart-comparativo" height="100"></canvas>
   </div>
+  <!-- Tipología de barrios: K-Means (codo + silueta) vs Ward -->
+  <div class="card" id="km-card" style="margin-top:16px;padding:16px 18px">
+    <div class="pt" style="margin-bottom:4px">Tipología de barrios · K-Means (codo y silueta) contrastado con Ward</div>
+    <p style="font-size:12.5px;color:var(--gov-body);margin:0 0 12px">Agrupa los barrios por similitud en infraestructura, condiciones sociales, servicios, cobertura y reportes. Se comparan dos métodos para saber qué tan sólida es la clasificación.</p>
+    <div id="km-panel"><p class="km-n">Calculando…</p></div>
+  </div>
 </section>
 
 <!-- ══ S-PRESUPUESTO ════════════════════════════════ -->
@@ -17604,5 +17610,151 @@ window.LayerManager = (function () {
   };
 })();
 </script>
+<script id="piit-cluster-js">
+/* ══ PIITCluster · tipologías de barrios: K-Means (codo + silueta) vs Ward ══
+   Variables estandarizadas (z-score). K-Means: inicialización k-means++, 30 reinicios,
+   semilla fija (resultado reproducible). Ward: aglomerativo, criterio de varianza mínima
+   (distancia euclídea). Se comparan con silueta media y con el índice de Rand ajustado. */
+window.PIITCluster=(function(){
+  'use strict';
+  var VARS=[['infra','Infraestructura'],['social','Social'],['srv','Servicios'],['sisben_ab','Sisbén A-B (%)'],['cobertura_acueducto','Acueducto (%)'],['cobertura_energia','Energía (%)'],['reportes','Reportes']];
+  var COL=['#004884','#488704','#E8710A','#B0301F','#7B5EA7','#00897B','#8D6E63','#C2185B'];
+  var KMAX=8, st={k:null,charts:[]};
+  function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  function d2(a,b){var s=0;for(var i=0;i<a.length;i++){var x=a[i]-b[i];s+=x*x;}return s;}
+  function zs(rows){var m=VARS.length,n=rows.length,mu=[],sd=[];
+    for(var j=0;j<m;j++){var v=rows.map(function(r){return +r[VARS[j][0]]||0;});var a=v.reduce(function(p,c){return p+c;},0)/n;
+      var s=Math.sqrt(v.reduce(function(p,c){return p+(c-a)*(c-a);},0)/n)||1;mu.push(a);sd.push(s);}
+    return rows.map(function(r){return VARS.map(function(V,j){return ((+r[V[0]]||0)-mu[j])/sd[j];});});}
+  function km1(X,k,rand){var n=X.length,C=[X[Math.floor(rand()*n)].slice()];
+    while(C.length<k){var D=X.map(function(x){return Math.min.apply(null,C.map(function(c){return d2(x,c);}));});
+      var tot=D.reduce(function(p,c){return p+c;},0),r=rand()*tot,i=0;for(;i<n-1;i++){r-=D[i];if(r<=0)break;}C.push(X[i].slice());}
+    var lab=new Array(n).fill(-1),ch=true,it=0;
+    while(ch&&it++<200){ch=false;
+      for(var i2=0;i2<n;i2++){var b=0,bd=Infinity;for(var c=0;c<k;c++){var dd=d2(X[i2],C[c]);if(dd<bd){bd=dd;b=c;}}if(lab[i2]!==b){lab[i2]=b;ch=true;}}
+      for(var c2=0;c2<k;c2++){var mem=X.filter(function(_,q){return lab[q]===c2;});if(!mem.length)continue;
+        C[c2]=X[0].map(function(_,j){return mem.reduce(function(p,r){return p+r[j];},0)/mem.length;});}}
+    var inertia=0;for(var q=0;q<n;q++)inertia+=d2(X[q],C[lab[q]]);
+    return {lab:lab,inertia:inertia,C:C};}
+  function relabel(lab,k){var cnt=new Array(k).fill(0);lab.forEach(function(l){cnt[l]++;});
+    var ord=cnt.map(function(_,i){return i;}).sort(function(a,b){return cnt[b]-cnt[a];}),map={};ord.forEach(function(o,i){map[o]=i;});
+    return lab.map(function(l){return map[l];});}
+  function kmeans(X,k){var best=null;for(var s=0;s<30;s++){var r=km1(X,k,rng(1234+s*97));if(!best||r.inertia<best.inertia)best=r;}
+    best.lab=relabel(best.lab,k);return best;}
+  function ward(X){var n=X.length,cl=X.map(function(x,i){return {m:[i],c:x.slice(),n:1};}),merges=[];
+    while(cl.length>1){var bi=0,bj=1,bc=Infinity;
+      for(var i=0;i<cl.length;i++)for(var j=i+1;j<cl.length;j++){var cost=cl[i].n*cl[j].n/(cl[i].n+cl[j].n)*d2(cl[i].c,cl[j].c);if(cost<bc){bc=cost;bi=i;bj=j;}}
+      var A=cl[bi],B=cl[bj],nn=A.n+B.n,c=A.c.map(function(v,t){return (v*A.n+B.c[t]*B.n)/nn;});
+      merges.push({a:A.m[0],b:B.m[0],h:bc});
+      var nw={m:A.m.concat(B.m),c:c,n:nn};cl.splice(bj,1);cl.splice(bi,1);cl.push(nw);}
+    return merges;}
+  function wardCut(merges,n,k){var par=[];for(var i=0;i<n;i++)par.push(i);
+    function f(x){while(par[x]!==x){par[x]=par[par[x]];x=par[x];}return x;}
+    for(var s=0;s<n-k;s++){par[f(merges[s].b)]=f(merges[s].a);}
+    var ids={},c=0,lab=[];for(var q=0;q<n;q++){var r=f(q);if(ids[r]===undefined)ids[r]=c++;lab.push(ids[r]);}
+    return relabel(lab,k);}
+  function sil(X,lab,k){var n=X.length,tot=0;
+    for(var i=0;i<n;i++){var sums=new Array(k).fill(0),cn=new Array(k).fill(0);
+      for(var j=0;j<n;j++){if(j===i)continue;sums[lab[j]]+=Math.sqrt(d2(X[i],X[j]));cn[lab[j]]++;}
+      if(cn[lab[i]]===0)continue;var a=sums[lab[i]]/cn[lab[i]],b=Infinity;
+      for(var c=0;c<k;c++)if(c!==lab[i]&&cn[c])b=Math.min(b,sums[c]/cn[c]);
+      tot+=(b-a)/Math.max(a,b);}
+    return tot/n;}
+  function ari(a,b){var n=a.length,ka=Math.max.apply(null,a)+1,kb=Math.max.apply(null,b)+1,M=[],i,j;
+    for(i=0;i<ka;i++)M.push(new Array(kb).fill(0));for(i=0;i<n;i++)M[a[i]][b[i]]++;
+    var c2=function(x){return x*(x-1)/2;},sij=0,sa=0,sb=0;
+    for(i=0;i<ka;i++){var r=0;for(j=0;j<kb;j++){sij+=c2(M[i][j]);r+=M[i][j];}sa+=c2(r);}
+    for(j=0;j<kb;j++){var cc=0;for(i=0;i<ka;i++)cc+=M[i][j];sb+=c2(cc);}
+    var exp=sa*sb/c2(n),mx=(sa+sb)/2;return mx===exp?1:(sij-exp)/(mx-exp);}
+  function pca(X){var m=X[0].length,n=X.length,Cv=[],i,j,t;
+    for(i=0;i<m;i++){Cv.push([]);for(j=0;j<m;j++){var s=0;for(t=0;t<n;t++)s+=X[t][i]*X[t][j];Cv[i].push(s/n);}}
+    function pw(M){var v=M.map(function(_,q){return q===0?1:0.5;});for(var it=0;it<300;it++){var w=M.map(function(r){return r.reduce(function(p,c,q){return p+c*v[q];},0);});var nr=Math.sqrt(w.reduce(function(p,c){return p+c*c;},0))||1;v=w.map(function(x){return x/nr;});}
+      var Mv=M.map(function(r){return r.reduce(function(p,c,q){return p+c*v[q];},0);});var lam=Mv.reduce(function(p,c,q){return p+c*v[q];},0);return {v:v,l:lam};}
+    var e1=pw(Cv),Cv2=Cv.map(function(r,a){return r.map(function(c,b){return c-e1.l*e1.v[a]*e1.v[b];});}),e2=pw(Cv2);
+    var tr=Cv.reduce(function(p,r,q){return p+r[q];},0);
+    return {pts:X.map(function(x){return {x:x.reduce(function(p,c,q){return p+c*e1.v[q];},0),y:x.reduce(function(p,c,q){return p+c*e2.v[q];},0)};}),ve:[e1.l/tr,e2.l/tr]};}
+  function elbow(ys){var n=ys.length,x1=0,y1=ys[0],x2=n-1,y2=ys[n-1],best=-1,bi=0;
+    for(var i=1;i<n-1;i++){var d=Math.abs((y2-y1)*i-(x2-x1)*ys[i]+x2*y1-y2*x1)/Math.sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1));if(d>best){best=d;bi=i;}}
+    return bi;}
+  function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function kill(){st.charts.forEach(function(c){try{c.destroy();}catch(e){}});st.charts=[];}
+  function mkChart(id,cfg){var el=document.getElementById(id);if(!el)return;st.charts.push(new Chart(el,cfg));}
+
+  function render(rows){
+    var host=document.getElementById('km-panel');if(!host)return;kill();
+    var X=zs(rows),n=X.length,ks=[],KM={},iner=[],sk=[],sw=[],merges=ward(X),WL={},i,k;
+    for(k=2;k<=Math.min(KMAX,n-1);k++){ks.push(k);KM[k]=kmeans(X,k);WL[k]=wardCut(merges,n,k);iner.push(KM[k].inertia);sk.push(sil(X,KM[k].lab,k));sw.push(sil(X,WL[k],k));}
+    var kS=ks[sk.indexOf(Math.max.apply(null,sk))],kE=ks[elbow(iner)]||ks[0];
+    if(st.k===null||ks.indexOf(st.k)<0)st.k=kS;
+    var K=st.k,lk=KM[K].lab,lw=WL[K],A=ari(lk,lw),pc=pca(X);
+    var opts=ks.map(function(q){return '<option value="'+q+'"'+(q===K?' selected':'')+'>k = '+q+'</option>';}).join('');
+    function prof(lab){var h='<table class="km-t"><thead><tr><th>Grupo</th><th>Barrios</th>'+VARS.map(function(v){return '<th>'+v[1]+'</th>';}).join('')+'<th>Barrios del grupo</th></tr></thead><tbody>';
+      for(var c=0;c<K;c++){var idx=[];lab.forEach(function(l,q){if(l===c)idx.push(q);});
+        h+='<tr><td><span class="km-dot" style="background:'+COL[c]+'"></span>G'+(c+1)+'</td><td>'+idx.length+'</td>'+VARS.map(function(v){return '<td>'+(idx.reduce(function(p,q){return p+(+rows[q][v[0]]||0);},0)/(idx.length||1)).toFixed(1)+'</td>';}).join('')+'<td class="km-m">'+idx.map(function(q){return esc(rows[q].nombre);}).join(' · ')+'</td></tr>';}
+      return h+'</tbody></table>';}
+    var cm='<table class="km-t km-cm"><thead><tr><th>K-Means ↓ / Ward →</th>'+Array.apply(null,Array(K)).map(function(_,c){return '<th>G'+(c+1)+'</th>';}).join('')+'</tr></thead><tbody>';
+    for(var a=0;a<K;a++){cm+='<tr><td>G'+(a+1)+'</td>';for(var b=0;b<K;b++){var cnt=0;for(i=0;i<n;i++)if(lk[i]===a&&lw[i]===b)cnt++;cm+='<td style="'+(cnt?'font-weight:700;background:rgba(0,72,132,'+Math.min(.08+cnt/n*1.6,.55).toFixed(2)+')':'color:#bbb')+'">'+cnt+'</td>';}cm+='</tr>';}
+    cm+='</tbody></table>';
+    var sK=sil(X,lk,K),sW=sil(X,lw,K);
+    var lectura=A>=.7?'Los dos métodos coinciden en gran parte: la tipología es robusta.':A>=.4?'Coincidencia parcial: hay barrios fronterizos que cambian de grupo según el método.':'Poca coincidencia: la estructura de grupos es débil y depende del método.';
+    host.innerHTML=
+      '<div class="km-bar"><label>Número de grupos <select id="km-k">'+opts+'</select></label>'+
+      '<span class="km-chip">Silueta sugiere k = '+kS+'</span><span class="km-chip">Codo sugiere k = '+kE+'</span></div>'+
+      '<div class="km-grid">'+
+      '<div class="km-box"><div class="km-h">Método del codo · inercia K-Means</div><div class="km-cv"><canvas id="km-c-codo"></canvas></div><p class="km-n">Se busca el punto donde la inercia deja de bajar de forma marcada.</p></div>'+
+      '<div class="km-box"><div class="km-h">Coeficiente de silueta · K-Means vs Ward</div><div class="km-cv"><canvas id="km-c-sil"></canvas></div><p class="km-n">Más alto es mejor (1 = grupos compactos y separados; menos de 0,25 = estructura débil).</p></div>'+
+      '<div class="km-box"><div class="km-h">K-Means · mapa de barrios (k = '+K+')</div><div class="km-cv"><canvas id="km-c-km"></canvas></div></div>'+
+      '<div class="km-box"><div class="km-h">Ward · mapa de barrios (k = '+K+')</div><div class="km-cv"><canvas id="km-c-w"></canvas></div></div>'+
+      '</div>'+
+      '<p class="km-n">Proyección en los dos primeros componentes principales (explican '+(100*(pc.ve[0]+pc.ve[1])).toFixed(0)+' % de la varianza).</p>'+
+      '<div class="km-kpis"><div><b>'+sK.toFixed(2)+'</b><span>Silueta K-Means</span></div><div><b>'+sW.toFixed(2)+'</b><span>Silueta Ward</span></div><div><b>'+A.toFixed(2)+'</b><span>Índice de Rand ajustado</span></div></div>'+
+      '<p class="km-lect"><strong>Lectura.</strong> '+lectura+' Con k = '+K+', K-Means obtiene silueta '+sK.toFixed(2)+' y Ward '+sW.toFixed(2)+'.</p>'+
+      '<div class="km-h" style="margin-top:14px">Contraste de asignaciones (cuántos barrios coinciden)</div><div class="km-sc">'+cm+'</div>'+
+      '<div class="km-h" style="margin-top:14px">Perfil de grupos · K-Means (promedios por variable)</div><div class="km-sc">'+prof(lk)+'</div>'+
+      '<div class="km-h" style="margin-top:14px">Perfil de grupos · Ward</div><div class="km-sc">'+prof(lw)+'</div>'+
+      '<details class="km-d"><summary>Cómo se calcula</summary><p>Variables: '+VARS.map(function(v){return v[1];}).join(', ')+', estandarizadas (media 0, desviación 1). K-Means: k-means++ con 30 reinicios y semilla fija. Ward: aglomerativo que minimiza el aumento de varianza intra-grupo. Silueta: media de (b − a) / máx(a, b) con distancia euclídea. Rand ajustado: 1 = particiones idénticas, cerca de 0 = coincidencia por azar. Con solo '+n+' barrios los resultados son orientativos, no una clasificación oficial.</p></details>';
+    document.getElementById('km-k').onchange=function(){st.k=+this.value;render(rows);};
+    var base={responsive:true,maintainAspectRatio:false};
+    var lab=ks.map(function(q){return 'k='+q;});
+    mkChart('km-c-codo',{type:'line',data:{labels:lab,datasets:[{label:'Inercia',data:iner,borderColor:'#004884',backgroundColor:'#004884',pointRadius:ks.map(function(q){return q===kE?7:3;}),pointBackgroundColor:ks.map(function(q){return q===kE?'#E8710A':'#004884';})}]},options:Object.assign({},base,{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'Suma de cuadrados intra-grupo'}}}})});
+    mkChart('km-c-sil',{type:'line',data:{labels:lab,datasets:[{label:'K-Means',data:sk,borderColor:'#004884',backgroundColor:'#004884'},{label:'Ward',data:sw,borderColor:'#488704',backgroundColor:'#488704',borderDash:[5,4]}]},options:Object.assign({},base,{scales:{y:{min:0,title:{display:true,text:'Silueta media'}}}})});
+    function sc(id,labs){var ds=[];for(var c=0;c<K;c++){var pts=[];pc.pts.forEach(function(p,q){if(labs[q]===c)pts.push({x:p.x,y:p.y,n:rows[q].nombre});});
+      ds.push({label:'G'+(c+1),data:pts,backgroundColor:COL[c],borderColor:COL[c],pointRadius:6,pointHoverRadius:8});}
+      mkChart(id,{type:'scatter',data:{datasets:ds},options:Object.assign({},base,{plugins:{tooltip:{callbacks:{label:function(c){return c.raw.n+' · '+c.dataset.label;}}}},scales:{x:{title:{display:true,text:'Componente 1'}},y:{title:{display:true,text:'Componente 2'}}}})});}
+    sc('km-c-km',lk);sc('km-c-w',lw);
+  }
+  function tick(){
+    var host=document.getElementById('km-panel');
+    if(!host||!window.Chart||!window.PIIT||!PIIT.analisis||!PIIT.analisis._data||!PIIT.analisis._data.length)return;
+    if(host.offsetParent===null||host.dataset.done)return;
+    host.dataset.done='1';try{render(PIIT.analisis._data);}catch(e){host.dataset.done='';host.innerHTML='<p class="km-n">No se pudo calcular la tipología: '+esc(e.message)+'</p>';console.error(e);}
+  }
+  setInterval(tick,1200);
+  return {render:render,kmeans:kmeans,ward:ward,sil:sil,ari:ari};
+})();
+</script>
+<style id="piit-cluster-css">
+#km-card .km-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+#km-card label{font-size:12.5px;color:#434343;font-weight:700}
+#km-card select{margin-left:6px;padding:5px 8px;border:1px solid #cfd6dc;border-radius:3px;font-family:inherit;background:#fff}
+.km-chip{background:#E6EFFD;color:#004884;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:700}
+.km-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+.km-box{border:1px solid #E1E5E8;border-radius:3px;padding:10px 12px;background:#fff}
+.km-h{font-family:'Nunito Sans',Verdana,sans-serif;font-weight:800;font-size:13px;color:#363636;margin-bottom:6px}
+.km-cv{position:relative;height:250px}
+.km-n{font-size:11.5px;color:#6b6b6b;margin:6px 0 0}
+.km-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.km-kpis div{border:1px solid #E1E5E8;border-radius:3px;padding:10px 12px;display:flex;flex-direction:column}
+.km-kpis b{font-size:22px;color:#004884;font-variant-numeric:tabular-nums}.km-kpis span{font-size:11.5px;color:#6b6b6b}
+.km-lect{font-size:12.5px;color:#434343;background:#F6F8F9;border-radius:3px;padding:10px 12px;margin:0}
+.km-sc{overflow-x:auto}
+.km-t{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.km-t th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:#5b5b5b;border-bottom:2px solid #bdbdbd;padding:7px 8px;white-space:nowrap}
+.km-t td{padding:6px 8px;border-bottom:1px solid #ebebeb}
+.km-t .km-m{min-width:220px;color:#5b5b5b;font-size:11.5px}
+.km-cm td,.km-cm th{text-align:center}.km-cm td:first-child,.km-cm th:first-child{text-align:left}
+.km-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.km-d{margin-top:12px;font-size:12px;color:#5b5b5b}.km-d summary{cursor:pointer;font-weight:700;color:#004884}
+</style>
 </body>
 </html>
