@@ -124,6 +124,14 @@ export function renderLogin(container) {
     const email    = container.querySelector("#login-email").value.trim()
     const password = container.querySelector("#login-password").value
 
+    if (!email || !password) {
+      errorEl.textContent = "Ingresa tu correo y tu contraseña."
+      errorEl.classList.add("visible")
+      btn.disabled = false
+      btn.textContent = "Acceder a la plataforma"
+      return
+    }
+
     setTimeout(async () => {
       const result = await AuthService.login({ email, password })
 
