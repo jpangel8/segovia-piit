@@ -3541,8 +3541,17 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     // acceso. En una vista previa de archivo (file:, blob:, srcdoc, panel del IDE)
     // no existe esa pantalla: antes se lanzaba el error "no-auth" y la página
     // quedaba en blanco. Ahora se abre en modo invitado (solo lectura).
-    var servidoPorHttp=/^https?:$/.test(window.location.protocol);
-    if(servidoPorHttp){window.location.replace('/');throw new Error('no-auth');}
+    // Un panel de vista previa también puede servir el archivo por https, pero
+    // su "/" no es el login de PIIT: se comprueba (sincrónico, mismo origen) que
+    // "/" realmente sea la aplicación PIIT antes de redirigir.
+    function loginDisponible(){
+      if(!/^https?:$/.test(window.location.protocol))return false;
+      try{
+        var x=new XMLHttpRequest();x.open('GET','/',false);x.send(null);
+        return x.status===200&&/<title>[^<]*PIIT/i.test(String(x.responseText).slice(0,6000));
+      }catch(e){return false;}
+    }
+    if(loginDisponible()){window.location.replace('/');throw new Error('no-auth');}
     user={name:'Invitado',role:'Vista previa',guest:true};
   }
   window.__PIIT_USER__=user;
