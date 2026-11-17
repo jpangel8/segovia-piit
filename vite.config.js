@@ -1,6 +1,12 @@
 import { defineConfig } from "vite"
 import { resolve } from "path"
 
+const SEC = {
+  "X-Frame-Options": "SAMEORIGIN",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+}
+
 export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
@@ -28,7 +34,7 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
-  server: {
-    open: false,
-  },
+  // Cabeceras de seguridad reales (los <meta http-equiv> de X-Frame-Options y nosniff no tienen efecto).
+  server: { open: false, headers: SEC },
+  preview: { headers: SEC },
 }))
