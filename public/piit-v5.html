@@ -4798,6 +4798,12 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <p style="font-size:12.5px;color:var(--gov-body);margin:0 0 12px">Agrupa los barrios por similitud en infraestructura, condiciones sociales, servicios, cobertura y reportes. Se comparan dos métodos para saber qué tan sólida es la clasificación.</p>
     <div id="km-panel"><p class="km-n">Calculando…</p></div>
   </div>
+  <!-- Autocorrelación espacial: I de Moran global y LISA (vecindad reina) -->
+  <div class="card" id="sp-card" style="margin-top:16px;padding:16px 18px">
+    <div class="pt" style="margin-bottom:4px">Autocorrelación espacial · I de Moran global y LISA (vecindad reina)</div>
+    <p style="font-size:12.5px;color:var(--gov-body);margin:0 0 12px">Mide si los barrios vecinos se parecen entre sí más de lo esperable por azar, y localiza dónde se concentran los valores altos o bajos.</p>
+    <div id="sp-panel"><p class="km-n">Calculando…</p></div>
+  </div>
 </section>
 
 <!-- ══ S-PRESUPUESTO ════════════════════════════════ -->
@@ -17755,6 +17761,118 @@ window.PIITCluster=(function(){
 .km-cm td,.km-cm th{text-align:center}.km-cm td:first-child,.km-cm th:first-child{text-align:left}
 .km-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .km-d{margin-top:12px;font-size:12px;color:#5b5b5b}.km-d summary{cursor:pointer;font-weight:700;color:#004884}
+</style>
+<script id="piit-spatial-js">
+/* ══ PIITSpatial · autocorrelación espacial: I de Moran global y LISA ══
+   Vecindad tipo reina: dos barrios son vecinos si comparten al menos un vértice o borde
+   (se calcula sobre BARRIOS_GEOJSON). Pesos estandarizados por fila. Inferencia por
+   permutaciones (999, semilla fija). LISA con permutación condicional.
+   Barrios sin vecinos (islas) quedan fuera del estadístico (equivale a zero.policy). */
+window.PIITSpatial=(function(){
+  'use strict';
+  var VARS=[['infra','Infraestructura'],['social','Social'],['srv','Servicios'],['sisben_ab','Sisbén A-B (%)'],['cobertura_acueducto','Acueducto (%)'],['cobertura_energia','Energía (%)'],['reportes','Reportes ciudadanos'],['puntaje','Puntaje Sisbén']];
+  var QC={HH:'#B0301F',LL:'#004884',HL:'#E8710A',LH:'#7FB2E5',ns:'#D5DADF'};
+  var QN={HH:'Alto-Alto',LL:'Bajo-Bajo',HL:'Alto-Bajo',LH:'Bajo-Alto',ns:'No significativo'};
+  var NPERM=999, st={v:'infra',charts:[],topo:null};
+  function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function ringsOf(f){var g=f.geometry,P=g.type==='Polygon'?[g.coordinates]:g.coordinates,o=[];P.forEach(function(p){p.forEach(function(r){o.push(r);});});return o;}
+  function topo(){
+    if(st.topo)return st.topo;
+    var G=PIIT.data.BARRIOS_GEOJSON,F=G.features,tol=1e-6;
+    var V=F.map(function(f){var s={};ringsOf(f).forEach(function(r){r.forEach(function(c){s[Math.round(c[0]/tol)+','+Math.round(c[1]/tol)]=1;});});return s;});
+    var nb=F.map(function(){return [];});
+    for(var i=0;i<F.length;i++)for(var j=i+1;j<F.length;j++){var sh=false;for(var k in V[i]){if(V[j][k]){sh=true;break;}}if(sh){nb[i].push(j);nb[j].push(i);}}
+    var pk=F.map(function(f){return f.properties.PK_BARRIO;});
+    st.topo={F:F,nb:nb,pk:pk};return st.topo;}
+  function analyze(rows,vkey){
+    var T=topo(),byPk={};rows.forEach(function(r){byPk[r.pk]=r;});
+    var idx=[];T.F.forEach(function(f,i){if(byPk[T.pk[i]]&&T.nb[i].length>0)idx.push(i);});
+    var islands=[];T.F.forEach(function(f,i){if(byPk[T.pk[i]]&&T.nb[i].length===0)islands.push(byPk[T.pk[i]].nombre);});
+    var pos={};idx.forEach(function(g,p){pos[g]=p;});
+    var n=idx.length,x=idx.map(function(g){return +byPk[T.pk[g]][vkey]||0;});
+    var mu=x.reduce(function(a,b){return a+b;},0)/n,z=x.map(function(v){return v-mu;});
+    var m2=z.reduce(function(a,b){return a+b*b;},0)/n,sd=Math.sqrt(m2)||1;
+    var W=idx.map(function(g){var l=T.nb[g].filter(function(h){return pos[h]!==undefined;});return l.map(function(h){return {j:pos[h],w:1/l.length};});});
+    function lagOf(zz,i){var s=0;W[i].forEach(function(e){s+=e.w*zz[e.j];});return s;}
+    function moran(zz){var num=0,den=0;for(var i=0;i<n;i++){num+=zz[i]*lagOf(zz,i);den+=zz[i]*zz[i];}return den?num/den:0;}
+    var I=moran(z),EI=-1/(n-1),rand=rng(20260101),perm=[],ge=0,sh=z.slice(),i,p;
+    for(p=0;p<NPERM;p++){for(i=n-1;i>0;i--){var j=Math.floor(rand()*(i+1)),t=sh[i];sh[i]=sh[j];sh[j]=t;}var Ip=moran(sh);perm.push(Ip);if(Math.abs(Ip-EI)>=Math.abs(I-EI))ge++;}
+    var pm=perm.reduce(function(a,b){return a+b;},0)/NPERM,ps=Math.sqrt(perm.reduce(function(a,b){return a+(b-pm)*(b-pm);},0)/NPERM)||1;
+    var pG=(ge+1)/(NPERM+1),zI=(I-pm)/ps;
+    // LISA con permutación condicional
+    var lisa=[],r2=rng(777);
+    for(i=0;i<n;i++){
+      var lag=lagOf(z,i),Ii=z[i]*lag/m2,k=W[i].length,others=[];for(var q=0;q<n;q++)if(q!==i)others.push(z[q]);
+      var cnt=0;
+      for(p=0;p<NPERM;p++){var s=0;for(var c=0;c<k;c++){s+=others[Math.floor(r2()*others.length)];}var Ip2=z[i]*(s/k)/m2;if(Math.abs(Ip2)>=Math.abs(Ii))cnt++;}
+      var pv=(cnt+1)/(NPERM+1),quad=z[i]>=0?(lag>=0?'HH':'HL'):(lag>=0?'LH':'LL');
+      lisa.push({g:idx[i],r:byPk[T.pk[idx[i]]],val:x[i],z:z[i]/sd,lag:lag/sd,Ii:Ii,p:pv,q:quad,cls:pv<0.05?quad:'ns',k:k});}
+    return {n:n,I:I,EI:EI,p:pG,zI:zI,perm:perm,lisa:lisa,islands:islands,x:x,mu:mu,sd:sd,idx:idx};}
+  function kill(){st.charts.forEach(function(c){try{c.destroy();}catch(e){}});st.charts=[];}
+  function mkChart(id,cfg){var el=document.getElementById(id);if(el)st.charts.push(new Chart(el,cfg));}
+  function mapSvg(R){
+    var T=topo(),F=T.F,minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9,i;
+    F.forEach(function(f){ringsOf(f).forEach(function(r){r.forEach(function(c){minx=Math.min(minx,c[0]);maxx=Math.max(maxx,c[0]);miny=Math.min(miny,c[1]);maxy=Math.max(maxy,c[1]);});});});
+    var lat0=(miny+maxy)/2*Math.PI/180,kx=Math.cos(lat0),W=520,pad=8,sc=(W-2*pad)/((maxx-minx)*kx),H=Math.round((maxy-miny)*sc+2*pad);
+    function pt(c){return ((c[0]-minx)*kx*sc+pad).toFixed(1)+','+((maxy-c[1])*sc+pad).toFixed(1);}
+    var byG={};R.lisa.forEach(function(l){byG[l.g]=l;});
+    var out='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Mapa de clústeres LISA" style="width:100%;height:auto;max-height:430px">';
+    F.forEach(function(f,gi){var l=byG[gi],col=l?QC[l.cls]:'#fff',nm=f.properties.NOM_BARRIO||'';
+      var d='';var g=f.geometry,P=g.type==='Polygon'?[g.coordinates]:g.coordinates;
+      P.forEach(function(poly){poly.forEach(function(r){d+='M'+r.map(pt).join('L')+'Z';});});
+      var tip=l?esc(l.r.nombre)+' · '+QN[l.cls]+' · Ii = '+l.Ii.toFixed(2)+' · p = '+l.p.toFixed(3):esc(nm)+' · sin vecinos o sin dato';
+      out+='<path d="'+d+'" fill="'+col+'" fill-rule="evenodd" stroke="'+(l?'#fff':'#9aa3ab')+'" stroke-width="1"'+(l?'':' stroke-dasharray="3 2"')+'><title>'+tip+'</title></path>';});
+    return out+'</svg>';}
+  function render(rows){
+    var host=document.getElementById('sp-panel');if(!host)return;kill();
+    var vk=st.v,R=analyze(rows,vk),vname=VARS.filter(function(v){return v[0]===vk;})[0][1];
+    var opts=VARS.map(function(v){return '<option value="'+v[0]+'"'+(v[0]===vk?' selected':'')+'>'+v[1]+'</option>';}).join('');
+    var cnt={HH:0,LL:0,HL:0,LH:0,ns:0};R.lisa.forEach(function(l){cnt[l.cls]++;});
+    var sig=R.p<0.05,txt=!sig?'No hay evidencia de autocorrelación espacial global: la distribución de «'+vname+'» no se distingue de una repartición al azar entre barrios vecinos.'
+      :R.I>R.EI?'Hay autocorrelación espacial positiva: los barrios con valores altos de «'+vname+'» tienden a estar junto a barrios altos, y los bajos junto a bajos.'
+      :'Hay autocorrelación espacial negativa: los barrios vecinos tienden a tener valores contrastantes en «'+vname+'».';
+    var rowsT=R.lisa.slice().sort(function(a,b){return a.p-b.p;}).map(function(l){
+      return '<tr><td>'+esc(l.r.nombre)+'</td><td>'+l.val.toFixed(1)+'</td><td>'+l.k+'</td><td>'+l.z.toFixed(2)+'</td><td>'+l.lag.toFixed(2)+'</td><td>'+l.Ii.toFixed(2)+'</td><td>'+l.p.toFixed(3)+'</td><td><span class="km-dot" style="background:'+QC[l.cls]+'"></span>'+QN[l.cls]+'</td></tr>';}).join('');
+    host.innerHTML=
+      '<div class="km-bar"><label>Variable <select id="sp-v">'+opts+'</select></label><span class="km-chip">Vecindad reina · pesos por fila</span><span class="km-chip">'+NPERM+' permutaciones</span></div>'+
+      '<div class="km-kpis"><div><b>'+R.I.toFixed(3)+'</b><span>I de Moran global (esperado '+R.EI.toFixed(3)+')</span></div><div><b>'+(R.p<0.001?'&lt; 0,001':R.p.toFixed(3))+'</b><span>Pseudo-valor p</span></div><div><b>'+R.zI.toFixed(2)+'</b><span>Puntaje z (permutación)</span></div><div><b>'+(cnt.HH+cnt.LL+cnt.HL+cnt.LH)+' / '+R.n+'</b><span>Barrios con LISA significativo (p &lt; 0,05)</span></div></div>'+
+      '<p class="km-lect"><strong>Lectura.</strong> '+txt+(R.islands.length?' Sin vecinos (excluidos del cálculo): '+R.islands.map(esc).join(', ')+'.':'')+'</p>'+
+      '<div class="km-grid" style="margin-top:14px">'+
+      '<div class="km-box"><div class="km-h">Diagrama de dispersión de Moran</div><div class="km-cv"><canvas id="sp-c-sc"></canvas></div><p class="km-n">Eje X: valor estandarizado. Eje Y: promedio estandarizado de los vecinos. La pendiente de la recta es el I de Moran.</p></div>'+
+      '<div class="km-box"><div class="km-h">Distribución por permutaciones del I de Moran</div><div class="km-cv"><canvas id="sp-c-pm"></canvas></div><p class="km-n">Barras: I bajo aleatoriedad espacial. Línea naranja: valor observado.</p></div>'+
+      '<div class="km-box"><div class="km-h">Mapa de clústeres LISA · '+esc(vname)+'</div>'+mapSvg(R)+
+      '<div class="sp-leg">'+['HH','LL','HL','LH','ns'].map(function(q){return '<span><i style="background:'+QC[q]+'"></i>'+QN[q]+' ('+cnt[q]+')</span>';}).join('')+'</div></div>'+
+      '<div class="km-box"><div class="km-h">Qué significa cada tipo</div><ul class="sp-ul"><li><b>Alto-Alto:</b> punto crítico; el barrio y sus vecinos tienen valores altos.</li><li><b>Bajo-Bajo:</b> zona homogénea de valores bajos.</li><li><b>Alto-Bajo / Bajo-Alto:</b> valor atípico espacial: contrasta con su entorno.</li><li><b>No significativo:</b> sin patrón distinguible del azar (p ≥ 0,05).</li></ul><p class="km-n">Interpretación: «alto» es relativo al promedio municipal de la variable, no «bueno» o «malo». Con 18 a 21 barrios y sin corrección por pruebas múltiples, los clústeres LISA son exploratorios.</p></div>'+
+      '</div>'+
+      '<div class="km-h" style="margin-top:14px">LISA por barrio (ordenado por significancia)</div><div class="km-sc"><table class="km-t"><thead><tr><th>Barrio</th><th>Valor</th><th>Vecinos</th><th>z</th><th>z vecinos</th><th>Ii</th><th>p</th><th>Tipo</th></tr></thead><tbody>'+rowsT+'</tbody></table></div>'+
+      '<details class="km-d"><summary>Cómo se calcula</summary><p>Vecindad reina: barrios que comparten al menos un vértice o borde en el polígono oficial. Pesos estandarizados por fila (cada vecino pesa 1/número de vecinos). I de Moran = Σᵢ Σⱼ wᵢⱼ zᵢ zⱼ / Σ zᵢ². LISA: Iᵢ = zᵢ · Σⱼ wᵢⱼ zⱼ / m₂. Significancia por permutación aleatoria ('+NPERM+', semilla fija): global con el estadístico completo y local con permutación condicional (se fija el barrio y se muestrean sus vecinos del resto). El valor p es pseudo-p = (extremos + 1) / ('+NPERM+' + 1), bilateral.</p></details>';
+    document.getElementById('sp-v').onchange=function(){st.v=this.value;render(rows);};
+    var base={responsive:true,maintainAspectRatio:false};
+    var ds=['HH','LL','HL','LH','ns'].map(function(q){return {label:QN[q],data:R.lisa.filter(function(l){return l.cls===q;}).map(function(l){return {x:l.z,y:l.lag,n:l.r.nombre};}),backgroundColor:QC[q],borderColor:QC[q],pointRadius:6,pointHoverRadius:8};}).filter(function(d){return d.data.length;});
+    var xs=R.lisa.map(function(l){return l.z;}),x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs);
+    // la pendiente de lag sobre z coincide con I (pesos por fila, z estandarizado con la misma desviación)
+    ds.push({type:'line',label:'Pendiente = I',data:[{x:x0,y:R.I*x0},{x:x1,y:R.I*x1}],borderColor:'#434343',borderWidth:1.5,pointRadius:0,borderDash:[4,3]});
+    mkChart('sp-c-sc',{type:'scatter',data:{datasets:ds},options:Object.assign({},base,{plugins:{tooltip:{callbacks:{label:function(c){return c.raw.n?c.raw.n+' · '+c.dataset.label:'I = '+R.I.toFixed(3);}}}},scales:{x:{title:{display:true,text:'z del barrio'}},y:{title:{display:true,text:'z promedio de vecinos'}}}})});
+    var lo=Math.min.apply(null,R.perm.concat([R.I])),hi=Math.max.apply(null,R.perm.concat([R.I])),B=24,w=(hi-lo)/B||1,h=new Array(B).fill(0),lb=[];
+    R.perm.forEach(function(v){h[Math.min(B-1,Math.floor((v-lo)/w))]++;});for(var b=0;b<B;b++)lb.push((lo+w*(b+.5)).toFixed(2));
+    var ob=Math.min(B-1,Math.floor((R.I-lo)/w));
+    mkChart('sp-c-pm',{type:'bar',data:{labels:lb,datasets:[{label:'Permutaciones',data:h,backgroundColor:h.map(function(_,q){return q===ob?'#E8710A':'#9DB7D5';})}]},options:Object.assign({},base,{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'I de Moran'},ticks:{maxTicksLimit:8}},y:{title:{display:true,text:'Frecuencia'}}}})});
+  }
+  function tick(){
+    var host=document.getElementById('sp-panel');
+    if(!host||!window.Chart||!window.PIIT||!PIIT.analisis||!PIIT.analisis._data||!PIIT.analisis._data.length||!PIIT.data||!PIIT.data.BARRIOS_GEOJSON)return;
+    if(host.offsetParent===null||host.dataset.done)return;
+    host.dataset.done='1';try{render(PIIT.analisis._data);}catch(e){host.dataset.done='';host.innerHTML='<p class="km-n">No se pudo calcular la autocorrelación espacial: '+esc(e.message)+'</p>';console.error(e);}
+  }
+  setInterval(tick,1300);
+  return {analyze:analyze,topo:topo};
+})();
+</script>
+<style id="piit-spatial-css">
+.sp-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:#434343;margin-top:8px}
+.sp-leg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.sp-ul{margin:0;padding-left:18px;font-size:12.5px;color:#434343;line-height:1.55}
 </style>
 </body>
 </html>
