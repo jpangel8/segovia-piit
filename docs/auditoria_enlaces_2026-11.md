@@ -74,3 +74,22 @@ Mientras PIIT sea una aplicación estática, el inicio de sesión **no es una ba
 - `public/politica-privacidad.html`: política de privacidad y tratamiento de datos (Ley 1581 de 2012, Decreto 1377 de 2013, Ley 1712 de 2014), descrita según los datos que la plataforma realmente trata.
 - `public/terminos-condiciones.html`: términos y condiciones de uso.
 - Ambos están enlazados desde el pie de la plataforma y desde la pantalla de acceso. Son **borradores** que deben ser revisados y aprobados por la Oficina Jurídica de la Alcaldía.
+
+---
+
+# Actualización de datos oficiales (17-nov-2026)
+
+**Fuente:** DANE, Proyecciones de población y estudios demográficos, serie municipal por área 2018-2042 (base CNPV 2018), publicada 8-ago-2025. Archivo `PPED-AreaMun-2018-2042_VP.xlsx`, hoja `PobMunicipalxÁrea`, DIVIPOLA 05736 (Segovia).
+
+| Año | Cabecera | Centros poblados y rural disperso | Total |
+|---|---|---|---|
+| 2018 | 30.128 | 7.772 | 37.900 |
+| 2024 | 31.846 | 7.270 | 39.116 |
+| 2025 | 32.112 | 7.231 | 39.343 |
+| 2026 | 32.366 | 7.183 | **39.549** |
+
+**Corregido en la plataforma:** población 2026 de 41.222 a 39.549 (en 4 lugares), variación +1,5 % a +1,1 % frente a 2024, base de los escenarios (2024 = 39.116) y densidad 33,1 a 31,8 hab/km² (misma superficie implícita).
+
+**No se pudo actualizar (sin fuente oficial accesible):**
+- Sisbén: `sisben.gov.co` no resolvió (DNS) y datos.gov.co no tiene un conjunto de Segovia. Las cifras por barrio siguen siendo estimaciones internas; hay un conflicto interno sin resolver (Sisbén A+B de GALÁN: 71 % en Análisis frente a 51 % en la tarjeta Sisbén). Se requiere el reporte de la Oficina del Sisbén de la Alcaldía.
+- Valores por barrio de población, índices, coberturas y reportes: el DANE no los publica a ese nivel. Los 21 barrios suman 32.090, coherente con la cabecera oficial (32.366).
