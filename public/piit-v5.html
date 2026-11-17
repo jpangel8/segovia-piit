@@ -6095,6 +6095,41 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 <!-- ═══ SCRIPTS ══════════════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous" onerror="document.getElementById('asset-warning').style.display='block'"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha384-DhxhYObIMeMNGyAG7iK11OHzBIKyEIeRL0ad1iFPAOwZB8iirUlTT0O/WJJUk8+o" crossorigin="anonymous" onerror="document.getElementById('asset-warning').style.display='block'"></script>
+<script id="piit-owid-defaults">
+/* Estilo tipo OWID Grapher para TODAS las gráficas Chart.js: ejes sin marco,
+   rejilla horizontal tenue, tipografía sobria y tooltip oscuro compacto. */
+window.piitOwidTheme=function(){ if(!window.Chart) return; var D=Chart.defaults;
+  D.font.family="'Nunito Sans',Verdana,sans-serif"; D.font.size=12; D.color='#5b5b5b';
+  D.borderColor='#dadada';
+  D.font.weight='400'; D.plugins.legend.labels.font={family:D.font.family,size:12,weight:'400'}; D.plugins.legend.labels.color='#5b5b5b'; D.plugins.tooltip.titleFont={family:D.font.family,weight:'700',size:12}; D.plugins.tooltip.bodyFont={family:D.font.family,size:12}; D.plugins.legend.labels.usePointStyle=true; D.plugins.legend.labels.boxWidth=8; D.plugins.legend.labels.boxHeight=8; D.plugins.legend.labels.padding=14;
+  D.plugins.tooltip.backgroundColor='rgba(36,36,36,.94)'; D.plugins.tooltip.padding=10; D.plugins.tooltip.cornerRadius=2; D.plugins.tooltip.boxPadding=4; D.plugins.tooltip.usePointStyle=true;
+  D.elements.line.borderWidth=2.2; D.elements.line.tension=0.15; D.elements.point.radius=2.5; D.elements.point.hoverRadius=5; D.elements.bar.borderRadius=1;
+  if(D.scale){ D.scale.grid=D.scale.grid||{}; }
+  if(!Chart.registry.plugins.get('owidAxes')) Chart.register({id:'owidAxes',beforeInit:function(c){
+    var s=c.options.scales; if(!s) return;
+    Object.keys(s).forEach(function(k){ var sc=s[k]; if(!sc||sc.type==='radialLinear') return;
+      sc.border=Object.assign({display:false},sc.border||{});
+      sc.grid=Object.assign({},sc.grid||{});
+      if(sc.grid.color===undefined) sc.grid.color=(sc.axis==='x'||k==='x')?'transparent':'#e4e4e4';
+      if(sc.grid.tickLength===undefined) sc.grid.tickLength=0;
+      sc.ticks=Object.assign({padding:6},sc.ticks||{});
+    });
+  }});
+};
+</script>
+<style id="piit-owid-tables">
+/* Tablas estilo OWID: cabecera clara con línea inferior, filas con separador fino,
+   cifras tabulares, fila resaltada al pasar el cursor. */
+.card table,.gr-tablewrap table,table.rep-hist-table{border-collapse:collapse!important;font-variant-numeric:tabular-nums}
+.card table thead tr,.rep-hist-table thead tr{background:#fff!important}
+.card table th,.rep-hist-table th{background:#fff!important;color:#5b5b5b!important;font-size:11px!important;letter-spacing:.03em!important;text-transform:uppercase;font-weight:700!important;border-bottom:2px solid #bdbdbd!important;padding-top:9px!important;padding-bottom:9px!important}
+.card table td,.rep-hist-table td{border-bottom:1px solid #ebebeb!important;color:#333}
+.card table tbody tr:hover,.rep-hist-table tbody tr:hover{background:#f4f7fb!important}
+.card table tbody tr:nth-child(even){background:transparent}
+.card table th.an-th:hover{color:#004884!important}
+.pchart-head-t{font-family:'Nunito Sans',Verdana,sans-serif;font-weight:800;color:#363636}
+.pchart-bar{border-top:1px solid #ebebeb}
+</style>
 <style id="piit-grapher-css">
 /* PIITGrapher — estructura inspirada en Grapher de Our World in Data:
    pestañas arriba a la izquierda, controles por vista arriba a la derecha,
@@ -9913,6 +9948,7 @@ window.PIIT = (function () {
       C.defaults.animation.easing = 'easeOutQuart';
 
       charts._themed = true;
+      if(window.piitOwidTheme) window.piitOwidTheme();
     },
 
     _defaults: function () {
