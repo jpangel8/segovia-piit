@@ -16878,7 +16878,7 @@ document.addEventListener('DOMContentLoaded', function(){
         '<div class="pchart-actions">' +
           '<button class="pchart-icobtn pchart-info" type="button" title="Fuente y fecha de actualización" aria-haspopup="true"><i class="fa-solid fa-circle-info"></i></button>' +
           '<button class="pchart-icobtn pchart-more" type="button" title="Más opciones" aria-haspopup="true"><i class="fa-solid fa-ellipsis-vertical"></i></button>' +
-          '<div class="pchart-menu" role="menu"><button type="button" class="pchart-menu-item" data-act="export"><i class="fa-solid fa-download"></i> Exportar PNG</button></div>' +
+          '<div class="pchart-menu" role="menu"><button type="button" class="pchart-menu-item" data-act="export"><i class="fa-solid fa-download"></i> Descargar PNG</button><button type="button" class="pchart-menu-item" data-act="csv"><i class="fa-solid fa-file-csv"></i> Descargar CSV</button><button type="button" class="pchart-menu-item" data-act="tabla"><i class="fa-solid fa-table"></i> Ver tabla / gráfico</button><button type="button" class="pchart-menu-item" data-act="full"><i class="fa-solid fa-expand"></i> Pantalla completa</button><button type="button" class="pchart-menu-item" data-act="share"><i class="fa-solid fa-link"></i> Copiar enlace</button></div>' +
         '</div>';
       if(titleEl){ titleEl.style.display = 'none'; }
       card.insertBefore(head, card.firstChild);
@@ -16901,6 +16901,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(window.PIIT && PIIT.map && PIIT.map.toast) PIIT.map.toast('Fuente: PIIT Segovia · Actualizado ' + fecha, 'ok');
       });
       menu.addEventListener('click', function(e){ e.stopPropagation(); });
+      grExtend(card,cv,chart,head,menu);
       menu.querySelector('[data-act="export"]').addEventListener('click', function(){
         closeAllMenus();
         var link = document.createElement('a');
@@ -16910,6 +16911,70 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     });
   }
+  /* Extensión Grapher: tabla, CSV, series, pantalla completa y enlace */
+  function dataOf(ch){
+    var d=ch.data, labels=d.labels||[], ds=d.datasets||[];
+    var circ=/^(doughnut|pie|polarArea)$/.test(ch.config.type);
+    var cols=circ?['Valor']:ds.map(function(s,i){return s.label||('Serie '+(i+1));});
+    var rows=labels.map(function(l,i){
+      return [l].concat(circ?[ds[0]&&ds[0].data[i]]:ds.map(function(s){var v=s.data[i];return v&&typeof v==='object'?(v.y!=null?v.y:''):v;}));
+    });
+    return {cols:['Categoría'].concat(cols),rows:rows};
+  }
+  function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function grExtend(card,cv,chart,head,menu){
+    var id=cv.id||'grafica', wrap=cv.parentElement;
+    var multi=!/^(doughnut|pie|polarArea|radar|bubble|scatter)$/.test(chart.config.type)&&(chart.data.datasets||[]).length>1;
+    if(multi){
+      var ser=document.createElement('div'); ser.className='gr-series-lite';
+      ser.style.cssText='display:flex;flex-wrap:wrap;gap:6px;padding:6px 16px 0';
+      chart.data.datasets.forEach(function(s,i){
+        var col=s.borderColor||s.backgroundColor; if(Array.isArray(col)) col=col[0];
+        var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-pressed','true');
+        b.style.cssText='border:1px solid var(--gov-line);background:#fff;border-radius:999px;padding:3px 10px;font-size:11.5px;cursor:pointer;color:var(--gov-ink)';
+        b.innerHTML='<i class="fa-solid fa-circle" style="color:'+(typeof col==='string'?col:'#488704')+';font-size:8px"></i> '+esc(s.label||('Serie '+(i+1)));
+        b.addEventListener('click',function(){
+          var vis=chart.isDatasetVisible(i); chart.setDatasetVisibility(i,!vis); chart.update();
+          b.setAttribute('aria-pressed',String(!vis)); b.style.opacity=vis?.45:1;
+        });
+        ser.appendChild(b);
+      });
+      head.insertAdjacentElement('afterend',ser);
+    }
+    var tbl=document.createElement('div'); tbl.style.cssText='display:none;overflow:auto;max-height:420px;padding:8px 16px';
+    card.insertBefore(tbl,card.querySelector('.pchart-bar'));
+    function render(){
+      var d=dataOf(chart);
+      tbl.innerHTML='<table style="width:100%;border-collapse:collapse;font-size:12.5px"><thead><tr>'+d.cols.map(function(c){return '<th style="text-align:left;padding:6px 8px;border-bottom:2px solid var(--gov-line);position:sticky;top:0;background:#fff">'+esc(c)+'</th>';}).join('')+'</tr></thead><tbody>'+
+        d.rows.map(function(r){return '<tr>'+r.map(function(c){return '<td style="padding:5px 8px;border-bottom:1px solid var(--gov-line)">'+esc(c)+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';
+    }
+    function setTab(showTable){
+      if(showTable) render();
+      tbl.style.display=showTable?'block':'none'; wrap.style.display=showTable?'none':'';
+      var s=card.querySelector('.gr-series-lite'); if(s) s.style.display=showTable?'none':'flex';
+    }
+    var isT=false;
+    menu.querySelector('[data-act="tabla"]').addEventListener('click',function(){isT=!isT;setTab(isT);closeAllMenus();});
+    menu.querySelector('[data-act="csv"]').addEventListener('click',function(){
+      var d=dataOf(chart), q=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+      var csv='\ufeff'+[d.cols].concat(d.rows).map(function(r){return r.map(q).join(',');}).join('\n');
+      var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+      a.download='piit-segovia-'+id+'.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); closeAllMenus();
+    });
+    menu.querySelector('[data-act="full"]').addEventListener('click',function(){
+      closeAllMenus();
+      if(document.fullscreenElement) document.exitFullscreen(); else if(card.requestFullscreen){card.style.background='#fff';card.requestFullscreen();}
+    });
+    menu.querySelector('[data-act="share"]').addEventListener('click',function(){
+      closeAllMenus();
+      var u=location.href.split('#')[0]+location.hash+(location.search?'':'');
+      var url=u+(u.indexOf('?')<0&&u.indexOf('#')<0?'?':'')+'';
+      var link=location.origin+location.pathname+location.search+location.hash;
+      var done=function(){ if(window.PIIT&&PIIT.map&&PIIT.map.toast) PIIT.map.toast('Enlace copiado','ok'); };
+      if(navigator.clipboard) navigator.clipboard.writeText(link+'').then(done,done); else done();
+    });
+  }
+  window.PIITChartExt=grExtend;
   setInterval(scan, 1500);
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(scan, 800); });
 })();
