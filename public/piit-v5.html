@@ -5764,8 +5764,8 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
               <a href="https://portalsivigila.ins.gov.co/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--blue);text-decoration:none;padding:6px 10px;background:var(--g50);border-radius:6px;border:1px solid var(--g100)">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>Portal SIVIGILA Principal
               </a>
-              <a href="https://www.ins.gov.co/Paginas/informe-de-evento.aspx" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--blue);text-decoration:none;padding:6px 10px;background:var(--g50);border-radius:6px;border:1px solid var(--g100)">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>Informes de Evento INS
+              <a href="https://www.ins.gov.co/buscador-eventos/SitePages/BusquedaEventos.aspx" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--blue);text-decoration:none;padding:6px 10px;background:var(--g50);border-radius:6px;border:1px solid var(--g100)">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>Informes de Evento INS (buscador)
               </a>
               <a href="https://www.ins.gov.co/buscador-eventos/Paginas/Vista-Boletin-Epidemilogico.aspx" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--blue);text-decoration:none;padding:6px 10px;background:var(--g50);border-radius:6px;border:1px solid var(--g100)">
                 <i class="fa-solid fa-newspaper"></i>Boletines Epidemiológicos INS
@@ -6471,8 +6471,8 @@ window.PIIT = (function () {
         frq:'Censo 2018 + proyecciones · con respaldo automático', ftc:'--blue',
         desc:'Marco geográfico oficial del Censo Nacional de Población y Vivienda 2018, servicio MGN2018/Serv_CapasMGN_2018. El WMS real se sirve desde portalgis.dane.gov.co (no geoportal.dane.gov.co, que sólo aloja el directorio REST) — verificado como WMS 1.3.0 válido. Protegido por el motor de resiliencia con respaldo REST "/export" sobre el mismo servicio.' },
       { nom:'INVIAS — Red Vial Nacional', sub:'Red primaria · Secundaria · Estado · Categoría', ico:_srcBadge('INVIAS','#2D6E3E'),
-        frq:'Trimestral', ftc:'--red',
-        desc:'Red vial del territorio nacional, servicio vigente Mapa_Carreteras/RedVial (hermes.invias.gov.co/arcgis/rest/services/). El folder anterior "portal_geovisor" fue retirado del servidor; el servicio actual no expone WMS y se consume vía REST "/export". Incluye vías que conectan Segovia con el Nordeste Antioqueño.' },
+        frq:'Servicio no disponible (host retirado)', ftc:'--red',
+        desc:'Red vial del territorio nacional (Mapa_Carreteras/RedVial). ⚠ Auditoría de enlaces nov-2026: el host hermes.invias.gov.co ya no resuelve en DNS y no se encontró un reemplazo oficial verificado (hermes2.invias.gov.co es solo un sitio web, sin ArcGIS REST). La capa se reporta como no disponible en el diagnóstico de servicios WMS hasta que INVIAS publique un nuevo endpoint. Incluye vías que conectan Segovia con el Nordeste Antioqueño.' },
       { nom:'SECOP II — Contratación Pública · Colombia Compra Eficiente', sub:'Contratos · Procesos · Contratistas · NIT 890981391-2 · Municipio de Segovia', ico:_srcBadge('SECOP','#0E7C86'),
         frq:'Tiempo real · Auto-sync cada 2 min', ftc:'--green',
         desc:'Sistema Electrónico de Contratación Pública — SECOP II. Fuente: API Socrata de datos abiertos (datos.gov.co). Datasets: jbjy-vk9h (contratos ejecutados con fecha inicio, fin, valor, contratista, estado) y p6dx-8zbt (procesos de contratación). Filtro: NIT entidad 890981391 (Municipio de Segovia). Integración en tiempo real: la plataforma PIIT consulta automáticamente cada 2 minutos si hay nuevos contratos publicados y actualiza la sección de Contratos sin recargar la página. Incluye semáforo de cierre contractual (verde/amarillo/rojo) calculado desde fecha_de_fin_del_contrato. Cobertura: años 2024, 2025, 2026 y 2027. Licencia: Datos abiertos Colombia · CC BY 4.0.' },
@@ -12962,7 +12962,7 @@ window.addEventListener('load',function(){
       <a href="https://www.ideam.gov.co" target="_blank" rel="noopener noreferrer" style="color:var(--green-600,#1E7A4C);font-weight:600;transition:color .15s">IDEAM ↗</a>
       <a href="https://www.sgc.gov.co" target="_blank" rel="noopener noreferrer" style="color:var(--green-600,#1E7A4C);font-weight:600;transition:color .15s">SGC ↗</a>
       <a href="https://portal.gestiondelriesgo.gov.co" target="_blank" rel="noopener noreferrer" style="color:var(--green-600,#1E7A4C);font-weight:600;transition:color .15s">UNGRD ↗</a>
-      <a href="https://www.siata.gov.co" target="_blank" rel="noopener noreferrer" style="color:var(--green-600,#1E7A4C);font-weight:600;transition:color .15s">SIATA ↗</a>
+      <a href="https://siata.gov.co/siata_nuevo/" target="_blank" rel="noopener noreferrer" style="color:var(--green-600,#1E7A4C);font-weight:600;transition:color .15s">SIATA ↗</a>
       <a href="https://simma.sgc.gov.co" target="_blank" rel="noopener noreferrer" style="color:var(--green-600,#1E7A4C);font-weight:600;transition:color .15s">SIMMA ↗</a>
     </div>
     <div style="font-size:10px;color:var(--text-5,#A8C4B8);font-family:'Fira Code',monospace">PIIT Segovia v5 · CDGRD · Decreto 2157/2017</div>
@@ -14194,11 +14194,18 @@ var IGAC_AGR = {
   ],
   wms_capas: [
     {nom:'Agrología Segovia', escala:'1:25.000', url:'https://mapas.igac.gov.co/server/services/agrologia/potencialusosegovia05736/MapServer/WMSServer', layer:'0', color:'#1E7A4C'},
-    {nom:'Cartografía base', escala:'1:100.000', url:'https://mapas.igac.gov.co/server/services/carto/mapa_referencia_nacional100k/MapServer/WMSServer', layer:'0', color:'#6366F1'},
-    {nom:'Límites IGAC', escala:'Nacional', url:'https://mapas.igac.gov.co/server/services/limites/territorioscedidosporcolombia/MapServer/WMSServer', layer:'0', color:'#0284C7'},
+    /* Auditoría de enlaces nov-2026:
+       - 'mapa_referencia_nacional100k' ya no existe en el servidor IGAC ("Service not found"):
+         se reemplaza por la cartografía básica 1:25.000 (carto25000colombia2017), servicio
+         vigente que NO expone WMS → se consume por /export de ArcGIS REST.
+       - 'territorioscedidosporcolombia' (capa "Límites IGAC") responde HTTP 500 de forma
+         persistente y, además, trata territorios cedidos por Colombia (sin relación con
+         Segovia): se retira de la lista.  */
+    {nom:'Cartografía base', escala:'1:25.000', export:'https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer', color:'#6366F1'},
     {nom:'Relieve SRTM 30m', escala:'30 metros', url:'https://mapas.igac.gov.co/server/services/relieve/srtm30metros/MapServer/WMSServer', layer:'0', color:'#7C3AED'},
     {nom:'SGC · Amenaza sísmica', escala:'Nacional', url:'https://geoportal.sgc.gov.co/arcgis/services/Amenaza_Sismica/Mapa_Amenaza_Sismica_Nacional_PGA2475/MapServer/WMSServer', layer:'0', color:'#DC2626'},
-    {nom:'Catastro · Dir. Territoriales', escala:'Nacional', url:'https://mapas.igac.gov.co/server/services/catastro/direccionesterritorialesigac/MapServer/WMSServer', layer:'0', color:'#C45828'},
+    /* El servicio de catastro no tiene extensión WMS (HTTP 400); /export de ArcGIS REST sí responde. */
+    {nom:'Catastro · Dir. Territoriales', escala:'Nacional', export:'https://mapas.igac.gov.co/server/rest/services/catastro/direccionesterritorialesigac/MapServer', color:'#C45828'},
   ]
 };
 
@@ -14382,12 +14389,34 @@ function toggleWMSLayer(capa, on){
   var key = capa.nom;
   if(on){
     if(_wmsLayers[key]) return;
-    var layer = L.tileLayer.wms(capa.url, {
-      layers: capa.layer,
-      format: 'image/png',
-      transparent: true,
-      opacity: 0.7,
-      attribution: 'IGAC · '+capa.nom
+    var layer;
+    if(capa.export){
+      // ArcGIS REST /export: se arma la URL con el bbox de cada tesela (EPSG:3857),
+      // reutilizando el mecanismo de TileLayer.WMS de Leaflet.
+      var ArcExport = L.TileLayer.WMS.extend({
+        getTileUrl: function(coords){
+          var b = this._tileCoordsToNwSe(coords), crs = this._crs;
+          var nw = crs.project(b[0]), se = crs.project(b[1]), s = this.getTileSize();
+          return this._url + '/export?bbox=' + [nw.x, se.y, se.x, nw.y].join(',')
+            + '&bboxSR=3857&imageSR=3857&size=' + s.x + ',' + s.y
+            + '&format=png32&transparent=true&f=image';
+        }
+      });
+      layer = new ArcExport(capa.export, { opacity: 0.7, attribution: 'IGAC · '+capa.nom });
+    } else {
+      layer = L.tileLayer.wms(capa.url, {
+        layers: capa.layer,
+        format: 'image/png',
+        transparent: true,
+        opacity: 0.7,
+        attribution: 'IGAC · '+capa.nom
+      });
+    }
+    // Si el servicio institucional no responde, avisar una sola vez (sin errores técnicos visibles).
+    var _avisado = false;
+    layer.on('tileerror', function(){
+      if(_avisado) return; _avisado = true;
+      if(window.PIIT && PIIT.map && PIIT.map.toast) PIIT.map.toast(capa.nom + ': el servicio del IGAC no está disponible en este momento. Intenta de nuevo más tarde.', 'err');
     });
     layer.addTo(mapObj);
     _wmsLayers[key] = layer;
