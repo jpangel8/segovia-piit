@@ -4801,7 +4801,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
   </div>
   <!-- Autocorrelación espacial: I de Moran global y LISA (vecindad reina) -->
   <div class="card" id="sp-card" style="margin-top:16px;padding:16px 18px">
-    <div class="pt" style="margin-bottom:4px">Autocorrelación espacial · I de Moran global y LISA (vecindad reina)</div>
+    <div class="pt" style="margin-bottom:4px">Autocorrelación espacial · I de Moran global y LISA (vecindad reina o 4 vecinos)</div>
     <p style="font-size:12.5px;color:var(--gov-body);margin:0 0 12px">Mide si los barrios vecinos se parecen entre sí más de lo esperable por azar, y localiza dónde se concentran los valores altos o bajos.</p>
     <div id="sp-panel"><p class="km-n">Calculando…</p></div>
   </div>
@@ -17774,7 +17774,7 @@ window.PIITSpatial=(function(){
   var VARS=[['infra','Infraestructura'],['social','Social'],['srv','Servicios'],['sisben_ab','Sisbén A-B (%)'],['cobertura_acueducto','Acueducto (%)'],['cobertura_energia','Energía (%)'],['reportes','Reportes ciudadanos'],['puntaje','Puntaje Sisbén']];
   var QC={HH:'#B0301F',LL:'#004884',HL:'#E8710A',LH:'#7FB2E5',ns:'#D5DADF'};
   var QN={HH:'Alto-Alto',LL:'Bajo-Bajo',HL:'Alto-Bajo',LH:'Bajo-Alto',ns:'No significativo'};
-  var NPERM=999, st={v:'infra',charts:[],topo:null};
+  var NPERM=999, st={v:'infra',w:'knn',charts:[],topo:null};
   function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
   function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
   function ringsOf(f){var g=f.geometry,P=g.type==='Polygon'?[g.coordinates]:g.coordinates,o=[];P.forEach(function(p){p.forEach(function(r){o.push(r);});});return o;}
@@ -17785,16 +17785,20 @@ window.PIITSpatial=(function(){
     var nb=F.map(function(){return [];});
     for(var i=0;i<F.length;i++)for(var j=i+1;j<F.length;j++){var sh=false;for(var k in V[i]){if(V[j][k]){sh=true;break;}}if(sh){nb[i].push(j);nb[j].push(i);}}
     var pk=F.map(function(f){return f.properties.PK_BARRIO;});
-    st.topo={F:F,nb:nb,pk:pk};return st.topo;}
+    var cen=F.map(function(f){var sx=0,sy=0,c=0;ringsOf(f).forEach(function(r){r.forEach(function(p){sx+=p[0];sy+=p[1];c++;});});return [sx/c,sy/c];});
+    var KN=4,kx=Math.cos(cen[0][1]*Math.PI/180),knn=F.map(function(_,i){
+      return F.map(function(_,j){return j;}).filter(function(j){return j!==i;}).sort(function(a,b){
+        return Math.hypot((cen[a][0]-cen[i][0])*kx,cen[a][1]-cen[i][1])-Math.hypot((cen[b][0]-cen[i][0])*kx,cen[b][1]-cen[i][1]);}).slice(0,KN);});
+    st.topo={F:F,nb:nb,knn:knn,pk:pk};return st.topo;}
   function analyze(rows,vkey){
     var T=topo(),byPk={};rows.forEach(function(r){byPk[r.pk]=r;});
-    var idx=[];T.F.forEach(function(f,i){if(byPk[T.pk[i]]&&T.nb[i].length>0)idx.push(i);});
-    var islands=[];T.F.forEach(function(f,i){if(byPk[T.pk[i]]&&T.nb[i].length===0)islands.push(byPk[T.pk[i]].nombre);});
+    var NB=st.w==='knn'?T.knn:T.nb,idx=[];T.F.forEach(function(f,i){if(byPk[T.pk[i]]&&NB[i].length>0)idx.push(i);});
+    var islands=[];T.F.forEach(function(f,i){if(byPk[T.pk[i]]&&NB[i].length===0)islands.push(byPk[T.pk[i]].nombre);});
     var pos={};idx.forEach(function(g,p){pos[g]=p;});
     var n=idx.length,x=idx.map(function(g){return +byPk[T.pk[g]][vkey]||0;});
     var mu=x.reduce(function(a,b){return a+b;},0)/n,z=x.map(function(v){return v-mu;});
     var m2=z.reduce(function(a,b){return a+b*b;},0)/n,sd=Math.sqrt(m2)||1;
-    var W=idx.map(function(g){var l=T.nb[g].filter(function(h){return pos[h]!==undefined;});return l.map(function(h){return {j:pos[h],w:1/l.length};});});
+    var W=idx.map(function(g){var l=NB[g].filter(function(h){return pos[h]!==undefined;});return l.map(function(h){return {j:pos[h],w:1/l.length};});});
     function lagOf(zz,i){var s=0;W[i].forEach(function(e){s+=e.w*zz[e.j];});return s;}
     function moran(zz){var num=0,den=0;for(var i=0;i<n;i++){num+=zz[i]*lagOf(zz,i);den+=zz[i]*zz[i];}return den?num/den:0;}
     var I=moran(z),EI=-1/(n-1),rand=rng(20260101),perm=[],ge=0,sh=z.slice(),i,p;
@@ -17836,7 +17840,7 @@ window.PIITSpatial=(function(){
     var rowsT=R.lisa.slice().sort(function(a,b){return a.p-b.p;}).map(function(l){
       return '<tr><td>'+esc(l.r.nombre)+'</td><td>'+l.val.toFixed(1)+'</td><td>'+l.k+'</td><td>'+l.z.toFixed(2)+'</td><td>'+l.lag.toFixed(2)+'</td><td>'+l.Ii.toFixed(2)+'</td><td>'+l.p.toFixed(3)+'</td><td><span class="km-dot" style="background:'+QC[l.cls]+'"></span>'+QN[l.cls]+'</td></tr>';}).join('');
     host.innerHTML=
-      '<div class="km-bar"><label>Variable <select id="sp-v">'+opts+'</select></label><span class="km-chip">Vecindad reina · pesos por fila</span><span class="km-chip">'+NPERM+' permutaciones</span></div>'+
+      '<div class="km-bar"><label>Variable <select id="sp-v">'+opts+'</select></label><label>Vecindad <select id="sp-w"><option value="knn"'+(st.w==='knn'?' selected':'')+'>4 vecinos más cercanos (incluye los 21 barrios)</option><option value="reina"'+(st.w==='reina'?' selected':'')+'>Reina (comparten borde o vértice)</option></select></label><span class="km-chip">Pesos por fila</span><span class="km-chip">'+NPERM+' permutaciones</span></div>'+
       '<div class="km-kpis"><div><b>'+R.I.toFixed(3)+'</b><span>I de Moran global (esperado '+R.EI.toFixed(3)+')</span></div><div><b>'+(R.p<0.001?'&lt; 0,001':R.p.toFixed(3))+'</b><span>Pseudo-valor p</span></div><div><b>'+R.zI.toFixed(2)+'</b><span>Puntaje z (permutación)</span></div><div><b>'+(cnt.HH+cnt.LL+cnt.HL+cnt.LH)+' / '+R.n+'</b><span>Barrios con LISA significativo (p &lt; 0,05)</span></div></div>'+
       '<p class="km-lect"><strong>Lectura.</strong> '+txt+(R.islands.length?' Sin vecinos (excluidos del cálculo): '+R.islands.map(esc).join(', ')+'.':'')+'</p>'+
       '<div class="km-grid" style="margin-top:14px">'+
@@ -17847,8 +17851,9 @@ window.PIITSpatial=(function(){
       '<div class="km-box"><div class="km-h">Qué significa cada tipo</div><ul class="sp-ul"><li><b>Alto-Alto:</b> punto crítico; el barrio y sus vecinos tienen valores altos.</li><li><b>Bajo-Bajo:</b> zona homogénea de valores bajos.</li><li><b>Alto-Bajo / Bajo-Alto:</b> valor atípico espacial: contrasta con su entorno.</li><li><b>No significativo:</b> sin patrón distinguible del azar (p ≥ 0,05).</li></ul><p class="km-n">Interpretación: «alto» es relativo al promedio municipal de la variable, no «bueno» o «malo». Con 18 a 21 barrios y sin corrección por pruebas múltiples, los clústeres LISA son exploratorios.</p></div>'+
       '</div>'+
       '<div class="km-h" style="margin-top:14px">LISA por barrio (ordenado por significancia)</div><div class="km-sc"><table class="km-t"><thead><tr><th>Barrio</th><th>Valor</th><th>Vecinos</th><th>z</th><th>z vecinos</th><th>Ii</th><th>p</th><th>Tipo</th></tr></thead><tbody>'+rowsT+'</tbody></table></div>'+
-      '<details class="km-d"><summary>Cómo se calcula</summary><p>Vecindad reina: barrios que comparten al menos un vértice o borde en el polígono oficial. Pesos estandarizados por fila (cada vecino pesa 1/número de vecinos). I de Moran = Σᵢ Σⱼ wᵢⱼ zᵢ zⱼ / Σ zᵢ². LISA: Iᵢ = zᵢ · Σⱼ wᵢⱼ zⱼ / m₂. Significancia por permutación aleatoria ('+NPERM+', semilla fija): global con el estadístico completo y local con permutación condicional (se fija el barrio y se muestrean sus vecinos del resto). El valor p es pseudo-p = (extremos + 1) / ('+NPERM+' + 1), bilateral.</p></details>';
+      '<details class="km-d"><summary>Cómo se calcula</summary><p>Vecindad reina: barrios que comparten al menos un vértice o borde en el polígono oficial (deja 3 barrios sin vecinos). Vecindad de 4 vecinos más cercanos: los 4 barrios con centroide más próximo (todos los barrios tienen vecinos; la relación no es simétrica). Pesos estandarizados por fila (cada vecino pesa 1/número de vecinos). I de Moran = Σᵢ Σⱼ wᵢⱼ zᵢ zⱼ / Σ zᵢ². LISA: Iᵢ = zᵢ · Σⱼ wᵢⱼ zⱼ / m₂. Significancia por permutación aleatoria ('+NPERM+', semilla fija): global con el estadístico completo y local con permutación condicional (se fija el barrio y se muestrean sus vecinos del resto). El valor p es pseudo-p = (extremos + 1) / ('+NPERM+' + 1), bilateral.</p></details>';
     document.getElementById('sp-v').onchange=function(){st.v=this.value;render(rows);};
+    document.getElementById('sp-w').onchange=function(){st.w=this.value;render(rows);};
     var base={responsive:true,maintainAspectRatio:false};
     var ds=['HH','LL','HL','LH','ns'].map(function(q){return {label:QN[q],data:R.lisa.filter(function(l){return l.cls===q;}).map(function(l){return {x:l.z,y:l.lag,n:l.r.nombre};}),backgroundColor:QC[q],borderColor:QC[q],pointRadius:6,pointHoverRadius:8};}).filter(function(d){return d.data.length;});
     var xs=R.lisa.map(function(l){return l.z;}),x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs);
