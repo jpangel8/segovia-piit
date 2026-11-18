@@ -182,3 +182,7 @@ Para cargar un año: `presupuesto.OTROS_ANIOS[2025] = { secs, kpi, ingresos, sgr
 **Contraste con la plataforma:** los 21 barrios promedian 36,6 % en A+B (ponderado por hogares), unos 22 puntos por debajo de la cifra oficial; los hogares de los barrios suman 8.434 frente a 9.851 de la cabecera oficial. Los perfiles por barrio (distribución A/B/C/D, puntaje) son derivados de forma determinista, no datos del Sisbén. El Sisbén IV clasifica por grupos, no por puntaje.
 
 **Cambios:** el KPI «Hogares grupo A+B» usa la cifra oficial (58 %), con nota visible sobre la fuente y los límites; el «puntaje» se rotuló como estimación interna; el buque de verificación compara en vivo con el DNP. Para cifras por barrio hay que solicitar la base certificada a la Oficina del Sisbén.
+
+## Tarjeta «Inversión pública 2026» del encabezado (17-nov-2026)
+
+Verificada contra SECOP II (datos.gov.co `jbjy-vk9h`, proveedor EDURSEG NIT 901989964, entidades «SEGOVIA»): 32 contratos en total ($98.090M); con inicio en 2025: 18 ($66.089M); con inicio en 2026: **12 ($30.422M)**. La tarjeta decía «$61.932M · 18 proyectos», que no coincide con ninguna combinación (18 es el conteo de 2025). Ahora se llama «Contratos EDURSEG 2026», se actualiza en vivo desde SECOP II y el buque de verificación la compara. Es contratación de EDURSEG, no la inversión pública total del municipio. Las 6 tarjetas del encabezado pasaron a una cuadrícula de 6 columnas (3 y 2 en pantallas menores).

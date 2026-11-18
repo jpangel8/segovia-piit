@@ -3767,7 +3767,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <div class="hkpi"><div class="hkpi-v">28,4%</div><div class="hkpi-l">IPM · Pobreza multidim.</div><div class="hkpi-x dn">▼ 4,2pp vs 2022 · DANE</div></div>
       <div class="hkpi"><div class="hkpi-v">12,1%</div><div class="hkpi-l">Desempleo</div><div class="hkpi-x dn">Vs 9,7% dpto. Antioquia</div></div>
       <div class="hkpi"><div class="hkpi-v">65%</div><div class="hkpi-l">Conectividad digital</div><div class="hkpi-x dn">Meta 85% · brecha 20%</div></div>
-      <div class="hkpi"><div class="hkpi-v">$61.932M</div><div class="hkpi-l">Inversión pública 2026</div><div class="hkpi-x up">18 proyectos EDURSEG</div></div>
+      <div class="hkpi"><div class="hkpi-v" id="hero-inv">$30.422M</div><div class="hkpi-l" id="hero-inv-l">Contratos EDURSEG 2026</div><div class="hkpi-x up" id="hero-inv-x">12 contratos · SECOP II</div></div>
     </div>
   </div>
 </div>
@@ -18363,6 +18363,10 @@ window.PIITVerif=(function(){
       if(!(r.ok&&Array.isArray(r.j)&&r.j.length))return {k:'v-dnp',t:'En vivo: Sisbén IV (DNP, datos.gov.co)',e:'warn',d:'No se pudo consultar ('+(r.err||'sin datos')+'). Se usa la referencia incluida (corte marzo 2022).',s:DNP_SIS.fuente};
       var o={A:0,B:0,C:0,D:0};r.j.forEach(function(x){o[x.grupo]=Math.round(parseFloat(x.h));});var live=abPct(o),ref=abPct(DNP_SIS.hogares);
       return {k:'v-dnp',t:'En vivo: Sisbén IV (DNP, datos.gov.co)',e:Math.abs(live-ref)<=0.5?'ok':'warn',d:'Consulta en '+r.ms+' ms: hogares de Segovia A '+o.A+' · B '+o.B+' · C '+o.C+' · D '+o.D+' (A+B = '+live.toFixed(1).replace('.',',')+' %). '+(Math.abs(live-ref)<=0.5?'Coincide con la referencia incluida.':'Difiere de la referencia incluida ('+ref.toFixed(1).replace('.',',')+' %): actualizar la tabla.'),s:DNP_SIS.fuente};}));
+    out.push(PIITHeroInv.consultar(new Date().getFullYear()).then(function(r){
+      var e=document.getElementById('hero-inv'),mostrado=e?e.textContent:'',esperado='$'+Math.round(r.total/1e6).toLocaleString('es-CO')+'M';
+      return {k:'v-inv',t:'En vivo: contratación EDURSEG '+r.anio+' (panel)',e:mostrado===esperado?'ok':'fail',d:mostrado===esperado?'La tarjeta del panel ('+mostrado+') coincide con SECOP II: '+r.n+' contratos con inicio en '+r.anio+'.':'El panel muestra '+mostrado+' y SECOP II registra '+esperado+' ('+r.n+' contratos con inicio en '+r.anio+').',s:'SECOP II · datos.gov.co jbjy-vk9h · NIT 901989964'};
+    }).catch(function(){return {k:'v-inv',t:'En vivo: contratación EDURSEG (panel)',e:'warn',d:'No se pudo consultar SECOP II ahora; el panel muestra la última cifra verificada.',s:'SECOP II · datos.gov.co'};}));
     out.push(Promise.resolve().then(function(){return {k:'v-pped',t:'En vivo: archivo DANE PPED',e:'info',d:'El archivo es un Excel que el navegador no puede leer directamente (CORS); las cifras de referencia de esta verificación se tomaron de él el 17-nov-2026. Si el DANE publica una nueva serie, hay que actualizar la tabla de referencia.',s:DANE_PPED.url};}));
     return out;
   }
@@ -18413,6 +18417,37 @@ window.PIITVerif=(function(){
   }
   setInterval(tick,2000);
   return {run:run,checks:checks,corregir:corregir,ref:DANE_PPED};
+})();
+</script>
+<style id="piit-hero-css">
+/* Las 6 tarjetas del encabezado caben en una sola fila; en pantallas menores pasan a 3 y a 2 columnas */
+html body .hero-kpis{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;flex-wrap:nowrap}
+html body .hero-kpis .hkpi{min-width:0;padding:14px 16px}
+@media (max-width:1180px){html body .hero-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){html body .hero-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
+</style>
+<script id="piit-hero-inv">
+/* Tarjeta «Contratos EDURSEG»: contratos que EDURSEG (NIT 901989964) tiene con entidades de Segovia y cuyo inicio
+   es el año en curso, según SECOP II (datos.gov.co, conjunto jbjy-vk9h). Si la consulta falla, queda la cifra
+   verificada el 17-nov-2026 (12 contratos, $30.422M). */
+window.PIITHeroInv=(function(){
+  var URL_='https://www.datos.gov.co/resource/jbjy-vk9h.json';
+  function consultar(anio){
+    var q=URL_+'?documento_proveedor=901989964&$where='+encodeURIComponent("nombre_entidad like '%SEGOVIA%' AND date_extract_y(fecha_de_inicio_del_contrato)="+anio)+'&$select='+encodeURIComponent('count(*) as n,sum(valor_del_contrato) as total');
+    var c=new AbortController(),tm=setTimeout(function(){c.abort();},30000);
+    return fetch(q,{signal:c.signal}).then(function(r){clearTimeout(tm);return r.json();}).then(function(j){
+      var n=parseInt(j[0]&&j[0].n,10),tot=parseFloat(j[0]&&j[0].total);
+      if(isNaN(n)||isNaN(tot))throw new Error('sin datos');return {n:n,total:tot,anio:anio};});
+  }
+  function pintar(r){
+    var M=Math.round(r.total/1e6),f=M.toLocaleString('es-CO');
+    var set=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+    set('hero-inv','$'+f+'M');set('hero-inv-l','Contratos EDURSEG '+r.anio);set('hero-inv-x',r.n+(r.n===1?' contrato':' contratos')+' · SECOP II');
+    window.__heroInv=r;
+  }
+  function run(){var y=new Date().getFullYear();return consultar(y).then(function(r){pintar(r);return r;}).catch(function(){return null;});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+  return {run:run,consultar:consultar};
 })();
 </script>
 </body>
