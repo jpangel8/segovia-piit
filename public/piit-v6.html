@@ -18783,5 +18783,98 @@ window.PIITLive=(function(){
   window.PIITSinIconos={marcar:marcar};
 })();
 </script>
+<style id="piit-rank-css">
+#rank-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:-2px 0 12px}
+#rank-tools .dt2-tabs{display:flex;border:1px solid #dadada;border-radius:4px;overflow:hidden}
+#rank-tools .dt2-tab{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;color:#4e4e4e;background:#fff;border:0;border-right:1px solid #dadada;padding:7px 14px;cursor:pointer;min-height:34px}
+#rank-tools .dt2-tab:last-child{border-right:0}
+#rank-tools .dt2-tab[aria-selected="true"]{background:#4c6a9c;color:#fff}
+#rank-tools select,#rank-tools input[type=search]{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;padding:7px 10px;border:1px solid #cfd6dc;border-radius:4px;background:#fff;min-height:34px;max-width:100%}
+#rank-tools .dt2-r{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#rank-tools .dt2-btn{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:700;color:#4e4e4e;background:#fff;border:1px solid #dadada;border-radius:4px;padding:7px 12px;cursor:pointer;min-height:34px}
+#rank-tools .dt2-btn:hover{background:#f2f2f2}
+#rank-tools button:focus-visible,#rank-tools select:focus-visible,#rank-tools input:focus-visible{outline:3px solid #3366CC;outline-offset:2px}
+#rank-chart-view .dt2-cv{position:relative}
+#rank-table-view{overflow:auto;max-height:560px}
+#rank-table-view .dt2-table{width:100%;border-collapse:collapse;font-size:.875em;font-variant-numeric:tabular-nums}
+#rank-table-view .dt2-table th{position:sticky;top:0;background:#f7f7f7;text-align:left;padding:8px 12px;border-bottom:1px solid #f2f2f2;font-weight:700;color:#4e4e4e;white-space:nowrap;cursor:pointer;user-select:none;font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif}
+#rank-table-view .dt2-table th:hover{background:#e7e7e7}
+#rank-table-view .dt2-table th .si{font-size:9px;margin-left:5px;color:#4c6a9c}
+#rank-table-view .dt2-table th.v,#rank-table-view .dt2-table td.v{text-align:right}
+#rank-table-view .dt2-table td{padding:8px 12px;border-bottom:1px solid #f2f2f2;color:#4e4e4e;font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif}
+#rank-table-view .dt2-table td.v{white-space:nowrap}
+#rank-table-view .dt2-table td.sel{font-weight:700;color:#2d2e2d}
+#rank-table-view .dt2-table tbody tr:nth-child(even){background:#f7f7f7}
+#rank-table-view .dt2-table tbody tr:hover{background:#f0f0f0}
+</style>
+<script id="piit-rank-js">
+/* Ranking por barrio estilo OWID: gráfico de barras con los 21 barrios y nombre completo, tabla ordenable,
+   selector de indicador, búsqueda, descarga CSV y enlace con el estado (g_rank). Lee de DATA.INDICADORES. */
+(function(){
+  'use strict';
+  var KEY='g_rank';
+  var MET=[['infra','Infraestructura vial'],['social','Cobertura social'],['srv','Servicios básicos'],['pop','Población (índice)'],['icv','ICV (índice compuesto)'],['cobertura_acueducto','Cobertura de acueducto'],['cobertura_energia','Cobertura de energía']];
+  var st={vista:'grafico',m:'infra',q:'',col:null,dir:-1,chart:null};
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function valor(d,m){return m==='icv'?PIIT.icv.barrio(d):(d[m]||0);}
+  function color(v){return v>=70?'#2E7D52':v>=40?'#C9852A':'#DC0B2C';}
+  function nombreM(m){return MET.filter(function(x){return x[0]===m;})[0][1];}
+  function datos(){var q=st.q.toLowerCase();return Object.values(PIIT.data.INDICADORES).filter(function(d){return !q||d.nombre.toLowerCase().indexOf(q)>=0;});}
+  function estado(){var p=[];if(st.vista!=='grafico')p.push('vista:'+st.vista);if(st.m!=='infra')p.push('ind:'+st.m);if(st.q)p.push('q:'+st.q);if(st.col)p.push('orden:'+st.col+(st.dir<0?'-desc':''));
+    try{var u=new URL(location.href);if(p.length)u.searchParams.set(KEY,p.join(';'));else u.searchParams.delete(KEY);history.replaceState(null,'',u.toString());}catch(e){}return p.join(';');}
+  function restaurar(){try{var v=new URL(location.href).searchParams.get(KEY);if(!v)return;v.split(';').forEach(function(x){var i=x.indexOf(':'),k=x.slice(0,i),val=x.slice(i+1);
+    if(k==='vista'&&/^(grafico|tabla)$/.test(val))st.vista=val;if(k==='ind'&&MET.some(function(m){return m[0]===val;}))st.m=val;if(k==='q')st.q=val;if(k==='orden'){st.col=val.replace('-desc','');st.dir=/-desc$/.test(val)?-1:1;}});}catch(e){}}
+  function filas(){var d=datos().slice(),k=st.col||st.m;
+    d.sort(function(a,b){var x,y;if(k==='nombre'){x=a.nombre;y=b.nombre;return (x<y?-1:x>y?1:0)*(st.col?st.dir:1);}x=valor(a,k);y=valor(b,k);return (x-y)*(st.col?st.dir:-1);});return d;}
+  function csv(){var q=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+    var rows=[['Posición','Barrio',nombreM(st.m),'ICV','Infraestructura','Social','Servicios','Población (índice)','Población (habitantes)']].concat(filas().map(function(d,i){return [i+1,d.nombre,valor(d,st.m),PIIT.icv.barrio(d),d.infra,d.social,d.srv,d.pop,d.poblacion];}));
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+rows.map(function(r){return r.map(q).join(',');}).join('\n')],{type:'text/csv;charset=utf-8'}));
+    a.download='piit-ranking-barrios-'+st.m+'-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+  function aplicar(){
+    var cv=document.getElementById('rank-chart-view'),tv=document.getElementById('rank-table-view');
+    cv.style.display=st.vista==='grafico'?'':'none';tv.style.display=st.vista==='tabla'?'':'none';
+    document.querySelectorAll('#rank-tools .dt2-tab').forEach(function(b){b.setAttribute('aria-selected',String(b.getAttribute('data-v')===st.vista));});
+    var pt=document.getElementById('rank-bars').closest('.grid2>div').querySelector('.pt');if(pt)pt.textContent='Ranking por barrio · '+nombreM(st.m);
+    document.getElementById('rank-n').textContent=datos().length+' de 21 barrios';
+    if(st.vista==='grafico')grafico();else if(st.chart){st.chart.destroy();st.chart=null;}
+    if(st.vista==='tabla')tabla();
+    estado();
+  }
+  function grafico(){
+    var cv=document.getElementById('rank-chart-view');if(st.chart){st.chart.destroy();st.chart=null;}
+    var rows=filas();
+    if(!rows.length){cv.innerHTML='<p class="km-n" style="padding:18px;text-align:center">Ningún barrio coincide con la búsqueda.</p>';return;}
+    cv.innerHTML='<div class="dt2-cv"><canvas id="rank-chart" aria-label="Ranking de barrios por '+esc(nombreM(st.m))+'"></canvas></div>';
+    st.chart=new Chart(document.getElementById('rank-chart'),{type:'bar',data:{labels:rows.map(function(d){return d.nombre;}),datasets:[{label:nombreM(st.m),data:rows.map(function(d){return valor(d,st.m);}),backgroundColor:rows.map(function(d){return color(valor(d,st.m));}),borderRadius:0}]},
+      options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false},owidBarValues:{suffix:''},tooltip:{callbacks:{title:function(i){return rows[i[0].dataIndex].nombre;},label:function(c){return nombreM(st.m)+': '+c.parsed.x;},afterBody:function(i){var d=rows[i[0].dataIndex];return ['ICV: '+PIIT.icv.barrio(d),'Infraestructura: '+d.infra+' · Social: '+d.social,'Servicios: '+d.srv+' · Población: '+d.pop,'Habitantes: '+(d.poblacion||0).toLocaleString('es-CO')];}}}},scales:{x:{beginAtZero:true,max:100}}}});
+  }
+  function tabla(){
+    var tv=document.getElementById('rank-table-view'),rows=filas(),cols=[['nombre','Barrio'],['infra','Infraestructura'],['social','Social'],['srv','Servicios'],['pop','Población (índice)'],['icv','ICV'],['poblacion','Habitantes']];
+    tv.innerHTML='<table class="dt2-table"><thead><tr><th scope="col" class="v" data-k="#" style="cursor:default">N.º</th>'+cols.map(function(c){var on=(st.col||st.m)===c[0],dir=st.col?st.dir:-1;return '<th scope="col" data-k="'+c[0]+'" class="'+(c[0]==='nombre'?'':'v')+'" aria-sort="'+(on?(dir>0?'ascending':'descending'):'none')+'" tabindex="0">'+c[1]+'<span class="si">'+(on?(dir>0?'▲':'▼'):'')+'</span></th>';}).join('')+'</tr></thead><tbody>'+
+      rows.map(function(d,i){var cell=function(k,v){return '<td class="v'+((st.col||st.m)===k?' sel':'')+'">'+v+'</td>';};return '<tr><td class="v">'+(i+1)+'</td><td'+((st.col||st.m)==='nombre'?' class="sel"':'')+'>'+esc(d.nombre)+'</td>'+cell('infra',d.infra)+cell('social',d.social)+cell('srv',d.srv)+cell('pop',d.pop)+cell('icv',PIIT.icv.barrio(d))+cell('poblacion',(d.poblacion||0).toLocaleString('es-CO'))+'</tr>';}).join('')+'</tbody></table>';
+    tv.querySelectorAll('th[data-k]').forEach(function(th){var k=th.getAttribute('data-k');if(k==='#')return;var go=function(){if((st.col||st.m)===k&&st.col)st.dir*=-1;else{st.col=k;st.dir=(k==='nombre')?1:-1;}aplicar();};th.addEventListener('click',go);th.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});});
+  }
+  function montar(){
+    var host=document.getElementById('rank-bars');if(!host||document.getElementById('rank-tools')||!window.PIIT||!PIIT.data||!PIIT.icv)return;
+    restaurar();host.style.display='none';
+    var tools=document.createElement('div');tools.id='rank-tools';tools.setAttribute('role','region');tools.setAttribute('aria-label','Vistas y filtros del ranking de barrios');
+    tools.innerHTML='<div class="dt2-tabs" role="tablist" aria-label="Vista"><button class="dt2-tab" role="tab" data-v="grafico" type="button">Gráfico</button><button class="dt2-tab" role="tab" data-v="tabla" type="button">Tabla</button></div>'+
+      '<select id="rank-m" aria-label="Indicador">'+MET.map(function(m){return '<option value="'+m[0]+'"'+(m[0]===st.m?' selected':'')+'>'+m[1]+'</option>';}).join('')+'</select>'+
+      '<input type="search" id="rank-q" placeholder="Buscar barrio…" aria-label="Buscar barrio" value="'+esc(st.q)+'">'+
+      '<div class="dt2-r"><span class="km-n" id="rank-n" aria-live="polite" style="margin:0"></span><button type="button" class="dt2-btn" id="rank-csv">Descargar CSV</button><button type="button" class="dt2-btn" id="rank-link">Copiar enlace</button></div>';
+    host.parentNode.insertBefore(tools,host);
+    var cv=document.createElement('div');cv.id='rank-chart-view';host.parentNode.insertBefore(cv,host.nextSibling);
+    var tv=document.createElement('div');tv.id='rank-table-view';tv.style.display='none';host.parentNode.insertBefore(tv,cv.nextSibling);
+    tools.querySelectorAll('.dt2-tab').forEach(function(b){b.addEventListener('click',function(){st.vista=b.getAttribute('data-v');aplicar();});});
+    document.getElementById('rank-m').addEventListener('change',function(){st.m=this.value;st.col=null;aplicar();});
+    document.getElementById('rank-q').addEventListener('input',function(){st.q=this.value;aplicar();});
+    document.getElementById('rank-csv').addEventListener('click',csv);
+    document.getElementById('rank-link').addEventListener('click',function(){estado();var u=location.href,ok=function(){if(window.PIIT&&PIIT.map&&PIIT.map.toast)PIIT.map.toast('Enlace copiado','ok');};if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,ok);else ok();});
+    aplicar();
+  }
+  setInterval(montar,1000);
+  window.PIITRank={estado:function(){return st;},montar:montar};
+})();
+</script>
 </body>
 </html>
