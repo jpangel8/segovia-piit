@@ -172,3 +172,13 @@ Para cargar un año: `presupuesto.OTROS_ANIOS[2025] = { secs, kpi, ingresos, sgr
 
 1. **ICV con cuatro valores (72 / 72 / 59 / 61,1) y 2. dos fórmulas.** Se adoptó una sola definición, calculada con los datos de los 21 barrios: ICV barrio = 0,30 Infraestructura + 0,25 Social + 0,25 Servicios + 0,20 Población; ICV municipal = promedio ponderado por población = **61** (2024). Panel, módulo Calidad de Vida, barra, cuatro componentes (64 / 64 / 62 / 53), radar (promedio municipal y barrios de mayor y menor ICV) y el punto 2024 de la serie histórica leen del mismo cálculo (`PIIT.icv`). Se retiraron las series sin fuente (radar 2022 y Antioquia 2024, «Antioquia 78 · Nacional 74 · Meta PDM 79»). Pendiente: los años 2019-2023 y 2025 de la serie y los escenarios ICV 2030 (79 / 85 / 72) siguen sin fuente verificable y fueron construidos sobre la base anterior (72).
 3. **Sisbén A+B en dos tablas.** El arreglo heredado `DATA.SISBEN` (8 de 21 barrios, sin uso y con cifras distintas) se eliminó; todo lee de `DATA.INDICADORES`. Las cifras siguen sin validar por la Oficina del Sisbén.
+
+## Verificación de la fuente oficial del Sisbén (17-nov-2026)
+
+**Fuente oficial pública:** DNP, muestra anonimizada del Sisbén IV, corte marzo 2022, en datos.gov.co (`hq2v-5umk` personas, `ab8a-uwf7` hogares, `np8m-kdhq` vivienda; licencia CC BY-SA 4.0; muestreo probabilístico estratificado, error relativo ≈ 5 %). Trae código de municipio, grupo A-D y zona; **no trae barrio ni vereda**. `sisben.gov.co` y `anda.dnp.gov.co` no respondieron desde esta red.
+
+**Segovia (05736), hogares:** A 2.275 · B 4.770 · C 3.935 · D 1.110 (total 12.091; A+B = **58,3 %**; cabecera 56,2 %). **Personas:** A 9.420 · B 15.082 · C 9.772 · D 1.670 (A+B = **68,2 %**; cabecera 65,7 %).
+
+**Contraste con la plataforma:** los 21 barrios promedian 36,6 % en A+B (ponderado por hogares), unos 22 puntos por debajo de la cifra oficial; los hogares de los barrios suman 8.434 frente a 9.851 de la cabecera oficial. Los perfiles por barrio (distribución A/B/C/D, puntaje) son derivados de forma determinista, no datos del Sisbén. El Sisbén IV clasifica por grupos, no por puntaje.
+
+**Cambios:** el KPI «Hogares grupo A+B» usa la cifra oficial (58 %), con nota visible sobre la fuente y los límites; el «puntaje» se rotuló como estimación interna; el buque de verificación compara en vivo con el DNP. Para cifras por barrio hay que solicitar la base certificada a la Oficina del Sisbén.

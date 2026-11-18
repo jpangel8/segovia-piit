@@ -4231,10 +4231,11 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
   </div>
   <div class="grid4" style="margin-bottom:8px" id="sisben-kpis-top">
     <div class="kc"><div class="kc-val" id="sk-hogares">—</div><div class="kc-lbl">Hogares registrados (21 barrios)</div></div>
-    <div class="kc"><div class="kc-val" id="sk-ab" style="color:var(--red)">—</div><div class="kc-lbl">Hogares grupo A+B</div></div>
-    <div class="kc"><div class="kc-val" id="sk-puntaje" style="color:var(--amber)">—</div><div class="kc-lbl">Puntaje promedio municipal</div></div>
+    <div class="kc"><div class="kc-val" id="sk-ab" style="color:var(--red)">—</div><div class="kc-lbl">Hogares grupo A+B · oficial DNP (muestra mar. 2022)</div></div>
+    <div class="kc"><div class="kc-val" id="sk-puntaje" style="color:var(--amber)">—</div><div class="kc-lbl">Puntaje interno estimado (el Sisbén IV clasifica por grupos)</div></div>
     <div class="kc"><div class="kc-val" id="sk-registros">—</div><div class="kc-lbl">Registros SISBEN IV estimados</div></div>
   </div>
+  <div id="sisben-oficial-nota" role="note" style="font-size:12.5px;color:#434343;background:#E6EFFD;border:1px solid #CFE0FA;border-radius:4px;padding:10px 14px;margin:6px 0 14px;line-height:1.55"><strong>Fuente oficial.</strong> El DNP estima, para Segovia, que el <strong>58 %</strong> de los hogares y el <strong>68 %</strong> de las personas están en los grupos A y B del Sisbén IV (muestra anonimizada, corte marzo 2022, margen de error relativo cercano al 5 %; cabecera: 56 % y 66 %). El DNP no publica cifras por barrio: las de esta pantalla son <strong>estimaciones internas</strong> (promedian 37 %) y no deben usarse para focalizar subsidios. Para cifras por barrio hay que solicitar la base certificada a la Oficina del Sisbén de la Alcaldía.</div>
   <div class="pt">Selecciona un barrio para ver su ficha SISBEN detallada</div>
   <div class="sisben-barr" id="sisben-grid"></div>
   <div class="sisben-det" id="sisben-det"><div style="font-size:12px;color:var(--t400)">Selecciona un barrio arriba para ver los indicadores SISBEN del cruce geoespacial.</div></div>
@@ -9027,7 +9028,8 @@ window.PIIT = (function () {
       });
       const setTxt = function (id, v) { const e = document.getElementById(id); if (e) e.textContent = v; };
       setTxt('sk-hogares', totalHogares.toLocaleString('es-CO'));
-      setTxt('sk-ab', Math.round((abHogares / totalHogares) * 100) + '%');
+      /* Cifra oficial (DNP): muestra anonimizada del Sisbén IV, corte marzo 2022, datos.gov.co/hq2v-5umk. */
+      setTxt('sk-ab', '58%');
       setTxt('sk-puntaje', Math.round(avg.puntaje));
       setTxt('sk-registros', totalRegistros.toLocaleString('es-CO'));
     },
@@ -18293,6 +18295,10 @@ window.PIITVerif=(function(){
     anios:{2018:[30128,7772,37900],2019:[30497,7549,38046],2020:[30901,7316,38217],2021:[31275,7293,38568],2022:[31582,7260,38842],2023:[31845,7217,39062],2024:[31846,7270,39116],2025:[32112,7231,39343],2026:[32366,7183,39549],2027:[32591,7108,39699],2028:[32830,7052,39882]}};
   /* Fechas de corte de cada fuente usada (año del dato) y su vigencia razonable en años */
   var CORTES=[['Censo CNPV 2018 (NBI, viviendas)',2018,10,'DANE'],['Proyección de población',2026,1,'DANE PPED'],['Sisbén IV por barrio',2022,2,'Oficina del Sisbén / DNP'],['Indicadores por barrio (infraestructura, social, servicios)',2024,2,'Interno PIIT'],['Series del ICV 2019-2025',2025,1,'Interno PIIT'],['SIVIGILA (casos semanales)',2026,1,'INS'],['Contratación (SECOP II)',2026,1,'datos.gov.co']];
+  /* Referencia oficial: DNP · muestra anonimizada del Sisbén IV, corte marzo 2022 (datos.gov.co, conjunto hq2v-5umk,
+     licencia CC BY-SA 4.0). Segovia (05736), hogares = suma de factores de expansión con orden = 1. */
+  var DNP_SIS={fuente:'DNP · Muestra anonimizada Sisbén IV, corte marzo 2022 (datos.gov.co hq2v-5umk)',hogares:{A:2275,B:4770,C:3935,D:1110},personas:{A:9420,B:15082,C:9772,D:1670}};
+  function abPct(o){var t=o.A+o.B+o.C+o.D;return (o.A+o.B)/t*100;}
   var ICON={ok:'fa-circle-check',warn:'fa-triangle-exclamation',fail:'fa-circle-xmark',info:'fa-circle-info',run:'fa-spinner fa-spin'};
   var LBL={ok:'Verificado',warn:'Atención',fail:'Incoherente',info:'Sin fuente oficial',run:'Verificando…'};
   var st={rows:[],last:null,running:false};
@@ -18333,7 +18339,9 @@ window.PIITVerif=(function(){
     // 7 · Sisbén A+B: dos fuentes internas
     var S=PIIT.data.SISBEN||[],by={};ind().forEach(function(x){by[x.pk]=x;});
     R.push({k:'sis',t:'Sisbén A+B por barrio: una sola fuente',e:S.length?'fail':'ok',d:S.length?'Existe una segunda tabla de Sisbén con cifras distintas.':'Todas las pantallas leen de la misma tabla de indicadores por barrio (21 barrios); ya no hay una segunda tabla.',s:'Interno PIIT'});
-    R.push({k:'sisv',t:'Sisbén A+B por barrio: validación oficial',e:'info',d:'Las cifras por barrio (por ejemplo GALÁN 71 %) son estimaciones internas: el Sisbén IV no las publica por barrio. Falta el reporte de la Oficina del Sisbén de la Alcaldía.',s:'Oficina del Sisbén (Alcaldía) / DNP'});
+    var Hb=ind().reduce(function(a,x){return a+(x.hogares||0);},0),abB=ind().reduce(function(a,x){return a+(x.sisben_ab||0)*(x.hogares||0);},0)/Hb,abO=abPct(DNP_SIS.hogares);
+    R.push({k:'sisd',t:'Sisbén A+B: barrios vs cifra oficial del DNP',e:Math.abs(abB-abO)<=10?'ok':'fail',d:'Los barrios de la plataforma promedian '+abB.toFixed(1).replace('.',',')+' % de hogares en A+B (ponderado por hogares); el DNP estima '+abO.toFixed(1).replace('.',',')+' % para Segovia (personas: '+abPct(DNP_SIS.personas).toFixed(1).replace('.',',')+' %). La cifra municipal del módulo Sisbén ya usa la oficial; las de cada barrio son estimaciones internas y quedan por debajo.',s:DNP_SIS.fuente});
+    R.push({k:'sisv',t:'Sisbén por barrio: qué publica el DNP',e:'info',d:'La fuente oficial pública es una muestra anonimizada del Sisbén IV con código de municipio, grupo (A-D) y zona, sin barrio ni vereda. Los barrios solo se pueden obtener solicitando la base certificada a la Oficina del Sisbén. Además, el Sisbén IV clasifica por grupos y no por puntaje: el «puntaje» de la plataforma es una cifra interna.',s:'DNP · datos.gov.co / Oficina del Sisbén'});
     // 8 · Estructura territorial
     var g=PIIT.data.BARRIOS_GEOJSON.features,pkG=g.map(function(f){return f.properties.PK_BARRIO;}),sinDato=pkG.filter(function(p){return !by[p];});S=ind();
     R.push({k:'est',t:'Barrios: mapa, indicadores y Sisbén enlazados',e:sinDato.length?'warn':'ok',d:sinDato.length?sinDato.length+' barrios del mapa sin indicadores.':g.length+' barrios en el mapa y '+Object.keys(by).length+' con indicadores, todos por el mismo código PK.',s:'IGAC · GDB barrios'});
@@ -18351,6 +18359,10 @@ window.PIITVerif=(function(){
     out.push(fetchJ('https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=1',9000).then(function(r){return {k:'v-secop',t:'En vivo: SECOP II (datos.gov.co)',e:r.ok&&Array.isArray(r.j)?'ok':'fail',d:r.ok&&Array.isArray(r.j)?'Responde en '+r.ms+' ms con datos de contratación.':'No responde ('+(r.err||'error')+').',s:'datos.gov.co · conjunto jbjy-vk9h'};}));
     out.push(fetchJ('https://geoportal.dane.gov.co/mparcgis/rest/services/MGN2018/Serv_CapasMGN_2018/MapServer?f=json',9000).then(function(r){return {k:'v-dane',t:'En vivo: geoportal DANE (MGN 2018)',e:r.ok&&r.j&&r.j.currentVersion?'ok':'warn',d:r.ok&&r.j&&r.j.currentVersion?'Servicio activo en '+r.ms+' ms.':'No verificable desde el navegador ('+(r.err||'sin respuesta')+').',s:'geoportal.dane.gov.co'};}));
     out.push(fetchJ('https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer?f=json',9000).then(function(r){return {k:'v-igac',t:'En vivo: cartografía base IGAC 1:25.000',e:r.ok&&r.j&&r.j.currentVersion?'ok':'warn',d:r.ok&&r.j&&r.j.currentVersion?'Servicio activo en '+r.ms+' ms.':'No verificable desde el navegador ('+(r.err||'sin respuesta')+').',s:'mapas.igac.gov.co'};}));
+    out.push(fetchJ('https://www.datos.gov.co/resource/hq2v-5umk.json?$select='+encodeURIComponent('grupo,sum(fex) as h')+'&$where='+encodeURIComponent("cod_mpio='05736' AND orden=1")+'&$group=grupo',45000).then(function(r){
+      if(!(r.ok&&Array.isArray(r.j)&&r.j.length))return {k:'v-dnp',t:'En vivo: Sisbén IV (DNP, datos.gov.co)',e:'warn',d:'No se pudo consultar ('+(r.err||'sin datos')+'). Se usa la referencia incluida (corte marzo 2022).',s:DNP_SIS.fuente};
+      var o={A:0,B:0,C:0,D:0};r.j.forEach(function(x){o[x.grupo]=Math.round(parseFloat(x.h));});var live=abPct(o),ref=abPct(DNP_SIS.hogares);
+      return {k:'v-dnp',t:'En vivo: Sisbén IV (DNP, datos.gov.co)',e:Math.abs(live-ref)<=0.5?'ok':'warn',d:'Consulta en '+r.ms+' ms: hogares de Segovia A '+o.A+' · B '+o.B+' · C '+o.C+' · D '+o.D+' (A+B = '+live.toFixed(1).replace('.',',')+' %). '+(Math.abs(live-ref)<=0.5?'Coincide con la referencia incluida.':'Difiere de la referencia incluida ('+ref.toFixed(1).replace('.',',')+' %): actualizar la tabla.'),s:DNP_SIS.fuente};}));
     out.push(Promise.resolve().then(function(){return {k:'v-pped',t:'En vivo: archivo DANE PPED',e:'info',d:'El archivo es un Excel que el navegador no puede leer directamente (CORS); las cifras de referencia de esta verificación se tomaron de él el 17-nov-2026. Si el DANE publica una nueva serie, hay que actualizar la tabla de referencia.',s:DANE_PPED.url};}));
     return out;
   }
