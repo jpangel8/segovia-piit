@@ -18967,7 +18967,7 @@ footer strong{color:#0D2E17}
     {k:'torr',n:'Avenida torrencial',c:'#286bbb',d:'Q. La Cianuración · barrio Briceño · riesgo moderado',tipo:'p',pts:[[CENTRO[0]-0.002,CENTRO[1]+0.011],[CENTRO[0]+0.002,CENTRO[1]+0.015],[CENTRO[0]-0.004,CENTRO[1]+0.019],[CENTRO[0]-0.008,CENTRO[1]+0.015]]}
   ];
   var RAMP=['#e6edfa','#b9cdee','#86a3d3','#52719f','#273f6c'];
-  var st={modo:'2d',capa:'vuln',sel:null,q:'',amen:{inund:true,masa:true,incen:true,torr:true},base:false,map:null,geo:null,layers:{},baseL:null,feats:{},vals:{},cortes:[]};
+  var st={modo:'2d',capa:'vuln',sel:null,q:'',amen:{inund:false,masa:false,incen:false,torr:false},base:false,map:null,geo:null,layers:{},baseL:null,feats:{},vals:{},cortes:[]};
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function fmt(n,u){return (Math.round(n*10)/10).toLocaleString('es-CO',{maximumFractionDigits:1})+(u||'');}
   function capa(){return CAPAS.filter(function(c){return c.k===st.capa;})[0];}
@@ -19068,6 +19068,7 @@ footer strong{color:#0D2E17}
     document.getElementById('rm-base').onclick=function(){st.base=!st.base;this.setAttribute('aria-pressed',String(st.base));
       if(st.base){if(!st.baseL)st.baseL=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:16,attribution:'Tiles © Esri',opacity:.9});st.baseL.addTo(st.map);st.baseL.bringToBack();}else if(st.baseL)st.map.removeLayer(st.baseL);};
     st.map.on('click',function(){});
+    var rb=document.getElementById('rm-base');if(rb&&!st.base)rb.onclick.call(rb);
   }
   function cambiarModo(m){
     if(m===st.modo)return;
