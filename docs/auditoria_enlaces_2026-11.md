@@ -153,3 +153,9 @@ Se inventariaron 32 gráficas Chart.js (más las diferidas de Salud/SISPRO) y se
 Desviaciones encontradas y corregidas: rejilla vertical residual en ejes de categoría (varias gráficas), barras horizontales sin rejilla guionada en el eje de valores, colores de ticks propios (`#8A9E96`, `#43594E`, `#5A7268`), líneas de 2 a 3,4 px, marcadores de 3 a 4 px, radar con rejilla distinta y resalte de la gráfica ICV (3,4 px; ahora 2 px, con series atenuadas a 1 px y opacidad 0,5 como `LINE_STYLE` de owid-grapher).
 
 Paleta OWID Distinct aplicada a 25 gráficas categóricas. Conservan colores semánticos: Sisbén (grupos), ejecución presupuestal, cobertura (semáforo), estado vial, vulnerabilidad, comparativo de barrios, histórico SIG y la serie de permutaciones de Moran.
+
+## Ejecución fiscal por año (17-nov-2026)
+
+Una sola fuente de datos por año (`presupuesto.datos(año)` en `public/piit-v6.html`) alimenta el selector de años del panel y el de la sección Ejecución fiscal (comparten estado), el título, las 4 tarjetas, las barras por secretaría, las fuentes de financiación y los proyectos SGR. Solo 2026 tiene datos; 2024, 2025 y 2027 muestran un aviso hasta que se carguen. No se encontró un informe público de ejecución presupuestal de Segovia para 2024 o 2025 (búsqueda del 17-nov-2026); la fuente natural es el reporte de la Secretaría de Hacienda / FUT.
+
+Para cargar un año: `presupuesto.OTROS_ANIOS[2025] = { secs, kpi, ingresos, sgr }` con la misma forma que 2026.

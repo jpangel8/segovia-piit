@@ -4824,27 +4824,28 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 <!-- ══ S-PRESUPUESTO ════════════════════════════════ -->
 <section class="section" id="s-presupuesto">
   <div class="sec-head">
-    <h2 class="sec-title">Ejecución fiscal 2026 · Segovia</h2>
+    <h2 class="sec-title" id="fis-title">Ejecución fiscal 2026 · Segovia</h2>
     <p class="sec-sub">Presupuesto General · SGR · SGP · Recaudo · Ley 617 · Ministerio de Hacienda · CHIP</p>
   </div>
+  <div id="fis-years" class="yr-pills" role="group" aria-label="Año de la ejecución fiscal"></div>
 
   <!-- KPIs fiscales -->
   <div class="grid4" style="margin-bottom:20px">
     <div class="kc">
-      <div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--g700)"></i></div><div class="kc-trend up">+8,2%</div></div>
-      <div class="kc-val">$12.840</div><div class="kc-lbl">Presupuesto total 2026 (millones COP)</div>
+      <div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--g700)"></i></div><div class="kc-trend up" id="fk-total-t">+8,2%</div></div>
+      <div class="kc-val" id="fk-total">$12.840</div><div class="kc-lbl" id="fk-total-l">Presupuesto total 2026 (millones COP)</div>
     </div>
     <div class="kc">
-      <div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-circle-dollar-to-slot" style="color:var(--au700)"></i></div><div class="kc-trend ok">73%</div></div>
-      <div class="kc-val" style="color:var(--g700)">$9.373</div><div class="kc-lbl">Comprometido (73%)</div>
+      <div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-circle-dollar-to-slot" style="color:var(--au700)"></i></div><div class="kc-trend ok" id="fk-comp-t">73%</div></div>
+      <div class="kc-val" id="fk-comp" style="color:var(--g700)">$9.373</div><div class="kc-lbl" id="fk-comp-l">Comprometido (73%)</div>
     </div>
     <div class="kc">
       <div class="kc-top"><div class="kc-ico" style="background:#FEF3C7"><i class="fa-solid fa-gem" style="color:var(--amber)"></i></div><div class="kc-trend ok">SGR</div></div>
-      <div class="kc-val">$4.120</div><div class="kc-lbl">Regalías recibidas (millones)</div>
+      <div class="kc-val" id="fk-reg">$4.120</div><div class="kc-lbl" id="fk-reg-l">Regalías recibidas (millones)</div>
     </div>
     <div class="kc">
-      <div class="kc-top"><div class="kc-ico" style="background:#E6F1FB"><i class="fa-solid fa-scale-balanced" style="color:var(--blue)"></i></div><div class="kc-trend ok">Cumple</div></div>
-      <div class="kc-val" style="color:var(--g700)">52%</div><div class="kc-lbl">Gastos funcionamiento / ICLD (Ley 617)</div>
+      <div class="kc-top"><div class="kc-ico" style="background:#E6F1FB"><i class="fa-solid fa-scale-balanced" style="color:var(--blue)"></i></div><div class="kc-trend ok" id="fk-617-t">Cumple</div></div>
+      <div class="kc-val" id="fk-617" style="color:var(--g700)">52%</div><div class="kc-lbl">Gastos funcionamiento / ICLD (Ley 617)</div>
     </div>
   </div>
 
@@ -4856,7 +4857,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     </div>
     <!-- Composición de ingresos -->
     <div>
-      <div class="pt">Fuentes de financiación 2026</div>
+      <div class="pt" id="fis-ing-t">Fuentes de financiación 2026</div>
       <div class="card" style="padding:14px 16px">
         <canvas id="chart-ingresos" height="210"></canvas>
       </div>
@@ -4864,7 +4865,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
   </div>
 
   <!-- Proyectos SGR geolocalizados -->
-  <div class="pt" style="margin-top:4px">Proyectos SGR activos 2026 · avance físico y financiero</div>
+  <div class="pt" id="fis-sgr-t" style="margin-top:4px">Proyectos SGR activos 2026 · avance físico y financiero</div>
   <div class="card" style="padding:0;overflow:hidden">
     <table style="width:100%;border-collapse:collapse;font-size:12px">
       <thead>
@@ -10229,60 +10230,33 @@ window.PIIT = (function () {
       });
     },
 
-    /* Ejecución presupuestal por año. Para agregar un año nuevo basta con añadir una entrada aquí:
-       PRES_ANIO[2027] = [['Nombre de la secretaría', % ejecutado], ...]. El selector de años se genera solo
-       (de 2024 hasta el año siguiente al actual, o hasta el último año con datos) y se extiende cada enero. */
-    PRES_ANIO: {
-      2026: [['Infraestructura y Servicios Públicos', 85], ['Educación, Cultura y Deporte', 71], ['Salud y Bienestar Social', 79], ['Gobierno', 55], ['Tránsito y Movilidad', 68], ['Minas y Desarrollo Económico', 47], ['Planeación', 62], ['Hacienda', 90]],
-    },
-    PRES_ANIO_DESDE: 2024,
-    _presAnio: null,
-    _presAnios: function () {
-      const con = Object.keys(charts.PRES_ANIO).map(Number);
-      const hasta = Math.max(new Date().getFullYear() + 1, con.length ? Math.max.apply(null, con) : 0);
-      const out = [];
-      for (let y = charts.PRES_ANIO_DESDE; y <= hasta; y++) out.push(y);
-      return out;
-    },
-    buildPresupuestoDash: function (anioSel) {
+    /* Ejecución presupuestal del panel: usa la misma fuente y el mismo año que la sección Ejecución fiscal
+       (ver presupuesto.datos / presupuesto.setAnio). */
+    buildPresupuestoDash: function () {
       charts._destroy('chart-presupuesto');
       const ctx = document.getElementById('chart-presupuesto');
       if (!ctx) return;
-      const anios = charts._presAnios();
-      const conDatos = anios.filter(function (y) { return charts.PRES_ANIO[y]; });
-      if (anioSel) charts._presAnio = anioSel;
-      if (!charts._presAnio || anios.indexOf(charts._presAnio) < 0) {
-        /* por defecto: el año más reciente que no sea futuro y tenga datos; si no, el último con datos */
-        const hoy = new Date().getFullYear();
-        const pasados = conDatos.filter(function (y) { return y <= hoy; });
-        charts._presAnio = pasados.length ? pasados[pasados.length - 1] : (conDatos[conDatos.length - 1] || anios[0]);
-      }
-      const anio = charts._presAnio, datos = charts.PRES_ANIO[anio];
+      const anio = presupuesto.anioActual(), d = presupuesto.datos(anio);
       const card = ctx.closest('.card'), wrap = ctx.parentNode;
-      /* selector de años generado con un bucle (estilo línea de tiempo de OWID) */
       let bar = document.getElementById('pres-years');
       if (!bar) {
         bar = document.createElement('div'); bar.id = 'pres-years'; bar.className = 'yr-pills'; bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', 'Año de ejecución presupuestal');
         card.insertBefore(bar, wrap);
         const msg = document.createElement('div'); msg.id = 'pres-empty'; msg.setAttribute('role', 'status'); msg.style.display = 'none'; card.insertBefore(msg, wrap.nextSibling);
       }
-      bar.innerHTML = anios.map(function (y) {
-        const has = !!charts.PRES_ANIO[y];
-        return '<button type="button" class="yr-pill' + (y === anio ? ' on' : '') + (has ? '' : ' nodata') + '" aria-pressed="' + (y === anio) + '" onclick="PIIT.charts.buildPresupuestoDash(' + y + ')" title="' + (has ? 'Ver ' + y : 'Sin datos cargados para ' + y) + '">' + y + '</button>';
-      }).join('');
+      presupuesto.pills('pres-years');
       const titulo = 'Ejecución presupuestal ' + anio + ' · por secretaría';
       const th = card.querySelector('.pchart-head-t'); if (th) th.textContent = titulo;
       const pt = card.parentNode.querySelector('.pt'); if (pt) pt.textContent = titulo;
       const empty = document.getElementById('pres-empty');
-      if (!datos) {
-        wrap.style.display = 'none'; empty.style.display = 'block';
-        empty.className = 'yr-empty';
-        empty.textContent = 'Aún no hay datos de ejecución presupuestal cargados para ' + anio + '. Se mostrarán aquí cuando se agreguen a la plataforma.';
+      if (!d) {
+        wrap.style.display = 'none'; empty.style.display = 'block'; empty.className = 'yr-empty';
+        empty.textContent = presupuesto._vacio(anio, 'ejecución presupuestal');
         return;
       }
       wrap.style.display = ''; empty.style.display = 'none';
       /* Barras horizontales ordenadas de mayor a menor, con el nombre completo de cada secretaría (como el gráfico de barras de OWID) */
-      const _par = datos.slice().sort(function (a, b) { return b[1] - a[1]; });
+      const _par = d.secs.map(function (s) { return [s.nom.replace('Serv. Públicos', 'Servicios Públicos'), s.ejecucion]; }).sort(function (x, y) { return y[1] - x[1]; });
       const secs = _par.map(function (p) { return p[0]; });
       const vals = _par.map(function (p) { return p[1]; });
       charts._instances['chart-presupuesto'] = new Chart(ctx, {
@@ -10361,11 +10335,17 @@ window.PIIT = (function () {
       charts._destroy('chart-ingresos');
       const ctx = document.getElementById('chart-ingresos');
       if (!ctx) return;
+      const _a = presupuesto.anioActual(), _d = presupuesto.datos(_a), _card = ctx.closest('.card');
+      const _th = _card && _card.querySelector('.pchart-head-t'); if (_th) _th.textContent = 'Fuentes de financiación ' + _a;
+      let _em = document.getElementById('ing-empty');
+      if (!_em) { _em = document.createElement('div'); _em.id = 'ing-empty'; _em.className = 'yr-empty'; ctx.parentNode.insertBefore(_em, ctx); }
+      if (!_d) { ctx.style.display = 'none'; _em.style.display = 'block'; _em.textContent = presupuesto._vacio(_a, 'fuentes de financiación'); return; }
+      ctx.style.display = ''; _em.style.display = 'none';
       charts._instances['chart-ingresos'] = new Chart(ctx, {
         type: 'pie',
         data: {
-          labels: ['SGR Regalías', 'SGP Transferencias', 'Recaudo propio', 'Cofinanciación', 'Otros'],
-          datasets: [{ data: [32, 28, 18, 15, 7], backgroundColor: ['#D6B000', '#48B72C', '#00A0E4', '#8A4AA3', '#8A9E96'], borderWidth: 2, borderColor: '#fff' }],
+          labels: _d.ingresos.labels,
+          datasets: [{ data: _d.ingresos.data, backgroundColor: ['#D6B000', '#48B72C', '#00A0E4', '#8A4AA3', '#8A9E96'], borderWidth: 2, borderColor: '#fff' }],
         },
         options: Object.assign(charts._defaults(), {
           plugins: { legend: { position: 'bottom', labels: { font:{size:12 }, boxWidth: 10 } } },
@@ -10602,16 +10582,82 @@ window.PIIT = (function () {
       { nom:'Sistema de alumbrado LED — casco urbano',          sec:'Infraestructura', valor:540,  fis:100,fin:97, estado:'Finalizado' },
     ],
 
+    /* ══ Datos por año (única fuente para el panel, la gráfica de ejecución, las tarjetas, las barras por
+       secretaría, las fuentes de financiación y los proyectos SGR) ══
+       Para cargar un año, añada una entrada en OTROS_ANIOS con esta misma forma que 2026:
+       OTROS_ANIOS[2025] = {
+         secs: [{ nom, ejecucion (%), monto ('$3.840'), inversion (%) }, ...],
+         kpi: { total, totalTend, comprometido, pctComp, regalias, ley617 },
+         ingresos: { labels: [...], data: [...] },   // fuentes de financiación (%)
+         sgr: [{ nom, sec, valor, fis, fin, estado }, ...]
+       }
+       El selector de años se genera solo: de ANIO_DESDE hasta el año siguiente al actual (o al último con datos). */
+    ANIO_DESDE: 2024,
+    OTROS_ANIOS: {},
+    anio: null,
+    _d2026: null,
+    datos: function (y) {
+      if (y === 2026) {
+        if (!presupuesto._d2026) presupuesto._d2026 = {
+          secs: presupuesto.SECS_PRES,
+          kpi: { total: '$12.840', totalTend: '+8,2%', comprometido: '$9.373', pctComp: '73%', regalias: '$4.120', ley617: '52%' },
+          ingresos: { labels: ['SGR Regalías', 'SGP Transferencias', 'Recaudo propio', 'Cofinanciación', 'Otros'], data: [32, 28, 18, 15, 7] },
+          sgr: presupuesto.SGR_PROYECTOS,
+        };
+        return presupuesto._d2026;
+      }
+      return presupuesto.OTROS_ANIOS[y] || null;
+    },
+    aniosLista: function () {
+      var con = [2026].concat(Object.keys(presupuesto.OTROS_ANIOS).map(Number)), out = [];
+      var hasta = Math.max(new Date().getFullYear() + 1, Math.max.apply(null, con));
+      for (var y = presupuesto.ANIO_DESDE; y <= hasta; y++) out.push(y);
+      return out;
+    },
+    anioActual: function () {
+      var lista = presupuesto.aniosLista();
+      if (presupuesto.anio && lista.indexOf(presupuesto.anio) >= 0) return presupuesto.anio;
+      var hoy = new Date().getFullYear();
+      var con = lista.filter(function (y) { return presupuesto.datos(y); });
+      var pasados = con.filter(function (y) { return y <= hoy; });
+      presupuesto.anio = pasados.length ? pasados[pasados.length - 1] : (con[con.length - 1] || lista[0]);
+      return presupuesto.anio;
+    },
+    pills: function (hostId) {
+      var el = document.getElementById(hostId); if (!el) return;
+      var a = presupuesto.anioActual();
+      el.innerHTML = presupuesto.aniosLista().map(function (y) {
+        var has = !!presupuesto.datos(y);
+        return '<button type="button" class="yr-pill' + (y === a ? ' on' : '') + (has ? '' : ' nodata') + '" aria-pressed="' + (y === a) + '" onclick="PIIT.presupuesto.setAnio(' + y + ')" title="' + (has ? 'Ver ' + y : 'Sin datos cargados para ' + y) + '">' + y + '</button>';
+      }).join('');
+    },
+    _txt: function (id, v) { var e = document.getElementById(id); if (e) e.textContent = v; },
+    _vacio: function (y, what) { return 'Aún no hay datos de ' + what + ' cargados para ' + y + '. Se mostrarán aquí cuando se agreguen a la plataforma.'; },
+    setAnio: function (y) {
+      if (y) presupuesto.anio = y;
+      var a = presupuesto.anioActual(), d = presupuesto.datos(a), T = presupuesto._txt;
+      presupuesto.pills('fis-years');
+      T('fis-title', 'Ejecución fiscal ' + a + ' · Segovia');
+      T('fis-ing-t', 'Fuentes de financiación ' + a);
+      T('fis-sgr-t', 'Proyectos SGR activos ' + a + ' · avance físico y financiero');
+      var k = d ? d.kpi : null, dash = '—';
+      T('fk-total', k ? k.total : dash); T('fk-total-t', k ? k.totalTend : dash); T('fk-total-l', 'Presupuesto total ' + a + ' (millones COP)');
+      T('fk-comp', k ? k.comprometido : dash); T('fk-comp-t', k ? k.pctComp : dash); T('fk-comp-l', k ? 'Comprometido (' + k.pctComp + ')' : 'Comprometido');
+      T('fk-reg', k ? k.regalias : dash); T('fk-617', k ? k.ley617 : dash);
+      presupuesto.renderSecBars(); presupuesto.renderSGR();
+      charts.buildIngresos(); charts.buildPresupuestoDash();
+    },
+
     init: function () {
-      presupuesto.renderSecBars();
-      presupuesto.renderSGR();
-      charts.buildIngresos();
+      presupuesto.setAnio();
     },
 
     renderSecBars: function () {
       var el = document.getElementById('pres-sec-bars');
       if (!el) return;
-      el.innerHTML = presupuesto.SECS_PRES.map(function (s) {
+      var _d = presupuesto.datos(presupuesto.anioActual());
+      if (!_d) { el.innerHTML = '<div class="yr-empty">' + presupuesto._vacio(presupuesto.anioActual(), 'ejecución por secretaría') + '</div>'; return; }
+      el.innerHTML = _d.secs.map(function (s) {
         var color = s.ejecucion >= 70 ? '#2E7D52' : s.ejecucion >= 50 ? '#C9852A' : '#DC0B2C';
         return '<div class="pres-row">'
           + '<div class="pres-sec" title="' + s.nom + '">' + s.nom + '</div>'
@@ -10625,7 +10671,9 @@ window.PIIT = (function () {
     renderSGR: function () {
       var tbody = document.getElementById('sgr-tbody');
       if (!tbody) return;
-      tbody.innerHTML = presupuesto.SGR_PROYECTOS.map(function (p) {
+      var _d = presupuesto.datos(presupuesto.anioActual());
+      if (!_d) { tbody.innerHTML = '<tr><td colspan="6" class="yr-empty" style="border:0">' + presupuesto._vacio(presupuesto.anioActual(), 'proyectos SGR') + '</td></tr>'; return; }
+      tbody.innerHTML = _d.sgr.map(function (p) {
         var colorFis = p.fis >= 70 ? '#2E7D52' : p.fis >= 40 ? '#C9852A' : '#DC0B2C';
         var colorFin = p.fin >= 70 ? '#2E7D52' : p.fin >= 40 ? '#C9852A' : '#DC0B2C';
         var badge = p.estado === 'Finalizado'
