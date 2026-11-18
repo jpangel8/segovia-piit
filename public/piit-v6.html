@@ -15988,10 +15988,8 @@ nav button { cursor: pointer !important; }
 /* ── 2 & 3. TABLAS CONTRATOS / OBRAS — clamp vía div wrapper ─── */
 /* td no acepta display:-webkit-box, se aplica a .td-clamp-inner via JS */
 .td-clamp-inner {
-  display: -webkit-box !important;
-  -webkit-line-clamp: 3 !important;
-  -webkit-box-orient: vertical !important;
-  overflow: hidden !important;
+  display: block !important; /* texto completo, sin recorte */
+  overflow: visible !important;
   word-break: break-word !important;
   white-space: normal !important;
   line-height: 1.45 !important;
