@@ -3758,8 +3758,8 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <h1 class="hero-h">Inteligencia territorial estratégica<br><em>Segovia en el Sistema de Ciudades Colombia</em></h1>
     <p class="hero-sub">Productividad · Conectividad · Calidad de Vida · Gobernanza · Sostenibilidad territorial · Alineado Misión Sistema de Ciudades DNP-BID</p>
     <div class="hero-cta">
-      <button type="button" class="cta-primary" onclick="PIIT.ui.goSection('s-mapa')"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Explorar el mapa territorial</button>
-      <button type="button" class="cta-secondary" onclick="PIIT.ui.goSection('s-reportes')"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Reportar un problema</button>
+      <button type="button" class="cta-primary" onclick="PIITGo('s-mapa')"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Explorar el mapa territorial</button>
+      <button type="button" class="cta-secondary" onclick="PIITGo('s-reportes')"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Reportar un problema</button>
     </div>
     <div class="hero-kpis">
       <div class="hkpi"><div class="hkpi-v">39.549</div><div class="hkpi-l">Habitantes 2026</div><div class="hkpi-x up">+1,1% vs 2024 · DANE</div></div>
@@ -6170,6 +6170,11 @@ window.piitOwidTheme=function(){ if(!window.Chart) return; var D=Chart.defaults;
       var nCat=(c.data.labels||[]).length, box=c.canvas&&c.canvas.parentNode;
       if(box){box.style.position='relative';box.style.height=Math.max(220,nCat*(ds.length>1?30:24)+90)+'px';}
       c.options.maintainAspectRatio=false;
+      /* nombres largos en dos líneas (sin recortar) */
+      var wrapL=function(s){if(typeof s!=='string'||s.length<=20)return s;var w=s.split(' '),out=[],cur='';w.forEach(function(x){if((cur+' '+x).trim().length>20&&cur){out.push(cur);cur=x;}else cur=(cur+' '+x).trim();});if(cur)out.push(cur);return out;};
+      if(c.data.labels)c.data.labels=c.data.labels.map(wrapL);
+      var maxL=0;(c.data.labels||[]).forEach(function(l){if(Array.isArray(l))maxL=Math.max(maxL,l.length);});
+      if(box&&maxL>1){box.style.height=Math.max(220,nCat*(ds.length>1?32:26)+(maxL-1)*40+90)+'px';}
     }
     Object.keys(s).forEach(function(k){ var sc=s[k]; if(!sc) return;
       if(sc.type==='radialLinear'){
@@ -15305,13 +15310,13 @@ function buildTicker(wrap){
 function loadThree(cb){
   if(window.THREE){cb();return;}
   var s=document.createElement('script');
-  s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';s.integrity='sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu';s.crossOrigin='anonymous';
   s.onload=function(){if(window.THREE)cb();else fallback(cb);};
   s.onerror=function(){fallback(cb);};
   document.head.appendChild(s);
   function fallback(cb2){
     var s2=document.createElement('script');
-    s2.src='https://unpkg.com/three@0.128.0/build/three.min.js';
+    s2.src='https://unpkg.com/three@0.128.0/build/three.min.js';s2.integrity='sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu';s2.crossOrigin='anonymous';
     s2.onload=cb2;
     document.head.appendChild(s2);
   }
@@ -17148,7 +17153,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var circ=/^(doughnut|pie|polarArea)$/.test(ch.config.type);
     var cols=circ?['Valor']:ds.map(function(s,i){return s.label||('Serie '+(i+1));});
     var rows=labels.map(function(l,i){
-      return [l].concat(circ?[ds[0]&&ds[0].data[i]]:ds.map(function(s){var v=s.data[i];return v&&typeof v==='object'?(v.y!=null?v.y:''):v;}));
+      return [Array.isArray(l)?l.join(' '):l].concat(circ?[ds[0]&&ds[0].data[i]]:ds.map(function(s){var v=s.data[i];return v&&typeof v==='object'?(v.y!=null?v.y:''):v;}));
     });
     return {cols:['Categoría'].concat(cols),rows:rows};
   }
@@ -18187,6 +18192,10 @@ window.PIITConsent=(function(){
   if(!get())setTimeout(open,900);else apply();
   return {open:open,get:get};
 })();
+</script>
+<script id="piit-go">
+/* Abre una sección desde un botón de la página y marca también el ítem del menú superior. */
+window.PIITGo=function(id){var btn=id==='s-mapa'?document.getElementById('nav-dd-trigger-sig'):document.querySelector('.nav-btn[onclick*="'+id+'"]');PIIT.ui.goSection(id,btn||undefined);window.scrollTo(0,0);};
 </script>
 <script id="piit-a11y-labels">
 /* Etiquetas accesibles para campos que solo tienen un texto cercano o un placeholder. */
