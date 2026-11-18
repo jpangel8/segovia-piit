@@ -5625,33 +5625,33 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         <div class="salud-kpis" style="margin-bottom:14px">
           <div class="skpi">
             <div class="skpi-ico" style="background:var(--g100)"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
-            <div class="skpi-v" style="color:var(--g700)">40.247</div>
+            <div class="skpi-v" id="bd-pob" style="color:var(--g700)">39.549</div>
             <div class="skpi-l">Población total proyectada</div>
-            <div class="skpi-ref" style="color:var(--t500)">DANE 2024</div>
+            <div class="skpi-ref" id="bd-pob-r" style="color:var(--t500)">DANE PPED 2026</div>
           </div>
           <div class="skpi">
             <div class="skpi-ico" style="background:#E6F1FB"><i class="fa-solid fa-id-card" aria-hidden="true"></i></div>
-            <div class="skpi-v" style="color:var(--blue)">37.185</div>
+            <div class="skpi-v" id="bd-tot" style="color:var(--blue)">37.185</div>
             <div class="skpi-l">Afiliados SGSSS activos</div>
-            <div class="skpi-ref" style="color:var(--blue)">92,4% cobertura</div>
+            <div class="skpi-ref" id="bd-tot-r" style="color:var(--blue)">92,4% cobertura</div>
           </div>
           <div class="skpi">
             <div class="skpi-ico" style="background:var(--au100)"><i class="fa-solid fa-briefcase" aria-hidden="true"></i></div>
-            <div class="skpi-v" style="color:var(--au700)">8.215</div>
+            <div class="skpi-v" id="bd-con" style="color:var(--au700)">8.215</div>
             <div class="skpi-l">Régimen contributivo</div>
-            <div class="skpi-ref" style="color:var(--au700)">22,1% de afiliados</div>
+            <div class="skpi-ref" id="bd-con-r" style="color:var(--au700)">22,1% de afiliados</div>
           </div>
           <div class="skpi">
             <div class="skpi-ico" style="background:#FFF5F5"><i class="fa-solid fa-landmark" aria-hidden="true"></i></div>
-            <div class="skpi-v" style="color:var(--red)">28.970</div>
+            <div class="skpi-v" id="bd-sub" style="color:var(--red)">28.970</div>
             <div class="skpi-l">Régimen subsidiado</div>
-            <div class="skpi-ref" style="color:var(--red)">77,9% de afiliados</div>
+            <div class="skpi-ref" id="bd-sub-r" style="color:var(--red)">77,9% de afiliados</div>
           </div>
         </div>
 
         <div class="grid2" style="margin-bottom:14px">
           <div>
-            <div class="pt">Afiliados SGSSS por régimen · Segovia BDUA 2024</div>
+            <div class="pt" id="bd-t1">Afiliados SGSSS por régimen · Segovia BDUA 2024</div>
             <div class="card" style="padding:14px 16px">
               <canvas id="sp-chart-afil" height="200"></canvas>
             </div>
@@ -5665,7 +5665,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         </div>
 
         <!-- Tabla EPS -->
-        <div class="pt">Distribución EPS operando en Segovia · 2024</div>
+        <div class="pt" id="bd-t2">Distribución EPS operando en Segovia · 2024</div>
         <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
           <div style="overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:13px">
@@ -9029,7 +9029,7 @@ window.PIIT = (function () {
       const setTxt = function (id, v) { const e = document.getElementById(id); if (e) e.textContent = v; };
       setTxt('sk-hogares', totalHogares.toLocaleString('es-CO'));
       /* Cifra oficial (DNP): muestra anonimizada del Sisbén IV, corte marzo 2022, datos.gov.co/hq2v-5umk. */
-      setTxt('sk-ab', '58%');
+      setTxt('sk-ab', (window.__sisbenLive ? window.__sisbenLive.abHog : 58) + '%');
       setTxt('sk-puntaje', Math.round(avg.puntaje));
       setTxt('sk-registros', totalRegistros.toLocaleString('es-CO'));
     },
@@ -12302,6 +12302,9 @@ window.PIIT = (function () {
       { eps:'Salud Total EPS',           cod:'EPS002', regimen:'Contributivo', afiliados:1520,  pct:4.1,  estado:'Activo' },
       { eps:'Otros regímenes especiales',cod:'—',      regimen:'Especial',     afiliados:1185,  pct:3.2,  estado:'Activo' },
     ];
+    /* ganchos para la capa de datos en vivo (PIITLive): reemplaza el contenido y vuelve a dibujar */
+    window.PIITSproEPS = SISPRO_EPS;
+    window.PIITSproRender = function () { _renderSproAfil(); };
 
     // ── EEVV: Serie histórica nacimientos/defunciones ──────────────
     var SISPRO_EEVV = {
@@ -12583,15 +12586,17 @@ window.PIIT = (function () {
         var subsid  = SISPRO_EPS.filter(function(e){return e.regimen==='Subsidiado';}).reduce(function(s,e){return s+e.afiliados;},0);
         var mixto   = SISPRO_EPS.filter(function(e){return e.regimen==='Mixto';}).reduce(function(s,e){return s+e.afiliados;},0);
         var espec   = SISPRO_EPS.filter(function(e){return e.regimen==='Especial';}).reduce(function(s,e){return s+e.afiliados;},0);
-        var noAfil  = 40247 - (contrib+subsid+mixto+espec);
+        var noAfil  = Math.max(0, (window.__bduaPob || 39549) - (contrib+subsid+mixto+espec));
+        /* con datos en vivo de ADRES se usan los totales por régimen (casi todas las EPS operan en ambos) */
+        if (window.__bduaLive) { contrib = window.__bduaLive.con; subsid = window.__bduaLive.sub; mixto = 0; espec = 0; noAfil = Math.max(0, (window.__bduaPob || 39549) - contrib - subsid); }
         charts._instances['sp-chart-afil'] = new Chart(c1, {
           type:'doughnut',
-          data:{
-            labels:['Contributivo','Subsidiado','Mixto','Especial','No afiliados'],
-            datasets:[{ data:[contrib,subsid,mixto,espec,noAfil],
-              backgroundColor:['#00A0E4','#2E7D52','#C9852A','#7A5A0A','#DC0B2C'],
-              borderWidth:2, borderColor:'#fff' }]
-          },
+          data:(function(){
+            var L=['Contributivo','Subsidiado','Mixto','Especial','No afiliados'], D=[contrib,subsid,mixto,espec,noAfil],
+                C=['#00A0E4','#2E7D52','#C9852A','#7A5A0A','#DC0B2C'], k=[];
+            D.forEach(function(v,i){ if (v > 0) k.push(i); });
+            return { labels:k.map(function(i){return L[i];}), datasets:[{ data:k.map(function(i){return D[i];}), backgroundColor:k.map(function(i){return C[i];}), borderWidth:2, borderColor:'#fff' }] };
+          })(),
           options:{
             cutout:'55%', responsive:true, maintainAspectRatio:true,
             plugins:{ legend:{ position:'bottom' },
@@ -18357,12 +18362,17 @@ window.PIITVerif=(function(){
   function vivos(){
     var out=[];
     out.push(fetchJ('https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=1',9000).then(function(r){return {k:'v-secop',t:'En vivo: SECOP II (datos.gov.co)',e:r.ok&&Array.isArray(r.j)?'ok':'fail',d:r.ok&&Array.isArray(r.j)?'Responde en '+r.ms+' ms con datos de contratación.':'No responde ('+(r.err||'error')+').',s:'datos.gov.co · conjunto jbjy-vk9h'};}));
-    out.push(fetchJ('https://geoportal.dane.gov.co/mparcgis/rest/services/MGN2018/Serv_CapasMGN_2018/MapServer?f=json',9000).then(function(r){return {k:'v-dane',t:'En vivo: geoportal DANE (MGN 2018)',e:r.ok&&r.j&&r.j.currentVersion?'ok':'warn',d:r.ok&&r.j&&r.j.currentVersion?'Servicio activo en '+r.ms+' ms.':'No verificable desde el navegador ('+(r.err||'sin respuesta')+').',s:'geoportal.dane.gov.co'};}));
-    out.push(fetchJ('https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer?f=json',9000).then(function(r){return {k:'v-igac',t:'En vivo: cartografía base IGAC 1:25.000',e:r.ok&&r.j&&r.j.currentVersion?'ok':'warn',d:r.ok&&r.j&&r.j.currentVersion?'Servicio activo en '+r.ms+' ms.':'No verificable desde el navegador ('+(r.err||'sin respuesta')+').',s:'mapas.igac.gov.co'};}));
+    out.push(Promise.resolve({k:'v-cors',t:'Servicios cartográficos DANE e IGAC',e:'info',d:'El geoportal del DANE y la cartografía de IGAC no permiten consultas desde el navegador (CORS), por lo que no se pueden verificar en vivo desde aquí; los mapas sí cargan como imagen. Se comprueban fuera de línea en la auditoría de enlaces.',s:'geoportal.dane.gov.co · mapas.igac.gov.co'}));
     out.push(fetchJ('https://www.datos.gov.co/resource/hq2v-5umk.json?$select='+encodeURIComponent('grupo,sum(fex) as h')+'&$where='+encodeURIComponent("cod_mpio='05736' AND orden=1")+'&$group=grupo',45000).then(function(r){
       if(!(r.ok&&Array.isArray(r.j)&&r.j.length))return {k:'v-dnp',t:'En vivo: Sisbén IV (DNP, datos.gov.co)',e:'warn',d:'No se pudo consultar ('+(r.err||'sin datos')+'). Se usa la referencia incluida (corte marzo 2022).',s:DNP_SIS.fuente};
       var o={A:0,B:0,C:0,D:0};r.j.forEach(function(x){o[x.grupo]=Math.round(parseFloat(x.h));});var live=abPct(o),ref=abPct(DNP_SIS.hogares);
       return {k:'v-dnp',t:'En vivo: Sisbén IV (DNP, datos.gov.co)',e:Math.abs(live-ref)<=0.5?'ok':'warn',d:'Consulta en '+r.ms+' ms: hogares de Segovia A '+o.A+' · B '+o.B+' · C '+o.C+' · D '+o.D+' (A+B = '+live.toFixed(1).replace('.',',')+' %). '+(Math.abs(live-ref)<=0.5?'Coincide con la referencia incluida.':'Difiere de la referencia incluida ('+ref.toFixed(1).replace('.',',')+' %): actualizar la tabla.'),s:DNP_SIS.fuente};}));
+    out.push(Promise.resolve().then(function(){
+      var E=PIITLive.estado(),f=PIITLive.fuentes(),ok=0,mal=[],pend=0,lineas=[];
+      f.forEach(function(x){var s=E[x.id];if(!s||(!s.t&&!s.tErr)){pend++;lineas.push(x.nombre+': consultando…');return;}
+        if(s.ok){ok++;lineas.push(x.nombre+': actualizado '+s.t.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+' ('+s.msg+')');}
+        else{mal.push(x.nombre);lineas.push(x.nombre+': falló ('+s.err+')'+(s.t?'; se conserva la cifra de '+s.t.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}):'; se conserva la cifra incluida'));}});
+      return {k:'v-ciclo',t:'Ciclo de actualización automática (cada 30 min)',e:mal.length?'warn':(pend?'info':'ok'),d:ok+' de '+f.length+' fuentes en vivo al día'+(mal.length?', '+mal.length+' con error':'')+'. '+lineas.join(' · '),s:'SECOP II · DNP · ADRES (datos.gov.co)'};}));
     out.push(PIITHeroInv.consultar(new Date().getFullYear()).then(function(r){
       var e=document.getElementById('hero-inv'),mostrado=e?e.textContent:'',esperado='$'+Math.round(r.total/1e6).toLocaleString('es-CO')+'M';
       return {k:'v-inv',t:'En vivo: contratación EDURSEG '+r.anio+' (panel)',e:mostrado===esperado?'ok':'fail',d:mostrado===esperado?'La tarjeta del panel ('+mostrado+') coincide con SECOP II: '+r.n+' contratos con inicio en '+r.anio+'.':'El panel muestra '+mostrado+' y SECOP II registra '+esperado+' ('+r.n+' contratos con inicio en '+r.anio+').',s:'SECOP II · datos.gov.co jbjy-vk9h · NIT 901989964'};
@@ -18446,8 +18456,89 @@ window.PIITHeroInv=(function(){
     window.__heroInv=r;
   }
   function run(){var y=new Date().getFullYear();return consultar(y).then(function(r){pintar(r);return r;}).catch(function(){return null;});}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
-  return {run:run,consultar:consultar};
+  return {run:run,consultar:consultar,pintar:pintar};
+})();
+</script>
+<script id="piit-live-js">
+/* ══ PIITLive · datos oficiales que se actualizan solos ══
+   Cada fuente se consulta al abrir la plataforma y se repite cada 30 minutos mientras la página está visible.
+   Si una consulta falla, se conserva la última cifra verificada y el estado queda registrado (lo muestra el buque
+   «Verificación automática de datos»). Fuentes: SECOP II (contratación), DNP (Sisbén IV, muestra anonimizada),
+   ADRES (BDUA, afiliación). Para agregar una fuente: PIITLive.registrar(id, nombre, funciónQueDevuelveUnaPromesa). */
+window.PIITLive=(function(){
+  'use strict';
+  var DEF=[],ST={},CADA=30*60*1000;
+  var POB_2026=39549; /* DANE PPED 2026 */
+  function fmt(n){return Math.round(n).toLocaleString('es-CO');}
+  function pct(a,b){return b?(a/b*100):0;}
+  function pc(n,d){return n.toFixed(d==null?1:d).replace('.',',');}
+  function get(url,ms){var c=new AbortController(),tm=setTimeout(function(){c.abort();},ms||45000);
+    return fetch(url,{signal:c.signal}).then(function(r){clearTimeout(tm);if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});}
+  function q(base,sel,where,group,order){return base+'?$select='+encodeURIComponent(sel)+'&$where='+encodeURIComponent(where)+(group?'&$group='+encodeURIComponent(group):'')+(order?'&$order='+encodeURIComponent(order):'');}
+  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+
+  /* 1 · SECOP II: contratos de EDURSEG con inicio en el año en curso */
+  function secop(){
+    var y=new Date().getFullYear();
+    return PIITHeroInv.consultar(y).then(function(r){PIITHeroInv.pintar(r);return 'EDURSEG '+y+': '+r.n+' contratos · $'+fmt(r.total/1e6)+'M';});
+  }
+
+  /* 2 · DNP: Sisbén IV (hogares y personas por grupo, total y cabecera) */
+  function sisben(){
+    var B='https://www.datos.gov.co/resource/hq2v-5umk.json',M="cod_mpio='05736'";
+    return Promise.all([get(q(B,'grupo,zona,sum(fex) as v',M+' AND orden=1','grupo,zona')),get(q(B,'grupo,zona,sum(fex) as v',M,'grupo,zona'))]).then(function(rs){
+      function agg(rows){var t={A:0,B:0,C:0,D:0},c={A:0,B:0,C:0,D:0};rows.forEach(function(x){var v=parseFloat(x.v);t[x.grupo]+=v;if(String(x.zona)==='1')c[x.grupo]+=v;});
+        var tot=t.A+t.B+t.C+t.D,tc=c.A+c.B+c.C+c.D;return {ab:pct(t.A+t.B,tot),abCab:pct(c.A+c.B,tc),tot:tot};}
+      var h=agg(rs[0]),p=agg(rs[1]);
+      window.__sisbenLive={abHog:Math.round(h.ab),abPer:Math.round(p.ab),abHogCab:Math.round(h.abCab),abPerCab:Math.round(p.abCab),hogares:Math.round(h.tot),t:new Date()};
+      set('sk-ab',window.__sisbenLive.abHog+'%');
+      var n=document.getElementById('sisben-oficial-nota');
+      if(n){n.innerHTML='<strong>Fuente oficial (consulta automática al DNP).</strong> Para Segovia, el <strong>'+window.__sisbenLive.abHog+' %</strong> de los hogares y el <strong>'+window.__sisbenLive.abPer+' %</strong> de las personas están en los grupos A y B del Sisbén IV (muestra anonimizada, corte marzo 2022, margen de error relativo cercano al 5 %; cabecera: '+window.__sisbenLive.abHogCab+' % y '+window.__sisbenLive.abPerCab+' %). El DNP no publica cifras por barrio: las de esta pantalla son <strong>estimaciones internas</strong> y no deben usarse para focalizar subsidios. Para cifras por barrio hay que solicitar la base certificada a la Oficina del Sisbén de la Alcaldía.';}
+      return 'A+B hogares '+pc(h.ab)+' % · personas '+pc(p.ab)+' %';
+    });
+  }
+
+  /* 3 · ADRES: BDUA, afiliados activos por EPS y régimen en Segovia */
+  var NOMBRES=[[/COOSALUD/,'Coosalud EPS'],[/SAVIA/,'Savia Salud EPS'],[/NUEVA EPS/,'Nueva EPS'],[/SURAMERICANA|SURA/,'SURA EPS'],[/SALUD TOTAL/,'Salud Total EPS'],[/FAMILIAR/,'EPS Familiar de Colombia'],[/MUTUAL/,'Mutualser EPS'],[/SANITAS/,'Sanitas EPS'],[/SALUD MIA/,'Salud MIA EPS']];
+  function nombreEps(s){var u=String(s).toUpperCase();for(var i=0;i<NOMBRES.length;i++)if(NOMBRES[i][0].test(u))return NOMBRES[i][1];return String(s).replace(/"/g,'').replace(/\s+-CM$/,'').replace(/\s+/g,' ').trim();}
+  function bdua(){
+    var W="upper(mnc_nombre)='SEGOVIA' AND upper(dpr_nombre)='ANTIOQUIA' AND tps_est_afl_nombre='Activo'",S='ent_nombre,sum(cantidad::number) as n';
+    return Promise.all([get(q('https://www.datos.gov.co/resource/d7a5-cnra.json',S,W,'ent_nombre')),get(q('https://www.datos.gov.co/resource/tq4m-hmg2.json',S,W,'ent_nombre'))]).then(function(rs){
+      var map={},add=function(rows,reg){rows.forEach(function(x){var k=nombreEps(x.ent_nombre),v=parseFloat(x.n)||0;if(!v)return;var e=map[k]=map[k]||{eps:k,S:0,C:0};e[reg]+=v;});};
+      add(rs[0],'S');add(rs[1],'C');
+      var arr=Object.keys(map).map(function(k){return map[k];}),con=0,sub=0;arr.forEach(function(e){con+=e.C;sub+=e.S;});var tot=con+sub;
+      if(!tot)throw new Error('sin afiliados');
+      var filas=arr.map(function(e){var reg=e.S&&e.C?'Mixto':(e.S?'Subsidiado':'Contributivo'),n=e.S+e.C;return {eps:e.eps,cod:'—',regimen:reg,afiliados:Math.round(n),pct:pct(n,tot),estado:'Activo'};}).sort(function(a,b){return b.afiliados-a.afiliados;});
+      var ref=window.PIITSproEPS;
+      if(ref){ref.length=0;filas.forEach(function(f){ref.push(f);});}
+      window.__bduaPob=POB_2026;window.__bduaLive={total:Math.round(tot),con:Math.round(con),sub:Math.round(sub),t:new Date()};
+      set('bd-pob',fmt(POB_2026));set('bd-pob-r','DANE PPED 2026');
+      set('bd-tot',fmt(tot));set('bd-tot-r',pc(pct(tot,POB_2026),0)+' % de la proyección DANE (BDUA registra afiliaciones, no residentes)');
+      set('bd-con',fmt(con));set('bd-con-r',pc(pct(con,tot))+' % de afiliados');
+      set('bd-sub',fmt(sub));set('bd-sub-r',pc(pct(sub,tot))+' % de afiliados');
+      var mes=new Date().toLocaleDateString('es-CO',{month:'long',year:'numeric'});
+      set('bd-t1','Afiliados SGSSS activos por régimen · Segovia · BDUA (ADRES), consulta de '+mes);
+      set('bd-t2','Distribución EPS operando en Segovia · BDUA (ADRES), consulta de '+mes);
+      if(window.PIITSproRender){try{window.PIITSproRender();}catch(e){}}
+      return 'BDUA: '+fmt(tot)+' afiliados activos (contributivo '+fmt(con)+' · subsidiado '+fmt(sub)+')';
+    });
+  }
+
+  function registrar(id,nombre,fn,cada){DEF.push({id:id,nombre:nombre,fn:fn,cada:cada||CADA});}
+  function correr(d){var t0=performance.now();ST[d.id]=ST[d.id]||{nombre:d.nombre,n:0,t:null,ok:null};
+    ST[d.id].corriendo=true;
+    return d.fn().then(function(msg){ST[d.id]={nombre:d.nombre,n:(ST[d.id].n||0)+1,t:new Date(),ok:true,ms:Math.round(performance.now()-t0),msg:msg};return true;})
+      .catch(function(e){ST[d.id]={nombre:d.nombre,n:ST[d.id].n||0,t:ST[d.id].t,ok:false,tErr:new Date(),err:(e&&e.name==='AbortError')?'tiempo de espera agotado':((e&&e.message)||'error'),msg:ST[d.id].msg};return false;});}
+  function todas(){return Promise.all(DEF.map(correr));}
+  /* ciclo: revisa cada minuto y repite las consultas vencidas (solo con la página visible) */
+  setInterval(function(){if(document.hidden)return;DEF.forEach(function(d){var s=ST[d.id];if(s&&s.corriendo&&!s.t&&!s.tErr)return;var ult=s&&(s.t||s.tErr);if(!ult||Date.now()-ult.getTime()>=d.cada)correr(d);});},60*1000);
+
+  registrar('secop','SECOP II · contratos EDURSEG (tarjeta del panel)',secop);
+  registrar('sisben','DNP · Sisbén IV, A+B de Segovia',sisben);
+  registrar('bdua','ADRES · BDUA, afiliados por EPS y régimen',bdua);
+  function arrancar(){setTimeout(todas,300);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrancar);else arrancar();
+  return {registrar:registrar,todas:todas,estado:function(){return ST;},fuentes:function(){return DEF.map(function(d){return {id:d.id,nombre:d.nombre,cada:d.cada};});}};
 })();
 </script>
 </body>

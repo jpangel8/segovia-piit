@@ -186,3 +186,11 @@ Para cargar un año: `presupuesto.OTROS_ANIOS[2025] = { secs, kpi, ingresos, sgr
 ## Tarjeta «Inversión pública 2026» del encabezado (17-nov-2026)
 
 Verificada contra SECOP II (datos.gov.co `jbjy-vk9h`, proveedor EDURSEG NIT 901989964, entidades «SEGOVIA»): 32 contratos en total ($98.090M); con inicio en 2025: 18 ($66.089M); con inicio en 2026: **12 ($30.422M)**. La tarjeta decía «$61.932M · 18 proyectos», que no coincide con ninguna combinación (18 es el conteo de 2025). Ahora se llama «Contratos EDURSEG 2026», se actualiza en vivo desde SECOP II y el buque de verificación la compara. Es contratación de EDURSEG, no la inversión pública total del municipio. Las 6 tarjetas del encabezado pasaron a una cuadrícula de 6 columnas (3 y 2 en pantallas menores).
+
+## Capa de datos en vivo con ciclo automático (18-nov-2026)
+
+`PIITLive` (en `public/piit-v6.html`) consulta fuentes oficiales al abrir la plataforma y las repite cada 30 minutos mientras la página está visible; si una consulta falla conserva la última cifra y registra el error (visible en el buque «Verificación automática de datos»). Fuentes conectadas: **SECOP II** (tarjeta «Contratos EDURSEG»: 12 contratos, $30.422M en 2026), **DNP** (Sisbén IV A+B: 58,3 % de hogares, 68,2 % de personas) y **ADRES BDUA** (afiliados activos de Segovia: 44.085, contributivo 13.660 y subsidiado 30.425; la tabla y las gráficas de EPS se rehacen con los datos oficiales). Para agregar otra fuente: `PIITLive.registrar(id, nombre, funciónQueDevuelveUnaPromesa)`.
+
+Correcciones derivadas: el módulo de aseguramiento mostraba 37.185 afiliados (8.215 contributivo / 28.970 subsidiado) y una tabla de EPS con cifras propias (Savia Salud 18.420, Mutualser 4.290…); la BDUA oficial da Coosalud 19.291, Nueva EPS 15.713 y Savia Salud 9.075, y no incluye Mutualser. «Población total proyectada 40.247 (DANE 2024)» era incorrecta: el DANE da 39.116 (2024) y 39.549 (2026). El total de afiliados BDUA supera la proyección DANE en un 11 %: no son cifras comparables como «cobertura».
+
+Fuentes sin ciclo automático (sin API consultable desde el navegador): DANE PPED (archivo Excel), geoportales DANE e IGAC (CORS).
