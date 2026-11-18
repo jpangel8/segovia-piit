@@ -6202,7 +6202,7 @@ window.piitOwidTheme=function(){ if(!window.Chart) return; var D=Chart.defaults;
     var ctx=c.ctx,horiz=c.options.indexAxis==='y',suf=o.suffix||'';
     ctx.save();ctx.font='700 11px Lato,Helvetica,Arial,sans-serif';ctx.fillStyle='#4e4e4e';ctx.textBaseline='middle';
     c.data.datasets.forEach(function(d,i){var meta=c.getDatasetMeta(i);if(meta.type!=='bar'||meta.hidden)return;
-      meta.data.forEach(function(el,j){var v=d.data[j];if(v==null)return;var txt=(Math.round(v*10)/10).toString().replace('.',',')+suf;
+      meta.data.forEach(function(el,j){var v=d.data[j];if(v==null)return;var txt=(Math.round(v*10)/10).toLocaleString('es-CO',{maximumFractionDigits:1})+suf;
         if(horiz){ctx.textAlign='left';ctx.fillText(txt,el.x+5,el.y);}else{ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(txt,el.x,el.y-4);}});});
     ctx.restore();}});
 };
@@ -18665,6 +18665,93 @@ window.PIITLive=(function(){
   }
   setInterval(montar,1000);
   window.PIITDaneTools={estado:function(){return st;},montar:montar};
+})();
+</script>
+<style id="piit-igac-tools-css">
+#igac-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:10px 20px;background:#fff;border-bottom:1px solid #E1E5E8}
+#igac-tools .dt2-tabs{display:flex;border:1px solid #dadada;border-radius:4px;overflow:hidden}
+#igac-tools .dt2-tab{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;color:#4e4e4e;background:#fff;border:0;border-right:1px solid #dadada;padding:7px 14px;cursor:pointer;min-height:34px}
+#igac-tools .dt2-tab:last-child{border-right:0}
+#igac-tools .dt2-tab[aria-selected="true"]{background:#4c6a9c;color:#fff}
+#igac-tools .dt2-r{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#igac-tools .dt2-btn{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:700;color:#4e4e4e;background:#fff;border:1px solid #dadada;border-radius:4px;padding:7px 12px;cursor:pointer;min-height:34px}
+#igac-tools .dt2-btn:hover{background:#f2f2f2}
+#igac-tools button:focus-visible{outline:3px solid #3366CC;outline-offset:2px}
+#igac-chart-view{padding:16px 20px 8px}
+#igac-chart-view .dt2-cv{position:relative;height:260px}
+#igac-table-view{overflow:auto;padding:4px 20px 14px}
+#igac-table-view .dt2-table{width:100%;border-collapse:collapse;font-size:.875em;font-variant-numeric:tabular-nums}
+#igac-table-view .dt2-table th{position:sticky;top:0;background:#f7f7f7;text-align:left;padding:8px 16px;border-bottom:1px solid #f2f2f2;font-weight:700;color:#4e4e4e;white-space:nowrap;cursor:pointer;user-select:none;font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif}
+#igac-table-view .dt2-table th:hover{background:#e7e7e7}
+#igac-table-view .dt2-table th .si{font-size:9px;margin-left:5px;color:#4c6a9c}
+#igac-table-view .dt2-table th.v,#igac-table-view .dt2-table td.v{text-align:right}
+#igac-table-view .dt2-table td{padding:8px 16px;border-bottom:1px solid #f2f2f2;color:#4e4e4e;vertical-align:bottom;font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif}
+#igac-table-view .dt2-table td.v{font-weight:700;white-space:nowrap}
+#igac-table-view .dt2-table tbody tr:nth-child(even){background:#f7f7f7}
+#igac-table-view .dt2-table tbody tr:hover{background:#f0f0f0}
+#igac-table-view .calc td{font-style:italic;color:#5b5b5b}
+</style>
+<script id="piit-igac-tools-js">
+(function(){
+  'use strict';
+  var KEY='g_igac',AREA_HA=124600,PAL=['#4c6a9c','#883039','#578145','#b13507','#767676'];
+  var st={vista:'resumen',col:null,dir:1,datos:[],chart:null};
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function nes(s){var m=String(s).replace(/\./g,'').replace(',','.').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;}
+  function leer(){
+    st.datos=[].map.call(document.querySelectorAll('#igac-uso-table tbody tr'),function(tr){
+      var td=tr.children,tag=td[0].querySelector('.igac-cat-tag'),nom=tag?tag.textContent.trim():td[0].textContent.trim();
+      var desc=(td[0].querySelector('div')||{textContent:''}).textContent.trim();
+      return {cat:nom,desc:desc,uni:nes(td[1].textContent),ha:nes(td[2].textContent),pct:parseFloat(td[3].textContent.replace('%','').replace(',','.'))};});
+    var suma=st.datos.reduce(function(a,d){return a+d.ha;},0),resto=AREA_HA-suma;
+    st.calc=resto>0?{cat:'Sin estudio agrológico (calculado)',desc:'Diferencia entre la extensión municipal (1.246 km²) y las hectáreas analizadas.',uni:NaN,ha:resto,pct:resto/AREA_HA*100,calc:true}:null;
+  }
+  function filas(){var v=st.datos.slice();if(st.calc)v.push(st.calc);if(st.col){var k=st.col;v.sort(function(a,b){var x=k==='cat'?a.cat.toLowerCase():(isNaN(a[k])?-1:a[k]),y=k==='cat'?b.cat.toLowerCase():(isNaN(b[k])?-1:b[k]);return (x<y?-1:x>y?1:0)*st.dir;});}return v;}
+  function f1(n){return isNaN(n)?'—':n.toLocaleString('es-CO',{maximumFractionDigits:1});}
+  function estado(){var p=[];if(st.vista!=='resumen')p.push('vista:'+st.vista);if(st.col)p.push('orden:'+st.col+(st.dir<0?'-desc':''));
+    try{var u=new URL(location.href);if(p.length)u.searchParams.set(KEY,p.join(';'));else u.searchParams.delete(KEY);history.replaceState(null,'',u.toString());}catch(e){}return p.join(';');}
+  function restaurar(){try{var v=new URL(location.href).searchParams.get(KEY);if(!v)return;v.split(';').forEach(function(x){var i=x.indexOf(':'),k=x.slice(0,i),val=x.slice(i+1);if(k==='vista'&&/^(resumen|grafico|tabla)$/.test(val))st.vista=val;if(k==='orden'){st.col=val.replace('-desc','');st.dir=/-desc$/.test(val)?-1:1;}});}catch(e){}}
+  function csv(){var q=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+    var rows=[['Categoría de uso','Descripción','Unidades','Hectáreas','% del municipio']].concat(filas().map(function(d){return [d.cat,d.desc,isNaN(d.uni)?'':d.uni,Math.round(d.ha),f1(d.pct)];}));
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+rows.map(function(r){return r.map(q).join(',');}).join('\n')],{type:'text/csv;charset=utf-8'}));
+    a.download='piit-igac-uso-del-suelo-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+  function aplicar(){
+    var body=document.getElementById('igac-body'),cv=document.getElementById('igac-chart-view'),tv=document.getElementById('igac-table-view');
+    var donut=document.getElementById('igac-donut-wrap'),tabOrig=document.getElementById('igac-uso-table');
+    body.style.display=st.vista==='resumen'?'':'none';cv.style.display=st.vista==='grafico'?'':'none';tv.style.display=st.vista==='tabla'?'':'none';
+    document.querySelectorAll('#igac-tools .dt2-tab').forEach(function(b){b.setAttribute('aria-selected',String(b.getAttribute('data-v')===st.vista));});
+    if(st.vista==='grafico')grafico();else if(st.chart){st.chart.destroy();st.chart=null;}
+    if(st.vista==='tabla')tabla();
+    estado();
+  }
+  function grafico(){
+    var cv=document.getElementById('igac-chart-view');if(st.chart){st.chart.destroy();st.chart=null;}
+    var rows=st.datos.slice();if(st.calc)rows.push(st.calc);rows.sort(function(a,b){return b.ha-a.ha;});
+    cv.innerHTML='<div class="dt2-cv"><canvas id="igac-chart" aria-label="Hectáreas por categoría de uso del suelo en Segovia"></canvas></div><p class="km-n" style="margin:6px 0 0">Hectáreas por categoría de uso (IGAC, estudio agrológico 1:25.000). La barra gris es la parte del municipio sin estudio, calculada a partir de la extensión de 1.246 km².</p>';
+    st.chart=new Chart(document.getElementById('igac-chart'),{type:'bar',data:{labels:rows.map(function(d){return d.cat;}),datasets:[{label:'Hectáreas',data:rows.map(function(d){return d.ha;}),backgroundColor:rows.map(function(d,i){return d.calc?'#a1a1a1':PAL[i%PAL.length];}),borderRadius:0}]},
+      options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false},owidBarValues:{suffix:' ha'},tooltip:{callbacks:{title:function(i){return rows[i[0].dataIndex].cat;},label:function(c){var d=rows[c.dataIndex];return f1(d.ha)+' ha · '+f1(d.pct)+' % del municipio'+(isNaN(d.uni)?'':' · '+d.uni+' unidades');}}}},scales:{x:{beginAtZero:true,ticks:{callback:function(v){return v.toLocaleString('es-CO');}}}}}});
+  }
+  function tabla(){
+    var tv=document.getElementById('igac-table-view'),cols=[['cat','Categoría de uso'],['uni','Unidades'],['ha','Hectáreas'],['pct','% del municipio'],['desc','Descripción']];
+    tv.innerHTML='<table class="dt2-table"><thead><tr>'+cols.map(function(c){var on=st.col===c[0],num=(c[0]==='uni'||c[0]==='ha'||c[0]==='pct');return '<th scope="col" data-k="'+c[0]+'" class="'+(num?'v':'')+'" aria-sort="'+(on?(st.dir>0?'ascending':'descending'):'none')+'" tabindex="0">'+c[1]+'<span class="si">'+(on?(st.dir>0?'▲':'▼'):'')+'</span></th>';}).join('')+'</tr></thead><tbody>'+
+      filas().map(function(d){return '<tr class="'+(d.calc?'calc':'')+'"><td>'+esc(d.cat)+'</td><td class="v">'+f1(d.uni)+'</td><td class="v">'+f1(d.ha)+' ha</td><td class="v">'+f1(d.pct)+' %</td><td>'+esc(d.desc)+'</td></tr>';}).join('')+'</tbody></table>';
+    tv.querySelectorAll('th').forEach(function(th){var go=function(){var k=th.getAttribute('data-k');if(st.col===k)st.dir*=-1;else{st.col=k;st.dir=(k==='cat'||k==='desc')?1:-1;}aplicar();};th.addEventListener('click',go);th.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});});
+  }
+  function montar(){
+    var body=document.getElementById('igac-body');if(!body||!document.getElementById('igac-uso-table')||document.getElementById('igac-tools'))return;
+    leer();if(!st.datos.length)return;restaurar();
+    var tools=document.createElement('div');tools.id='igac-tools';tools.setAttribute('role','region');tools.setAttribute('aria-label','Vistas del uso del suelo');
+    tools.innerHTML='<div class="dt2-tabs" role="tablist" aria-label="Vista"><button class="dt2-tab" role="tab" data-v="resumen" type="button">Resumen</button><button class="dt2-tab" role="tab" data-v="grafico" type="button">Gráfico</button><button class="dt2-tab" role="tab" data-v="tabla" type="button">Tabla</button></div><div class="dt2-r"><button type="button" class="dt2-btn" id="igac-csv">Descargar CSV</button><button type="button" class="dt2-btn" id="igac-link">Copiar enlace</button></div>';
+    body.parentNode.insertBefore(tools,body);
+    var cv=document.createElement('div');cv.id='igac-chart-view';cv.style.display='none';body.parentNode.insertBefore(cv,body.nextSibling);
+    var tv=document.createElement('div');tv.id='igac-table-view';tv.style.display='none';body.parentNode.insertBefore(tv,cv.nextSibling);
+    tools.querySelectorAll('.dt2-tab').forEach(function(b){b.addEventListener('click',function(){st.vista=b.getAttribute('data-v');aplicar();});});
+    document.getElementById('igac-csv').addEventListener('click',csv);
+    document.getElementById('igac-link').addEventListener('click',function(){estado();var u=location.href,ok=function(){if(window.PIIT&&PIIT.map&&PIIT.map.toast)PIIT.map.toast('Enlace copiado','ok');};if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,ok);else ok();});
+    aplicar();
+  }
+  setInterval(montar,1000);
+  window.PIITIgacTools={estado:function(){return st;},montar:montar};
 })();
 </script>
 </body>
