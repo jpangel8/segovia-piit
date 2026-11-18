@@ -3785,9 +3785,10 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
   <!-- Navegación temática del dashboard (anclas a cada grupo de indicadores) -->
   <nav class="dash-topics" aria-label="Temas del dashboard">
     <a href="#dash-t-general" class="dash-topic act">Visión general</a>
-    <a href="#dash-t-indicadores" class="dash-topic">Indicadores territoriales</a>
-    <a href="#dash-t-fiscal" class="dash-topic">Ejecución fiscal</a>
     <a href="#dash-t-tendencias" class="dash-topic">Tendencias históricas</a>
+    <a href="#dash-t-fiscal" class="dash-topic">Ejecución fiscal</a>
+    <a href="#dash-t-indicadores" class="dash-topic">Indicadores territoriales</a>
+    <a href="#dash-t-ranking" class="dash-topic">Ranking y alertas</a>
   </nav>
 
   <div id="dash-t-general"></div>
@@ -3799,21 +3800,40 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i></div><div class="kc-trend dn">Urgentes</div></div><div class="kc-val" style="color:var(--red)">4</div><div class="kc-lbl">Alertas territoriales</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>hace 2 días</span><span class="kc-meta-src">Reportes ciudadanos</span></div></div>
   </div>
 
-  <!-- Fila 1: Ranking + Alertas -->
-  <div class="grid2">
-    <div>
-      <div class="pt">Ranking cobertura — infraestructura vial por barrio</div>
-      <div class="card" style="padding:14px 16px"><div id="rank-bars"></div></div>
+  <!-- Fila 4: Tendencia histórica ICV — año como eje central, sincronizado -->
+  <div id="dash-t-tendencias" class="dash-anchor"></div>
+  <div style="margin-top:4px">
+    <div class="pt">Evolución histórica · Índice de Calidad de Vida (ICV) municipal · 2019–2025</div>
+    <div class="card" style="padding:16px 18px">
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div id="yr-kpi-readout" style="display:flex;align-items:baseline;gap:10px">
+          <span id="yr-kpi-val" style="font-family:var(--fm);font-size:32px;font-weight:700;color:#0D0D0D">62</span>
+          <span style="font-size:12px;color:#5D5D5D">ICV · <span id="yr-kpi-year">2025</span></span>
+          <span id="yr-kpi-delta" style="font-size:11.5px;font-weight:700;color:#237938">▲ +3 vs 2024</span>
+        </div>
+        <div id="yr-selector" style="display:flex;gap:6px;flex-wrap:wrap" role="tablist" aria-label="Seleccionar año"></div>
+      </div>
     </div>
-    <div>
-      <div class="pt">Alertas y reportes recientes</div>
-      <div class="alert-item crit"><div class="alert-ico crit"></div><div><div class="alert-t">Deterioro vía barrio Briceño — sector sur km 1,8</div><div class="alert-s">Reporte confirmado · Sec. Infraestructura pendiente · hace 2 días</div></div></div>
-      <div class="alert-item warn"><div class="alert-ico warn"></div><div><div class="alert-t">Interrupción alumbrado barrio San Joaquín — 12 cuadras</div><div class="alert-s">Reportado por 3 ciudadanos · empresa prestadora notificada · hace 5 días</div></div></div>
-      <div class="alert-item warn"><div class="alert-ico warn"></div><div><div class="alert-t">38% hogares Galán y Marquetalia en grupo A+B SISBEN</div><div class="alert-s">Concentración vulnerabilidad · visitas prioritarias Salud y Bienestar</div></div></div>
-      <div class="alert-item info"><div class="alert-ico info"></div><div><div class="alert-t">Actualización SISBEN completada — barrio 7 de Agosto</div><div class="alert-s">480 hogares caracterizados · integración plataforma exitosa · hace 7 días</div></div></div>
-    </div>
+    <div id="icv-grapher" style="margin-top:12px"></div>
   </div>
 
+  <!-- Fila 3: Ejecución presupuestal rápida + cobertura servicios -->
+  <div id="dash-t-fiscal" class="dash-anchor"></div>
+  <div class="pt" style="margin-top:6px">Ejecución fiscal</div>
+  <div class="grid2" style="margin-top:0">
+    <div>
+      <div class="pt">Ejecución presupuestal 2026 · por secretaría</div>
+      <div class="card" style="padding:14px 16px">
+        <div class="hbar-wrap"><canvas id="chart-presupuesto"></canvas></div>
+      </div>
+    </div>
+    <div>
+      <div class="pt">Cobertura servicios básicos · 21 barrios · meta 85%</div>
+      <div class="card" style="padding:14px 16px">
+        <div class="hbar-wrap"><canvas id="chart-cobertura"></canvas></div>
+      </div>
+    </div>
+  </div>
   <!-- Fila 2: Gráficas Chart.js -->
   <div id="dash-t-indicadores" class="dash-anchor"></div>
   <div class="pt" style="margin-top:6px">Indicadores territoriales</div>
@@ -3838,38 +3858,20 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     </div>
   </div>
 
-  <!-- Fila 3: Ejecución presupuestal rápida + cobertura servicios -->
-  <div id="dash-t-fiscal" class="dash-anchor"></div>
-  <div class="pt" style="margin-top:6px">Ejecución fiscal</div>
-  <div class="grid2" style="margin-top:0">
+  <!-- Ranking + Alertas (al final del panel) -->
+  <div id="dash-t-ranking" class="dash-anchor"></div>
+  <div class="grid2">
     <div>
-      <div class="pt">Ejecución presupuestal 2026 · por secretaría</div>
-      <div class="card" style="padding:14px 16px">
-        <div class="hbar-wrap"><canvas id="chart-presupuesto"></canvas></div>
-      </div>
+      <div class="pt">Ranking cobertura — infraestructura vial por barrio</div>
+      <div class="card" style="padding:14px 16px"><div id="rank-bars"></div></div>
     </div>
     <div>
-      <div class="pt">Cobertura servicios básicos · 21 barrios · meta 85%</div>
-      <div class="card" style="padding:14px 16px">
-        <div class="hbar-wrap"><canvas id="chart-cobertura"></canvas></div>
-      </div>
+      <div class="pt">Alertas y reportes recientes</div>
+      <div class="alert-item crit"><div class="alert-ico crit"></div><div><div class="alert-t">Deterioro vía barrio Briceño — sector sur km 1,8</div><div class="alert-s">Reporte confirmado · Sec. Infraestructura pendiente · hace 2 días</div></div></div>
+      <div class="alert-item warn"><div class="alert-ico warn"></div><div><div class="alert-t">Interrupción alumbrado barrio San Joaquín — 12 cuadras</div><div class="alert-s">Reportado por 3 ciudadanos · empresa prestadora notificada · hace 5 días</div></div></div>
+      <div class="alert-item warn"><div class="alert-ico warn"></div><div><div class="alert-t">38% hogares Galán y Marquetalia en grupo A+B SISBEN</div><div class="alert-s">Concentración vulnerabilidad · visitas prioritarias Salud y Bienestar</div></div></div>
+      <div class="alert-item info"><div class="alert-ico info"></div><div><div class="alert-t">Actualización SISBEN completada — barrio 7 de Agosto</div><div class="alert-s">480 hogares caracterizados · integración plataforma exitosa · hace 7 días</div></div></div>
     </div>
-  </div>
-  <!-- Fila 4: Tendencia histórica ICV — año como eje central, sincronizado -->
-  <div id="dash-t-tendencias" class="dash-anchor"></div>
-  <div style="margin-top:4px">
-    <div class="pt">Evolución histórica · Índice de Calidad de Vida (ICV) municipal · 2019–2025</div>
-    <div class="card" style="padding:16px 18px">
-      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <div id="yr-kpi-readout" style="display:flex;align-items:baseline;gap:10px">
-          <span id="yr-kpi-val" style="font-family:var(--fm);font-size:32px;font-weight:700;color:#0D0D0D">62</span>
-          <span style="font-size:12px;color:#5D5D5D">ICV · <span id="yr-kpi-year">2025</span></span>
-          <span id="yr-kpi-delta" style="font-size:11.5px;font-weight:700;color:#237938">▲ +3 vs 2024</span>
-        </div>
-        <div id="yr-selector" style="display:flex;gap:6px;flex-wrap:wrap" role="tablist" aria-label="Seleccionar año"></div>
-      </div>
-    </div>
-    <div id="icv-grapher" style="margin-top:12px"></div>
   </div>
 
   <!-- Acerca de estos datos: fuentes y metodología -->
