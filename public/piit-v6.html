@@ -18772,7 +18772,9 @@ window.PIITLive=(function(){
     (raiz||document).querySelectorAll('i[class*="fa-"]').forEach(function(i){
       if(i.dataset.sin)return;i.dataset.sin='1';
       var cls=i.className||'';
-      var k=(cls+' ');if(!soloIcono(i)&&FORCE.test(k)){}else if(KEEP_CLS.test(k)||soloIcono(i)||i.closest(KEEP_ANC))return;
+      var k=(cls+' '),p0=i.parentElement,enCont=p0&&/(^|\s)[\w-]*ico[\w-]*(\s|$)/i.test(String(p0.className));
+      if(soloIcono(i))return;
+      if(!(enCont||FORCE.test(k))&&(KEEP_CLS.test(k)||i.closest(KEEP_ANC)))return;
       i.classList.add('ico-off');
       var p=i.parentElement;
       if(p&&/ico|icon/i.test(String(p.className))&&!(p.textContent||'').trim()){p.classList.add('ico-box-off');}
