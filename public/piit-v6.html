@@ -3845,7 +3845,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div>
       <div class="pt">Ejecución presupuestal 2026 · por secretaría</div>
       <div class="card" style="padding:14px 16px">
-        <canvas id="chart-presupuesto" height="180"></canvas>
+        <div class="hbar-wrap"><canvas id="chart-presupuesto"></canvas></div>
       </div>
     </div>
     <div>
@@ -10233,8 +10233,10 @@ window.PIIT = (function () {
       charts._destroy('chart-presupuesto');
       const ctx = document.getElementById('chart-presupuesto');
       if (!ctx) return;
-      const secs = ['Infraestructura', 'Educación', 'Salud', 'Gobierno', 'Tránsito', 'Minas/Eco.', 'Planeación', 'Hacienda'];
-      const vals = [85, 71, 79, 55, 68, 47, 62, 90];
+      /* Barras horizontales ordenadas de mayor a menor, con el nombre completo de cada secretaría (como el gráfico de barras de OWID) */
+      const _par = [['Infraestructura y Servicios Públicos', 85], ['Educación, Cultura y Deporte', 71], ['Salud y Bienestar Social', 79], ['Gobierno', 55], ['Tránsito y Movilidad', 68], ['Minas y Desarrollo Económico', 47], ['Planeación', 62], ['Hacienda', 90]].sort(function (a, b) { return b[1] - a[1]; });
+      const secs = _par.map(function (p) { return p[0]; });
+      const vals = _par.map(function (p) { return p[1]; });
       charts._instances['chart-presupuesto'] = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -10243,14 +10245,15 @@ window.PIIT = (function () {
             label: '% ejecutado',
             data: vals,
             backgroundColor: vals.map(function (v) { return v >= 70 ? '#2E7D52' : v >= 50 ? '#C9852A' : '#DC0B2C'; }),
-            borderRadius: 4,
+            borderRadius: 0,
           }],
         },
         options: Object.assign(charts._defaults(), {
-          plugins: { legend: { display: false } },
+          indexAxis: 'y',
+          plugins: { legend: { display: false }, owidBarValues: { suffix: '%' } },
           scales: {
-            x: { ticks: { color: '#8A9E96', font:{size:11.5 } }, grid: { display: false } },
-            y: { beginAtZero: true, max: 100, ticks: { color: '#8A9E96', font:{size:11.5 }, callback: function (v) { return v + '%'; } }, grid: { color: 'rgba(0,0,0,.05)' } },
+            x: { beginAtZero: true, max: 100, ticks: { color: '#5b5b5b', font:{size:11.5 }, callback: function (v) { return v + '%'; } }, grid: { color: '#ddd' } },
+            y: { ticks: { color: '#5b5b5b', font:{size:12 } }, grid: { display: false } },
           },
         }),
       });
