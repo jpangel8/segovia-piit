@@ -159,3 +159,11 @@ Paleta OWID Distinct aplicada a 25 gráficas categóricas. Conservan colores sem
 Una sola fuente de datos por año (`presupuesto.datos(año)` en `public/piit-v6.html`) alimenta el selector de años del panel y el de la sección Ejecución fiscal (comparten estado), el título, las 4 tarjetas, las barras por secretaría, las fuentes de financiación y los proyectos SGR. Solo 2026 tiene datos; 2024, 2025 y 2027 muestran un aviso hasta que se carguen. No se encontró un informe público de ejecución presupuestal de Segovia para 2024 o 2025 (búsqueda del 17-nov-2026); la fuente natural es el reporte de la Secretaría de Hacienda / FUT.
 
 Para cargar un año: `presupuesto.OTROS_ANIOS[2025] = { secs, kpi, ingresos, sgr }` con la misma forma que 2026.
+
+---
+
+# Verificación del ICV y buque de auto verificación (17-nov-2026)
+
+**Hallazgos del ICV.** (1) No existe una serie oficial del ICV de Segovia: es un índice interno. (2) Hay cuatro valores distintos para 2024: panel 72, módulo Calidad de Vida 72, serie histórica 59 (2025 = 62) y promedio ponderado de los barrios 61,1 (diferencia máxima 13 puntos). (3) Dos fórmulas con el mismo nombre: Salud 30 % + Educación 30 % + Vivienda 20 % + Seguridad 20 % (módulo) frente a Infraestructura 30 % + Social 25 % + Servicios 25 % + Población 20 % (barrios). (4) «Antioquia 78 · Nacional 74 · Meta PDM 79» no cita fuente. No se modificaron cifras del ICV porque no hay referencia oficial para elegir cuál es la correcta.
+
+**Buque «Verificación automática de datos»** (sección Fuentes de datos, `PIITVerif` en `public/piit-v6.html`): ~20 comprobaciones (población vs DANE PPED, coherencia del ICV y de las fórmulas, Sisbén A+B entre tablas, enlace mapa-indicadores-Sisbén, vigencia de cada fuente, ejecución por año, servicios en vivo). Corre al abrir la sección y cada 30 minutos; botón «Verificar ahora», «Aplicar correcciones oficiales» (solo cifras con referencia oficial, hoy la población) e «Informe CSV». Para actualizar la referencia cuando el DANE publique una nueva serie, editar `DANE_PPED.anios`.

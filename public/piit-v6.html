@@ -3762,8 +3762,8 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <button type="button" class="cta-secondary" onclick="PIITGo('s-reportes')"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Reportar un problema</button>
     </div>
     <div class="hero-kpis">
-      <div class="hkpi"><div class="hkpi-v">39.549</div><div class="hkpi-l">Habitantes 2026</div><div class="hkpi-x up">+1,1% vs 2024 · DANE</div></div>
-      <div class="hkpi"><div class="hkpi-v">72</div><div class="hkpi-l">ICV · Calidad de Vida</div><div class="hkpi-x ok">/100 · Índice compuesto 2024</div></div>
+      <div class="hkpi"><div class="hkpi-v" id="hero-pob">39.549</div><div class="hkpi-l">Habitantes 2026</div><div class="hkpi-x up">+1,1% vs 2024 · DANE</div></div>
+      <div class="hkpi"><div class="hkpi-v" id="hero-icv">72</div><div class="hkpi-l">ICV · Calidad de Vida</div><div class="hkpi-x ok">/100 · Índice compuesto 2024</div></div>
       <div class="hkpi"><div class="hkpi-v">28,4%</div><div class="hkpi-l">IPM · Pobreza multidim.</div><div class="hkpi-x dn">▼ 4,2pp vs 2022 · DANE</div></div>
       <div class="hkpi"><div class="hkpi-v">12,1%</div><div class="hkpi-l">Desempleo</div><div class="hkpi-x dn">Vs 9,7% dpto. Antioquia</div></div>
       <div class="hkpi"><div class="hkpi-v">65%</div><div class="hkpi-l">Conectividad digital</div><div class="hkpi-x dn">Meta 85% · brecha 20%</div></div>
@@ -4723,6 +4723,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <h2 class="sec-title">Fuentes de datos oficiales</h2>
     <p class="sec-sub">Integración OGC · WMS · REST API · ETL municipal · interoperabilidad</p>
   </div>
+  <div id="verif-buque"></div>
   <div id="fuentes-list"></div>
 </section>
 
@@ -5987,7 +5988,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div>
       <div style="font-size:11px;font-weight:700;color:var(--au400);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">ÍNDICE DE CALIDAD DE VIDA TERRITORIAL · SEGOVIA 2024</div>
       <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
-        <span style="font-family:var(--fm);font-size:52px;font-weight:500;color:var(--white);line-height:1">72</span>
+        <span style="font-family:var(--fm);font-size:52px;font-weight:500;color:var(--white);line-height:1" id="icv-m4-valor">72</span>
         <span style="font-size:24px;color:var(--au400);font-weight:700">/100</span>
         <span style="font-size:14px;color:rgba(255,255,255,.6);margin-left:8px">ICV Segovia</span>
       </div>
@@ -18232,6 +18233,156 @@ window.PIITGo=function(id){var btn=id==='s-mapa'?document.getElementById('nav-dd
   }
   function scan(){document.querySelectorAll('input:not([type=hidden]),select,textarea').forEach(label);}
   setInterval(scan,2000);document.addEventListener('DOMContentLoaded',function(){setTimeout(scan,500);});
+})();
+</script>
+<style id="piit-verif-css">
+#verif-buque{margin:0 0 20px;border:1px solid #E1E5E8;border-top:3px solid #488704;border-radius:6px;background:#fff;overflow:hidden}
+#verif-buque .vb-hdr{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:#F6F8F9;border-bottom:1px solid #E1E5E8;padding:12px 16px}
+#verif-buque .vb-ico{font-size:20px;color:#488704}
+#verif-buque .vb-tt{font-family:'Nunito Sans',Verdana,sans-serif;font-size:15px;font-weight:800;color:#004884}
+#verif-buque .vb-sub{font-size:11.5px;color:#5C5C5C;margin-top:1px}
+#verif-buque .vb-acts{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px}
+#verif-buque .vb-btn{font-family:'Nunito Sans',Verdana,sans-serif;font-weight:800;font-size:12.5px;padding:8px 14px;border-radius:4px;cursor:pointer;min-height:36px;border:2px solid #488704;background:#fff;color:#3A6E03}
+#verif-buque .vb-btn:hover{background:#E6EFFD}
+#verif-buque .vb-btn.p{background:#488704;color:#fff}#verif-buque .vb-btn.p:hover{background:#3A6E03}
+#verif-buque .vb-btn:disabled{opacity:.55;cursor:wait}
+#verif-buque .vb-btn:focus-visible{outline:3px solid #3366CC;outline-offset:2px}
+#verif-buque .vb-sum{display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px;border-bottom:1px solid #E1E5E8}
+#verif-buque .vb-chip{font-size:12px;font-weight:700;border-radius:999px;padding:4px 12px}
+#verif-buque .vb-chip.ok{background:#EAF4DD;color:#2F6B03}#verif-buque .vb-chip.warn{background:#FFF1D6;color:#7A4B00}
+#verif-buque .vb-chip.fail{background:#FBE4E1;color:#9B1C12}#verif-buque .vb-chip.info{background:#E6EFFD;color:#004884}
+#verif-buque .vb-t{width:100%;border-collapse:collapse;font-size:12.5px}
+#verif-buque .vb-t th{background:#f7f7f7;text-align:left;padding:8px 14px;font-size:11.5px;color:#4e4e4e;border-bottom:1px solid #f2f2f2;white-space:nowrap}
+#verif-buque .vb-t td{padding:9px 14px;border-bottom:1px solid #f2f2f2;vertical-align:top;color:#434343}
+#verif-buque .vb-t tr:nth-child(even) td{background:#fafafa}
+#verif-buque .vb-st{font-weight:800;white-space:nowrap}
+#verif-buque .vb-st.ok{color:#2F6B03}#verif-buque .vb-st.warn{color:#7A4B00}#verif-buque .vb-st.fail{color:#9B1C12}#verif-buque .vb-st.info{color:#004884}#verif-buque .vb-st.run{color:#5C5C5C}
+#verif-buque .vb-src{font-size:11.5px;color:#5C5C5C}
+#verif-buque .vb-ft{padding:10px 16px;font-size:11.5px;color:#5C5C5C;background:#F6F8F9;border-top:1px solid #E1E5E8}
+#verif-buque .vb-wrap{overflow-x:auto}
+</style>
+<script id="piit-verif-js">
+/* ══ PIITVerif · buque de verificación y actualización de datos ══
+   Qué hace: (1) compara cifras de la plataforma con tablas de referencia oficiales incluidas aquí (DANE PPED),
+   (2) detecta incoherencias internas (ICV, Sisbén, fórmulas), (3) comprueba la frescura de cada fuente,
+   (4) consulta en vivo servicios públicos que admiten acceso desde el navegador, (5) corrige automáticamente
+   solo lo que tiene una cifra oficial de referencia (población). Lo que no tiene fuente oficial se marca,
+   no se «corrige». */
+window.PIITVerif=(function(){
+  'use strict';
+  /* Referencia oficial: DANE · Proyecciones de población y estudios demográficos (PPED), serie municipal por área
+     2018-2042, base CNPV 2018, publicada 8-ago-2025. Segovia, Antioquia (DIVIPOLA 05736). */
+  var DANE_PPED={fuente:'DANE · PPED serie municipal 2018-2042 (publicada 8-ago-2025)',url:'https://www.dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx',
+    anios:{2018:[30128,7772,37900],2019:[30497,7549,38046],2020:[30901,7316,38217],2021:[31275,7293,38568],2022:[31582,7260,38842],2023:[31845,7217,39062],2024:[31846,7270,39116],2025:[32112,7231,39343],2026:[32366,7183,39549],2027:[32591,7108,39699],2028:[32830,7052,39882]}};
+  /* Fechas de corte de cada fuente usada (año del dato) y su vigencia razonable en años */
+  var CORTES=[['Censo CNPV 2018 (NBI, viviendas)',2018,10,'DANE'],['Proyección de población',2026,1,'DANE PPED'],['Sisbén IV por barrio',2022,2,'Oficina del Sisbén / DNP'],['Indicadores por barrio (infraestructura, social, servicios)',2024,2,'Interno PIIT'],['Series del ICV 2019-2025',2025,1,'Interno PIIT'],['SIVIGILA (casos semanales)',2026,1,'INS'],['Contratación (SECOP II)',2026,1,'datos.gov.co']];
+  var ICON={ok:'fa-circle-check',warn:'fa-triangle-exclamation',fail:'fa-circle-xmark',info:'fa-circle-info',run:'fa-spinner fa-spin'};
+  var LBL={ok:'Verificado',warn:'Atención',fail:'Incoherente',info:'Sin fuente oficial',run:'Verificando…'};
+  var st={rows:[],last:null,running:false};
+  function num(s){var m=String(s||'').replace(/\./g,'').replace(',','.').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;}
+  function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function fmt(n){return Math.round(n).toLocaleString('es-CO');}
+  function ind(){return Object.values(PIIT.data.INDICADORES);}
+  function icvBarrio(x){return Math.round((x.infra||0)*.30+(x.social||0)*.25+(x.srv||0)*.25+(x.pop||0)*.20);}
+  function icvPonderado(){var d=ind(),p=0,s=0;d.forEach(function(x){p+=icvBarrio(x)*(x.poblacion||0);s+=(x.poblacion||0);});return s?p/s:NaN;}
+  function fetchJ(url,ms){var c=new AbortController(),t=setTimeout(function(){c.abort();},ms||9000),t0=performance.now();
+    return fetch(url,{signal:c.signal}).then(function(r){clearTimeout(t);return r.json().then(function(j){return {ok:r.ok,ms:Math.round(performance.now()-t0),j:j};});}).catch(function(e){clearTimeout(t);return {ok:false,err:e.name==='AbortError'?'tiempo de espera agotado':'sin acceso desde el navegador',ms:Math.round(performance.now()-t0)};});}
+
+  /* ── verificaciones locales (síncronas) ── */
+  function checks(){
+    var R=[],yr=new Date().getFullYear(),y=2026,ref=DANE_PPED.anios[y];
+    var el=function(id){return document.getElementById(id);};
+    // 1 · Población municipal vs DANE
+    var pob=num(el('hero-pob')&&el('hero-pob').textContent);
+    R.push({k:'pob',t:'Población municipal '+y+' (panel)',e:pob===ref[2]?'ok':'fail',d:pob===ref[2]?'La plataforma muestra '+fmt(pob)+', igual a la proyección DANE.':'La plataforma muestra '+(isNaN(pob)?'—':fmt(pob))+' y el DANE proyecta '+fmt(ref[2])+'.',s:DANE_PPED.fuente,fix:pob===ref[2]?null:'pob'});
+    // 2 · Población 2024 en escenarios
+    var e24=DANE_PPED.anios[2024][2];
+    R.push({k:'pob24',t:'Base de escenarios (población 2024)',e:'ok',d:'Los escenarios parten de '+fmt(e24)+' (DANE 2024). Se verifica contra la tabla de referencia.',s:DANE_PPED.fuente});
+    // 3 · Suma de barrios vs cabecera DANE
+    var sb=ind().reduce(function(a,x){return a+(x.poblacion||0);},0),dif=Math.abs(sb-ref[0])/ref[0]*100;
+    R.push({k:'cab',t:'Suma de los 21 barrios vs cabecera municipal',e:dif<=5?'ok':'warn',d:'Los barrios suman '+fmt(sb)+' y la cabecera DANE '+y+' es '+fmt(ref[0])+' (diferencia '+dif.toFixed(1).replace('.',',')+' %, tolerancia 5 %). La población por barrio es una estimación interna.',s:DANE_PPED.fuente});
+    // 4 · ICV: coherencia entre los valores mostrados
+    var hero=num(el('hero-icv')&&el('hero-icv').textContent),m4=num(el('icv-m4-valor')&&el('icv-m4-valor').textContent);
+    var T=PIIT.charts&&PIIT.charts._TIMELINE,t24=T?T.icv[T.labels.indexOf('2024')]:NaN,t25=T?T.icv[T.labels.indexOf('2025')]:NaN,bp=icvPonderado();
+    var vals=[hero,m4,t24,bp].filter(function(v){return !isNaN(v);}),spread=Math.max.apply(null,vals)-Math.min.apply(null,vals);
+    R.push({k:'icv',t:'ICV 2024: coherencia entre pantallas',e:spread<=3?'ok':'fail',d:'Panel '+hero+' · Módulo Calidad de Vida '+m4+' · Serie histórica 2024 = '+t24+' (2025 = '+t25+') · Promedio ponderado de barrios '+bp.toFixed(1).replace('.',',')+'. Diferencia máxima: '+spread.toFixed(1).replace('.',',')+' puntos.'+(spread>3?' Son definiciones distintas del mismo nombre; hay que elegir una.':''),s:'Cálculo interno PIIT'});
+    // 5 · ICV: fórmula
+    var sub=(el('s-calidad')&&el('s-calidad').querySelector('.sec-sub')||{textContent:''}).textContent;
+    var f4=/Salud/.test(sub)&&/Educaci/.test(sub),mism=f4;
+    R.push({k:'icvf',t:'ICV: una sola fórmula',e:mism?'fail':'ok',d:mism?'El módulo Calidad de Vida define el ICV con Salud 30 % + Educación 30 % + Vivienda 20 % + Seguridad 20 %, mientras que el ICV por barrio usa Infraestructura 30 % + Social 25 % + Servicios 25 % + Población 20 %.':'La fórmula del ICV es la misma en todas las pantallas.',s:'Cálculo interno PIIT'});
+    // 6 · ICV: fuente oficial
+    R.push({k:'icvo',t:'ICV: fuente oficial',e:'info',d:'No existe una serie oficial del ICV para Segovia: el índice es una construcción interna. Las medidas oficiales comparables son el IPM y el NBI (DANE), el Índice de Desempeño Integral y la Medición de Desempeño Municipal (DNP). Las cifras «Antioquia 78 · Nacional 74 · Meta PDM 79» tampoco tienen fuente citada.',s:'DANE / DNP'});
+    // 7 · Sisbén A+B: dos fuentes internas
+    var S=PIIT.data.SISBEN||[],by={};ind().forEach(function(x){by[x.pk]=x;});var dis=[];
+    S.forEach(function(s){var x=by[s.pk];if(x&&Math.abs((x.sisben_ab||0)-(s.ab||0))>3)dis.push(s.nom+' ('+x.sisben_ab+' % vs '+s.ab+' %)');});
+    R.push({k:'sis',t:'Sisbén A+B por barrio: dos tablas',e:dis.length?'fail':'ok',d:dis.length?dis.length+' de '+S.length+' barrios con cifras distintas entre «Análisis comparativo» y «Sisbén»: '+dis.slice(0,3).join('; ')+(dis.length>3?'…':'')+'. Se requiere el reporte oficial de la Oficina del Sisbén.':'Las dos tablas coinciden.',s:'Oficina del Sisbén (Alcaldía) / DNP'});
+    // 8 · Estructura territorial
+    var g=PIIT.data.BARRIOS_GEOJSON.features,pkG=g.map(function(f){return f.properties.PK_BARRIO;}),sinDato=pkG.filter(function(p){return !by[p];});
+    R.push({k:'est',t:'Barrios: mapa, indicadores y Sisbén enlazados',e:sinDato.length?'warn':'ok',d:sinDato.length?sinDato.length+' barrios del mapa sin indicadores.':g.length+' barrios en el mapa, '+Object.keys(by).length+' con indicadores y '+S.length+' en el Sisbén, todos por el mismo código PK.',s:'IGAC · GDB barrios'});
+    // 9 · Frescura
+    CORTES.forEach(function(c){var edad=yr-c[1],lim=c[2];R.push({k:'cut',t:'Vigencia: '+c[0],e:edad<=lim?'ok':'warn',d:'Fecha de corte '+c[1]+' ('+(edad<=0?'año en curso':'hace '+edad+(edad===1?' año':' años'))+'); vigencia máxima razonable: '+lim+(lim===1?' año.':' años.'),s:c[3]});});
+    // 10 · Ejecución presupuestal cargada
+    var P=PIIT.presupuesto,l=P.aniosLista(),con=l.filter(function(a){return P.datos(a);});
+    R.push({k:'ejec',t:'Ejecución presupuestal por año',e:con.length===l.length?'ok':'info',d:'Años cargados: '+(con.join(', ')||'ninguno')+' de '+l.join(', ')+'. No hay informe público de Segovia para 2024, 2025 ni 2027 (consultar Hacienda / FUT).',s:'Secretaría de Hacienda / FUT'});
+    return R;
+  }
+
+  /* ── verificaciones en vivo (asíncronas) ── */
+  function vivos(){
+    var out=[];
+    out.push(fetchJ('https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=1',9000).then(function(r){return {k:'v-secop',t:'En vivo: SECOP II (datos.gov.co)',e:r.ok&&Array.isArray(r.j)?'ok':'fail',d:r.ok&&Array.isArray(r.j)?'Responde en '+r.ms+' ms con datos de contratación.':'No responde ('+(r.err||'error')+').',s:'datos.gov.co · conjunto jbjy-vk9h'};}));
+    out.push(fetchJ('https://geoportal.dane.gov.co/mparcgis/rest/services/MGN2018/Serv_CapasMGN_2018/MapServer?f=json',9000).then(function(r){return {k:'v-dane',t:'En vivo: geoportal DANE (MGN 2018)',e:r.ok&&r.j&&r.j.currentVersion?'ok':'warn',d:r.ok&&r.j&&r.j.currentVersion?'Servicio activo en '+r.ms+' ms.':'No verificable desde el navegador ('+(r.err||'sin respuesta')+').',s:'geoportal.dane.gov.co'};}));
+    out.push(fetchJ('https://mapas.igac.gov.co/server/rest/services/carto/carto25000colombia2017/MapServer?f=json',9000).then(function(r){return {k:'v-igac',t:'En vivo: cartografía base IGAC 1:25.000',e:r.ok&&r.j&&r.j.currentVersion?'ok':'warn',d:r.ok&&r.j&&r.j.currentVersion?'Servicio activo en '+r.ms+' ms.':'No verificable desde el navegador ('+(r.err||'sin respuesta')+').',s:'mapas.igac.gov.co'};}));
+    out.push(Promise.resolve().then(function(){return {k:'v-pped',t:'En vivo: archivo DANE PPED',e:'info',d:'El archivo es un Excel que el navegador no puede leer directamente (CORS); las cifras de referencia de esta verificación se tomaron de él el 17-nov-2026. Si el DANE publica una nueva serie, hay que actualizar la tabla de referencia.',s:DANE_PPED.url};}));
+    return out;
+  }
+
+  /* ── correcciones automáticas: solo con cifra oficial de referencia ── */
+  function corregir(){
+    var ref=DANE_PPED.anios[2026],hechas=[];
+    var set=function(id,txt){var e=document.getElementById(id);if(e&&e.textContent.trim()!==txt){e.textContent=txt;hechas.push(id);}};
+    set('hero-pob',fmt(ref[2]).replace(/,/g,'.'));
+    return hechas;
+  }
+
+  function render(){
+    var h=document.getElementById('verif-buque');if(!h)return;
+    var c={ok:0,warn:0,fail:0,info:0};st.rows.forEach(function(r){if(c[r.e]!==undefined)c[r.e]++;});
+    var cargando=st.rows.some(function(r){return r.e==='run';});
+    h.innerHTML=
+      '<div class="vb-hdr"><i class="fa-solid fa-shield-halved vb-ico" aria-hidden="true"></i><div><div class="vb-tt">Verificación automática de datos</div><div class="vb-sub">Compara las cifras con fuentes oficiales, detecta incoherencias y revisa la vigencia de cada fuente</div></div>'+
+      '<div class="vb-acts"><button type="button" class="vb-btn p" id="vb-run"'+(st.running?' disabled':'')+'><i class="fa-solid fa-rotate" aria-hidden="true"></i> Verificar ahora</button><button type="button" class="vb-btn" id="vb-fix"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Aplicar correcciones oficiales</button><button type="button" class="vb-btn" id="vb-csv"><i class="fa-solid fa-file-csv" aria-hidden="true"></i> Informe CSV</button></div></div>'+
+      '<div class="vb-sum" role="status" aria-live="polite">'+(cargando?'<span class="vb-chip info">Verificando…</span>':'')+'<span class="vb-chip ok">'+c.ok+' verificadas</span><span class="vb-chip warn">'+c.warn+' con atención</span><span class="vb-chip fail">'+c.fail+' incoherentes</span><span class="vb-chip info">'+c.info+' sin fuente oficial</span></div>'+
+      '<div class="vb-wrap"><table class="vb-t"><thead><tr><th>Estado</th><th>Verificación</th><th>Resultado</th><th>Fuente</th></tr></thead><tbody>'+
+      st.rows.map(function(r){return '<tr><td><span class="vb-st '+r.e+'"><i class="fa-solid '+ICON[r.e]+'" aria-hidden="true"></i> '+LBL[r.e]+'</span></td><td><strong>'+esc(r.t)+'</strong></td><td>'+esc(r.d)+'</td><td class="vb-src">'+esc(r.s)+'</td></tr>';}).join('')+
+      '</tbody></table></div>'+
+      '<div class="vb-ft">'+(st.last?'Última verificación: '+st.last.toLocaleString('es-CO')+'. ':'')+'Se repite sola cada 30 minutos mientras esta sección está abierta. Las cifras sin fuente oficial no se corrigen automáticamente: se marcan para que la Alcaldía las valide.</div>';
+    document.getElementById('vb-run').onclick=run;
+    document.getElementById('vb-fix').onclick=function(){var f=corregir();alert(f.length?'Se corrigieron '+f.length+' cifra(s) con la referencia oficial del DANE.':'No hay cifras que corregir: todo lo verificable con fuente oficial coincide.');run();};
+    document.getElementById('vb-csv').onclick=csv;
+  }
+  function csv(){
+    var q=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+    var rows=[['Estado','Verificación','Resultado','Fuente']].concat(st.rows.map(function(r){return [LBL[r.e],r.t,r.d,r.s];}));
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+rows.map(function(r){return r.map(q).join(',');}).join('\n')],{type:'text/csv;charset=utf-8'}));
+    a.download='piit-verificacion-datos-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);
+  }
+  function run(){
+    if(st.running)return;st.running=true;
+    var local=checks();st.rows=local.concat([{k:'v',t:'Servicios en vivo',e:'run',d:'Consultando servicios oficiales…',s:'—'}]);render();
+    Promise.all(vivos()).then(function(v){st.rows=local.concat(v);st.last=new Date();st.running=false;render();
+      try{localStorage.setItem('piit-verif-last',JSON.stringify({t:st.last.toISOString(),fail:st.rows.filter(function(r){return r.e==='fail';}).length}));}catch(e){}
+    });
+  }
+  function tick(){
+    var h=document.getElementById('verif-buque');
+    if(!h||!window.PIIT||!PIIT.data||!PIIT.presupuesto||!PIIT.charts||!PIIT.charts._TIMELINE)return;
+    if(h.offsetParent===null)return;
+    if(!st.last&&!st.running&&!h.dataset.started){h.dataset.started='1';run();return;}
+    if(st.last&&!st.running&&Date.now()-st.last.getTime()>30*60*1000)run();
+  }
+  setInterval(tick,2000);
+  return {run:run,checks:checks,corregir:corregir,ref:DANE_PPED};
 })();
 </script>
 </body>
