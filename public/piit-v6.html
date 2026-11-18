@@ -14090,8 +14090,8 @@ document.addEventListener('DOMContentLoaded', function(){
 var DANE_DATOS = [
   /* DEMOGRAFÍA */
   {cat:'Demografía',   val:'39.549',    cls:'',      lbl:'Habitantes proyectados 2026',       sub:'Cabecera 32.366 · rural 7.183 · PPED DANE',src:'DANE'},
-  {cat:'Demografía',   val:'29.680',    cls:'blue',  lbl:'Población cabecera urbana',          sub:'72% del total municipal',    src:'CNPV 2018'},
-  {cat:'Demografía',   val:'11.542',    cls:'',      lbl:'Población rural dispersa',           sub:'28% · 20 veredas + centros', src:'MGN 2018'},
+  {cat:'Demografía',   val:'32.366',    cls:'blue',  lbl:'Población cabecera municipal',       sub:'82% del total municipal',    src:'PPED DANE 2026'},
+  {cat:'Demografía',   val:'7.183',     cls:'',      lbl:'Centros poblados y rural disperso',  sub:'18% del total municipal',    src:'PPED DANE 2026'},
   {cat:'Demografía',   val:'3,1',       cls:'',      lbl:'Personas por hogar',                 sub:'Media municipal',            src:'CNPV 2018'},
   /* VIVIENDA */
   {cat:'Vivienda',     val:'12.847',    cls:'',      lbl:'Unidades de vivienda',               sub:'Urbano + rural · censo 2018',src:'CNPV 2018'},
@@ -18031,6 +18031,23 @@ html body span.pchart-head-t.pchart-head-t.pchart-head-t.pchart-head-t.pchart-he
 html body .gr-sub,html body .gr-src,html body .gr-note,html body span.pchart-updated.pchart-updated.pchart-updated.pchart-updated.pchart-updated,html body .km-n,html body .card table td,html body .card table th,html body .km-t td,html body .km-t th,html body .gr-table td,html body .gr-table th,html body .rep-hist-table td,html body .rep-hist-table th{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif!important}
 .pchart-updated,.gr-src,.gr-note{font-size:12px;color:#767676}
 .hbar-wrap{position:relative;min-height:220px}
+/* Bloques DANE y Sisbén: paleta institucional clara (verde #488704, azul #004884) en vez del fondo casi negro */
+html body #dane-buque,html body #sisben-buque{border:1px solid #E1E5E8!important;border-top:3px solid #488704!important;border-radius:6px!important;box-shadow:none!important}
+html body #dane-buque-hdr,html body #sisben-buque-hdr{background:#F6F8F9!important;backdrop-filter:none!important;border-bottom:1px solid #E1E5E8}
+html body #dane-buque-hdr .bh-ico,html body #sisben-buque-hdr .bh-ico{color:#488704}
+html body #dane-buque-hdr .bh-title,html body #sisben-buque-hdr .bh-title{color:#004884!important;font-family:'Nunito Sans',Verdana,sans-serif!important;font-size:14px!important;font-weight:800}
+html body #dane-buque-hdr .bh-sub,html body #sisben-buque-hdr .bh-sub{color:#5C5C5C!important;font-size:11.5px!important}
+html body #dane-buque-hdr .bh-live,html body #sisben-buque-hdr .bh-live{color:#2F6B03!important;background:#EAF4DD!important;border:1px solid #BFDca0!important}
+html body #dane-buque-hdr .bh-live::before{background:#488704!important;box-shadow:none!important}
+html body #dane-ticker-wrap{background:#E6EFFD!important;border-bottom:1px solid #D3E0F6!important}
+html body #dane-ticker-wrap::before{background:linear-gradient(90deg,#E6EFFD,transparent)!important}
+html body #dane-ticker-wrap::after{background:linear-gradient(270deg,#E6EFFD,transparent)!important}
+html body .dt-label{color:#4A5B6E!important}
+html body .dt-val{color:#004884!important}
+html body .dt-unit{color:#5C5C5C!important}
+html body .dt-sep{color:#8FA9CC!important}
+html body .dt-src{color:#3F6B1F!important;background:#EAF4DD!important}
+
 </style>
 <div id="piit-consent" role="dialog" aria-labelledby="pc-t" aria-describedby="pc-d" hidden>
   <strong id="pc-t">Privacidad y cookies</strong>
