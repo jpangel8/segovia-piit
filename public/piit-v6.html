@@ -5878,7 +5878,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div>
       <div class="pt">Flujos funcionales dominantes · área Nordeste</div>
       <div class="card" style="padding:14px 16px">
-        <canvas id="chart-flujos" height="220"></canvas>
+        <div style="position:relative"><canvas id="chart-flujos" height="220"></canvas></div>
       </div>
       <div class="pt" style="margin-top:14px">Posición en el sistema nacional de ciudades · DNP 2024</div>
       <div class="card" style="padding:12px 14px;border-left:3px solid var(--g600)">
@@ -6166,13 +6166,13 @@ window.piitOwidTheme=function(){ if(!window.Chart) return; var D=Chart.defaults;
     var s=c.options.scales; if(!s) return;
     if(type==='bar'&&c.options.indexAxis==='y'){ /* barras horizontales: una fila legible por categoría */
       var nCat=(c.data.labels||[]).length, box=c.canvas&&c.canvas.parentNode;
-      if(box){box.style.position='relative';box.style.height=Math.max(220,nCat*(ds.length>1?30:24)+90)+'px';}
+      if(box){box.style.position='relative';box.style.height=Math.max(220,nCat*(ds.length>1?44:24)+90)+'px';}
       c.options.maintainAspectRatio=false;
       /* nombres largos en dos líneas (sin recortar) */
       var wrapL=function(s){if(typeof s!=='string'||s.length<=20)return s;var w=s.split(' '),out=[],cur='';w.forEach(function(x){if((cur+' '+x).trim().length>20&&cur){out.push(cur);cur=x;}else cur=(cur+' '+x).trim();});if(cur)out.push(cur);return out;};
       if(c.data.labels)c.data.labels=c.data.labels.map(wrapL);
       var maxL=0;(c.data.labels||[]).forEach(function(l){if(Array.isArray(l))maxL=Math.max(maxL,l.length);});
-      if(box&&maxL>1){box.style.height=Math.max(220,nCat*(ds.length>1?32:26)+(maxL-1)*40+90)+'px';}
+      if(box&&maxL>1){box.style.height=Math.max(220,nCat*(ds.length>1?46:26)+(maxL-1)*40+90)+'px';}
     }
     Object.keys(s).forEach(function(k){ var sc=s[k]; if(!sc) return;
       if(sc.type==='radialLinear'){
