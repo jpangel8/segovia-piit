@@ -3820,18 +3820,16 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
   <!-- Fila 3: Ejecución presupuestal rápida + cobertura servicios -->
   <div id="dash-t-fiscal" class="dash-anchor"></div>
   <div class="pt" style="margin-top:6px">Ejecución fiscal</div>
-  <div class="grid2" style="margin-top:0">
-    <div>
-      <div class="pt">Ejecución presupuestal 2026 · por secretaría</div>
-      <div class="card" style="padding:14px 16px">
-        <div class="hbar-wrap"><canvas id="chart-presupuesto"></canvas></div>
-      </div>
+  <div style="margin-top:0">
+    <div class="pt">Ejecución presupuestal 2026 · por secretaría</div>
+    <div class="card" style="padding:14px 16px">
+      <div class="hbar-wrap"><canvas id="chart-presupuesto"></canvas></div>
     </div>
-    <div>
-      <div class="pt">Cobertura servicios básicos · 21 barrios · meta 85%</div>
-      <div class="card" style="padding:14px 16px">
-        <div class="hbar-wrap"><canvas id="chart-cobertura"></canvas></div>
-      </div>
+  </div>
+  <div style="margin-top:16px">
+    <div class="pt">Cobertura servicios básicos · 21 barrios · meta 85%</div>
+    <div class="card" style="padding:14px 16px">
+      <div class="hbar-wrap"><canvas id="chart-cobertura"></canvas></div>
     </div>
   </div>
   <!-- Fila 2: Gráficas Chart.js -->
@@ -10292,26 +10290,48 @@ window.PIIT = (function () {
       charts._destroy('chart-cobertura');
       const ctx = document.getElementById('chart-cobertura');
       if (!ctx) return;
-      const noms = Object.values(DATA.INDICADORES).sort(function (a, b) { return a.srv - b.srv; }).map(function (d) { return d.nombre; });
-      const vals = Object.values(DATA.INDICADORES).sort(function (a, b) { return a.srv - b.srv; }).map(function (d) { return d.srv; });
+      /* Ancho suficiente: columnas a lo ancho de la página con el nombre completo bajo cada una (partido en líneas).
+         Pantalla estrecha (celular): barras horizontales, una fila por barrio. */
+      const wide = ctx.closest('.card').clientWidth >= 760;
+      charts._cobWide = wide;
+      const orden = Object.values(DATA.INDICADORES).sort(function (a, b) { return a.srv - b.srv; });
+      const wrapL = function (s, n) { const w = s.split(' '), out = []; let cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n && cur) { out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; };
+      const noms = orden.map(function (d) { return d.nombre; });
+      const vals = orden.map(function (d) { return d.srv; });
+      if (wide) ctx.parentNode.style.height = '520px';
       charts._instances['chart-cobertura'] = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: noms,
           datasets: [
-            { label: 'Servicios (%)', data: vals, backgroundColor: vals.map(function (v) { return v >= 70 ? 'rgba(46,125,82,.7)' : v >= 40 ? 'rgba(201,133,42,.7)' : 'rgba(200,64,64,.7)'; }), borderRadius: 3 },
+            { label: 'Servicios (%)', data: vals, backgroundColor: vals.map(function (v) { return v >= 70 ? 'rgba(46,125,82,.7)' : v >= 40 ? 'rgba(201,133,42,.7)' : 'rgba(200,64,64,.7)'; }), borderRadius: 0, maxBarThickness: 46 },
             { label: 'Meta 85%', data: new Array(vals.length).fill(85), type: 'line', borderColor: '#D6B000', borderDash: [6, 3], borderWidth: 1.5, pointRadius: 0, fill: false },
           ],
         },
         options: Object.assign(charts._defaults(), {
-          indexAxis: 'y',
+          indexAxis: wide ? 'x' : 'y',
+          maintainAspectRatio: false,
           plugins: { legend: { position: 'bottom', labels: { font:{size:12 }, boxWidth: 10 } }, owidBarValues: { suffix: '%' } },
-          scales: {
-            x: { beginAtZero: true, max: 100, ticks: { color: '#8A9E96', font:{size:11.5 }, callback: function (v) { return v + '%'; } }, grid: { color: 'rgba(0,0,0,.05)' } },
-            y: { ticks: { color: '#8A9E96', font:{size:11.5 } }, grid: { display: false } },
+          scales: wide ? {
+            x: { ticks: { color: '#5b5b5b', font:{size:11 }, autoSkip: false, maxRotation: 50, minRotation: 50 }, grid: { display: false } },
+            y: { beginAtZero: true, max: 100, ticks: { color: '#5b5b5b', font:{size:11.5 }, callback: function (v) { return v + '%'; } }, grid: { color: '#ddd' } },
+          } : {
+            x: { beginAtZero: true, max: 100, ticks: { color: '#5b5b5b', font:{size:11.5 }, callback: function (v) { return v + '%'; } }, grid: { color: '#ddd' } },
+            y: { ticks: { color: '#5b5b5b', font:{size:11.5 } }, grid: { display: false } },
           },
         }),
       });
+      if (!charts._cobResize) {
+        charts._cobResize = true;
+        let tm = null;
+        window.addEventListener('resize', function () {
+          clearTimeout(tm);
+          tm = setTimeout(function () {
+            const c = document.getElementById('chart-cobertura');
+            if (c && c.offsetParent && (c.closest('.card').clientWidth >= 760) !== charts._cobWide) charts.buildCobertura();
+          }, 250);
+        });
+      }
     },
 
     buildComparativo: function (colKey) {
