@@ -694,7 +694,7 @@ iframe.plat-frame{width:100%;height:620px;border:none;display:block}
 .smod-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;margin-top:5px}
 
 /* ─── FOOTER ─── */
-footer{background:var(--g900);color:var(--g300);text-align:center;padding:20px;font-size:11px;margin-top:40px;border-top:1px solid rgba(255,255,255,.05)}
+footer{background:#C2410C;color:#FFF7ED;text-align:center;padding:20px;font-size:11px;margin-top:40px;border-top:1px solid rgba(255,255,255,.05)}
 footer strong{color:var(--au400)}
 footer a{color:var(--g400);text-decoration:none}
 footer a:hover{color:var(--au400)}
@@ -6111,9 +6111,9 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 <footer>
   <div style="max-width:1140px;margin:0 auto">
     <strong>PIIT</strong> Plataforma Integral de Inteligencia Territorial
-    &nbsp;·&nbsp; <a href="politica-privacidad.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Política de privacidad</a>
-    &nbsp;·&nbsp; <a href="terminos-condiciones.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Términos y condiciones</a>
-    &nbsp;·&nbsp; <a href="#" onclick="PIITConsent.open();return false" style="color:inherit;text-decoration:underline">Configurar cookies</a>
+    &nbsp;·&nbsp; <a href="politica-privacidad.html" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Política de privacidad</a>
+    &nbsp;·&nbsp; <a href="terminos-condiciones.html" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Términos y condiciones</a>
+    &nbsp;·&nbsp; <a href="#" onclick="PIITConsent.open();return false" style="color:#fff;text-decoration:underline">Configurar cookies</a>
   </div>
 </footer>
 
@@ -13696,7 +13696,7 @@ window.__piitLogout=function(){localStorage.removeItem("piit-session");window.lo
     // amenaza flotaban sin relación con el territorio.
     var CENTRO=[7.0828,-74.7077];
     _satMap=L.map(el,{zoomControl:false,scrollWheelZoom:false,attributionControl:false});
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:16}).addTo(_satMap);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:16}).addTo(_satMap);
     _satMap.setView(CENTRO,13);
     L.control.zoom({position:'bottomright'}).addTo(_satMap);
     L.control.attribution({position:'bottomleft',prefix:false}).addTo(_satMap).addAttribution('&copy; CARTO · SGC · IDEAM · IGAC');
@@ -18741,6 +18741,8 @@ window.PIITLive=(function(){
 .ico-off{display:none!important}
 .ico-box-off{display:none!important}
 .kc-top{justify-content:flex-start;gap:8px}
+body footer a,body footer a:visited{color:#fff!important;text-decoration:underline}
+footer strong{color:#FFE9B0}
 </style>
 <script id="piit-sin-iconos-js">
 /* Quita los íconos decorativos de toda la plataforma. Se conservan: botones que solo tienen ícono (controles),
@@ -18882,7 +18884,14 @@ window.PIITLive=(function(){
 #rm-wrap .rm-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding:12px 14px;border-bottom:1px solid #E1E5E8;background:#fff}
 #rm-wrap select,#rm-wrap input[type=search]{font-family:inherit;font-size:13.5px;padding:8px 12px;border:1px solid #cfd6dc;border-radius:6px;background:#fff;min-height:36px;max-width:100%}
 #rm-wrap .rm-capa{flex:1 1 230px;font-weight:700;color:#363636}
-#rm-wrap .rm-d2{font-size:12px;font-weight:700;color:#fff;background:#363636;border-radius:999px;padding:6px 12px}
+#rm-wrap .rm-modes{display:flex;border:1px solid #dadada;border-radius:999px;overflow:hidden}
+#rm-wrap .rm-mode{font-family:inherit;font-size:12.5px;font-weight:700;color:#4e4e4e;background:#fff;border:0;padding:7px 16px;cursor:pointer;min-height:36px}
+#rm-wrap .rm-mode[aria-pressed="true"]{background:#363636;color:#fff}
+#rm-wrap .rm-mode:focus-visible{outline:3px solid #3366CC;outline-offset:-3px}
+#rm-3d{position:absolute;inset:0;z-index:1;background:linear-gradient(#f4f6f5,#e6eae8);cursor:grab;outline:none;touch-action:none}
+#rm-3d:focus-visible{box-shadow:inset 0 0 0 3px #3366CC}
+#rm-3d canvas{display:block;width:100%;height:100%}
+#rm-3d-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:13px;color:#5b5b5b}
 #rm-wrap .rm-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 14px;border-bottom:1px solid #E1E5E8;background:#fafafa;align-items:center}
 #rm-wrap .rm-chips .t{font-size:11.5px;color:#5C5C5C;margin-right:4px}
 #rm-wrap .rm-chip{font-family:inherit;font-size:12px;font-weight:700;color:#4e4e4e;background:#fff;border:1px solid #dadada;border-radius:999px;padding:4px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:30px}
@@ -18956,7 +18965,7 @@ window.PIITLive=(function(){
     {k:'torr',n:'Avenida torrencial',c:'#286bbb',d:'Q. La Cianuración · barrio Briceño · riesgo moderado',tipo:'p',pts:[[CENTRO[0]-0.002,CENTRO[1]+0.011],[CENTRO[0]+0.002,CENTRO[1]+0.015],[CENTRO[0]-0.004,CENTRO[1]+0.019],[CENTRO[0]-0.008,CENTRO[1]+0.015]]}
   ];
   var RAMP=['#e6edfa','#b9cdee','#86a3d3','#52719f','#273f6c'];
-  var st={capa:'vuln',sel:null,q:'',amen:{inund:true,masa:true,incen:true,torr:true},base:false,map:null,geo:null,layers:{},baseL:null,feats:{},vals:{},cortes:[]};
+  var st={modo:'2d',capa:'vuln',sel:null,q:'',amen:{inund:true,masa:true,incen:true,torr:true},base:false,map:null,geo:null,layers:{},baseL:null,feats:{},vals:{},cortes:[]};
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function fmt(n,u){return (Math.round(n*10)/10).toLocaleString('es-CO',{maximumFractionDigits:1})+(u||'');}
   function capa(){return CAPAS.filter(function(c){return c.k===st.capa;})[0];}
@@ -18974,16 +18983,16 @@ window.PIITLive=(function(){
   function nucleo(){var ks=Object.keys(st.feats),cs=ks.map(function(k){return st.feats[k].getBounds().getCenter();}),med=function(a){a=a.slice().sort(function(x,y){return x-y;});return a[Math.floor(a.length/2)];},c0=L.latLng(med(cs.map(function(c){return c.lat;})),med(cs.map(function(c){return c.lng;}))),b=null;
     ks.forEach(function(k,i){if(cs[i].distanceTo(c0)<=2500){var bb=st.feats[k].getBounds();b=b?b.extend(bb):L.latLngBounds(bb.getSouthWest(),bb.getNorthEast());}});return b||st.geo.getBounds();}
   function verNucleo(an){st.map.fitBounds(nucleo(),{padding:[24,24],animate:an!==false});}
-  function estado(){var p=[];if(st.capa!=='vuln')p.push('capa:'+st.capa);if(st.sel)p.push('barrio:'+st.sel);
+  function estado(){var p=[];if(st.modo==='3d')p.push('modo:3d');if(st.capa!=='vuln')p.push('capa:'+st.capa);if(st.sel)p.push('barrio:'+st.sel);
     try{var u=new URL(location.href);if(p.length)u.searchParams.set(KEY,p.join(';'));else u.searchParams.delete(KEY);history.replaceState(null,'',u.toString());}catch(e){}return p.join(';');}
-  function restaurar(){try{var v=new URL(location.href).searchParams.get(KEY);if(!v)return;v.split(';').forEach(function(x){var i=x.indexOf(':'),k=x.slice(0,i),val=x.slice(i+1);if(k==='capa'&&CAPAS.some(function(c){return c.k===val;}))st.capa=val;if(k==='barrio')st.sel=val;});}catch(e){}}
+  function restaurar(){try{var v=new URL(location.href).searchParams.get(KEY);if(!v)return;v.split(';').forEach(function(x){var i=x.indexOf(':'),k=x.slice(0,i),val=x.slice(i+1);if(k==='capa'&&CAPAS.some(function(c){return c.k===val;}))st.capa=val;if(k==='barrio')st.sel=val;if(k==='modo'&&val==='3d')st.modo='3d';});}catch(e){}}
 
   function ui(){
     var w=document.getElementById('rm-wrap');
     w.innerHTML='<div class="rm-grid"><div class="rm-mapcol">'+
-      '<div class="rm-bar"><select id="rm-capa" class="rm-capa" aria-label="Capa del mapa">'+CAPAS.map(function(c){return '<option value="'+c.k+'"'+(c.k===st.capa?' selected':'')+'>'+c.n+'</option>';}).join('')+'</select><span class="rm-d2" title="Mapa plano">2D</span></div>'+
+      '<div class="rm-bar"><select id="rm-capa" class="rm-capa" aria-label="Capa del mapa">'+CAPAS.map(function(c){return '<option value="'+c.k+'"'+(c.k===st.capa?' selected':'')+'>'+c.n+'</option>';}).join('')+'</select><div class="rm-modes" role="group" aria-label="Vista del mapa"><button type="button" class="rm-mode" data-m="2d" aria-pressed="true">2D</button><button type="button" class="rm-mode" data-m="3d" aria-pressed="false">3D</button></div></div>'+
       '<div class="rm-chips" role="group" aria-label="Zonas de amenaza (esquemáticas)"><span class="t">Zonas de amenaza:</span>'+AMEN.map(function(a){return '<button type="button" class="rm-chip" data-a="'+a.k+'" aria-pressed="'+st.amen[a.k]+'"><i class="s" style="background:'+a.c+'"></i>'+a.n+'</button>';}).join('')+'<button type="button" class="rm-chip" id="rm-base" aria-pressed="false">Mapa base</button></div>'+
-      '<div class="rm-mapbox"><div id="rm-map" role="application" aria-label="Mapa de barrios de Segovia"></div><div class="rm-leg" id="rm-leg"></div>'+
+      '<div class="rm-mapbox"><div id="rm-map" role="application" aria-label="Mapa de barrios de Segovia"></div><div id="rm-3d" tabindex="0" role="application" aria-label="Relieve 3D de los barrios de Segovia. Arrastre para girar, clic derecho o Mayús para desplazar, rueda o +/− para acercar." style="display:none"><div id="rm-3d-tt" class="rm-tt" style="display:none;position:absolute;pointer-events:none;z-index:600"></div><div id="rm-3d-msg" style="display:none"></div></div><div class="rm-leg" id="rm-leg"></div>'+
       '<div class="rm-zoom"><button type="button" class="rm-btn" id="rm-zi" aria-label="Acercar">+</button><button type="button" class="rm-btn" id="rm-zo" aria-label="Alejar">−</button><button type="button" class="rm-btn" id="rm-core" aria-label="Ver el casco urbano" title="Ver el casco urbano" style="font-size:11.5px">Casco</button><button type="button" class="rm-btn" id="rm-fit" aria-label="Ver todo el municipio" title="Ver todo el municipio" style="font-size:12px">Todo</button></div></div>'+
       '<div class="rm-foot">Cartografía: IGAC (21 barrios). Valores por barrio: estimaciones internas de PIIT. Las zonas de amenaza son esquemáticas, no provienen del SGC ni del IDEAM. Fuentes institucionales: SIMMA · SGC · IDEAM.</div></div>'+
       '<aside class="rm-panel" id="rm-panel" aria-live="polite"></aside></div>';
@@ -19021,6 +19030,7 @@ window.PIITLive=(function(){
   }
   function elegir(pk,zoom){
     st.sel=pk;if(st.geo)st.geo.setStyle(estilo);
+    if(st.modo==='3d'&&window.PIITRiesgo3D){if(pk)ficha(pk);else lista();PIITRiesgo3D.seleccionar(pk);estado();return;}
     if(pk){ficha(pk);var f=st.feats[pk];if(f&&zoom!==false){st.map.fitBounds(f.getBounds(),{padding:[60,60],maxZoom:16,animate:true});f.bringToFront();}}
     else{lista();verNucleo(true);}
     estado();
@@ -19046,21 +19056,42 @@ window.PIITLive=(function(){
       layer.getElement&&0;}}).addTo(st.map);
     verNucleo(false);
     pintarAmen();
-    document.getElementById('rm-zi').onclick=function(){st.mov=true;st.map.zoomIn();};
-    document.getElementById('rm-zo').onclick=function(){st.mov=true;st.map.zoomOut();};
-    document.getElementById('rm-fit').onclick=function(){st.mov=true;st.map.fitBounds(st.geo.getBounds(),{padding:[20,20]});};
-    document.getElementById('rm-core').onclick=function(){st.mov=false;elegir(null);};
-    document.getElementById('rm-capa').onchange=function(){st.capa=this.value;calcular();st.geo.setStyle(estilo);leyenda();if(st.sel)ficha(st.sel);else lista();estado();};
-    document.querySelectorAll('#rm-wrap .rm-chip[data-a]').forEach(function(b){b.onclick=function(){var k=b.getAttribute('data-a');st.amen[k]=!st.amen[k];b.setAttribute('aria-pressed',String(st.amen[k]));pintarAmen();};});
+    document.getElementById('rm-zi').onclick=function(){if(st.modo==='3d'){PIITRiesgo3D.zoom(0.8);return;}st.mov=true;st.map.zoomIn();};
+    document.getElementById('rm-zo').onclick=function(){if(st.modo==='3d'){PIITRiesgo3D.zoom(1.25);return;}st.mov=true;st.map.zoomOut();};
+    document.getElementById('rm-fit').onclick=function(){if(st.modo==='3d'){PIITRiesgo3D.vista('todo');return;}st.mov=true;st.map.fitBounds(st.geo.getBounds(),{padding:[20,20]});};
+    document.getElementById('rm-core').onclick=function(){if(st.modo==='3d'){st.sel=null;lista();PIITRiesgo3D.seleccionar(null);PIITRiesgo3D.vista('casco');estado();return;}st.mov=false;elegir(null);};
+    document.getElementById('rm-capa').onchange=function(){st.capa=this.value;calcular();st.geo.setStyle(estilo);leyenda();if(st.sel)ficha(st.sel);else lista();if(window.PIITRiesgo3D)PIITRiesgo3D.actualizar();estado();};
+    document.querySelectorAll('#rm-wrap .rm-mode').forEach(function(b){b.onclick=function(){cambiarModo(b.getAttribute('data-m'));};});
+    document.querySelectorAll('#rm-wrap .rm-chip[data-a]').forEach(function(b){b.onclick=function(){var k=b.getAttribute('data-a');st.amen[k]=!st.amen[k];b.setAttribute('aria-pressed',String(st.amen[k]));pintarAmen();if(window.PIITRiesgo3D)PIITRiesgo3D.actualizar();};});
     document.getElementById('rm-base').onclick=function(){st.base=!st.base;this.setAttribute('aria-pressed',String(st.base));
       if(st.base){if(!st.baseL)st.baseL=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:16,attribution:'Tiles © Esri',opacity:.9});st.baseL.addTo(st.map);st.baseL.bringToBack();}else if(st.baseL)st.map.removeLayer(st.baseL);};
     st.map.on('click',function(){});
   }
+  function cambiarModo(m){
+    if(m===st.modo)return;
+    if(m==='3d'){
+      if(!window.PIITRiesgo3D){return;}
+      PIITRiesgo3D.activar(function(ok){
+        if(!ok)return;st.modo='3d';aplicarModo();
+      });
+    }else{st.modo='2d';aplicarModo();}
+  }
+  function aplicarModo(){
+    var is3=st.modo==='3d';
+    document.querySelectorAll('#rm-wrap .rm-mode').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-m')===st.modo));});
+    document.getElementById('rm-3d').style.display=is3?'block':'none';
+    document.getElementById('rm-map').style.visibility=is3?'hidden':'visible';
+    var base=document.getElementById('rm-base');if(base)base.style.display=is3?'none':'';
+    if(is3){PIITRiesgo3D.mostrar();PIITRiesgo3D.seleccionar(st.sel);}else{PIITRiesgo3D.ocultar();if(st.map){st.map.invalidateSize();if(st.sel)elegir(st.sel,true);else verNucleo(false);}}
+    estado();
+  }
+  window.__rmApi={st:st,color:color,datos:datos,elegir:function(pk){st.sel=pk;if(st.geo)st.geo.setStyle(estilo);if(pk)ficha(pk);else lista();estado();},capa:capa,AMEN:AMEN,cambiarModo:cambiarModo,aplicarModo:aplicarModo};
   function montar(){
     var w=document.getElementById('rm-wrap');
     if(!w||w.dataset.ok||w.offsetParent===null||typeof L==='undefined'||!window.PIIT||!PIIT.data||!PIIT.icv||!PIIT.data.BARRIOS_GEOJSON)return;
     w.dataset.ok='1';restaurar();calcular();ui();mapa();leyenda();
     if(st.sel&&st.feats[st.sel])elegir(st.sel,true);else lista();
+    if(st.modo==='3d'){st.modo='2d';setTimeout(function(){cambiarModo('3d');},600);}
     setTimeout(function(){st.map.invalidateSize();if(!st.sel)verNucleo(false);},300);
     window.addEventListener('resize',function(){if(st.map)st.map.invalidateSize();});
     /* si el contenedor cambia de tamaño (carga de fuentes, panel, ventana), se reajusta el encuadre */
@@ -19069,6 +19100,150 @@ window.PIITLive=(function(){
   }
   setInterval(function(){montar();var w=document.getElementById('rm-wrap');if(w&&w.dataset.ok&&w.offsetParent!==null&&st.map&&!w.dataset.vis){w.dataset.vis='1';setTimeout(function(){st.map.invalidateSize();},200);}if(w&&w.offsetParent===null)w.dataset.vis='';},800);
   window.PIITRiesgoMapa={estado:function(){return st;},amenazasDe:amenazasDe};
+})();
+</script>
+<script id="piit-rm3d-js">
+/* Vista 3D del mapa de barrios: cada barrio es un prisma cuya altura es el valor de la capa elegida (como el relieve
+   3D del visor de referencia). Girar con arrastre, desplazar con clic derecho o Mayús, acercar con rueda o +/−,
+   teclas de flecha para girar. Toca un barrio para abrir su ficha. Three.js r128 con comprobación de integridad. */
+window.PIITRiesgo3D=(function(){
+  'use strict';
+  var HASH='sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu';
+  var S={listo:false,vis:false,meshes:{},amen:{},cam:{az:-0.35,el:0.9,dist:1,tx:0,tz:0},fit:null,anim:0,hover:null,ptr:{},drag:null,foc:false};
+  var R,scene,camera,raster,ray,mouse,cont,tt;
+  function api(){return window.__rmApi;}
+  function cargar(cb){
+    if(window.THREE){cb(true);return;}
+    var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';s.integrity=HASH;s.crossOrigin='anonymous';
+    s.onload=function(){cb(!!window.THREE);};
+    s.onerror=function(){var s2=document.createElement('script');s2.src='https://unpkg.com/three@0.128.0/build/three.min.js';s2.integrity=HASH;s2.crossOrigin='anonymous';s2.onload=function(){cb(!!window.THREE);};s2.onerror=function(){cb(false);};document.head.appendChild(s2);};
+    document.head.appendChild(s);
+  }
+  function mensaje(txt){var m=document.getElementById('rm-3d-msg');if(!m)return;m.textContent=txt||'';m.style.display=txt?'flex':'none';}
+  /* proyección local en metros alrededor del centro del casco */
+  var O=null;
+  function proj(lng,lat){return [(lng-O.lng)*111320*Math.cos(O.lat*Math.PI/180),(lat-O.lat)*110540];}
+  function anillos(f){var g=f.geometry,P=g.type==='Polygon'?[g.coordinates]:g.coordinates;return P;}
+  function construir(){
+    var A=api(),by=A.datos();
+    var feats=PIIT.data.BARRIOS_GEOJSON.features;
+    /* origen: centro de los barrios del casco (mediana) */
+    var cs=feats.map(function(f){var r=anillos(f)[0][0],sx=0,sy=0;r.forEach(function(p){sx+=p[0];sy+=p[1];});return [sx/r.length,sy/r.length];});
+    var med=function(a){a=a.slice().sort(function(x,y){return x-y;});return a[Math.floor(a.length/2)];};
+    O={lng:med(cs.map(function(c){return c[0];})),lat:med(cs.map(function(c){return c[1];}))};
+    var nucleo=[],todo={minx:1e9,maxx:-1e9,miny:1e9,maxy:-1e9},core={minx:1e9,maxx:-1e9,miny:1e9,maxy:-1e9};
+    feats.forEach(function(f,i){var pk=f.properties.PK_BARRIO,d=by[pk];if(!d)return;
+      var shapes=[];
+      anillos(f).forEach(function(poly){
+        var ext=poly[0].map(function(p){return proj(p[0],p[1]);});
+        var sh=new THREE.Shape(ext.map(function(p){return new THREE.Vector2(p[0],p[1]);}));
+        for(var h=1;h<poly.length;h++){sh.holes.push(new THREE.Path(poly[h].map(function(p){var q=proj(p[0],p[1]);return new THREE.Vector2(q[0],q[1]);})));}
+        shapes.push(sh);
+        ext.forEach(function(p){todo.minx=Math.min(todo.minx,p[0]);todo.maxx=Math.max(todo.maxx,p[0]);todo.miny=Math.min(todo.miny,p[1]);todo.maxy=Math.max(todo.maxy,p[1]);
+          var cd=Math.hypot(p[0],p[1]);if(cd<2800){core.minx=Math.min(core.minx,p[0]);core.maxx=Math.max(core.maxx,p[0]);core.miny=Math.min(core.miny,p[1]);core.maxy=Math.max(core.maxy,p[1]);}});
+      });
+      var geo=new THREE.ExtrudeGeometry(shapes,{depth:1,bevelEnabled:false,curveSegments:1});geo.rotateX(-Math.PI/2);
+      var mat=new THREE.MeshLambertMaterial({color:0xcccccc});
+      var mesh=new THREE.Mesh(geo,mat);mesh.userData={pk:pk};mesh.scale.y=1;
+      var edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo,25),new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.7}));mesh.add(edges);
+      scene.add(mesh);S.meshes[pk]={mesh:mesh,mat:mat,h:1,hT:1};
+    });
+    S.fit={todo:todo,core:isFinite(core.minx)?core:todo};
+    /* suelo */
+    var gs=Math.max(todo.maxx-todo.minx,todo.maxy-todo.miny)*1.6;
+    var plane=new THREE.Mesh(new THREE.PlaneGeometry(gs,gs),new THREE.MeshBasicMaterial({color:0xeef0ef}));plane.rotation.x=-Math.PI/2;plane.position.y=-2;scene.add(plane);
+  }
+  function altura(v,mn,mx){var c=S.fit.core,tam=Math.max(c.maxx-c.minx,c.maxy-c.miny);var H=tam*0.13,min=tam*0.01;return min+(mx===mn?.5:(v-mn)/(mx-mn))*H;}
+  function colorHex(v){var c=api().color(v);return new THREE.Color(c);}
+  function actualizarAmen(){
+    var A=api(),st=A.st;
+    A.AMEN.forEach(function(a){var o=S.amen[a.k];
+      if(!o){var pts;if(a.tipo==='c'){pts=[];for(var i=0;i<48;i++){var ang=i/48*Math.PI*2,p=proj(a.lng,a.lat);pts.push(new THREE.Vector2(p[0]+Math.cos(ang)*a.r,p[1]+Math.sin(ang)*a.r));}}else pts=a.pts.map(function(q){var p=proj(q[1],q[0]);return new THREE.Vector2(p[0],p[1]);});
+        var g=new THREE.ShapeGeometry(new THREE.Shape(pts));g.rotateX(-Math.PI/2);
+        var m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:new THREE.Color(a.c),transparent:true,opacity:.38,side:THREE.DoubleSide,depthWrite:false}));m.position.y=Math.max(1,(S.fit.core.maxx-S.fit.core.minx)*0.25)*0.0+60;
+        var ln=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts.map(function(p){return new THREE.Vector3(p.x,0,-p.y);})),new THREE.LineBasicMaterial({color:new THREE.Color(a.c)}));m.add(ln);
+        scene.add(m);o=S.amen[a.k]=m;}
+      o.visible=!!st.amen[a.k];});
+  }
+  function actualizar(){
+    if(!S.listo)return;var A=api(),st=A.st,by=A.datos();
+    var vals=Object.keys(S.meshes).map(function(pk){return st.vals[pk];}),mn=st.min,mx=st.max;
+    Object.keys(S.meshes).forEach(function(pk){var m=S.meshes[pk],v=st.vals[pk];m.mat.color.copy(colorHex(v));m.hT=altura(v,mn,mx);m.v=v;});
+    actualizarAmen();pintarSel();animar();
+  }
+  function pintarSel(){var sel=api().st.sel;Object.keys(S.meshes).forEach(function(pk){var m=S.meshes[pk];var on=pk===sel,hov=pk===S.hover;m.mat.emissive.setHex(on?0x444444:(hov?0x222222:0x000000));m.mesh.children[0].material.color.setHex(on?0x1a1d24:0xffffff);m.mesh.children[0].material.opacity=on?1:.7;});}
+  function camara(){var c=S.cam,x=c.tx+Math.sin(c.az)*Math.cos(c.el)*c.dist,y=Math.sin(c.el)*c.dist,z=c.tz+Math.cos(c.az)*Math.cos(c.el)*c.dist;camera.position.set(x,y,z);camera.lookAt(c.tx,0,c.tz);}
+  function dibujar(){if(!R||!S.vis)return;camara();R.render(scene,camera);}
+  function animar(){if(S.anim)return;S.anim=requestAnimationFrame(function paso(){
+    var seguir=false;Object.keys(S.meshes).forEach(function(pk){var m=S.meshes[pk];var d=m.hT-m.h;if(Math.abs(d)>0.05){m.h+=d*0.18;seguir=true;}else m.h=m.hT;m.mesh.scale.y=m.h;});
+    var c=S.cam,t=S.target;if(t){['az','el','dist','tx','tz'].forEach(function(k){var d=t[k]-c[k];if(Math.abs(d)>(k==='dist'?0.5:0.0008)){c[k]+=d*0.16;seguir=true;}else c[k]=t[k];});if(!seguir)S.target=null;}
+    dibujar();if(seguir||S.target)S.anim=requestAnimationFrame(paso);else S.anim=0;});}
+  function enfocar(modo){
+    var f=S.fit[modo==='todo'?'todo':'core'],w=f.maxx-f.minx,h=f.maxy-f.miny,tam=Math.max(w,h*1.15),fov=camera.fov*Math.PI/180;
+    S.target={az:-0.35,el:0.9,dist:(tam/2)/Math.tan(fov/2)*(modo==='todo'?2.1:1.25),tx:(f.minx+f.maxx)/2,tz:-(f.miny+f.maxy)/2};animar();
+  }
+  function seleccionar(pk){
+    if(!S.listo)return;pintarSel();
+    if(!pk){enfocar('casco');return;}
+    var m=S.meshes[pk];if(!m)return;var b=new THREE.Box3().setFromObject(m.mesh),cen=b.getCenter(new THREE.Vector3()),sz=b.getSize(new THREE.Vector3()),r=Math.max(sz.x,sz.z,200),fov=camera.fov*Math.PI/180;
+    S.target={az:S.cam.az,el:Math.max(S.cam.el,0.7),dist:Math.max(r*2.6,600)/ (Math.tan(fov/2))*0.45,tx:cen.x,tz:cen.z};animar();
+  }
+  function zoom(k){S.cam.dist=Math.max(150,Math.min(60000,S.cam.dist*k));S.target=null;dibujar();}
+  function pick(ev){var r=cont.getBoundingClientRect();mouse.x=((ev.clientX-r.left)/r.width)*2-1;mouse.y=-((ev.clientY-r.top)/r.height)*2+1;camara();ray.setFromCamera(mouse,camera);
+    var ms=Object.keys(S.meshes).map(function(k){return S.meshes[k].mesh;}),h=ray.intersectObjects(ms,false);return h.length?h[0].object.userData.pk:null;}
+  function tip(ev,pk){
+    if(!pk){tt.style.display='none';return;}var A=api(),d=A.datos()[pk],st=A.st,c=A.capa(),r=cont.getBoundingClientRect();
+    tt.innerHTML='<b>'+(d?d.nombre:'')+'</b>'+c.n+': <b style="display:inline">'+(Math.round(st.vals[pk]*10)/10).toLocaleString('es-CO')+(c.u||'')+'</b>';
+    tt.style.display='block';tt.style.left=Math.min(r.width-190,ev.clientX-r.left+14)+'px';tt.style.top=Math.max(4,ev.clientY-r.top+14)+'px';
+  }
+  function eventos(){
+    cont.addEventListener('contextmenu',function(e){e.preventDefault();});
+    cont.addEventListener('pointerdown',function(e){cont.setPointerCapture(e.pointerId);S.ptr[e.pointerId]={x:e.clientX,y:e.clientY};S.mov=0;S.drag={x:e.clientX,y:e.clientY,pan:(e.button===2||e.shiftKey),dist:null};cont.style.cursor='grabbing';cont.focus();S.foc=true;S.target=null;});
+    cont.addEventListener('pointermove',function(e){
+      var n=Object.keys(S.ptr).length;
+      if(S.ptr[e.pointerId]){var p=S.ptr[e.pointerId],dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;S.mov+=Math.abs(dx)+Math.abs(dy);
+        if(n>=2){var ks=Object.keys(S.ptr),a=S.ptr[ks[0]],b=S.ptr[ks[1]],d=Math.hypot(a.x-b.x,a.y-b.y);if(S.pd)S.cam.dist=Math.max(150,Math.min(60000,S.cam.dist*(S.pd/d)));S.pd=d;}
+        else if(S.drag&&S.drag.pan){var k=S.cam.dist/700;S.cam.tx-=(Math.cos(S.cam.az)*dx+Math.sin(S.cam.az)*dy*Math.sin(S.cam.el))*k;S.cam.tz+=(Math.sin(S.cam.az)*dx-Math.cos(S.cam.az)*dy*Math.sin(S.cam.el))*k;}
+        else{S.cam.az-=dx*0.006;S.cam.el=Math.max(0.12,Math.min(1.5,S.cam.el+dy*0.005));}
+        tt.style.display='none';dibujar();return;}
+      var pk=pick(e);if(pk!==S.hover){S.hover=pk;pintarSel();dibujar();}tip(e,pk);cont.style.cursor=pk?'pointer':'grab';
+    });
+    function fin(e){var click=S.mov<6&&Object.keys(S.ptr).length===1;delete S.ptr[e.pointerId];S.pd=0;cont.style.cursor='grab';
+      if(click&&e.type==='pointerup'&&e.button===0){var pk=pick(e);var A=api();A.elegir(pk);api().cambiarModo&&0;if(window.__rmApi){PIITRiesgo3D.seleccionar(pk);}}}
+    cont.addEventListener('pointerup',fin);cont.addEventListener('pointercancel',fin);
+    cont.addEventListener('pointerleave',function(){if(!Object.keys(S.ptr).length){S.hover=null;pintarSel();tt.style.display='none';dibujar();}});
+    cont.addEventListener('wheel',function(e){if(!(S.foc||e.ctrlKey||e.metaKey))return;e.preventDefault();zoom(e.deltaY>0?1.12:0.89);},{passive:false});
+    cont.addEventListener('blur',function(){S.foc=false;});
+    cont.addEventListener('keydown',function(e){var k=e.key,h=true;
+      if(k==='ArrowLeft')S.cam.az+=0.08;else if(k==='ArrowRight')S.cam.az-=0.08;else if(k==='ArrowUp')S.cam.el=Math.min(1.5,S.cam.el+0.06);else if(k==='ArrowDown')S.cam.el=Math.max(0.12,S.cam.el-0.06);else if(k==='+'||k==='=')zoom(0.85);else if(k==='-'||k==='_')zoom(1.18);else h=false;
+      if(h){e.preventDefault();S.target=null;dibujar();}});
+    if(window.ResizeObserver)new ResizeObserver(function(){if(!R)return;var w=cont.clientWidth,h=cont.clientHeight;if(w&&h){R.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();dibujar();}}).observe(cont);
+  }
+  function iniciar(){
+    cont=document.getElementById('rm-3d');tt=document.getElementById('rm-3d-tt');
+    try{R=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:false});}catch(e){return false;}
+    R.setPixelRatio(Math.min(window.devicePixelRatio||1,2));R.setClearColor(0x000000,0);
+    cont.insertBefore(R.domElement,cont.firstChild);
+    scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(38,1,10,200000);
+    scene.add(new THREE.AmbientLight(0xffffff,0.78));var dl=new THREE.DirectionalLight(0xffffff,0.55);dl.position.set(-900,1500,700);scene.add(dl);
+    ray=new THREE.Raycaster();mouse=new THREE.Vector2();
+    construir();eventos();S.listo=true;
+    var w=cont.clientWidth||800,h=cont.clientHeight||500;R.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
+    var c=S.fit.core,tam=Math.max(c.maxx-c.minx,c.maxy-c.miny);S.cam.dist=(tam/2)/Math.tan(camera.fov*Math.PI/360)*1.25;S.cam.tx=(c.minx+c.maxx)/2;S.cam.tz=-(c.miny+c.maxy)/2;
+    return true;
+  }
+  function activar(cb){
+    if(S.listo){cb(true);return;}
+    mensaje('');cargar(function(ok){
+      if(!ok){alert('No se pudo cargar la librería 3D (Three.js). Verifique su conexión y vuelva a intentar.');cb(false);return;}
+      var okI=false;try{okI=iniciar();}catch(e){okI=false;}
+      if(!okI){alert('Este navegador o equipo no admite gráficos 3D (WebGL). Se mantiene la vista 2D.');cb(false);return;}
+      cb(true);
+    });
+  }
+  function mostrar(){S.vis=true;var w=cont.clientWidth,h=cont.clientHeight;if(w&&h){R.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}actualizar();enfocar('casco');if(api().st.sel)setTimeout(function(){seleccionar(api().st.sel);},50);}
+  function ocultar(){S.vis=false;if(S.anim){cancelAnimationFrame(S.anim);S.anim=0;}tt&&(tt.style.display='none');}
+  return {activar:activar,mostrar:mostrar,ocultar:ocultar,actualizar:actualizar,seleccionar:seleccionar,zoom:zoom,vista:function(m){enfocar(m);},estado:function(){return S;}};
 })();
 </script>
 </body>
