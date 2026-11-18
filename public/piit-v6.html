@@ -3758,8 +3758,8 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <h1 class="hero-h">Inteligencia territorial estratégica<br><em>Segovia en el Sistema de Ciudades Colombia</em></h1>
     <p class="hero-sub">Productividad · Conectividad · Calidad de Vida · Gobernanza · Sostenibilidad territorial · Alineado Misión Sistema de Ciudades DNP-BID</p>
     <div class="hero-cta">
-      <button type="button" class="cta-primary" onclick="PIITGo('s-mapa')"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Explorar el mapa territorial</button>
-      <button type="button" class="cta-secondary" onclick="PIITGo('s-reportes')"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Reportar un problema</button>
+      <button type="button" class="cta-primary" onclick="PIITGo('s-mapa')">Explorar el mapa territorial</button>
+      <button type="button" class="cta-secondary" onclick="PIITGo('s-reportes')">Reportar un problema</button>
     </div>
     <div class="hero-kpis">
       <div class="hkpi"><div class="hkpi-v" id="hero-pob">39.549</div><div class="hkpi-l">Habitantes 2026</div><div class="hkpi-x up">+1,1% vs 2024 · DANE</div></div>
@@ -14322,7 +14322,7 @@ function buildFooter(wrap){
   var now = new Date();
   var ts = now.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})
            +' '+now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-  ftr.innerHTML = '<i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> Fuentes: '
+  ftr.innerHTML = 'Fuentes: '
     +'<a href="https://www.dane.gov.co" target="_blank" rel="noopener noreferrer">DANE · CNPV 2018</a> · '
     +'<a href="https://terridata.dnp.gov.co" target="_blank" rel="noopener noreferrer">DNP Terridata</a> · '
     +'<a href="https://www.ins.gov.co" target="_blank" rel="noopener noreferrer">INS · SIVICAP</a> · '
@@ -14344,7 +14344,7 @@ function buildBuque(){
   /* Header */
   var hdr = document.createElement('div');
   hdr.id = 'dane-buque-hdr';
-  hdr.innerHTML = '<span class="bh-ico"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></span>'
+  hdr.innerHTML = ''
     +'<div><div class="bh-title">DANE · Observatorio Municipal · Segovia, Antioquia</div>'
     +'<div class="bh-sub">DIVIPOLA 05736 · Nordeste Antioqueño · 28 indicadores actualizados de fuentes oficiales</div></div>'
     +'<span class="bh-live">EN VIVO</span>';
@@ -14531,7 +14531,6 @@ document.addEventListener('DOMContentLoaded', function(){
     buque.id = 'sisben-buque';
     buque.innerHTML =
       '<div id="sisben-buque-hdr">'
-      + '<span class="bh-ico"><i class="fa-solid fa-satellite" aria-hidden="true"></i></span>'
       + '<div><div class="bh-title">SISBEN IV · Motor de Auto-Verificación</div>'
       + '<div class="bh-sub">Auditoría continua de integridad geoespacial y alfanumérica · 21 barrios · Segovia, Antioquia</div></div>'
       + '<span class="bh-live" id="sb-buque-live">VERIFICANDO…</span>'
@@ -14831,7 +14830,7 @@ function buildPanel(){
   /* Header */
   var hdr = document.createElement('div');
   hdr.id = 'igac-panel-hdr';
-  hdr.innerHTML = '<div class="igac-hdr-ico"><i class="fa-solid fa-map" aria-hidden="true"></i></div>'
+  hdr.innerHTML = ''
     + '<div>'
     +   '<div class="igac-hdr-title">IGAC · Análisis Territorial Oficial · Segovia, Antioquia</div>'
     +   '<div class="igac-hdr-sub">Estudio Agrológico 1:25.000 · DIVIPOLA 05736 · '+ IGAC_AGR.total_unidades +' unidades · 6 capas WMS en vivo</div>'
@@ -14920,7 +14919,7 @@ function buildPanel(){
   /* Footer */
   var ftr = document.createElement('div');
   ftr.id = 'igac-footer';
-  ftr.innerHTML = '<span class="ft-src"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> Fuente: <a href="https://mapas.igac.gov.co" target="_blank" rel="noopener noreferrer">IGAC · Subdirección de Agrología</a> · '
+  ftr.innerHTML = '<span class="ft-src">Fuente: <a href="https://mapas.igac.gov.co" target="_blank" rel="noopener noreferrer">IGAC · Subdirección de Agrología</a> · '
     +'Estudio de Suelos y Potencial de Usos Municipio Segovia · Escala 1:25.000 · '
     +'<a href="https://geoportal.igac.gov.co" target="_blank" rel="noopener noreferrer">GeoPortal IGAC</a> · DIVIPOLA 05736</span>'
     +'<span class="ft-date">Consulta REST API · '+new Date().toLocaleDateString('es-CO',{month:'long',year:'numeric'})+'</span>';
@@ -18397,8 +18396,8 @@ window.PIITVerif=(function(){
     var c={ok:0,warn:0,fail:0,info:0};st.rows.forEach(function(r){if(c[r.e]!==undefined)c[r.e]++;});
     var cargando=st.rows.some(function(r){return r.e==='run';});
     h.innerHTML=
-      '<div class="vb-hdr"><i class="fa-solid fa-shield-halved vb-ico" aria-hidden="true"></i><div><div class="vb-tt">Verificación automática de datos</div><div class="vb-sub">Compara las cifras con fuentes oficiales, detecta incoherencias y revisa la vigencia de cada fuente</div></div>'+
-      '<div class="vb-acts"><button type="button" class="vb-btn p" id="vb-run"'+(st.running?' disabled':'')+'><i class="fa-solid fa-rotate" aria-hidden="true"></i> Verificar ahora</button><button type="button" class="vb-btn" id="vb-fix"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Aplicar correcciones oficiales</button><button type="button" class="vb-btn" id="vb-csv"><i class="fa-solid fa-file-csv" aria-hidden="true"></i> Informe CSV</button></div></div>'+
+      '<div class="vb-hdr"><div><div class="vb-tt">Verificación automática de datos</div><div class="vb-sub">Compara las cifras con fuentes oficiales, detecta incoherencias y revisa la vigencia de cada fuente</div></div>'+
+      '<div class="vb-acts"><button type="button" class="vb-btn p" id="vb-run"'+(st.running?' disabled':'')+'>Verificar ahora</button><button type="button" class="vb-btn" id="vb-fix">Aplicar correcciones oficiales</button><button type="button" class="vb-btn" id="vb-csv">Informe CSV</button></div></div>'+
       '<div class="vb-sum" role="status" aria-live="polite">'+(cargando?'<span class="vb-chip info">Verificando…</span>':'')+[['ok',c.ok+' verificadas'],['warn',c.warn+' con atención'],['fail',c.fail+' incoherentes'],['info',c.info+' sin fuente oficial']].map(function(x){return '<button type="button" class="vb-chip '+x[0]+' vb-f" data-f="'+x[0]+'" aria-pressed="'+(st.f===x[0])+'" style="border:2px solid '+(st.f===x[0]?'currentColor':'transparent')+';cursor:pointer;font-family:inherit">'+x[1]+'</button>';}).join('')+(st.f!=='todas'?'<button type="button" class="vb-chip info vb-f" data-f="todas" style="border:2px solid transparent;cursor:pointer;font-family:inherit">Ver todas</button>':'')+'</div>'+
       '<div class="vb-wrap"><table class="vb-t"><thead><tr>'+[['e','Estado'],['t','Verificación'],['d','Resultado'],['s','Fuente']].map(function(c){var on=st.col===c[0];return '<th scope="col" data-k="'+c[0]+'" tabindex="0" aria-sort="'+(on?(st.dir>0?'ascending':'descending'):'none')+'" style="cursor:pointer">'+c[1]+(on?(st.dir>0?' ▲':' ▼'):'')+'</th>';}).join('')+'</tr></thead><tbody>'+
       filas().map(function(r){return '<tr><td><span class="vb-st '+r.e+'"><i class="fa-solid '+ICON[r.e]+'" aria-hidden="true"></i> '+LBL[r.e]+'</span></td><td><strong>'+esc(r.t)+'</strong></td><td>'+esc(r.d)+'</td><td class="vb-src">'+esc(r.s)+'</td></tr>';}).join('')+
