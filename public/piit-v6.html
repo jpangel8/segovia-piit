@@ -5084,13 +5084,13 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <div>
       <div class="pt">Distribución por secretaría · valor en millones</div>
       <div class="card" style="padding:14px 16px">
-        <canvas id="chart-cont-sec" height="200"></canvas>
+        <div style="position:relative;height:440px"><canvas id="chart-cont-sec" height="200"></canvas></div>
       </div>
     </div>
     <div>
       <div class="pt">Distribución por modalidad de contratación</div>
       <div class="card" style="padding:14px 16px">
-        <canvas id="chart-cont-tipo" height="200"></canvas>
+        <div style="position:relative;height:440px"><canvas id="chart-cont-tipo" height="200"></canvas></div>
       </div>
     </div>
   </div>
@@ -11536,7 +11536,7 @@ window.PIIT = (function () {
         charts._instances['chart-cont-sec'] = new Chart(ctx1, { type:'bar',
           data:{ labels:sNom, datasets:[{ label:'Valor M$', data:sVal,
             backgroundColor:['#48B72Cbb','#D6B000bb','#00A0E4bb','#8A4AA3bb','#C9852Abb','#993C1Dbb','#854F0Bbb','#1A5C3Abb'], borderRadius:4 }] },
-          options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{ display:false } },
+          options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } },
             scales:{ x:{ ticks:{ font:{ size:11.5 }, maxRotation:35 }, grid:{ display:false } },
                     y:{ beginAtZero:true, ticks:{ font:{ size:11.5 }, callback:function(v){ return '$'+v+'M'; } }, grid:{ color:'rgba(0,0,0,.08)' } } } }
         });
@@ -11549,7 +11549,7 @@ window.PIIT = (function () {
         charts._instances['chart-cont-tipo'] = new Chart(ctx2, { type:'doughnut',
           data:{ labels:Object.keys(tipMap), datasets:[{ data:Object.values(tipMap),
             backgroundColor:['#48B72C','#D6B000','#00A0E4','#8A4AA3','#C9852A','#1A8080'], borderWidth:2, borderColor:'#fff' }] },
-          options:{ cutout:'60%', responsive:true, maintainAspectRatio:true,
+          options:{ cutout:'60%', responsive:true, maintainAspectRatio:false,
             plugins:{ legend:{ position:'bottom', labels:{ font:{ size:12 }, boxWidth:10 } } } }
         });
       }
