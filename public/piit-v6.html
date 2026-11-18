@@ -18753,5 +18753,37 @@ window.PIITLive=(function(){
   window.PIITIgacTools={estado:function(){return st;},montar:montar};
 })();
 </script>
+<style id="piit-sin-iconos-css">
+/* Íconos decorativos retirados (los marca PIITSinIconos); los funcionales se conservan */
+.ico-off{display:none!important}
+.ico-box-off{display:none!important}
+.kc-top{justify-content:flex-start;gap:8px}
+</style>
+<script id="piit-sin-iconos-js">
+/* Quita los íconos decorativos de toda la plataforma. Se conservan: botones que solo tienen ícono (controles),
+   flechas de menús y de orden, íconos de estado (círculos, alertas, ✔/✖), manijas de arrastre y lupa/menú. */
+(function(){
+  'use strict';
+  var FORCE=/fa-(calendar|clock)/;
+  var KEEP_CLS=/fa-(circle(-check|-xmark|-exclamation|-info|-notch)?(\s|$)|triangle-exclamation|arrow-|caret|chevron|angle|sort|xmark|magnifying|bars|ellipsis|expand|compress|spinner|rotate|grip|up-down|arrows)/;
+  var KEEP_ANC='.lm-handle,.an-th,.vb-st,.badge,.kc-trend,.pchart-icobtn,.lm-btn,.ptbl-pg-btn,.dt2-tab,.vb-chip,.leaflet-control,.sev-btn,.hkpi-x,.nav-search-btn,.tb-search';
+  function soloIcono(i){var b=i.closest('button,a[href],[role=button],[onclick]');if(!b)return false;return (b.textContent||'').replace(/\s+/g,'').length===0;}
+  function marcar(raiz){
+    (raiz||document).querySelectorAll('i[class*="fa-"]').forEach(function(i){
+      if(i.dataset.sin)return;i.dataset.sin='1';
+      var cls=i.className||'';
+      var k=(cls+' ');if(!soloIcono(i)&&FORCE.test(k)){}else if(KEEP_CLS.test(k)||soloIcono(i)||i.closest(KEEP_ANC))return;
+      i.classList.add('ico-off');
+      var p=i.parentElement;
+      if(p&&/ico|icon/i.test(String(p.className))&&!(p.textContent||'').trim()){p.classList.add('ico-box-off');}
+    });
+  }
+  var tm=null;
+  function lanzar(){clearTimeout(tm);tm=setTimeout(function(){marcar();},120);}
+  function init(){marcar();new MutationObserver(lanzar).observe(document.body,{childList:true,subtree:true});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  window.PIITSinIconos={marcar:marcar};
+})();
+</script>
 </body>
 </html>
