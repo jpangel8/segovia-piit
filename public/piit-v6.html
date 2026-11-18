@@ -18306,7 +18306,7 @@ window.PIITVerif=(function(){
   function abPct(o){var t=o.A+o.B+o.C+o.D;return (o.A+o.B)/t*100;}
   var ICON={ok:'fa-circle-check',warn:'fa-triangle-exclamation',fail:'fa-circle-xmark',info:'fa-circle-info',run:'fa-spinner fa-spin'};
   var LBL={ok:'Verificado',warn:'Atención',fail:'Incoherente',info:'Sin fuente oficial',run:'Verificando…'};
-  var st={rows:[],last:null,running:false};
+  var st={rows:[],last:null,running:false,f:'todas',col:null,dir:1};
   function num(s){var m=String(s||'').replace(/\./g,'').replace(',','.').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;}
   function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
   function fmt(n){return Math.round(n).toLocaleString('es-CO');}
@@ -18389,6 +18389,9 @@ window.PIITVerif=(function(){
     return hechas;
   }
 
+  function filas(){var o={fail:0,warn:1,info:2,run:3,ok:4},v=st.rows.filter(function(r){return st.f==='todas'||r.e===st.f;});
+    if(st.col){v=v.slice().sort(function(a,b){var x=st.col==='e'?o[a.e]:String(a[st.col]).toLowerCase(),y=st.col==='e'?o[b.e]:String(b[st.col]).toLowerCase();return (x<y?-1:x>y?1:0)*st.dir;});}
+    return v;}
   function render(){
     var h=document.getElementById('verif-buque');if(!h)return;
     var c={ok:0,warn:0,fail:0,info:0};st.rows.forEach(function(r){if(c[r.e]!==undefined)c[r.e]++;});
@@ -18396,11 +18399,13 @@ window.PIITVerif=(function(){
     h.innerHTML=
       '<div class="vb-hdr"><i class="fa-solid fa-shield-halved vb-ico" aria-hidden="true"></i><div><div class="vb-tt">Verificación automática de datos</div><div class="vb-sub">Compara las cifras con fuentes oficiales, detecta incoherencias y revisa la vigencia de cada fuente</div></div>'+
       '<div class="vb-acts"><button type="button" class="vb-btn p" id="vb-run"'+(st.running?' disabled':'')+'><i class="fa-solid fa-rotate" aria-hidden="true"></i> Verificar ahora</button><button type="button" class="vb-btn" id="vb-fix"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Aplicar correcciones oficiales</button><button type="button" class="vb-btn" id="vb-csv"><i class="fa-solid fa-file-csv" aria-hidden="true"></i> Informe CSV</button></div></div>'+
-      '<div class="vb-sum" role="status" aria-live="polite">'+(cargando?'<span class="vb-chip info">Verificando…</span>':'')+'<span class="vb-chip ok">'+c.ok+' verificadas</span><span class="vb-chip warn">'+c.warn+' con atención</span><span class="vb-chip fail">'+c.fail+' incoherentes</span><span class="vb-chip info">'+c.info+' sin fuente oficial</span></div>'+
-      '<div class="vb-wrap"><table class="vb-t"><thead><tr><th>Estado</th><th>Verificación</th><th>Resultado</th><th>Fuente</th></tr></thead><tbody>'+
-      st.rows.map(function(r){return '<tr><td><span class="vb-st '+r.e+'"><i class="fa-solid '+ICON[r.e]+'" aria-hidden="true"></i> '+LBL[r.e]+'</span></td><td><strong>'+esc(r.t)+'</strong></td><td>'+esc(r.d)+'</td><td class="vb-src">'+esc(r.s)+'</td></tr>';}).join('')+
+      '<div class="vb-sum" role="status" aria-live="polite">'+(cargando?'<span class="vb-chip info">Verificando…</span>':'')+[['ok',c.ok+' verificadas'],['warn',c.warn+' con atención'],['fail',c.fail+' incoherentes'],['info',c.info+' sin fuente oficial']].map(function(x){return '<button type="button" class="vb-chip '+x[0]+' vb-f" data-f="'+x[0]+'" aria-pressed="'+(st.f===x[0])+'" style="border:2px solid '+(st.f===x[0]?'currentColor':'transparent')+';cursor:pointer;font-family:inherit">'+x[1]+'</button>';}).join('')+(st.f!=='todas'?'<button type="button" class="vb-chip info vb-f" data-f="todas" style="border:2px solid transparent;cursor:pointer;font-family:inherit">Ver todas</button>':'')+'</div>'+
+      '<div class="vb-wrap"><table class="vb-t"><thead><tr>'+[['e','Estado'],['t','Verificación'],['d','Resultado'],['s','Fuente']].map(function(c){var on=st.col===c[0];return '<th scope="col" data-k="'+c[0]+'" tabindex="0" aria-sort="'+(on?(st.dir>0?'ascending':'descending'):'none')+'" style="cursor:pointer">'+c[1]+(on?(st.dir>0?' ▲':' ▼'):'')+'</th>';}).join('')+'</tr></thead><tbody>'+
+      filas().map(function(r){return '<tr><td><span class="vb-st '+r.e+'"><i class="fa-solid '+ICON[r.e]+'" aria-hidden="true"></i> '+LBL[r.e]+'</span></td><td><strong>'+esc(r.t)+'</strong></td><td>'+esc(r.d)+'</td><td class="vb-src">'+esc(r.s)+'</td></tr>';}).join('')+
       '</tbody></table></div>'+
       '<div class="vb-ft">'+(st.last?'Última verificación: '+st.last.toLocaleString('es-CO')+'. ':'')+'Se repite sola cada 30 minutos mientras esta sección está abierta. Las cifras sin fuente oficial no se corrigen automáticamente: se marcan para que la Alcaldía las valide.</div>';
+    document.querySelectorAll('#verif-buque .vb-f').forEach(function(b){b.onclick=function(){var f=b.getAttribute('data-f');st.f=(st.f===f?'todas':f);render();};});
+    document.querySelectorAll('#verif-buque .vb-t th').forEach(function(th){var go=function(){var k=th.getAttribute('data-k');if(st.col===k)st.dir*=-1;else{st.col=k;st.dir=1;}render();};th.onclick=go;th.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
     document.getElementById('vb-run').onclick=run;
     document.getElementById('vb-fix').onclick=function(){var f=corregir();alert(f.length?'Se corrigieron '+f.length+' cifra(s) con la referencia oficial del DANE.':'No hay cifras que corregir: todo lo verificable con fuente oficial coincide.');run();};
     document.getElementById('vb-csv').onclick=csv;
@@ -18539,6 +18544,127 @@ window.PIITLive=(function(){
   function arrancar(){setTimeout(todas,300);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrancar);else arrancar();
   return {registrar:registrar,todas:todas,estado:function(){return ST;},fuentes:function(){return DEF.map(function(d){return {id:d.id,nombre:d.nombre,cada:d.cada};});}};
+})();
+</script>
+<style id="piit-dane-tools-css">
+#dane-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:10px 16px;background:#fff;border-bottom:1px solid #E1E5E8}
+#dane-tools .dt2-tabs{display:flex;gap:0;border:1px solid #dadada;border-radius:4px;overflow:hidden}
+#dane-tools .dt2-tab{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;color:#4e4e4e;background:#fff;border:0;border-right:1px solid #dadada;padding:7px 14px;cursor:pointer;min-height:34px}
+#dane-tools .dt2-tab:last-child{border-right:0}
+#dane-tools .dt2-tab[aria-selected="true"]{background:#4c6a9c;color:#fff}
+#dane-tools .dt2-tab:focus-visible,#dane-tools .yr-pill:focus-visible,#dane-tools button:focus-visible,#dane-tools input:focus-visible{outline:3px solid #3366CC;outline-offset:2px}
+#dane-tools .dt2-chips{display:flex;flex-wrap:wrap;gap:6px}
+#dane-tools .dt2-r{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#dane-tools input[type=search]{font-family:inherit;font-size:13px;padding:7px 10px;border:1px solid #cfd6dc;border-radius:4px;min-width:170px}
+#dane-tools .dt2-btn{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:700;color:#4e4e4e;background:#fff;border:1px solid #dadada;border-radius:4px;padding:7px 12px;cursor:pointer;min-height:34px}
+#dane-tools .dt2-btn:hover{background:#f2f2f2}
+#dane-tools .dt2-n{font-size:12px;color:#5C5C5C}
+#dane-chart-view{padding:14px 16px 8px}
+#dane-chart-view .dt2-cv{position:relative}
+#dane-table-view{overflow:auto;max-height:620px}
+.dt2-table{width:100%;border-collapse:collapse;font-size:.875em;font-variant-numeric:tabular-nums}
+.dt2-table th{position:sticky;top:0;background:#f7f7f7;text-align:left;padding:8px 16px;border-bottom:1px solid #f2f2f2;font-weight:700;color:#4e4e4e;white-space:nowrap;cursor:pointer;user-select:none;font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif}
+.dt2-table th:hover{background:#e7e7e7}
+.dt2-table th .si{font-size:9px;margin-left:5px;color:#4c6a9c}
+.dt2-table td{padding:8px 16px;border-bottom:1px solid #f2f2f2;color:#4e4e4e;vertical-align:bottom;font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif}
+.dt2-table td.v{text-align:right;font-weight:700;white-space:nowrap}
+.dt2-table th.v{text-align:right}
+.dt2-table tbody tr:nth-child(even){background:#f7f7f7}
+.dt2-table tbody tr:hover{background:#f0f0f0}
+.dt2-empty{padding:28px 18px;text-align:center;font-size:13px;color:#5b5b5b}
+</style>
+<script id="piit-dane-tools-js">
+(function(){
+  'use strict';
+  var KEY='g_dane',CATC={},PAL=['#4c6a9c','#883039','#578145','#b13507','#b16214','#970046','#00847e','#6d3e91'];
+  var st={vista:'tarjetas',cat:'Todas',q:'',col:null,dir:1,datos:[],chart:null,cats:[]};
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function num(s){var m=String(s).replace(/[~$\s]/g,'').replace(/M$/,'').replace(/\./g,'').replace(',','.').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;}
+  function leer(){
+    st.datos=[].map.call(document.querySelectorAll('#dane-grid .dane-cell'),function(c,i){
+      var q=function(s){var e=c.querySelector(s);return e?e.textContent.trim():'';};
+      var src=q('.src-tag'),sub=q('.dc-sub').replace(src,'').trim();
+      return {i:i,cat:q('.dc-category'),val:q('.dc-val'),lbl:q('.dc-lbl'),src:src,sub:sub,n:num(q('.dc-val')),pct:/%$/.test(q('.dc-val')),el:c};
+    });
+    st.cats=[];st.datos.forEach(function(d){if(st.cats.indexOf(d.cat)<0)st.cats.push(d.cat);});
+  }
+  function visibles(){
+    var q=st.q.toLowerCase();
+    return st.datos.filter(function(d){return (st.cat==='Todas'||d.cat===st.cat)&&(!q||(d.lbl+' '+d.cat+' '+d.src+' '+d.sub+' '+d.val).toLowerCase().indexOf(q)>=0);});
+  }
+  function estado(){
+    var p=[];if(st.vista!=='tarjetas')p.push('vista:'+st.vista);if(st.cat!=='Todas')p.push('cat:'+st.cat);if(st.q)p.push('q:'+st.q);if(st.col)p.push('orden:'+st.col+(st.dir<0?'-desc':''));
+    try{var u=new URL(location.href);if(p.length)u.searchParams.set(KEY,p.join(';'));else u.searchParams.delete(KEY);history.replaceState(null,'',u.toString());}catch(e){}
+    return p.join(';');
+  }
+  function restaurar(){
+    try{var v=new URL(location.href).searchParams.get(KEY);if(!v)return;v.split(';').forEach(function(x){var i=x.indexOf(':'),k=x.slice(0,i),val=x.slice(i+1);
+      if(k==='vista'&&/^(tarjetas|grafico|tabla)$/.test(val))st.vista=val;if(k==='cat')st.cat=val;if(k==='q')st.q=val;
+      if(k==='orden'){st.col=val.replace('-desc','');st.dir=/-desc$/.test(val)?-1:1;}});}catch(e){}
+  }
+  function csv(){
+    var q=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+    var rows=[['Categoría','Indicador','Valor','Fuente','Nota']].concat(ordenados().map(function(d){return [d.cat,d.lbl,d.val,d.src,d.sub];}));
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+rows.map(function(r){return r.map(q).join(',');}).join('\n')],{type:'text/csv;charset=utf-8'}));
+    a.download='piit-observatorio-dane-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);
+  }
+  function ordenados(){
+    var v=visibles().slice();if(!st.col)return v;var k=st.col;
+    v.sort(function(a,b){var x,y;if(k==='val'){x=a.n;y=b.n;if(isNaN(x)&&isNaN(y)){x=a.val;y=b.val;}else if(isNaN(x))return 1;else if(isNaN(y))return -1;}else{x=(a[k]||'').toLowerCase();y=(b[k]||'').toLowerCase();}
+      return (x<y?-1:x>y?1:0)*st.dir;});
+    return v;
+  }
+  function aplicar(){
+    var vis=visibles(),set={};vis.forEach(function(d){set[d.i]=1;});
+    var g=document.getElementById('dane-grid'),cv=document.getElementById('dane-chart-view'),tv=document.getElementById('dane-table-view');
+    st.datos.forEach(function(d){d.el.style.display=set[d.i]?'':'none';});
+    g.style.display=st.vista==='tarjetas'?'':'none';cv.style.display=st.vista==='grafico'?'':'none';tv.style.display=st.vista==='tabla'?'':'none';
+    document.querySelectorAll('#dane-tools .dt2-tab').forEach(function(b){b.setAttribute('aria-selected',String(b.getAttribute('data-v')===st.vista));});
+    document.querySelectorAll('#dane-tools .yr-pill').forEach(function(b){var on=b.getAttribute('data-c')===st.cat;b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on));});
+    document.getElementById('dane-n').textContent=vis.length+' de '+st.datos.length+' indicadores';
+    if(st.vista==='tabla')tabla();if(st.vista==='grafico')grafico();
+    if(st.vista==='tarjetas'&&!vis.length){}
+    estado();
+  }
+  function tabla(){
+    var tv=document.getElementById('dane-table-view'),rows=ordenados();
+    if(!rows.length){tv.innerHTML='<div class="dt2-empty">Ningún indicador coincide con el filtro.</div>';return;}
+    var cols=[['cat','Categoría'],['lbl','Indicador'],['val','Valor'],['src','Fuente'],['sub','Nota']];
+    tv.innerHTML='<table class="dt2-table"><thead><tr>'+cols.map(function(c){var on=st.col===c[0],ar=on?(st.dir>0?'ascending':'descending'):'none';
+      return '<th scope="col" data-k="'+c[0]+'" class="'+(c[0]==='val'?'v':'')+'" aria-sort="'+ar+'" tabindex="0">'+c[1]+'<span class="si">'+(on?(st.dir>0?'▲':'▼'):'')+'</span></th>';}).join('')+'</tr></thead><tbody>'+
+      rows.map(function(d){return '<tr><td>'+esc(d.cat)+'</td><td>'+esc(d.lbl)+'</td><td class="v">'+esc(d.val)+'</td><td>'+esc(d.src)+'</td><td>'+esc(d.sub)+'</td></tr>';}).join('')+'</tbody></table>';
+    tv.querySelectorAll('th').forEach(function(th){var f=function(){var k=th.getAttribute('data-k');if(st.col===k)st.dir*=-1;else{st.col=k;st.dir=(k==='val')?-1:1;}aplicar();};th.addEventListener('click',f);th.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}});});
+  }
+  function grafico(){
+    var cv=document.getElementById('dane-chart-view');
+    if(st.chart){st.chart.destroy();st.chart=null;}
+    var rows=visibles().filter(function(d){return d.pct&&!isNaN(d.n);}).sort(function(a,b){return b.n-a.n;});
+    if(!rows.length){cv.innerHTML='<div class="dt2-empty">No hay indicadores expresados en porcentaje con este filtro. Pruebe «Todas» o la vista Tabla.</div>';return;}
+    cv.innerHTML='<div class="dt2-cv"><canvas id="dane-chart" aria-label="Indicadores en porcentaje del observatorio DANE"></canvas></div><p class="km-n" style="margin:6px 0 0">Solo se grafican los indicadores expresados en porcentaje (los demás tienen unidades distintas: habitantes, km², pesos). Orden de mayor a menor.</p>';
+    var cats=[];rows.forEach(function(d){if(cats.indexOf(d.cat)<0)cats.push(d.cat);});
+    var col=function(c){return PAL[st.cats.indexOf(c)%PAL.length];};
+    st.chart=new Chart(document.getElementById('dane-chart'),{type:'bar',data:{labels:rows.map(function(d){return d.lbl;}),datasets:[{label:'%',data:rows.map(function(d){return d.n;}),backgroundColor:rows.map(function(d){return col(d.cat);}),borderRadius:0}]},
+      options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false},owidBarValues:{suffix:' %'},tooltip:{callbacks:{title:function(i){return rows[i[0].dataIndex].lbl;},label:function(c){var d=rows[c.dataIndex];return d.cat+' · '+d.val+' · '+d.src;}}}},scales:{x:{beginAtZero:true,max:100,ticks:{callback:function(v){return v+'%';}}},y:{}}}});
+  }
+  function montar(){
+    var g=document.getElementById('dane-grid');if(!g||document.getElementById('dane-tools'))return;
+    leer();if(!st.datos.length)return;restaurar();
+    var tools=document.createElement('div');tools.id='dane-tools';tools.setAttribute('role','region');tools.setAttribute('aria-label','Vistas y filtros del observatorio DANE');
+    tools.innerHTML='<div class="dt2-tabs" role="tablist" aria-label="Vista"><button class="dt2-tab" role="tab" data-v="tarjetas" type="button">Tarjetas</button><button class="dt2-tab" role="tab" data-v="grafico" type="button">Gráfico</button><button class="dt2-tab" role="tab" data-v="tabla" type="button">Tabla</button></div>'+
+      '<div class="dt2-chips" role="group" aria-label="Filtrar por categoría">'+['Todas'].concat(st.cats).map(function(c){return '<button type="button" class="yr-pill" data-c="'+esc(c)+'" aria-pressed="false">'+esc(c)+'</button>';}).join('')+'</div>'+
+      '<div class="dt2-r"><input type="search" id="dane-q" placeholder="Buscar indicador…" aria-label="Buscar indicador" value="'+esc(st.q)+'"><span class="dt2-n" id="dane-n" aria-live="polite"></span><button type="button" class="dt2-btn" id="dane-csv">Descargar CSV</button><button type="button" class="dt2-btn" id="dane-link">Copiar enlace</button></div>';
+    g.parentNode.insertBefore(tools,g);
+    var cv=document.createElement('div');cv.id='dane-chart-view';cv.style.display='none';g.parentNode.insertBefore(cv,g.nextSibling);
+    var tv=document.createElement('div');tv.id='dane-table-view';tv.style.display='none';g.parentNode.insertBefore(tv,cv.nextSibling);
+    tools.querySelectorAll('.dt2-tab').forEach(function(b){b.addEventListener('click',function(){st.vista=b.getAttribute('data-v');aplicar();});});
+    tools.querySelectorAll('.yr-pill').forEach(function(b){b.addEventListener('click',function(){st.cat=b.getAttribute('data-c');aplicar();});});
+    document.getElementById('dane-q').addEventListener('input',function(){st.q=this.value;aplicar();});
+    document.getElementById('dane-csv').addEventListener('click',csv);
+    document.getElementById('dane-link').addEventListener('click',function(){estado();var u=location.href,ok=function(){if(window.PIIT&&PIIT.map&&PIIT.map.toast)PIIT.map.toast('Enlace copiado','ok');};if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,ok);else ok();});
+    aplicar();
+  }
+  setInterval(montar,1000);
+  window.PIITDaneTools={estado:function(){return st;},montar:montar};
 })();
 </script>
 </body>
