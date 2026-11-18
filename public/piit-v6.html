@@ -3752,7 +3752,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 </div>
 
 <!-- ═══ HERO ════════════════════════════════════════ -->
-<div class="hero">
+<div class="hero dash-anchor" id="dash-t-general">
   <div class="hero-inner">
     <div class="hero-tag"><span>SISTEMA DE INTELIGENCIA TERRITORIAL · MISIÓN SISTEMA DE CIUDADES · BID · SEGOVIA 2026</span></div>
     <h1 class="hero-h">Inteligencia territorial estratégica<br><em>Segovia en el Sistema de Ciudades Colombia</em></h1>
@@ -3768,6 +3768,9 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
       <div class="hkpi"><div class="hkpi-v">12,1%</div><div class="hkpi-l">Desempleo</div><div class="hkpi-x dn">Vs 9,7% dpto. Antioquia</div></div>
       <div class="hkpi"><div class="hkpi-v">65%</div><div class="hkpi-l">Conectividad digital</div><div class="hkpi-x dn">Meta 85% · brecha 20%</div></div>
       <div class="hkpi"><div class="hkpi-v" id="hero-inv">$30.422M</div><div class="hkpi-l" id="hero-inv-l">Contratos EDURSEG 2026</div><div class="hkpi-x up" id="hero-inv-x">12 contratos · SECOP II</div></div>
+      <div class="hkpi"><div class="hkpi-v" id="hero-barrios">21</div><div class="hkpi-l">Barrios monitoreados</div><div class="hkpi-x ok">100% · GDB oficial IGAC</div></div>
+      <div class="hkpi"><div class="hkpi-v" style="color:#8F5A0A">68%</div><div class="hkpi-l">Cobertura servicios básicos</div><div class="hkpi-x dn">Brecha 17% · SSPD · SUI 2024</div></div>
+      <div class="hkpi"><div class="hkpi-v" style="color:var(--red)">4</div><div class="hkpi-l">Alertas territoriales</div><div class="hkpi-x dn">Urgentes · hace 2 días · reportes ciudadanos</div></div>
     </div>
   </div>
 </div>
@@ -3790,15 +3793,6 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     <a href="#dash-t-indicadores" class="dash-topic">Indicadores territoriales</a>
     <a href="#dash-t-ranking" class="dash-topic">Ranking y alertas</a>
   </nav>
-
-  <div id="dash-t-general"></div>
-  <!-- KPI cards -->
-  <div class="grid4">
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--g100)"><i class="fa-solid fa-users" style="color:var(--g700)"></i></div><div class="kc-trend up">+1,1%</div></div><div class="kc-val">39.549</div><div class="kc-lbl">Habitantes (DANE 2026)</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>Ene 2026</span><span class="kc-meta-src">DANE · CNPV</span></div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:var(--au100)"><i class="fa-solid fa-map-location-dot" style="color:var(--au700)"></i></div><div class="kc-trend ok">100%</div></div><div class="kc-val">19</div><div class="kc-lbl">Barrios monitoreados</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>Hoy</span><span class="kc-meta-src">GDB oficial · IGAC</span></div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FEF3C7"><i class="fa-solid fa-briefcase" style="color:var(--amber)"></i></div><div class="kc-trend dn">Brecha 17%</div></div><div class="kc-val" style="color:var(--amber)">68%</div><div class="kc-lbl">Cobertura servicios básicos</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>2024</span><span class="kc-meta-src">SSPD · SUI</span></div></div>
-    <div class="kc"><div class="kc-top"><div class="kc-ico" style="background:#FFF5F5"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i></div><div class="kc-trend dn">Urgentes</div></div><div class="kc-val" style="color:var(--red)">4</div><div class="kc-lbl">Alertas territoriales</div><div class="kc-meta"><span><i class="fa-regular fa-clock"></i>hace 2 días</span><span class="kc-meta-src">Reportes ciudadanos</span></div></div>
-  </div>
 
   <!-- Fila 4: Tendencia histórica ICV — año como eje central, sincronizado -->
   <div id="dash-t-tendencias" class="dash-anchor"></div>
@@ -18349,6 +18343,8 @@ window.PIITVerif=(function(){
     // 8 · Estructura territorial
     var g=PIIT.data.BARRIOS_GEOJSON.features,pkG=g.map(function(f){return f.properties.PK_BARRIO;}),sinDato=pkG.filter(function(p){return !by[p];});S=ind();
     R.push({k:'est',t:'Barrios: mapa, indicadores y Sisbén enlazados',e:sinDato.length?'warn':'ok',d:sinDato.length?sinDato.length+' barrios del mapa sin indicadores.':g.length+' barrios en el mapa y '+Object.keys(by).length+' con indicadores, todos por el mismo código PK.',s:'IGAC · GDB barrios'});
+    var nb=num(el('hero-barrios')&&el('hero-barrios').textContent),real=Object.keys(by).length;
+    R.push({k:'nbar',t:'Barrios monitoreados (panel)',e:nb===real?'ok':'fail',d:nb===real?'El panel indica '+nb+' barrios, igual a los '+real+' de la base de indicadores y del mapa.':'El panel indica '+(isNaN(nb)?'—':nb)+' barrios y la base tiene '+real+'.',s:'IGAC · GDB barrios'});
     // 9 · Frescura
     CORTES.forEach(function(c){var edad=yr-c[1],lim=c[2];R.push({k:'cut',t:'Vigencia: '+c[0],e:edad<=lim?'ok':'warn',d:'Fecha de corte '+c[1]+' ('+(edad<=0?'año en curso':'hace '+edad+(edad===1?' año':' años'))+'); vigencia máxima razonable: '+lim+(lim===1?' año.':' años.'),s:c[3]});});
     // 10 · Ejecución presupuestal cargada
@@ -18435,7 +18431,7 @@ window.PIITVerif=(function(){
 </script>
 <style id="piit-hero-css">
 /* Las 6 tarjetas del encabezado caben en una sola fila; en pantallas menores pasan a 3 y a 2 columnas */
-html body .hero-kpis{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;flex-wrap:nowrap}
+html body .hero-kpis{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;flex-wrap:nowrap}
 html body .hero-kpis .hkpi{min-width:0;padding:14px 16px}
 @media (max-width:1180px){html body .hero-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:560px){html body .hero-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
