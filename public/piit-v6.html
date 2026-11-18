@@ -10229,12 +10229,60 @@ window.PIIT = (function () {
       });
     },
 
-    buildPresupuestoDash: function () {
+    /* Ejecución presupuestal por año. Para agregar un año nuevo basta con añadir una entrada aquí:
+       PRES_ANIO[2027] = [['Nombre de la secretaría', % ejecutado], ...]. El selector de años se genera solo
+       (de 2024 hasta el año siguiente al actual, o hasta el último año con datos) y se extiende cada enero. */
+    PRES_ANIO: {
+      2026: [['Infraestructura y Servicios Públicos', 85], ['Educación, Cultura y Deporte', 71], ['Salud y Bienestar Social', 79], ['Gobierno', 55], ['Tránsito y Movilidad', 68], ['Minas y Desarrollo Económico', 47], ['Planeación', 62], ['Hacienda', 90]],
+    },
+    PRES_ANIO_DESDE: 2024,
+    _presAnio: null,
+    _presAnios: function () {
+      const con = Object.keys(charts.PRES_ANIO).map(Number);
+      const hasta = Math.max(new Date().getFullYear() + 1, con.length ? Math.max.apply(null, con) : 0);
+      const out = [];
+      for (let y = charts.PRES_ANIO_DESDE; y <= hasta; y++) out.push(y);
+      return out;
+    },
+    buildPresupuestoDash: function (anioSel) {
       charts._destroy('chart-presupuesto');
       const ctx = document.getElementById('chart-presupuesto');
       if (!ctx) return;
+      const anios = charts._presAnios();
+      const conDatos = anios.filter(function (y) { return charts.PRES_ANIO[y]; });
+      if (anioSel) charts._presAnio = anioSel;
+      if (!charts._presAnio || anios.indexOf(charts._presAnio) < 0) {
+        /* por defecto: el año más reciente que no sea futuro y tenga datos; si no, el último con datos */
+        const hoy = new Date().getFullYear();
+        const pasados = conDatos.filter(function (y) { return y <= hoy; });
+        charts._presAnio = pasados.length ? pasados[pasados.length - 1] : (conDatos[conDatos.length - 1] || anios[0]);
+      }
+      const anio = charts._presAnio, datos = charts.PRES_ANIO[anio];
+      const card = ctx.closest('.card'), wrap = ctx.parentNode;
+      /* selector de años generado con un bucle (estilo línea de tiempo de OWID) */
+      let bar = document.getElementById('pres-years');
+      if (!bar) {
+        bar = document.createElement('div'); bar.id = 'pres-years'; bar.className = 'yr-pills'; bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', 'Año de ejecución presupuestal');
+        card.insertBefore(bar, wrap);
+        const msg = document.createElement('div'); msg.id = 'pres-empty'; msg.setAttribute('role', 'status'); msg.style.display = 'none'; card.insertBefore(msg, wrap.nextSibling);
+      }
+      bar.innerHTML = anios.map(function (y) {
+        const has = !!charts.PRES_ANIO[y];
+        return '<button type="button" class="yr-pill' + (y === anio ? ' on' : '') + (has ? '' : ' nodata') + '" aria-pressed="' + (y === anio) + '" onclick="PIIT.charts.buildPresupuestoDash(' + y + ')" title="' + (has ? 'Ver ' + y : 'Sin datos cargados para ' + y) + '">' + y + '</button>';
+      }).join('');
+      const titulo = 'Ejecución presupuestal ' + anio + ' · por secretaría';
+      const th = card.querySelector('.pchart-head-t'); if (th) th.textContent = titulo;
+      const pt = card.parentNode.querySelector('.pt'); if (pt) pt.textContent = titulo;
+      const empty = document.getElementById('pres-empty');
+      if (!datos) {
+        wrap.style.display = 'none'; empty.style.display = 'block';
+        empty.className = 'yr-empty';
+        empty.textContent = 'Aún no hay datos de ejecución presupuestal cargados para ' + anio + '. Se mostrarán aquí cuando se agreguen a la plataforma.';
+        return;
+      }
+      wrap.style.display = ''; empty.style.display = 'none';
       /* Barras horizontales ordenadas de mayor a menor, con el nombre completo de cada secretaría (como el gráfico de barras de OWID) */
-      const _par = [['Infraestructura y Servicios Públicos', 85], ['Educación, Cultura y Deporte', 71], ['Salud y Bienestar Social', 79], ['Gobierno', 55], ['Tránsito y Movilidad', 68], ['Minas y Desarrollo Económico', 47], ['Planeación', 62], ['Hacienda', 90]].sort(function (a, b) { return b[1] - a[1]; });
+      const _par = datos.slice().sort(function (a, b) { return b[1] - a[1]; });
       const secs = _par.map(function (p) { return p[0]; });
       const vals = _par.map(function (p) { return p[1]; });
       charts._instances['chart-presupuesto'] = new Chart(ctx, {
@@ -10242,7 +10290,7 @@ window.PIIT = (function () {
         data: {
           labels: secs,
           datasets: [{
-            label: '% ejecutado',
+            label: '% ejecutado ' + anio,
             data: vals,
             backgroundColor: vals.map(function (v) { return v >= 70 ? '#2E7D52' : v >= 50 ? '#C9852A' : '#DC0B2C'; }),
             borderRadius: 0,
@@ -16993,6 +17041,8 @@ document.addEventListener('DOMContentLoaded', function(){
       if(enhanced.has(cv)) return;
       var chart = Chart.getChart(cv);
       if(!chart) return;
+      /* referencia viva: si el módulo recrea la gráfica (p. ej. al cambiar de año), PNG/CSV/tabla usan la vigente */
+      chart = new Proxy({}, { get: function(_, k){ var c = Chart.getChart(cv); if(!c) return undefined; var v = c[k]; return typeof v === 'function' ? v.bind(c) : v; } });
       var card = cv.closest('.card');
       if(!card || card.querySelector('.pchart-head')) { enhanced.add(cv); return; }
       enhanced.add(cv);
@@ -18034,6 +18084,15 @@ html body span.pchart-head-t.pchart-head-t.pchart-head-t.pchart-head-t.pchart-he
 html body .gr-sub,html body .gr-src,html body .gr-note,html body span.pchart-updated.pchart-updated.pchart-updated.pchart-updated.pchart-updated,html body .km-n,html body .card table td,html body .card table th,html body .km-t td,html body .km-t th,html body .gr-table td,html body .gr-table th,html body .rep-hist-table td,html body .rep-hist-table th{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif!important}
 .pchart-updated,.gr-src,.gr-note{font-size:12px;color:#767676}
 .hbar-wrap{position:relative;min-height:220px}
+.yr-pills{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.yr-pill{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:700;color:#4e4e4e;background:#fff;border:1px solid #dadada;border-radius:999px;padding:4px 14px;cursor:pointer;min-height:30px}
+.yr-pill:hover{background:#f2f2f2}
+.yr-pill.on{background:#4c6a9c;border-color:#4c6a9c;color:#fff}
+.yr-pill.nodata{color:#767676;border-style:dashed}
+.yr-pill.nodata.on{background:#767676;border-color:#767676;color:#fff}
+.yr-pill:focus-visible{outline:3px solid #3366CC;outline-offset:2px}
+.yr-empty{font-size:13px;color:#5b5b5b;background:#f7f7f7;border:1px dashed #ccc;border-radius:4px;padding:28px 18px;text-align:center}
+
 /* Bloques DANE y Sisbén: paleta institucional clara (verde #488704, azul #004884) en vez del fondo casi negro */
 html body #dane-buque,html body #sisben-buque{border:1px solid #E1E5E8!important;border-top:3px solid #488704!important;border-radius:6px!important;box-shadow:none!important}
 html body #dane-buque-hdr,html body #sisben-buque-hdr{background:#F6F8F9!important;backdrop-filter:none!important;border-bottom:1px solid #E1E5E8}
