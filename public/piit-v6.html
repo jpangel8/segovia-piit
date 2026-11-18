@@ -6154,7 +6154,8 @@ window.piitOwidTheme=function(){ if(!window.Chart) return; var D=Chart.defaults;
     if(type==='bar'){ds.forEach(function(d){d.borderRadius=0;});}
     /* 2 · paleta OWID en gráficas categóricas */
     if(CATEG[cid]){
-      if(type==='doughnut'||type==='pie'){ds.forEach(function(d){var n=(d.data||[]).length;d.backgroundColor=d.data.map(function(_,i){return OWID_A[i%OWID_A.length];});d.borderColor='#fff';d.borderWidth=1.5;});}
+      if(cid==='chart-cont-tipo'){var INST={'Prestación':'#237938','Suministro':'#00A0E4','Otro':'#FCDC00','Consultoría':'#FF5900','Obra':'#8A4AA3'},INSTX=['#48B72C','#DC0B2C','#6B7580'];ds.forEach(function(d){d.backgroundColor=(c.data.labels||[]).map(function(l,i){return INST[l]||INSTX[i%INSTX.length];});d.borderColor='#fff';d.borderWidth=1.5;});}
+      else if(type==='doughnut'||type==='pie'){ds.forEach(function(d){var n=(d.data||[]).length;d.backgroundColor=d.data.map(function(_,i){return OWID_A[i%OWID_A.length];});d.borderColor='#fff';d.borderWidth=1.5;});}
       else if(type==='bar'&&ds.length===1){var d0=ds[0],n0=(d0.data||[]).length;d0.backgroundColor=d0.data.map(function(_,i){return OWID_A[i%OWID_A.length];});}
       else{ds.forEach(function(d,i){var col=OWID_L[i%OWID_L.length];
         if(type==='line'||type==='radar'){d.borderColor=col;d.pointBackgroundColor=col;d.pointBorderColor=col;d.backgroundColor=d.fill?hex2rgba(col,.12):col;}
