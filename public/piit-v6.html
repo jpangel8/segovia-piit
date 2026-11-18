@@ -5037,21 +5037,21 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
       <!-- Selector de año -->
-      <div style="display:flex;align-items:center;gap:0;background:var(--g900);border-radius:8px;overflow:hidden;border:1.5px solid var(--g700);box-shadow:var(--sh-sm)">
+      <div id="ct-anios">
         <button onclick="PIIT.contratos.setAnio(2024,this)" class="ct-anio-btn" id="ct-anio-2024"
-          style="padding:7px 16px;border:none;background:transparent;color:var(--g300);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb);transition:all .18s;display:flex;align-items:center;gap:5px;white-space:nowrap">
+          >
           <i class="fa-solid fa-calendar" style="font-size:10px;opacity:.6"></i>2024
         </button>
         <button onclick="PIIT.contratos.setAnio(2025,this)" class="ct-anio-btn" id="ct-anio-2025"
-          style="padding:7px 16px;border:none;background:transparent;color:var(--g300);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb);transition:all .18s;display:flex;align-items:center;gap:5px;white-space:nowrap">
+          >
           <i class="fa-solid fa-calendar" style="font-size:10px;opacity:.6"></i>2025
         </button>
-        <button onclick="PIIT.contratos.setAnio(2026,this)" class="ct-anio-btn" id="ct-anio-2026"
-          style="padding:7px 16px;border:none;background:var(--au500);color:var(--g900);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb);transition:all .18s;display:flex;align-items:center;gap:5px;white-space:nowrap">
+        <button onclick="PIIT.contratos.setAnio(2026,this)" class="ct-anio-btn act" id="ct-anio-2026"
+          >
           <i class="fa-solid fa-calendar-check" style="font-size:10px"></i>2026
         </button>
         <button onclick="PIIT.contratos.setAnio(2027,this)" class="ct-anio-btn" id="ct-anio-2027"
-          style="padding:7px 16px;border:none;background:transparent;color:var(--g300);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb);transition:all .18s;display:flex;align-items:center;gap:5px;white-space:nowrap">
+          >
           <i class="fa-solid fa-calendar" style="font-size:10px;opacity:.6"></i>2027
         </button>
       </div>
@@ -11668,19 +11668,9 @@ window.PIIT = (function () {
     }
 
     function _updateAnioBtns() {
-      document.querySelectorAll('.ct-anio-btn').forEach(function(b) {
-        b.style.background = 'transparent';
-        b.style.color = 'var(--g300)';
-        var ico = b.querySelector('i');
-        if (ico) { ico.className = 'fa-solid fa-calendar'; ico.style.opacity = '.6'; }
-      });
+      document.querySelectorAll('.ct-anio-btn').forEach(function(b) { b.classList.remove('act'); b.setAttribute('aria-pressed','false'); });
       var actBtn = document.getElementById('ct-anio-' + _anioActual);
-      if (actBtn) {
-        actBtn.style.background = 'var(--au500)';
-        actBtn.style.color = 'var(--g900)';
-        var ico = actBtn.querySelector('i');
-        if (ico) { ico.className = 'fa-solid fa-calendar-check'; ico.style.opacity = '1'; }
-      }
+      if (actBtn) { actBtn.classList.add('act'); actBtn.setAttribute('aria-pressed','true'); }
     }
 
     return {
@@ -18738,13 +18728,14 @@ window.PIITLive=(function(){
 })();
 </script>
 <style id="piit-year-selector-css">
-/* Selector de año unificado en toda la plataforma (mismo estilo y mismo comportamiento que Contratación) */
-:is(#yr-selector,#fis-years,#pres-years,div:has(>.sv-year-btn)){display:inline-flex!important;flex-wrap:nowrap!important;gap:0!important;margin:4px 0 10px!important;background:var(--g900,#0D2E17);border-radius:8px;overflow:hidden;border:1.5px solid var(--g700,#237938);box-shadow:var(--sh-sm,0 1px 3px rgba(0,0,0,.12));max-width:100%;overflow-x:auto}
-:is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill),div:has(>.sv-year-btn)>.sv-year-btn{padding:7px 16px!important;min-height:0!important;border:none!important;border-radius:0!important;background:transparent!important;color:var(--g300,#9ADCB0)!important;font:700 12px/1.2 var(--fb,Lato,sans-serif)!important;cursor:pointer;white-space:nowrap;transition:all .18s;box-shadow:none!important}
-:is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill):hover,div:has(>.sv-year-btn)>.sv-year-btn:hover{background:rgba(255,255,255,.1)!important;color:#fff!important}
-:is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn.act,.yr-pill.on),div:has(>.sv-year-btn)>.sv-year-btn.act{background:var(--au500,#FCDC00)!important;color:var(--g900,#0D2E17)!important}
-:is(#yr-selector,#fis-years,#pres-years) .yr-pill.nodata:not(.on),div:has(>.sv-year-btn)>.sv-year-btn.sv-year-empty:not(.act){opacity:.6;font-style:italic}
-:is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill):focus-visible,div:has(>.sv-year-btn)>.sv-year-btn:focus-visible{outline:3px solid #FCDC00;outline-offset:-3px}
+/* Selector de año unificado: botones tipo píldora (modelo: ICV del Dashboard), activo en azul institucional */
+body :is(#yr-selector,#fis-years,#pres-years,#ct-anios,div:has(>.sv-year-btn)){display:flex!important;flex-wrap:wrap!important;gap:6px!important;background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;margin:4px 0 10px}
+body :is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill),body div:has(>.sv-year-btn)>.sv-year-btn,body #ct-anios .ct-anio-btn{font:600 11.5px/1.2 var(--fm,Lato,sans-serif)!important;padding:5px 12px!important;min-height:0!important;border-radius:20px!important;border:1px solid #E0E0E0!important;background:#fff!important;color:#5D5D5D!important;cursor:pointer;white-space:nowrap;box-shadow:none!important;font-style:normal!important;opacity:1!important;transition:background .15s,color .15s,border-color .15s}
+body :is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill):hover,body div:has(>.sv-year-btn)>.sv-year-btn:hover,body #ct-anios .ct-anio-btn:hover{border-color:#237938!important;color:#237938!important;background:#fff!important}
+body :is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn.act,.yr-pill.on),body div:has(>.sv-year-btn)>.sv-year-btn.act,body #ct-anios .ct-anio-btn.act{background:var(--gov-blue,#004884)!important;border-color:var(--gov-blue,#004884)!important;color:#fff!important}
+body :is(#yr-selector,#fis-years,#pres-years) .yr-pill.nodata:not(.on),body div:has(>.sv-year-btn)>.sv-year-btn.sv-year-empty:not(.act){border-style:dashed!important;color:#8C9A93!important}
+body #ct-anios .ct-anio-btn i{display:none!important}
+body :is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill):focus-visible,body div:has(>.sv-year-btn)>.sv-year-btn:focus-visible,body #ct-anios .ct-anio-btn:focus-visible{outline:3px solid #3366CC;outline-offset:2px}
 </style>
 <style id="piit-sin-iconos-css">
 /* Íconos decorativos retirados (los marca PIITSinIconos); los funcionales se conservan */
