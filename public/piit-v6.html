@@ -7374,9 +7374,9 @@ window.PIIT = (function () {
         }
       );
 
-      const dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19, subdomains: 'abcd',
-        attribution: '© CartoDB',
+      const dark = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 16,
+        attribution: 'Tiles © Esri',
       });
       const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
         maxZoom: 17,
@@ -13461,21 +13461,8 @@ window.addEventListener('load',function(){
   </div>
 
   <!-- Mapa + Alertas -->
-  <div class="grid2 sat-main-grid" style="margin-bottom:24px">
-    <div class="card" style="padding:0;overflow:hidden">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--g100,#EAF5EF)">
-        <div>
-          <div style="font-size:11px;font-weight:700;color:var(--text-2,#2A4035);letter-spacing:.05em">MAPA DE AMENAZAS TERRITORIALES</div>
-          <div style="font-size:10px;color:var(--text-4,#7A9E8C);margin-top:2px">Segovia · Nordeste Antioqueño · SIMMA · SGC · IDEAM</div>
-        </div>
-        <div style="display:flex;gap:10px;font-size:10px;color:var(--text-4,#7A9E8C)">
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#00A0E4;display:inline-block"></span>Inundación</span>
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#C9852A;display:inline-block"></span>Masa</span>
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#DC0B2C;display:inline-block"></span>Incendio</span>
-        </div>
-      </div>
-      <div id="sat-mapa"></div>
-    </div>
+  <div class="grid2 sat-main-grid rm-row" style="margin-bottom:24px">
+    <div class="card" id="rm-wrap" style="padding:0;overflow:hidden"></div>
     <div>
       <div class="pt">Alertas activas · Tiempo real IDEAM · SGC</div>
       <div id="sat-alertas-list"></div>
@@ -18881,6 +18868,207 @@ window.PIITLive=(function(){
   }
   setInterval(montar,1000);
   window.PIITRank={estado:function(){return st;},montar:montar};
+})();
+</script>
+<style id="piit-rm-css">
+.rm-row{grid-template-columns:1fr!important}
+.rm-row>div:nth-child(2){display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;align-content:start}
+.rm-row>div:nth-child(2)>.pt,.rm-row>div:nth-child(2)>#sat-alertas-list{grid-column:1/-1}
+.rm-row>div:nth-child(2)>#sat-alertas-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.rm-row>div:nth-child(2)>.card{grid-column:1/-1;margin-top:0!important}
+#rm-wrap{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif}
+#rm-wrap .rm-grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(280px,1fr);min-height:600px}
+#rm-wrap .rm-mapcol{position:relative;border-right:1px solid #E1E5E8;display:flex;flex-direction:column;min-width:0}
+#rm-wrap .rm-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding:12px 14px;border-bottom:1px solid #E1E5E8;background:#fff}
+#rm-wrap select,#rm-wrap input[type=search]{font-family:inherit;font-size:13.5px;padding:8px 12px;border:1px solid #cfd6dc;border-radius:6px;background:#fff;min-height:36px;max-width:100%}
+#rm-wrap .rm-capa{flex:1 1 230px;font-weight:700;color:#363636}
+#rm-wrap .rm-d2{font-size:12px;font-weight:700;color:#fff;background:#363636;border-radius:999px;padding:6px 12px}
+#rm-wrap .rm-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 14px;border-bottom:1px solid #E1E5E8;background:#fafafa;align-items:center}
+#rm-wrap .rm-chips .t{font-size:11.5px;color:#5C5C5C;margin-right:4px}
+#rm-wrap .rm-chip{font-family:inherit;font-size:12px;font-weight:700;color:#4e4e4e;background:#fff;border:1px solid #dadada;border-radius:999px;padding:4px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:30px}
+#rm-wrap .rm-chip i.s{width:9px;height:9px;border-radius:2px;display:inline-block}
+#rm-wrap .rm-chip[aria-pressed="true"]{background:#363636;color:#fff;border-color:#363636}
+#rm-wrap .rm-chip:focus-visible,#rm-wrap .rm-btn:focus-visible,#rm-wrap .rm-li:focus-visible{outline:3px solid #3366CC;outline-offset:2px}
+#rm-wrap .rm-mapbox{position:relative;flex:1;min-height:480px}
+#rm-map{position:absolute;inset:0;background:#eef0ef;z-index:0}
+#rm-wrap .rm-leg{position:absolute;left:12px;top:12px;z-index:500;background:#fff;border:1px solid #E1E5E8;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.12);padding:10px 12px;font-size:11.5px;color:#434343;max-width:240px}
+#rm-wrap .rm-leg b{display:block;font-size:12px;color:#363636;margin-bottom:6px}
+#rm-wrap .rm-leg .r{display:flex;height:10px;border-radius:2px;overflow:hidden;margin-bottom:4px}
+#rm-wrap .rm-leg .r i{flex:1}
+#rm-wrap .rm-leg .l{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+#rm-wrap .rm-zoom{position:absolute;right:12px;top:12px;z-index:500;display:flex;flex-direction:column;gap:6px}
+#rm-wrap .rm-btn{width:38px;height:38px;border-radius:8px;border:1px solid #E1E5E8;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1);font-size:18px;font-weight:700;color:#363636;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit}
+#rm-wrap .rm-btn:hover{background:#f2f2f2}
+#rm-wrap .rm-foot{padding:8px 14px;font-size:11px;color:#5C5C5C;border-top:1px solid #E1E5E8;background:#fff}
+#rm-wrap .rm-panel{display:flex;flex-direction:column;min-width:0;background:#fff;max-height:700px}
+#rm-wrap .rm-ph{padding:16px 18px 10px}
+#rm-wrap .rm-ph h3{margin:0 0 4px;font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:19px;color:#363636}
+#rm-wrap .rm-ph p{margin:0 0 10px;font-size:12.5px;color:#5C5C5C;line-height:1.5}
+#rm-wrap .rm-list{overflow:auto;padding:0 18px 12px;flex:1}
+#rm-wrap .rm-li{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid #ebebeb;padding:9px 2px;cursor:pointer;font-family:inherit}
+#rm-wrap .rm-li:hover{background:#f7f7f7}
+#rm-wrap .rm-li.sel{background:#eef3fb}
+#rm-wrap .rm-li .n{font-size:11.5px;color:#767676;font-variant-numeric:tabular-nums}
+#rm-wrap .rm-li .nm{font-weight:700;color:#2d2e2d;font-size:13.5px}
+#rm-wrap .rm-li .sb{display:block;font-size:11px;color:#767676;font-weight:400}
+#rm-wrap .rm-li .v{font-family:'Playfair Display',Georgia,serif;font-size:17px;color:#2d2e2d;font-variant-numeric:tabular-nums}
+#rm-wrap .rm-ficha{overflow:auto;padding:0 18px 14px;flex:1}
+#rm-wrap .rm-ficha h4{margin:2px 0 2px;font-family:'Playfair Display',Georgia,serif;font-size:20px;color:#2d2e2d}
+#rm-wrap .rm-ficha .big{font-family:'Playfair Display',Georgia,serif;font-size:38px;line-height:1.1;color:#2d2e2d}
+#rm-wrap .rm-ficha .sub{font-size:12px;color:#5C5C5C}
+#rm-wrap .rm-row2{display:grid;grid-template-columns:120px 1fr 34px;gap:8px;align-items:center;font-size:12.5px;margin:7px 0;color:#434343}
+#rm-wrap .rm-row2 .tr{height:7px;background:#ececec;border-radius:4px;overflow:hidden}
+#rm-wrap .rm-row2 .tr i{display:block;height:7px;background:#4c6a9c}
+#rm-wrap .rm-row2 b{text-align:right;font-variant-numeric:tabular-nums}
+#rm-wrap .rm-am{font-size:12.5px;color:#434343;margin:4px 0}
+#rm-wrap .rm-back{font-family:inherit;font-size:12.5px;font-weight:700;color:#004884;background:none;border:0;cursor:pointer;padding:4px 0;margin:8px 0 0}
+#rm-wrap .rm-actions{display:flex;gap:8px;flex-wrap:wrap;padding:10px 18px;border-top:1px solid #E1E5E8}
+#rm-wrap .rm-act{font-family:inherit;font-size:12.5px;font-weight:700;color:#4e4e4e;background:#fff;border:1px solid #dadada;border-radius:6px;padding:7px 12px;cursor:pointer;min-height:34px}
+#rm-wrap .rm-act:hover{background:#f2f2f2}
+.rm-tt{font-family:Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;border:1px solid #e7e7e7;border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.15);padding:6px 10px;color:#2d2e2d}
+.rm-tt b{display:block}
+@media (max-width:900px){#rm-wrap .rm-grid{grid-template-columns:1fr}#rm-wrap .rm-mapcol{border-right:0;border-bottom:1px solid #E1E5E8}#rm-wrap .rm-mapbox{min-height:420px}#rm-wrap .rm-panel{max-height:560px}}
+</style>
+<script id="piit-rm-js">
+/* Mapa de amenazas y vulnerabilidad por barrio (interacción tipo visor 2D de coropletas): capa seleccionable,
+   leyenda flotante, zoom y ajuste, buscador, ranking con ficha por barrio, zonas de amenaza activables y CSV.
+   Datos: DATA.BARRIOS_GEOJSON (IGAC) + DATA.INDICADORES. Las zonas de amenaza son ESQUEMÁTICAS (no oficiales). */
+(function(){
+  'use strict';
+  var CENTRO=[7.0828,-74.7077],KEY='g_riesgo';
+  var CAPAS=[
+    {k:'vuln',n:'Índice de vulnerabilidad (100 − ICV)',f:function(d){return 100-PIIT.icv.barrio(d);},u:''},
+    {k:'icv',n:'ICV (índice compuesto)',f:function(d){return PIIT.icv.barrio(d);},u:''},
+    {k:'infra',n:'Infraestructura vial',f:function(d){return d.infra;},u:''},
+    {k:'social',n:'Cobertura social',f:function(d){return d.social;},u:''},
+    {k:'srv',n:'Servicios básicos',f:function(d){return d.srv;},u:''},
+    {k:'pop',n:'Población (índice)',f:function(d){return d.pop;},u:''},
+    {k:'sisben_ab',n:'Hogares Sisbén A+B (estimación interna)',f:function(d){return d.sisben_ab;},u:' %'},
+    {k:'cobertura_acueducto',n:'Cobertura de acueducto',f:function(d){return d.cobertura_acueducto;},u:' %'},
+    {k:'cobertura_energia',n:'Cobertura de energía',f:function(d){return d.cobertura_energia;},u:' %'},
+    {k:'reportes',n:'Reportes ciudadanos',f:function(d){return d.reportes;},u:''},
+    {k:'poblacion',n:'Habitantes (estimación interna)',f:function(d){return d.poblacion;},u:''}
+  ];
+  var AMEN=[
+    {k:'inund',n:'Inundación',c:'#00A0E4',d:'Q. El Bagre · barrio La Madre · riesgo moderado',tipo:'c',lat:CENTRO[0]-0.008,lng:CENTRO[1]+0.003,r:900},
+    {k:'masa',n:'Movimiento en masa',c:'#C9852A',d:'Vda. La Cruzada · Cerros Galán · riesgo alto',tipo:'p',pts:[[CENTRO[0]-0.011,CENTRO[1]-0.006],[CENTRO[0]-0.006,CENTRO[1]-0.001],[CENTRO[0]-0.013,CENTRO[1]+0.002],[CENTRO[0]-0.017,CENTRO[1]-0.003]]},
+    {k:'incen',n:'Incendio forestal',c:'#DC0B2C',d:'Zona rural norte · corredor veredal · riesgo moderado',tipo:'p',pts:[[CENTRO[0]+0.014,CENTRO[1]+0.010],[CENTRO[0]+0.019,CENTRO[1]+0.016],[CENTRO[0]+0.011,CENTRO[1]+0.020],[CENTRO[0]+0.007,CENTRO[1]+0.014]]},
+    {k:'torr',n:'Avenida torrencial',c:'#286bbb',d:'Q. La Cianuración · barrio Briceño · riesgo moderado',tipo:'p',pts:[[CENTRO[0]-0.002,CENTRO[1]+0.011],[CENTRO[0]+0.002,CENTRO[1]+0.015],[CENTRO[0]-0.004,CENTRO[1]+0.019],[CENTRO[0]-0.008,CENTRO[1]+0.015]]}
+  ];
+  var RAMP=['#e6edfa','#b9cdee','#86a3d3','#52719f','#273f6c'];
+  var st={capa:'vuln',sel:null,q:'',amen:{inund:true,masa:true,incen:true,torr:true},base:false,map:null,geo:null,layers:{},baseL:null,feats:{},vals:{},cortes:[]};
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function fmt(n,u){return (Math.round(n*10)/10).toLocaleString('es-CO',{maximumFractionDigits:1})+(u||'');}
+  function capa(){return CAPAS.filter(function(c){return c.k===st.capa;})[0];}
+  function datos(){var by={};Object.values(PIIT.data.INDICADORES).forEach(function(d){by[d.pk]=d;});return by;}
+  function calcular(){
+    var c=capa(),by=datos(),vals=Object.values(by).map(c.f),mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+    st.min=mn;st.max=mx;st.vals={};Object.values(by).forEach(function(d){st.vals[d.pk]=c.f(d);});
+    st.cortes=[];for(var i=0;i<=5;i++)st.cortes.push(mn+(mx-mn)*i/5);
+  }
+  function color(v){if(v==null||isNaN(v))return '#d9d9d9';var mn=st.min,mx=st.max;if(mx===mn)return RAMP[2];var i=Math.min(4,Math.floor((v-mn)/(mx-mn)*5));return RAMP[i];}
+  function estilo(f){var pk=f.properties.PK_BARRIO,sel=st.sel===pk;return {fillColor:color(st.vals[pk]),fillOpacity:.92,color:sel?'#1a1d24':'#ffffff',weight:sel?3:1,opacity:1};}
+  function dentro(pt,pts){var x=pt[1],y=pt[0],ins=false;for(var i=0,j=pts.length-1;i<pts.length;j=i++){var xi=pts[i][1],yi=pts[i][0],xj=pts[j][1],yj=pts[j][0];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))ins=!ins;}return ins;}
+  function amenazasDe(pk){var f=st.feats[pk];if(!f)return [];var ce=f.getBounds().getCenter(),pt=[ce.lat,ce.lng],o=[];
+    AMEN.forEach(function(a){var en=a.tipo==='c'?(L.latLng(pt).distanceTo(L.latLng(a.lat,a.lng))<=a.r):dentro(pt,a.pts);if(en)o.push(a);});return o;}
+  function nucleo(){var ks=Object.keys(st.feats),cs=ks.map(function(k){return st.feats[k].getBounds().getCenter();}),med=function(a){a=a.slice().sort(function(x,y){return x-y;});return a[Math.floor(a.length/2)];},c0=L.latLng(med(cs.map(function(c){return c.lat;})),med(cs.map(function(c){return c.lng;}))),b=null;
+    ks.forEach(function(k,i){if(cs[i].distanceTo(c0)<=2500){var bb=st.feats[k].getBounds();b=b?b.extend(bb):L.latLngBounds(bb.getSouthWest(),bb.getNorthEast());}});return b||st.geo.getBounds();}
+  function verNucleo(an){st.map.fitBounds(nucleo(),{padding:[24,24],animate:an!==false});}
+  function estado(){var p=[];if(st.capa!=='vuln')p.push('capa:'+st.capa);if(st.sel)p.push('barrio:'+st.sel);
+    try{var u=new URL(location.href);if(p.length)u.searchParams.set(KEY,p.join(';'));else u.searchParams.delete(KEY);history.replaceState(null,'',u.toString());}catch(e){}return p.join(';');}
+  function restaurar(){try{var v=new URL(location.href).searchParams.get(KEY);if(!v)return;v.split(';').forEach(function(x){var i=x.indexOf(':'),k=x.slice(0,i),val=x.slice(i+1);if(k==='capa'&&CAPAS.some(function(c){return c.k===val;}))st.capa=val;if(k==='barrio')st.sel=val;});}catch(e){}}
+
+  function ui(){
+    var w=document.getElementById('rm-wrap');
+    w.innerHTML='<div class="rm-grid"><div class="rm-mapcol">'+
+      '<div class="rm-bar"><select id="rm-capa" class="rm-capa" aria-label="Capa del mapa">'+CAPAS.map(function(c){return '<option value="'+c.k+'"'+(c.k===st.capa?' selected':'')+'>'+c.n+'</option>';}).join('')+'</select><span class="rm-d2" title="Mapa plano">2D</span></div>'+
+      '<div class="rm-chips" role="group" aria-label="Zonas de amenaza (esquemáticas)"><span class="t">Zonas de amenaza:</span>'+AMEN.map(function(a){return '<button type="button" class="rm-chip" data-a="'+a.k+'" aria-pressed="'+st.amen[a.k]+'"><i class="s" style="background:'+a.c+'"></i>'+a.n+'</button>';}).join('')+'<button type="button" class="rm-chip" id="rm-base" aria-pressed="false">Mapa base</button></div>'+
+      '<div class="rm-mapbox"><div id="rm-map" role="application" aria-label="Mapa de barrios de Segovia"></div><div class="rm-leg" id="rm-leg"></div>'+
+      '<div class="rm-zoom"><button type="button" class="rm-btn" id="rm-zi" aria-label="Acercar">+</button><button type="button" class="rm-btn" id="rm-zo" aria-label="Alejar">−</button><button type="button" class="rm-btn" id="rm-core" aria-label="Ver el casco urbano" title="Ver el casco urbano" style="font-size:11.5px">Casco</button><button type="button" class="rm-btn" id="rm-fit" aria-label="Ver todo el municipio" title="Ver todo el municipio" style="font-size:12px">Todo</button></div></div>'+
+      '<div class="rm-foot">Cartografía: IGAC (21 barrios). Valores por barrio: estimaciones internas de PIIT. Las zonas de amenaza son esquemáticas, no provienen del SGC ni del IDEAM. Fuentes institucionales: SIMMA · SGC · IDEAM.</div></div>'+
+      '<aside class="rm-panel" id="rm-panel" aria-live="polite"></aside></div>';
+  }
+  function leyenda(){
+    var c=capa(),el=document.getElementById('rm-leg');
+    el.innerHTML='<b>'+esc(c.n)+'</b><div class="r">'+RAMP.map(function(x){return '<i style="background:'+x+'"></i>';}).join('')+'</div><div class="l"><span>'+fmt(st.cortes[0],c.u)+'</span><span>'+fmt(st.cortes[5],c.u)+'</span></div>';
+  }
+  function lista(){
+    var c=capa(),by=datos(),q=st.q.toLowerCase();
+    var rows=Object.values(by).filter(function(d){return !q||d.nombre.toLowerCase().indexOf(q)>=0;}).sort(function(a,b){return st.vals[b.pk]-st.vals[a.pk];});
+    var p=document.getElementById('rm-panel');
+    p.innerHTML='<div class="rm-ph"><h3>Elige un barrio</h3><p>Tócalo en el mapa, en la lista o búscalo por su nombre. Ordenados de mayor a menor en «'+esc(c.n)+'».</p><input type="search" id="rm-q" placeholder="Buscar barrio…" aria-label="Buscar barrio" value="'+esc(st.q)+'" style="width:100%"></div>'+
+      '<div class="rm-list" id="rm-list">'+(rows.length?rows.map(function(d,i){return '<button type="button" class="rm-li'+(st.sel===d.pk?' sel':'')+'" data-pk="'+d.pk+'"><span class="n">'+(i+1)+'</span><span class="nm">'+esc(d.nombre)+'<span class="sb">'+(d.poblacion||0).toLocaleString('es-CO')+' hab. (est.)</span></span><span class="v">'+fmt(st.vals[d.pk],c.u)+'</span></button>';}).join(''):'<p class="rm-ph" style="padding:10px 0">Ningún barrio coincide con la búsqueda.</p>')+'</div>'+
+      '<div class="rm-actions"><button type="button" class="rm-act" id="rm-csv">Descargar CSV</button><button type="button" class="rm-act" id="rm-link">Copiar enlace</button></div>';
+    p.querySelector('#rm-q').addEventListener('input',function(){st.q=this.value;lista();var q2=document.getElementById('rm-q');q2.focus();q2.setSelectionRange(q2.value.length,q2.value.length);});
+    p.querySelectorAll('.rm-li').forEach(function(b){b.addEventListener('click',function(){elegir(b.getAttribute('data-pk'),true);});});
+    p.querySelector('#rm-csv').addEventListener('click',csv);p.querySelector('#rm-link').addEventListener('click',copiar);
+  }
+  function ficha(pk){
+    var d=datos()[pk],c=capa(),p=document.getElementById('rm-panel'),icv=PIIT.icv.barrio(d),am=amenazasDe(pk);
+    var fila=function(n,v,max){return '<div class="rm-row2"><span>'+n+'</span><span class="tr"><i style="width:'+Math.min(100,v/(max||100)*100)+'%"></i></span><b>'+v+'</b></div>';};
+    p.innerHTML='<div class="rm-ph"><button type="button" class="rm-back" id="rm-back">← Ver todos los barrios</button></div><div class="rm-ficha"><h4>'+esc(d.nombre)+'</h4><div class="sub">Segovia · '+(d.poblacion||0).toLocaleString('es-CO')+' habitantes (estimación interna) · '+(d.hogares||0).toLocaleString('es-CO')+' hogares</div>'+
+      '<div style="margin:14px 0 4px"><div class="sub">'+esc(c.n)+'</div><div class="big">'+fmt(st.vals[pk],c.u)+'</div></div>'+
+      '<div style="margin:12px 0 4px;font-weight:700;font-size:12.5px;color:#363636">ICV '+icv+' · componentes</div>'+
+      fila('Infraestructura',d.infra)+fila('Social',d.social)+fila('Servicios',d.srv)+fila('Población',d.pop)+
+      '<div style="margin:12px 0 4px;font-weight:700;font-size:12.5px;color:#363636">Cobertura y condiciones</div>'+
+      fila('Acueducto',d.cobertura_acueducto)+fila('Energía',d.cobertura_energia)+fila('Sisbén A+B (est.)',d.sisben_ab)+
+      '<div class="rm-am"><b>Reportes ciudadanos:</b> '+(d.reportes||0)+'</div>'+
+      '<div style="margin:12px 0 4px;font-weight:700;font-size:12.5px;color:#363636">Zonas de amenaza esquemáticas que lo cubren</div>'+
+      (am.length?am.map(function(a){return '<div class="rm-am"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:'+a.c+';margin-right:6px"></span><b>'+a.n+'</b> · '+esc(a.d)+'</div>';}).join(''):'<div class="rm-am">Ninguna de las zonas esquemáticas cubre el centro del barrio.</div>')+
+      '</div><div class="rm-actions"><button type="button" class="rm-act" id="rm-csv">Descargar CSV</button><button type="button" class="rm-act" id="rm-link">Copiar enlace</button></div>';
+    p.querySelector('#rm-back').addEventListener('click',function(){elegir(null);});
+    p.querySelector('#rm-csv').addEventListener('click',csv);p.querySelector('#rm-link').addEventListener('click',copiar);
+  }
+  function elegir(pk,zoom){
+    st.sel=pk;if(st.geo)st.geo.setStyle(estilo);
+    if(pk){ficha(pk);var f=st.feats[pk];if(f&&zoom!==false){st.map.fitBounds(f.getBounds(),{padding:[60,60],maxZoom:16,animate:true});f.bringToFront();}}
+    else{lista();verNucleo(true);}
+    estado();
+  }
+  function csv(){var c=capa(),q=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+    var rows=[['Posición','Barrio',c.n,'ICV','Infraestructura','Social','Servicios','Población (índice)','Sisbén A+B (est.)','Habitantes (est.)']].concat(Object.values(datos()).sort(function(a,b){return st.vals[b.pk]-st.vals[a.pk];}).map(function(d,i){return [i+1,d.nombre,st.vals[d.pk],PIIT.icv.barrio(d),d.infra,d.social,d.srv,d.pop,d.sisben_ab,d.poblacion];}));
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+rows.map(function(r){return r.map(q).join(',');}).join('\n')],{type:'text/csv;charset=utf-8'}));
+    a.download='piit-mapa-barrios-'+c.k+'-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+  function copiar(){estado();var u=location.href,ok=function(){if(window.PIIT&&PIIT.map&&PIIT.map.toast)PIIT.map.toast('Enlace copiado','ok');};if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,ok);else ok();}
+  function pintarAmen(){
+    AMEN.forEach(function(a){var l=st.layers[a.k];if(!l){var op={color:a.c,fillColor:a.c,fillOpacity:.18,weight:2,dashArray:'5,3',interactive:true};
+      l=st.layers[a.k]=a.tipo==='c'?L.circle([a.lat,a.lng],Object.assign({radius:a.r},op)):L.polygon(a.pts,op);
+      l.bindTooltip('<b>'+a.n+'</b>'+esc(a.d)+'<br><small>Zona esquemática</small>',{sticky:true,className:'rm-tt'});}
+      if(st.amen[a.k]){if(!st.map.hasLayer(l))l.addTo(st.map);}else if(st.map.hasLayer(l))st.map.removeLayer(l);});
+  }
+  function mapa(){
+    var el=document.getElementById('rm-map');
+    st.map=L.map(el,{zoomControl:false,attributionControl:false,scrollWheelZoom:false,zoomSnap:.25,minZoom:10,maxZoom:17});
+    st.map.createPane('barrios');st.map.getPane('barrios').style.zIndex=400;
+    st.geo=L.geoJSON(PIIT.data.BARRIOS_GEOJSON,{pane:'barrios',style:estilo,onEachFeature:function(f,layer){var pk=f.properties.PK_BARRIO;st.feats[pk]=layer;
+      layer.on({mouseover:function(){if(st.sel!==pk){layer.setStyle({weight:2.5,color:'#363636'});layer.bringToFront();}var d=datos()[pk];layer.bindTooltip('<b>'+esc(d?d.nombre:(f.properties.NOM_BARRIO||''))+'</b>'+esc(capa().n)+': <b style="display:inline">'+fmt(st.vals[pk],capa().u)+'</b>',{sticky:true,className:'rm-tt'}).openTooltip();},
+        mouseout:function(){st.geo.resetStyle(layer);layer.setStyle(estilo(f));},click:function(){elegir(pk,true);}});
+      layer.getElement&&0;}}).addTo(st.map);
+    verNucleo(false);
+    pintarAmen();
+    document.getElementById('rm-zi').onclick=function(){st.mov=true;st.map.zoomIn();};
+    document.getElementById('rm-zo').onclick=function(){st.mov=true;st.map.zoomOut();};
+    document.getElementById('rm-fit').onclick=function(){st.mov=true;st.map.fitBounds(st.geo.getBounds(),{padding:[20,20]});};
+    document.getElementById('rm-core').onclick=function(){st.mov=false;elegir(null);};
+    document.getElementById('rm-capa').onchange=function(){st.capa=this.value;calcular();st.geo.setStyle(estilo);leyenda();if(st.sel)ficha(st.sel);else lista();estado();};
+    document.querySelectorAll('#rm-wrap .rm-chip[data-a]').forEach(function(b){b.onclick=function(){var k=b.getAttribute('data-a');st.amen[k]=!st.amen[k];b.setAttribute('aria-pressed',String(st.amen[k]));pintarAmen();};});
+    document.getElementById('rm-base').onclick=function(){st.base=!st.base;this.setAttribute('aria-pressed',String(st.base));
+      if(st.base){if(!st.baseL)st.baseL=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:16,attribution:'Tiles © Esri',opacity:.9});st.baseL.addTo(st.map);st.baseL.bringToBack();}else if(st.baseL)st.map.removeLayer(st.baseL);};
+    st.map.on('click',function(){});
+  }
+  function montar(){
+    var w=document.getElementById('rm-wrap');
+    if(!w||w.dataset.ok||w.offsetParent===null||typeof L==='undefined'||!window.PIIT||!PIIT.data||!PIIT.icv||!PIIT.data.BARRIOS_GEOJSON)return;
+    w.dataset.ok='1';restaurar();calcular();ui();mapa();leyenda();
+    if(st.sel&&st.feats[st.sel])elegir(st.sel,true);else lista();
+    setTimeout(function(){st.map.invalidateSize();if(!st.sel)verNucleo(false);},300);
+    window.addEventListener('resize',function(){if(st.map)st.map.invalidateSize();});
+    /* si el contenedor cambia de tamaño (carga de fuentes, panel, ventana), se reajusta el encuadre */
+    if(window.ResizeObserver){var ult=0;new ResizeObserver(function(){if(!st.map)return;var m=document.getElementById('rm-map'),k=m.clientWidth*1000+m.clientHeight;if(k===ult)return;ult=k;st.map.invalidateSize();if(!st.sel&&!st.mov)verNucleo(false);}).observe(document.getElementById('rm-map'));}
+    st.map.on('dragstart',function(){st.mov=true;});
+  }
+  setInterval(function(){montar();var w=document.getElementById('rm-wrap');if(w&&w.dataset.ok&&w.offsetParent!==null&&st.map&&!w.dataset.vis){w.dataset.vis='1';setTimeout(function(){st.map.invalidateSize();},200);}if(w&&w.offsetParent===null)w.dataset.vis='';},800);
+  window.PIITRiesgoMapa={estado:function(){return st;},amenazasDe:amenazasDe};
 })();
 </script>
 </body>

@@ -194,3 +194,11 @@ Verificada contra SECOP II (datos.gov.co `jbjy-vk9h`, proveedor EDURSEG NIT 9019
 Correcciones derivadas: el módulo de aseguramiento mostraba 37.185 afiliados (8.215 contributivo / 28.970 subsidiado) y una tabla de EPS con cifras propias (Savia Salud 18.420, Mutualser 4.290…); la BDUA oficial da Coosalud 19.291, Nueva EPS 15.713 y Savia Salud 9.075, y no incluye Mutualser. «Población total proyectada 40.247 (DANE 2024)» era incorrecta: el DANE da 39.116 (2024) y 39.549 (2026). El total de afiliados BDUA supera la proyección DANE en un 11 %: no son cifras comparables como «cobertura».
 
 Fuentes sin ciclo automático (sin API consultable desde el navegador): DANE PPED (archivo Excel), geoportales DANE e IGAC (CORS).
+
+## Mapa de amenazas y mapas base (18-nov-2026)
+
+**Mapas base de CARTO:** los teselas `basemaps.cartocdn.com` (voyager y dark_all) ahora responden una imagen con la marca «API KEY REQUIRED» (el servidor entrega un PNG de ~2 KB). Se sustituyeron por Esri (Canvas World Dark Gray en el mapa SIG; el mapa de amenazas ya no usa mapa base por defecto y ofrece Esri Light Gray opcional).
+
+**Mapa de amenazas rediseñado** (sección Gestión del Riesgo, `PIITRiesgoMapa`), con la interacción del visor 2D de referencia (gentrificacionmadrid.netlify.app: mapa SVG de coropletas sin mapa base, selector de capa, leyenda flotante, zoom, buscador, ranking y ficha): coropleta de los 21 barrios (IGAC) con 11 capas seleccionables (vulnerabilidad = 100 − ICV, ICV, infraestructura, social, servicios, población, Sisbén A+B estimado, acueducto, energía, reportes y habitantes), leyenda flotante, zoom +/−, «Casco» y «Todo», panel «Elige un barrio» con ranking ordenado y buscador, ficha por barrio, zonas de amenaza activables, mapa base opcional, descarga CSV y enlace con el estado (`g_riesgo`). No se replicó la vista 3D.
+
+**Aviso:** las zonas de amenaza (inundación, movimiento en masa, incendio, avenida torrencial) son polígonos esquemáticos colocados a mano, no cartografía del SGC ni del IDEAM; y las probabilidades del «Inventario de amenazas» tampoco tienen fuente verificable.
