@@ -5981,7 +5981,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
 <section class="section" id="s-calidad">
   <div class="sec-head">
     <h2 class="sec-title">Calidad de Vida — Índice Compuesto Territorial</h2>
-    <p class="sec-sub">ICV = 0,30 Salud + 0,30 Educación + 0,20 Vivienda + 0,20 Seguridad · Eje Misión Ciudades: calidad de vida urbana</p>
+    <p class="sec-sub">ICV = 0,30 Infraestructura + 0,25 Social + 0,25 Servicios + 0,20 Población · promedio ponderado por población de los 21 barrios · Eje Misión Ciudades: calidad de vida urbana</p>
   </div>
 
   <div style="background:linear-gradient(135deg,var(--g900),#0E3A20);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:18px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;flex-wrap:wrap">
@@ -5992,20 +5992,20 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
         <span style="font-size:24px;color:var(--au400);font-weight:700">/100</span>
         <span style="font-size:14px;color:rgba(255,255,255,.6);margin-left:8px">ICV Segovia</span>
       </div>
-      <div style="height:8px;background:rgba(255,255,255,.1);border-radius:4px;max-width:480px;overflow:hidden;margin-bottom:10px"><div style="width:72%;height:8px;background:linear-gradient(90deg,var(--au500),var(--g400));border-radius:4px"></div></div>
-      <div style="font-size:12.5px;color:rgba(255,255,255,.6)">Antioquia: 78 · Nacional: 74 · Meta PDM 2027: 79 · Brecha Antioquia: 6 puntos</div>
+      <div style="height:8px;background:rgba(255,255,255,.1);border-radius:4px;max-width:480px;overflow:hidden;margin-bottom:10px"><div id="icv-m4-barra" style="width:61%;height:8px;background:linear-gradient(90deg,var(--au500),var(--g400));border-radius:4px"></div></div>
+      <div style="font-size:12.5px;color:rgba(255,255,255,.6)">Índice interno de PIIT, no oficial. Referencias oficiales comparables: IPM y NBI (DANE) y Medición de Desempeño Municipal (DNP).</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:280px">
-      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">74</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-pills" aria-hidden="true"></i> Salud 30%</div></div>
-      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">70</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-book" aria-hidden="true"></i> Educación 30%</div></div>
-      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">68</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-house" aria-hidden="true"></i> Vivienda 20%</div></div>
-      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">76</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Seguridad 20%</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div id="icv-c-infra" style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">74</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-road" aria-hidden="true"></i> Infraestructura 30%</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div id="icv-c-social" style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">70</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-users" aria-hidden="true"></i> Social 25%</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div id="icv-c-srv" style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">68</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-faucet-drip" aria-hidden="true"></i> Servicios 25%</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center"><div id="icv-c-pop" style="font-size:22px;font-weight:700;color:var(--white);font-family:var(--fm)">76</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px"><i class="fa-solid fa-people-group" aria-hidden="true"></i> Población 20%</div></div>
     </div>
   </div>
 
   <div class="grid2" style="margin-bottom:18px">
     <div>
-      <div class="pt">Perfil de calidad de vida por dimensión · 2022 vs 2024</div>
+      <div class="pt">Perfil de calidad de vida por dimensión · 2024 · promedio municipal y barrios extremos</div>
       <div class="card" style="padding:14px 16px"><canvas id="chart-icv-radar" height="200"></canvas></div>
     </div>
     <div>
@@ -6903,17 +6903,8 @@ window.PIIT = (function () {
       },
     },
 
-    /* Barrios SISBEN — nombres oficiales GDB · 8 barrios de mayor vulnerabilidad */
-    SISBEN: [
-      {nom:'EL CHISPERO Y PTO. CALAVERA', id:'020', pk:'7361001020', hogares:171,  ab:61, puntaje:27, adultos_m:54, discapacidad:18, victimas:42},
-      {nom:'MARMAJITO',                   id:'016', pk:'7361001016', hogares:200,  ab:55, puntaje:30, adultos_m:48, discapacidad:15, victimas:35},
-      {nom:'GALÁN',                       id:'008', pk:'7361001008', hogares:258,  ab:51, puntaje:32, adultos_m:42, discapacidad:14, victimas:31},
-      {nom:'MARQUETALIA',                 id:'009', pk:'7361001009', hogares:295,  ab:48, puntaje:34, adultos_m:56, discapacidad:16, victimas:38},
-      {nom:'BRICEÑO',                     id:'005', pk:'7361001005', hogares:416,  ab:44, puntaje:36, adultos_m:46, discapacidad:13, victimas:28},
-      {nom:'LA PAZ',                      id:'004', pk:'7361001004', hogares:442,  ab:42, puntaje:37, adultos_m:52, discapacidad:12, victimas:32},
-      {nom:'CAMPO ALEGRE',                id:'019', pk:'7361001019', hogares:258,  ab:40, puntaje:38, adultos_m:44, discapacidad:11, victimas:26},
-      {nom:'SAN JOAQUÍN',                 id:'010', pk:'7361001010', hogares:337,  ab:38, puntaje:40, adultos_m:48, discapacidad:10, victimas:22},
-    ],
+    /* Sisbén por barrio: fuente única DATA.INDICADORES (sisben_ab, puntaje, hogares). El arreglo heredado
+       DATA.SISBEN (8 de 21 barrios, con cifras distintas) se eliminó el 17-nov-2026. */
 
     FUENTES: [
       { nom:'IGAC — CartoBásica Nacional (500k / 25k) · Ref. CeM 12524', sub:'CartoBásica · Vías · Hidrografía · Límites · Relieve', ico:_srcBadge('IGAC','#0B5FA8'),
@@ -9939,6 +9930,28 @@ window.PIIT = (function () {
   };
 
   /* ── MÓDULO GRÁFICAS ────────────────────────────── */
+  /* ICV PIIT: una sola definición, derivada de DATA.INDICADORES (21 barrios).
+     ICV de un barrio = 0,30 Infraestructura + 0,25 Social + 0,25 Servicios + 0,20 Población.
+     ICV municipal = promedio de los barrios ponderado por población. Es un índice interno: no existe una
+     serie oficial del ICV para Segovia (ver Fuentes de datos > Verificación automática). */
+  const ICV = (function () {
+    var PES = { infra: 0.30, social: 0.25, srv: 0.25, pop: 0.20 };
+    function lista() { return Object.values(DATA.INDICADORES); }
+    function barrio(d) { return Math.round((d.infra || 0) * PES.infra + (d.social || 0) * PES.social + (d.srv || 0) * PES.srv + (d.pop || 0) * PES.pop); }
+    function ponderar(fn) { var p = 0, s = 0; lista().forEach(function (d) { var w = d.poblacion || 0; p += fn(d) * w; s += w; }); return s ? p / s : 0; }
+    function comp() { return { infra: ponderar(function (d) { return d.infra || 0; }), social: ponderar(function (d) { return d.social || 0; }), srv: ponderar(function (d) { return d.srv || 0; }), pop: ponderar(function (d) { return d.pop || 0; }) }; }
+    function valor() { return Math.round(ponderar(barrio)); }
+    function extremos() { var l = lista().slice().sort(function (a, b) { return barrio(a) - barrio(b); }); return { bajo: l[0], alto: l[l.length - 1] }; }
+    function pintar() {
+      var v = valor(), c = comp(), set = function (id, txt) { var e = document.getElementById(id); if (e) e.textContent = txt; };
+      set('hero-icv', v); set('icv-m4-valor', v);
+      var b = document.getElementById('icv-m4-barra'); if (b) b.style.width = v + '%';
+      set('icv-c-infra', Math.round(c.infra)); set('icv-c-social', Math.round(c.social)); set('icv-c-srv', Math.round(c.srv)); set('icv-c-pop', Math.round(c.pop));
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pintar); else pintar();
+    return { barrio: barrio, valor: valor, comp: comp, extremos: extremos, pintar: pintar, pesos: PES };
+  })();
+
   const charts = {
     _instances: {},
 
@@ -10083,9 +10096,10 @@ window.PIIT = (function () {
 
     _TIMELINE: {
       labels: ['2019','2020','2021','2022','2023','2024','2025'],
-      icv:    [48,46,49,52,55,59,62],
-      infra:  [51,49,52,55,58,62,66],
-      social: [44,43,47,50,53,57,60],
+      /* 2024 = valor calculado con los datos por barrio; los demás años son una serie interna sin fuente verificable */
+      icv:    [48,46,49,52,55,ICV.valor(),62],
+      infra:  [51,49,52,55,58,Math.round(ICV.comp().infra),66],
+      social: [44,43,47,50,53,Math.round(ICV.comp().social),60],
       selectedIdx: 6, // 2025 por defecto
     },
 
@@ -13068,15 +13082,18 @@ window.PIIT = (function () {
         charts._instances['chart-icv-radar'] = new Chart(c1, {
           type:'radar',
           data:{
-            labels:['Salud','Educación','Vivienda','Seguridad','Empleo','Conectividad'],
-            datasets:[
-              { label:'Segovia 2022', data:[70,66,62,72,55,48],
-                borderColor:'rgba(201,133,42,.8)', backgroundColor:'rgba(201,133,42,.1)', borderWidth:2, pointRadius:3 },
-              { label:'Segovia 2024', data:[74,70,68,76,60,65],
-                borderColor:'rgba(46,125,82,.9)', backgroundColor:'rgba(46,125,82,.12)', borderWidth:2.5, pointRadius:4 },
-              { label:'Antioquia 2024', data:[82,78,76,80,72,75],
-                borderColor:'rgba(42,108,168,.6)', backgroundColor:'rgba(42,108,168,.06)', borderWidth:1.5, borderDash:[4,3], pointRadius:2 },
-            ]
+            labels:['Infraestructura','Social','Servicios','Población'],
+            datasets:(function(){
+              var c = ICV.comp(), e = ICV.extremos(), r = function(d){ return [d.infra, d.social, d.srv, d.pop]; };
+              return [
+                { label:'Promedio municipal 2024', data:[Math.round(c.infra),Math.round(c.social),Math.round(c.srv),Math.round(c.pop)],
+                  borderColor:'rgba(46,125,82,.9)', backgroundColor:'rgba(46,125,82,.12)', borderWidth:2.5, pointRadius:4 },
+                { label:'Mayor ICV: ' + e.alto.nombre, data:r(e.alto),
+                  borderColor:'rgba(42,108,168,.7)', backgroundColor:'rgba(42,108,168,.06)', borderWidth:1.5, borderDash:[4,3], pointRadius:2 },
+                { label:'Menor ICV: ' + e.bajo.nombre, data:r(e.bajo),
+                  borderColor:'rgba(201,133,42,.8)', backgroundColor:'rgba(201,133,42,.1)', borderWidth:2, pointRadius:3 },
+              ];
+            })()
           },
           options:{ responsive:true, maintainAspectRatio:true,
             plugins:{ legend:{ position:'bottom' } },
@@ -13322,7 +13339,7 @@ window.PIIT = (function () {
 
   /* Exponer API pública (v5) */
   return { map, ui, app, reportes, charts, analisis, presupuesto, obras, contratos, salud,
-           sistema, productividad, conectividad, calidad, planeacion, escenarios, sisben,
+           sistema, productividad, conectividad, calidad, planeacion, escenarios, sisben, icv: ICV,
            data: DATA, state: STATE };
 
 })();
@@ -18311,14 +18328,15 @@ window.PIITVerif=(function(){
     var f4=/Salud/.test(sub)&&/Educaci/.test(sub),mism=f4;
     R.push({k:'icvf',t:'ICV: una sola fórmula',e:mism?'fail':'ok',d:mism?'El módulo Calidad de Vida define el ICV con Salud 30 % + Educación 30 % + Vivienda 20 % + Seguridad 20 %, mientras que el ICV por barrio usa Infraestructura 30 % + Social 25 % + Servicios 25 % + Población 20 %.':'La fórmula del ICV es la misma en todas las pantallas.',s:'Cálculo interno PIIT'});
     // 6 · ICV: fuente oficial
+    R.push({k:'icvh',t:'ICV: serie histórica',e:'info',d:'Solo el punto 2024 se calcula con datos por barrio (promedio ponderado). Los años 2019-2023 y 2025 son una serie interna sin fuente verificable; los escenarios ICV 2030 (79 / 85 / 72) se construyeron sobre una línea base anterior (72) y deben recalcularse.',s:'Cálculo interno PIIT'});
     R.push({k:'icvo',t:'ICV: fuente oficial',e:'info',d:'No existe una serie oficial del ICV para Segovia: el índice es una construcción interna. Las medidas oficiales comparables son el IPM y el NBI (DANE), el Índice de Desempeño Integral y la Medición de Desempeño Municipal (DNP). Las cifras «Antioquia 78 · Nacional 74 · Meta PDM 79» tampoco tienen fuente citada.',s:'DANE / DNP'});
     // 7 · Sisbén A+B: dos fuentes internas
-    var S=PIIT.data.SISBEN||[],by={};ind().forEach(function(x){by[x.pk]=x;});var dis=[];
-    S.forEach(function(s){var x=by[s.pk];if(x&&Math.abs((x.sisben_ab||0)-(s.ab||0))>3)dis.push(s.nom+' ('+x.sisben_ab+' % vs '+s.ab+' %)');});
-    R.push({k:'sis',t:'Sisbén A+B por barrio: dos tablas',e:dis.length?'fail':'ok',d:dis.length?dis.length+' de '+S.length+' barrios con cifras distintas entre «Análisis comparativo» y «Sisbén»: '+dis.slice(0,3).join('; ')+(dis.length>3?'…':'')+'. Se requiere el reporte oficial de la Oficina del Sisbén.':'Las dos tablas coinciden.',s:'Oficina del Sisbén (Alcaldía) / DNP'});
+    var S=PIIT.data.SISBEN||[],by={};ind().forEach(function(x){by[x.pk]=x;});
+    R.push({k:'sis',t:'Sisbén A+B por barrio: una sola fuente',e:S.length?'fail':'ok',d:S.length?'Existe una segunda tabla de Sisbén con cifras distintas.':'Todas las pantallas leen de la misma tabla de indicadores por barrio (21 barrios); ya no hay una segunda tabla.',s:'Interno PIIT'});
+    R.push({k:'sisv',t:'Sisbén A+B por barrio: validación oficial',e:'info',d:'Las cifras por barrio (por ejemplo GALÁN 71 %) son estimaciones internas: el Sisbén IV no las publica por barrio. Falta el reporte de la Oficina del Sisbén de la Alcaldía.',s:'Oficina del Sisbén (Alcaldía) / DNP'});
     // 8 · Estructura territorial
-    var g=PIIT.data.BARRIOS_GEOJSON.features,pkG=g.map(function(f){return f.properties.PK_BARRIO;}),sinDato=pkG.filter(function(p){return !by[p];});
-    R.push({k:'est',t:'Barrios: mapa, indicadores y Sisbén enlazados',e:sinDato.length?'warn':'ok',d:sinDato.length?sinDato.length+' barrios del mapa sin indicadores.':g.length+' barrios en el mapa, '+Object.keys(by).length+' con indicadores y '+S.length+' en el Sisbén, todos por el mismo código PK.',s:'IGAC · GDB barrios'});
+    var g=PIIT.data.BARRIOS_GEOJSON.features,pkG=g.map(function(f){return f.properties.PK_BARRIO;}),sinDato=pkG.filter(function(p){return !by[p];});S=ind();
+    R.push({k:'est',t:'Barrios: mapa, indicadores y Sisbén enlazados',e:sinDato.length?'warn':'ok',d:sinDato.length?sinDato.length+' barrios del mapa sin indicadores.':g.length+' barrios en el mapa y '+Object.keys(by).length+' con indicadores, todos por el mismo código PK.',s:'IGAC · GDB barrios'});
     // 9 · Frescura
     CORTES.forEach(function(c){var edad=yr-c[1],lim=c[2];R.push({k:'cut',t:'Vigencia: '+c[0],e:edad<=lim?'ok':'warn',d:'Fecha de corte '+c[1]+' ('+(edad<=0?'año en curso':'hace '+edad+(edad===1?' año':' años'))+'); vigencia máxima razonable: '+lim+(lim===1?' año.':' años.'),s:c[3]});});
     // 10 · Ejecución presupuestal cargada
