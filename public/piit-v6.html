@@ -18737,6 +18737,15 @@ window.PIITLive=(function(){
   window.PIITIgacTools={estado:function(){return st;},montar:montar};
 })();
 </script>
+<style id="piit-year-selector-css">
+/* Selector de año unificado en toda la plataforma (mismo estilo y mismo comportamiento que Contratación) */
+:is(#yr-selector,#fis-years,#pres-years,div:has(>.sv-year-btn)){display:inline-flex!important;flex-wrap:nowrap!important;gap:0!important;margin:4px 0 10px!important;background:var(--g900,#0D2E17);border-radius:8px;overflow:hidden;border:1.5px solid var(--g700,#237938);box-shadow:var(--sh-sm,0 1px 3px rgba(0,0,0,.12));max-width:100%;overflow-x:auto}
+:is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill),div:has(>.sv-year-btn)>.sv-year-btn{padding:7px 16px!important;min-height:0!important;border:none!important;border-radius:0!important;background:transparent!important;color:var(--g300,#9ADCB0)!important;font:700 12px/1.2 var(--fb,Lato,sans-serif)!important;cursor:pointer;white-space:nowrap;transition:all .18s;box-shadow:none!important}
+:is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill):hover,div:has(>.sv-year-btn)>.sv-year-btn:hover{background:rgba(255,255,255,.1)!important;color:#fff!important}
+:is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn.act,.yr-pill.on),div:has(>.sv-year-btn)>.sv-year-btn.act{background:var(--au500,#FCDC00)!important;color:var(--g900,#0D2E17)!important}
+:is(#yr-selector,#fis-years,#pres-years) .yr-pill.nodata:not(.on),div:has(>.sv-year-btn)>.sv-year-btn.sv-year-empty:not(.act){opacity:.6;font-style:italic}
+:is(#yr-selector,#fis-years,#pres-years) :is(.yr-btn,.yr-pill):focus-visible,div:has(>.sv-year-btn)>.sv-year-btn:focus-visible{outline:3px solid #FCDC00;outline-offset:-3px}
+</style>
 <style id="piit-sin-iconos-css">
 /* Íconos decorativos retirados (los marca PIITSinIconos); los funcionales se conservan */
 .ico-off{display:none!important}
