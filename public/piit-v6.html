@@ -10653,6 +10653,48 @@ window.PIIT = (function () {
       for (var y = presupuesto.ANIO_DESDE; y <= hasta; y++) out.push(y);
       return out;
     },
+
+    /* ── Contratación SECOP II por año (dato oficial, en vivo) ──
+       Para los años sin ejecución presupuestal cargada se muestra lo único verificable por fuente abierta:
+       lo contratado según SECOP II (datos.gov.co, jbjy-vk9h, NIT 890981391). NO es ejecución presupuestal. */
+    _secop: {},
+    _secopTs: {},
+    secopAnio: function (y, cb) {
+      var c = presupuesto._secop[y];
+      if (c && c.ok && Date.now() - presupuesto._secopTs[y] < 30 * 60 * 1000) { if (cb) cb(c); return c; }
+      if (c && c.cargando) return c;
+      presupuesto._secop[y] = c = c || { cargando: true };
+      c.cargando = true;
+      var u = 'https://www.datos.gov.co/resource/jbjy-vk9h.json?$select=tipo_de_contrato,count(*)%20as%20n,sum(valor_del_contrato::number)%20as%20v'
+        + '&$where=' + encodeURIComponent("nit_entidad='890981391' AND date_extract_y(fecha_de_firma)=" + y)
+        + '&$group=tipo_de_contrato&$order=v%20DESC&$limit=50';
+      fetch(u).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }).then(function (rows) {
+        var tipos = rows.map(function (r) { return { nom: r.tipo_de_contrato || 'Sin tipo', n: +r.n || 0, v: +r.v || 0 }; });
+        var n = tipos.reduce(function (s, x) { return s + x.n; }, 0), v = tipos.reduce(function (s, x) { return s + x.v; }, 0);
+        presupuesto._secop[y] = { ok: true, n: n, v: v, tipos: tipos };
+        presupuesto._secopTs[y] = Date.now();
+        if (cb) cb(presupuesto._secop[y]);
+        if (presupuesto.anioActual() === y) { presupuesto.renderSecBars(); presupuesto.notaSecop(); }
+      }).catch(function (e) { presupuesto._secop[y] = { err: String(e.message || e) }; if (presupuesto.anioActual() === y) { presupuesto.renderSecBars(); presupuesto.notaSecop(); } });
+      return c;
+    },
+    _fmtM: function (v) { return '$' + Math.round(v / 1e6).toLocaleString('es-CO'); },
+    notaSecop: function () {
+      var a = presupuesto.anioActual(), d = presupuesto.datos(a), host = document.getElementById('pres-sec-bars'); if (!host) return;
+      var n = document.getElementById('pres-nota');
+      if (!n) { n = document.createElement('div'); n.id = 'pres-nota'; n.setAttribute('role', 'note'); n.style.cssText = 'font-size:12px;line-height:1.5;color:#434343;background:#FFF8E1;border:1px solid #F3E2A9;border-radius:4px;padding:8px 12px;margin:0 0 10px'; host.parentNode.insertBefore(n, host); }
+      var s = presupuesto._secop[a], real = s && s.ok ? 'SECOP II ' + a + ': ' + s.n.toLocaleString('es-CO') + ' contratos firmados por ' + presupuesto._fmtM(s.v) + ' M (fuente oficial, en vivo).' : '';
+      if (d && a === 2026) n.innerHTML = '<strong>Cifras ilustrativas.</strong> La ejecución por secretaría, los totales y las fuentes de financiación de este año no tienen una fuente oficial verificada; se reemplazarán con el FUT / ejecución de gastos de la Secretaría de Hacienda. ' + real;
+      else if (!d) n.innerHTML = '<strong>Ejecución presupuestal no publicada.</strong> Ni datos.gov.co ni el FUT ofrecen datos abiertos de Segovia para ' + a + '. Se muestra lo contratado según SECOP II (no equivale a ejecución). ' + real;
+      else n.innerHTML = real;
+      n.style.display = n.innerHTML ? '' : 'none';
+      presupuesto._kpiSecop(a, d);
+    },
+    _kpiSecop: function (a, d) {
+      if (d) return;
+      var s = presupuesto._secop[a], T = presupuesto._txt;
+      if (s && s.ok && s.n) { T('fk-total', presupuesto._fmtM(s.v)); T('fk-total-t', s.n + ' contratos'); T('fk-total-l', 'Contratado SECOP II ' + a + ' (millones COP)'); }
+    },
     anioActual: function () {
       var lista = presupuesto.aniosLista();
       if (presupuesto.anio && lista.indexOf(presupuesto.anio) >= 0) return presupuesto.anio;
@@ -10684,18 +10726,30 @@ window.PIIT = (function () {
       T('fk-comp', k ? k.comprometido : dash); T('fk-comp-t', k ? k.pctComp : dash); T('fk-comp-l', k ? 'Comprometido (' + k.pctComp + ')' : 'Comprometido');
       T('fk-reg', k ? k.regalias : dash); T('fk-617', k ? k.ley617 : dash);
       presupuesto.renderSecBars(); presupuesto.renderSGR();
+      presupuesto.secopAnio(a); presupuesto.notaSecop();
       charts.buildIngresos(); charts.buildPresupuestoDash();
     },
 
     init: function () {
       presupuesto.setAnio();
+      if (!presupuesto._ivSecop) presupuesto._ivSecop = setInterval(function () { presupuesto.secopAnio(presupuesto.anioActual()); }, 30 * 60 * 1000 + 5000);
     },
 
     renderSecBars: function () {
       var el = document.getElementById('pres-sec-bars');
       if (!el) return;
       var _d = presupuesto.datos(presupuesto.anioActual());
-      if (!_d) { el.innerHTML = '<div class="yr-empty">' + presupuesto._vacio(presupuesto.anioActual(), 'ejecución por secretaría') + '</div>'; return; }
+      if (!_d) {
+        var ya = presupuesto.anioActual(), sc = presupuesto.secopAnio(ya);
+        if (sc && sc.ok && sc.n) {
+          el.innerHTML = '<div style="font-size:11px;color:var(--t400);margin-bottom:6px">Valor contratado por tipo de contrato · SECOP II ' + ya + ' (no es ejecución presupuestal)</div>' + sc.tipos.map(function (x) {
+            var p = sc.v ? Math.round(x.v / sc.v * 1000) / 10 : 0;
+            return '<div class="pres-row"><div class="pres-sec" title="' + x.nom + '">' + x.nom + '</div><div class="pres-track"><div class="pres-fill" style="width:' + p + '%;background:#237938"></div></div><div class="pres-pct" style="color:#237938">' + String(p).replace('.', ',') + '%</div><div class="pres-monto">' + presupuesto._fmtM(x.v) + 'M · ' + x.n + '</div></div>';
+          }).join('');
+        } else if (sc && sc.cargando) { el.innerHTML = '<div class="yr-empty">Consultando SECOP II ' + ya + '…</div>'; }
+        else { el.innerHTML = '<div class="yr-empty">' + presupuesto._vacio(ya, 'ejecución por secretaría') + (sc && sc.ok ? ' SECOP II no registra contratos firmados en ' + ya + '.' : '') + '</div>'; }
+        return;
+      }
       el.innerHTML = _d.secs.map(function (s) {
         var color = s.ejecucion >= 70 ? '#2E7D52' : s.ejecucion >= 50 ? '#C9852A' : '#DC0B2C';
         return '<div class="pres-row">'
@@ -18599,7 +18653,7 @@ window.PIITLive=(function(){
   }
   function montar(){
     var g=document.getElementById('dane-grid');if(!g||document.getElementById('dane-tools'))return;
-    leer();if(!st.datos.length)return;restaurar();resumen();
+    leer();if(!st.datos.length)return;restaurar();
     var tools=document.createElement('div');tools.id='dane-tools';tools.setAttribute('role','region');tools.setAttribute('aria-label','Vistas y filtros del observatorio DANE');
     tools.innerHTML='<div class="dt2-tabs" role="tablist" aria-label="Vista"><button class="dt2-tab" role="tab" data-v="tarjetas" type="button">Tarjetas</button><button class="dt2-tab" role="tab" data-v="grafico" type="button">Gráfico</button><button class="dt2-tab" role="tab" data-v="tabla" type="button">Tabla</button></div>'+
       '<div class="dt2-chips" role="group" aria-label="Filtrar por categoría">'+['Todas'].concat(st.cats).map(function(c){return '<button type="button" class="yr-pill" data-c="'+esc(c)+'" aria-pressed="false">'+esc(c)+'</button>';}).join('')+'</div>'+
@@ -18732,7 +18786,7 @@ window.PIITLive=(function(){
   }
   function montar(){
     var body=document.getElementById('igac-body');if(!body||!document.getElementById('igac-uso-table')||document.getElementById('igac-tools'))return;
-    leer();if(!st.datos.length)return;restaurar();
+    leer();if(!st.datos.length)return;restaurar();resumen();
     var tools=document.createElement('div');tools.id='igac-tools';tools.setAttribute('role','region');tools.setAttribute('aria-label','Vistas del uso del suelo');
     tools.innerHTML='<div class="dt2-tabs" role="tablist" aria-label="Vista"><button class="dt2-tab" role="tab" data-v="resumen" type="button">Resumen</button><button class="dt2-tab" role="tab" data-v="grafico" type="button">Gráfico</button><button class="dt2-tab" role="tab" data-v="tabla" type="button">Tabla</button></div><div class="dt2-r"><button type="button" class="dt2-btn" id="igac-csv">Descargar CSV</button><button type="button" class="dt2-btn" id="igac-link">Copiar enlace</button></div>';
     body.parentNode.insertBefore(tools,body);
