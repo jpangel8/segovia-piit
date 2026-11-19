@@ -8152,6 +8152,10 @@ window.PIIT = (function () {
       // central antes de animar, para que la cabecera municipal quede
       // centrada en la franja visible, no bajo los paneles.
       var size = m.getSize();
+      if(!(size.x>0)||!(size.y>0)||!isFinite(zoom)){ /* mapa aún sin tamaño (sección recién visible): reintenta una vez */
+        if(!map._cmRetry){ map._cmRetry=1; setTimeout(function(){ map._cmRetry=0; try{ m.invalidateSize(); map.centerMap(); }catch(e){} }, 350); }
+        return;
+      }
       var leftEdge  = 16 + 262 + 16;             // padding + panel izq + gap
       var rightEdge = size.x - (16 + 296);        // borde del panel derecho
       var visibleCenterX = (leftEdge + rightEdge) / 2;
@@ -19322,6 +19326,46 @@ window.PIITRiesgo3D=(function(){
   function mostrar(){S.vis=true;var w=cont.clientWidth,h=cont.clientHeight;if(w&&h){R.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}actualizar();enfocar('casco');if(api().st.sel)setTimeout(function(){seleccionar(api().st.sel);},50);}
   function ocultar(){S.vis=false;if(S.anim){cancelAnimationFrame(S.anim);S.anim=0;}tt&&(tt.style.display='none');}
   return {activar:activar,mostrar:mostrar,ocultar:ocultar,actualizar:actualizar,seleccionar:seleccionar,zoom:zoom,vista:function(m){enfocar(m);},estado:function(){return S;}};
+})();
+</script>
+<style id="piit-tabla-tools-css">
+.ptt-bar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin:0 0 6px;flex-wrap:wrap}
+.ptt-n{margin-right:auto;font:400 12px Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5b5b5b}
+.ptt-btn{font:700 12.5px Lato,'Helvetica Neue',Helvetica,Arial,sans-serif;color:#4e4e4e;background:#fff;border:1px solid #dadada;border-radius:4px;padding:5px 12px;min-height:30px;cursor:pointer}
+.ptt-btn:hover{background:#f2f2f2}.ptt-btn:focus-visible{outline:3px solid #3366CC;outline-offset:2px}
+</style>
+<script id="piit-tabla-tools-js">
+/* Descarga de CSV y enlace para toda tabla de datos que aún no los tenga (coherencia con el resto de la plataforma, estilo OWID). */
+(function(){
+  'use strict';
+  function tiene(t){var n=t,i;for(i=0;i<4&&n&&n!==document.body;i++){n=n.parentElement;if(!n)break;
+    var b=n.querySelectorAll('button,a');for(var j=0;j<b.length;j++){if(/csv/i.test(b[j].textContent)||/csv/i.test(b[j].id||'')||/csv/i.test(b[j].getAttribute('data-act')||''))return true;}
+    if(n.tagName==='SECTION'||n.classList.contains('card'))break;}
+    var sec=t.closest('section');if(sec&&sec.querySelectorAll('table').length===1){var bs=sec.querySelectorAll('button,a');for(var k=0;k<bs.length;k++){if(/csv/i.test(bs[k].textContent))return true;}}
+    return false;}
+  function limpia(s){return String(s==null?'':s).replace(/\s+/g,' ').trim();}
+  function csv(t,nombre){
+    var q=function(v){v=limpia(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+    var rows=[].map.call(t.rows,function(r){return [].map.call(r.cells,function(c){return q(c.innerText||c.textContent);}).join(',');});
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8'}));
+    a.download='piit-'+nombre+'-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+  function nombreDe(t){var sec=t.closest('section'),id=t.id||(sec&&sec.id)||'tabla';return id.replace(/^s-/,'').replace(/[^a-z0-9-]+/gi,'-').toLowerCase();}
+  function enlace(t){var sec=t.closest('section'),u=new URL(location.href);if(sec&&sec.id)u.hash=sec.id;var ok=function(){if(window.PIIT&&PIIT.map&&PIIT.map.toast)PIIT.map.toast('Enlace copiado','ok');};
+    if(navigator.clipboard)navigator.clipboard.writeText(u.toString()).then(ok,function(){});}
+  function revisar(){
+    document.querySelectorAll('table').forEach(function(t){
+      if(t.dataset.ptt||!t.offsetParent||t.closest('#igac-body,#dane-tools,#rank-tools,#piit-rm,#rm-wrap,.leaflet-container,.pchart-menu'))return;
+      var filas=t.tBodies.length?t.tBodies[0].rows.length:t.rows.length;if(filas<4)return;
+      t.dataset.ptt='1';if(tiene(t))return;
+      var bar=document.createElement('div');bar.className='ptt-bar';
+      bar.innerHTML='<span class="ptt-n">'+filas+' filas</span><button type="button" class="ptt-btn" data-a="csv">Descargar CSV</button><button type="button" class="ptt-btn" data-a="link">Copiar enlace</button>';
+      bar.querySelector('[data-a=csv]').addEventListener('click',function(){csv(t,nombreDe(t));});
+      bar.querySelector('[data-a=link]').addEventListener('click',function(){enlace(t);});
+      var host=t.closest('.table-wrap,.tbl-wrap,div[style*="overflow"]')||t;if(host.parentNode)host.parentNode.insertBefore(bar,host);
+    });
+  }
+  setInterval(revisar,1500);
+  window.PIITTablaTools={revisar:revisar};
 })();
 </script>
 </body>
