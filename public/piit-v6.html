@@ -15856,6 +15856,11 @@ function patchGoSectionForMinimap(){
     orig.call(this,id,el);
     if(id==='s-mapa'&&window._PIIT_minimap3D)
       setTimeout(function(){window._PIIT_minimap3D.resize();},200);
+    /* Georreferenciación automática: al abrir el SIG se solicita el permiso de ubicación del navegador (una vez por carga) */
+    if(id==='s-mapa'&&!window.__piitGeoAuto){window.__piitGeoAuto=1;setTimeout(function(){
+      var go=function(){var d=document.getElementById('sig-visor3d');if(d)d.open=true;var b=document.getElementById('mm-geo-btn');if(b&&!b.disabled)b.click();};
+      try{if(navigator.permissions&&navigator.permissions.query){navigator.permissions.query({name:'geolocation'}).then(function(p){if(p.state!=='denied')go();else{var d=document.getElementById('sig-visor3d');if(d)d.open=true;var s=document.getElementById('mm-geo-status');if(s){s.textContent='Ubicación bloqueada: permítala en el candado de la barra de direcciones';s.classList.add('has-msg');}}}).catch(go);}else go();}catch(e){go();}
+    },700);}
     if(id==='s-riesgo'&&window.PIIT.riesgo)
       setTimeout(function(){window.PIIT.riesgo.init();},120);
   };
