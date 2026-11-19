@@ -4147,7 +4147,7 @@ h1,h2,h3,.sec-title,.hero-h{color:#3F6B1F !important;font-weight:700 !important}
              de Capas (misma disclosure <details> que el resto); ya no es
              una ventana flotante y por tanto no puede solaparse con nada -->
         <details class="sig-col" id="sig-visor3d">
-          <summary>Visor Cartográfico 3D</summary>
+          <summary>Georreferenciación</summary>
           <div class="sig-col-body">
             <div id="minimap"></div>
           </div>
@@ -15361,14 +15361,13 @@ function initMinimap(){
     +'<span class="mm-hb-dot"></span>'
     +'<span class="mm-hb-txt">EN LÍNEA</span>'
     +'</div>';
-  outer.appendChild(header);
+  /* visor 3D retirado: solo se conserva el panel de Georreferenciación */
 
   /* Map container */
   var mapDiv=document.createElement('div');
   mapDiv.id='mm-map';
 
   old.parentNode.replaceChild(outer,old);
-  outer.appendChild(mapDiv);
 
   /* ── Barra de metadatos ── */
   var metaBar=document.createElement('div');
@@ -15379,9 +15378,6 @@ function initMinimap(){
     +'<div class="mm-meta-item"><span class="mm-meta-lbl">Área</span><span class="mm-meta-val">1.246 km²</span></div>'
     +'<div class="mm-meta-sep"></div>'
     +'<div class="mm-meta-item"><span class="mm-meta-lbl">Datum</span><span class="mm-meta-val">MAGNA-SIRGAS</span></div>';
-  outer.appendChild(metaBar);
-
-  buildTicker(outer);
 
   /* Overlays HTML encima del canvas WebGL */
   var vignette=document.createElement('div');
@@ -15621,30 +15617,10 @@ function initMinimap(){
     });
   },1200);
 
-  loadThree(function(){
-    init3DMap(mapDiv);
-  });
 
   /* ── Pausar/reanudar el render WebGL según el <details> esté abierto ──
      El visor ahora vive dentro de "Capas" como una sección más: si está
      colapsada no tiene sentido seguir renderizando cada frame. */
-  var detailsEl = document.getElementById('sig-visor3d');
-  if(detailsEl){
-    function syncVisor3D(){
-      var v = window._PIIT_minimap3D;
-      if(!v){ setTimeout(syncVisor3D, 200); return; }
-      if(detailsEl.open){ v.resume(); v.resize(); }
-      else{ v.pause(); }
-    }
-    detailsEl.addEventListener('toggle', function(){
-      var v = window._PIIT_minimap3D;
-      if(!v) return;
-      if(detailsEl.open){ v.resume(); setTimeout(function(){v.resize();}, 260); }
-      else{ v.pause(); }
-    });
-    /* estado inicial: si arranca cerrado, pausar en cuanto exista la escena */
-    syncVisor3D();
-  }
 }
 
 function init3DMap(container){
