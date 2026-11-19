@@ -13530,8 +13530,8 @@ window.addEventListener('load',function(){
 @keyframes tbPopIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .tb-user-pop .tb-user-name{font-size:12px;font-weight:700;color:#111;padding:2px 6px}
 .tb-user-pop .tb-user-role{font-size:10px;color:#6b7280;padding:0 6px 8px;border-bottom:1px solid #eee;margin-bottom:6px}
-.tb-logout-btn{width:100%;padding:7px 10px;border-radius:8px;border:none;background:rgba(220,38,38,.08);color:#DC0B2C;font-size:11.5px;font-weight:700;cursor:pointer;transition:background .15s;text-align:left}
-.tb-logout-btn:hover{background:rgba(220,38,38,.14)}
+.tb-logout-btn{width:100%;padding:7px 10px;border-radius:8px;border:none;background:transparent;color:#DC0B2C;font-size:11.5px;font-weight:700;cursor:pointer;transition:background .15s;text-align:left}
+.tb-logout-btn:hover{background:transparent;text-decoration:underline}
 </style>
 <script>
 window.__piitLogout=function(){localStorage.removeItem("piit-session");window.location.replace("/");};
