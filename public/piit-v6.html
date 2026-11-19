@@ -19368,5 +19368,50 @@ window.PIITRiesgo3D=(function(){
   window.PIITTablaTools={revisar:revisar};
 })();
 </script>
+<style id="piit-dash-tabs-css">
+#s-dash .dt-hide{display:none!important}
+#s-dash .dash-topics{position:sticky;top:0;z-index:5;background:#fff}
+#s-dash .dash-topic{cursor:pointer}
+</style>
+<script id="piit-dash-tabs-js">
+/* Dashboard por temas: una pestaña a la vez (de ~3.800 px de recorrido a un tema por vez). Estado compartible: ?g_dash=tema */
+(function(){
+  'use strict';
+  var KEY='g_dash',ORDEN=['general','tendencias','fiscal','indicadores','ranking'],grupos={},actual='general',listo=false;
+  function montar(){
+    var s=document.getElementById('s-dash'),nav=s&&s.querySelector('.dash-topics');if(!s||!nav||listo)return false;
+    var anc={tendencias:document.getElementById('dash-t-tendencias'),fiscal:document.getElementById('dash-t-fiscal'),indicadores:document.getElementById('dash-t-indicadores'),ranking:document.getElementById('dash-t-ranking')};
+    if(!anc.tendencias||!anc.fiscal||!anc.indicadores||!anc.ranking)return false;
+    var kids=[].slice.call(s.children),cur=null;grupos={general:[],tendencias:[],fiscal:[],indicadores:[],ranking:[]};
+    kids.forEach(function(k){
+      if(k===nav)return;
+      var tema=null;for(var n in anc){if(anc[n]===k)tema=n;}
+      if(tema){cur=tema;grupos[cur].push(k);return;}
+      if(k.classList.contains('dash-about')){grupos.general.push(k);cur=null;return;}
+      (cur?grupos[cur]:grupos.general).push(k);
+    });
+    nav.querySelectorAll('.dash-topic').forEach(function(a,i){
+      a.setAttribute('role','tab');a.setAttribute('data-tema',ORDEN[i]);
+      a.addEventListener('click',function(e){e.preventDefault();ir(ORDEN[i],true);});
+    });
+    nav.setAttribute('role','tablist');listo=true;
+    var v=null;try{v=new URL(location.href).searchParams.get(KEY);}catch(e){}
+    ir(ORDEN.indexOf(v)>=0?v:'general',false);return true;
+  }
+  function ir(tema,url){
+    actual=tema;
+    ORDEN.forEach(function(n){(grupos[n]||[]).forEach(function(el){el.classList.toggle('dt-hide',n!==tema);});});
+    var nav=document.querySelector('#s-dash .dash-topics');
+    if(nav)nav.querySelectorAll('.dash-topic').forEach(function(a){var on=a.getAttribute('data-tema')===tema;a.classList.toggle('act',on);a.setAttribute('aria-selected',String(on));});
+    setTimeout(function(){window.dispatchEvent(new Event('resize'));},60);
+    setTimeout(function(){window.dispatchEvent(new Event('resize'));},400);
+    if(url!==false){try{var u=new URL(location.href);if(tema==='general')u.searchParams.delete(KEY);else u.searchParams.set(KEY,tema);history.replaceState(null,'',u.toString());}catch(e){}}
+  }
+  /* enlaces internos #dash-t-* (otras secciones) abren la pestaña correspondiente */
+  window.addEventListener('hashchange',function(){var m=/^#dash-t-(\w+)/.exec(location.hash);if(m&&ORDEN.indexOf(m[1])>=0)ir(m[1],true);});
+  var iv=setInterval(function(){if(montar())clearInterval(iv);},400);
+  window.PIITDashTabs={ir:ir,estado:function(){return actual;}};
+})();
+</script>
 </body>
 </html>
